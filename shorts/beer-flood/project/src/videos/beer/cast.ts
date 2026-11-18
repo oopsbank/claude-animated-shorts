@@ -307,7 +307,7 @@ const spurts = (out: Stage, i: number, t: number, t0: number) => {
 
 // ---- the street ----
 export const BALCONIES: V3[] = [[-STREET.x1 - 0.65, 3.0, 22], [STREET.x1 + 0.65, 3.0, 17.5], [-STREET.x1 - 0.65, 3.0, 13]];
-export const CELLAR: V3 = [STREET.x1 + 0.02, 0, 36.0]; // the cellar window of shot 13c (right-hand house front)
+export const CELLAR: V3 = [STREET.x1 + 0.02, 0, 30.0]; // the cellar window of shot 13c (right-hand house front)
 const zFront = (tau: number) => (tau < TW ? -99 : WALL_T + 6.6 * (tau - TW) ** 0.95);
 const streetLife = (out: Stage, cam: CamInfo, t: number, tau: number, id: number) => {
   // laundry across the street
@@ -449,7 +449,7 @@ export const stage = (id: number, t: number, tau: number, cam: CamInfo): Stage =
   if (id === 10 && tau > 22.2 && tau < TB[1]) creaks(out, 1, t, 2);
   if (id === 11 && tau < TB[2]) creaks(out, 2, t, 2);
   if (s.place === "street") { streetLife(out, cam, t, tau, id); breachFx(out, tau); }
-  if (id === 13 && t > 30.85) cellarFx(out, t);
+  if (id === 13 && zFront(tau) > CELLAR[2] - 0.8) cellarFx(out, t);
   if (id === 15) arrows(out, t);
   if (id === 16 || id === 17) dinner(out, cam, t, id);
   if (id >= 18 && id <= 20) court(out, cam, t, id);

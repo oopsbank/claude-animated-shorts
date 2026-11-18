@@ -242,7 +242,7 @@ const CAMS: Record<number, Key[]> = {
   13: [
     { f: 804, s: (f) => zoom([0.5, 21, 42], [0, 0, 10], 44, pushK(f, 804, 0.0018)) },
     { f: 881, cut: true, s: (f) => dolly([-3.0, 4.6, 34], [1.5, 2.6, 22], pushK(f, 881, 0.0025), { fov: 44 }) },
-    { f: 927, cut: true, s: (f) => dolly([-1.8, 2.1, 40.2], [STREET.x1 + 0.1, 0.6, 36.0], pushK(f, 927, 0.003), { fov: 42 }) },
+    { f: 927, cut: true, s: (f) => dolly([-1.8, 2.1, 34.2], [STREET.x1 + 0.1, 0.6, 30.0], pushK(f, 927, 0.003), { fov: 42 }) },
   ],
   // 14 golden: the quiet street after, slow push
   14: [{ f: 984, s: (f) => dolly([0.8, 2.3, 38], [0, 2.4, 6], pushK(f, 984, 0.0012), { fov: 42 }) }],
