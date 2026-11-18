@@ -1,0 +1,20 @@
+{
+  "name": "too-much-water",
+  "private": true,
+  "dependencies": {
+    "@react-three/fiber": "^9.8.2",
+    "@react-three/postprocessing": "^3.0.4",
+    "@remotion/bundler": "^4.0.545",
+    "@remotion/cli": "^4.0.545",
+    "@remotion/renderer": "^4.0.545",
+    "@remotion/three": "^4.0.545",
+    "@types/react": "^19.3.0",
+    "@types/three": "^0.176.0",
+    "postprocessing": "^6.37.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.545",
+    "three": "^0.176.0",
+    "typescript": "^7.0.2"
+  }
+}

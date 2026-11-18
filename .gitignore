@@ -1,0 +1,3 @@
+__pycache__/
+projects/*/audio/stem_*.wav
+node_modules/
