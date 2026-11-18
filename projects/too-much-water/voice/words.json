@@ -1,0 +1,902 @@
+[
+{
+"word": "The",
+"start": 0.0,
+"end": 0.128
+},
+{
+"word": "most",
+"start": 0.174,
+"end": 0.302
+},
+{
+"word": "dangerous",
+"start": 0.337,
+"end": 0.697
+},
+{
+"word": "drink",
+"start": 0.731,
+"end": 0.906
+},
+{
+"word": "in",
+"start": 0.94,
+"end": 0.998
+},
+{
+"word": "this",
+"start": 1.033,
+"end": 1.149
+},
+{
+"word": "bar",
+"start": 1.196,
+"end": 1.405
+},
+{
+"word": "isn't",
+"start": 1.474,
+"end": 1.683
+},
+{
+"word": "whiskey.",
+"start": 1.718,
+"end": 2.229
+},
+{
+"word": "It's",
+"start": 2.334,
+"end": 2.508
+},
+{
+"word": "water.",
+"start": 2.543,
+"end": 3.042
+},
+{
+"word": "Your",
+"start": 3.286,
+"end": 3.425
+},
+{
+"word": "body",
+"start": 3.471,
+"end": 3.657
+},
+{
+"word": "is",
+"start": 3.692,
+"end": 3.762
+},
+{
+"word": "mostly",
+"start": 3.82,
+"end": 4.075
+},
+{
+"word": "water,",
+"start": 4.11,
+"end": 4.563
+},
+{
+"word": "and",
+"start": 4.667,
+"end": 4.772
+},
+{
+"word": "it",
+"start": 4.818,
+"end": 4.876
+},
+{
+"word": "guards",
+"start": 4.934,
+"end": 5.213
+},
+{
+"word": "one",
+"start": 5.271,
+"end": 5.422
+},
+{
+"word": "number",
+"start": 5.457,
+"end": 5.654
+},
+{
+"word": "like",
+"start": 5.689,
+"end": 5.828
+},
+{
+"word": "treasure:",
+"start": 5.863,
+"end": 6.385
+},
+{
+"word": "how",
+"start": 6.536,
+"end": 6.653
+},
+{
+"word": "salty",
+"start": 6.722,
+"end": 6.989
+},
+{
+"word": "that",
+"start": 7.024,
+"end": 7.14
+},
+{
+"word": "water",
+"start": 7.187,
+"end": 7.442
+},
+{
+"word": "is.",
+"start": 7.5,
+"end": 7.825
+},
+{
+"word": "Drink",
+"start": 8.429,
+"end": 8.626
+},
+{
+"word": "a",
+"start": 8.661,
+"end": 8.684
+},
+{
+"word": "glass.",
+"start": 8.719,
+"end": 9.125
+},
+{
+"word": "Your",
+"start": 9.183,
+"end": 9.334
+},
+{
+"word": "kidneys",
+"start": 9.369,
+"end": 9.671
+},
+{
+"word": "handle",
+"start": 9.706,
+"end": 9.95
+},
+{
+"word": "it.",
+"start": 9.985,
+"end": 10.228
+},
+{
+"word": "A",
+"start": 10.832,
+"end": 10.902
+},
+{
+"word": "liter",
+"start": 10.971,
+"end": 11.192
+},
+{
+"word": "in",
+"start": 11.238,
+"end": 11.297
+},
+{
+"word": "an",
+"start": 11.331,
+"end": 11.389
+},
+{
+"word": "hour?",
+"start": 11.424,
+"end": 11.831
+},
+{
+"word": "Fine.",
+"start": 12.214,
+"end": 12.643
+},
+{
+"word": "That's",
+"start": 12.725,
+"end": 12.957
+},
+{
+"word": "their",
+"start": 12.992,
+"end": 13.143
+},
+{
+"word": "top",
+"start": 13.178,
+"end": 13.34
+},
+{
+"word": "speed.",
+"start": 13.398,
+"end": 13.874
+},
+{
+"word": "Two",
+"start": 14.257,
+"end": 14.431
+},
+{
+"word": "liters.",
+"start": 14.501,
+"end": 15.024
+},
+{
+"word": "Now",
+"start": 15.546,
+"end": 15.685
+},
+{
+"word": "there's",
+"start": 15.72,
+"end": 15.894
+},
+{
+"word": "a",
+"start": 15.918,
+"end": 15.941
+},
+{
+"word": "queue.",
+"start": 15.976,
+"end": 16.347
+},
+{
+"word": "Three.",
+"start": 16.626,
+"end": 17.055
+},
+{
+"word": "The",
+"start": 17.206,
+"end": 17.299
+},
+{
+"word": "queue",
+"start": 17.346,
+"end": 17.508
+},
+{
+"word": "is",
+"start": 17.531,
+"end": 17.601
+},
+{
+"word": "out",
+"start": 17.636,
+"end": 17.74
+},
+{
+"word": "the",
+"start": 17.775,
+"end": 17.845
+},
+{
+"word": "door",
+"start": 17.88,
+"end": 18.042
+},
+{
+"word": "and",
+"start": 18.077,
+"end": 18.147
+},
+{
+"word": "down",
+"start": 18.181,
+"end": 18.321
+},
+{
+"word": "the",
+"start": 18.356,
+"end": 18.425
+},
+{
+"word": "street.",
+"start": 18.46,
+"end": 18.901
+},
+{
+"word": "The",
+"start": 19.284,
+"end": 19.389
+},
+{
+"word": "extra",
+"start": 19.447,
+"end": 19.656
+},
+{
+"word": "water",
+"start": 19.691,
+"end": 19.935
+},
+{
+"word": "has",
+"start": 19.969,
+"end": 20.062
+},
+{
+"word": "nowhere",
+"start": 20.12,
+"end": 20.364
+},
+{
+"word": "to",
+"start": 20.399,
+"end": 20.445
+},
+{
+"word": "go.",
+"start": 20.492,
+"end": 20.829
+},
+{
+"word": "It",
+"start": 21.27,
+"end": 21.386
+},
+{
+"word": "dilutes",
+"start": 21.421,
+"end": 21.746
+},
+{
+"word": "the",
+"start": 21.792,
+"end": 21.862
+},
+{
+"word": "salt,",
+"start": 21.908,
+"end": 22.257
+},
+{
+"word": "and",
+"start": 22.373,
+"end": 22.489
+},
+{
+"word": "your",
+"start": 22.524,
+"end": 22.64
+},
+{
+"word": "cells",
+"start": 22.675,
+"end": 22.93
+},
+{
+"word": "do",
+"start": 22.965,
+"end": 23.046
+},
+{
+"word": "what",
+"start": 23.081,
+"end": 23.197
+},
+{
+"word": "thirsty",
+"start": 23.232,
+"end": 23.51
+},
+{
+"word": "things",
+"start": 23.557,
+"end": 23.777
+},
+{
+"word": "do.",
+"start": 23.812,
+"end": 24.126
+},
+{
+"word": "They",
+"start": 24.567,
+"end": 24.718
+},
+{
+"word": "drink.",
+"start": 24.753,
+"end": 25.171
+},
+{
+"word": "Luckily,",
+"start": 25.774,
+"end": 26.111
+},
+{
+"word": "most",
+"start": 26.146,
+"end": 26.32
+},
+{
+"word": "cells",
+"start": 26.366,
+"end": 26.61
+},
+{
+"word": "can",
+"start": 26.645,
+"end": 26.749
+},
+{
+"word": "just",
+"start": 26.784,
+"end": 26.924
+},
+{
+"word": "swell",
+"start": 26.97,
+"end": 27.191
+},
+{
+"word": "a",
+"start": 27.225,
+"end": 27.249
+},
+{
+"word": "little.",
+"start": 27.283,
+"end": 27.678
+},
+{
+"word": "Unluckily,",
+"start": 28.282,
+"end": 28.735
+},
+{
+"word": "your",
+"start": 28.758,
+"end": 28.874
+},
+{
+"word": "brain",
+"start": 28.909,
+"end": 29.095
+},
+{
+"word": "lives",
+"start": 29.141,
+"end": 29.304
+},
+{
+"word": "in",
+"start": 29.338,
+"end": 29.396
+},
+{
+"word": "a",
+"start": 29.431,
+"end": 29.455
+},
+{
+"word": "box",
+"start": 29.513,
+"end": 29.71
+},
+{
+"word": "made",
+"start": 29.768,
+"end": 29.919
+},
+{
+"word": "of",
+"start": 29.942,
+"end": 29.989
+},
+{
+"word": "bone.",
+"start": 30.035,
+"end": 30.499
+},
+{
+"word": "Picture",
+"start": 30.883,
+"end": 31.15
+},
+{
+"word": "a",
+"start": 31.184,
+"end": 31.208
+},
+{
+"word": "sponge",
+"start": 31.242,
+"end": 31.556
+},
+{
+"word": "in",
+"start": 31.579,
+"end": 31.637
+},
+{
+"word": "a",
+"start": 31.672,
+"end": 31.695
+},
+{
+"word": "glass",
+"start": 31.73,
+"end": 31.962
+},
+{
+"word": "jar.",
+"start": 31.997,
+"end": 32.462
+},
+{
+"word": "The",
+"start": 32.705,
+"end": 32.798
+},
+{
+"word": "sponge",
+"start": 32.833,
+"end": 33.112
+},
+{
+"word": "grows.",
+"start": 33.146,
+"end": 33.541
+},
+{
+"word": "The",
+"start": 33.646,
+"end": 33.739
+},
+{
+"word": "jar",
+"start": 33.773,
+"end": 33.959
+},
+{
+"word": "doesn't.",
+"start": 34.006,
+"end": 34.47
+},
+{
+"word": "Headache,",
+"start": 34.749,
+"end": 35.132
+},
+{
+"word": "confusion,",
+"start": 35.178,
+"end": 35.712
+},
+{
+"word": "sleepiness:",
+"start": 35.77,
+"end": 36.397
+},
+{
+"word": "that's",
+"start": 36.838,
+"end": 37.059
+},
+{
+"word": "the",
+"start": 37.094,
+"end": 37.164
+},
+{
+"word": "sponge",
+"start": 37.198,
+"end": 37.489
+},
+{
+"word": "hitting",
+"start": 37.512,
+"end": 37.721
+},
+{
+"word": "the",
+"start": 37.756,
+"end": 37.825
+},
+{
+"word": "glass.",
+"start": 37.86,
+"end": 38.348
+},
+{
+"word": "And",
+"start": 38.731,
+"end": 38.847
+},
+{
+"word": "it's",
+"start": 38.893,
+"end": 39.021
+},
+{
+"word": "real.",
+"start": 39.067,
+"end": 39.474
+},
+{
+"word": "In",
+"start": 39.915,
+"end": 40.019
+},
+{
+"word": "2007,",
+"start": 40.054,
+"end": 40.751
+},
+{
+"word": "a",
+"start": 40.786,
+"end": 40.844
+},
+{
+"word": "radio",
+"start": 40.913,
+"end": 41.18
+},
+{
+"word": "contest",
+"start": 41.238,
+"end": 41.575
+},
+{
+"word": "to",
+"start": 41.61,
+"end": 41.668
+},
+{
+"word": "drink",
+"start": 41.714,
+"end": 41.888
+},
+{
+"word": "the",
+"start": 41.935,
+"end": 42.005
+},
+{
+"word": "most",
+"start": 42.039,
+"end": 42.19
+},
+{
+"word": "water",
+"start": 42.237,
+"end": 42.539
+},
+{
+"word": "ended",
+"start": 42.666,
+"end": 42.899
+},
+{
+"word": "with",
+"start": 42.933,
+"end": 43.049
+},
+{
+"word": "a",
+"start": 43.084,
+"end": 43.108
+},
+{
+"word": "contestant",
+"start": 43.142,
+"end": 43.607
+},
+{
+"word": "dying",
+"start": 43.653,
+"end": 43.92
+},
+{
+"word": "that",
+"start": 43.955,
+"end": 44.083
+},
+{
+"word": "same",
+"start": 44.129,
+"end": 44.327
+},
+{
+"word": "day.",
+"start": 44.361,
+"end": 44.791
+},
+{
+"word": "After",
+"start": 45.395,
+"end": 45.639
+},
+{
+"word": "trainees",
+"start": 45.673,
+"end": 45.975
+},
+{
+"word": "ended",
+"start": 46.033,
+"end": 46.219
+},
+{
+"word": "up",
+"start": 46.254,
+"end": 46.324
+},
+{
+"word": "in",
+"start": 46.358,
+"end": 46.428
+},
+{
+"word": "hospital,",
+"start": 46.486,
+"end": 46.904
+},
+{
+"word": "the",
+"start": 46.962,
+"end": 47.055
+},
+{
+"word": "U.S.",
+"start": 47.101,
+"end": 47.345
+},
+{
+"word": "Army",
+"start": 47.368,
+"end": 47.554
+},
+{
+"word": "wrote",
+"start": 47.601,
+"end": 47.775
+},
+{
+"word": "a",
+"start": 47.798,
+"end": 47.833
+},
+{
+"word": "rule:",
+"start": 47.879,
+"end": 48.251
+},
+{
+"word": "no",
+"start": 48.634,
+"end": 48.738
+},
+{
+"word": "more",
+"start": 48.808,
+"end": 48.947
+},
+{
+"word": "than",
+"start": 48.982,
+"end": 49.098
+},
+{
+"word": "about",
+"start": 49.133,
+"end": 49.307
+},
+{
+"word": "a",
+"start": 49.342,
+"end": 49.377
+},
+{
+"word": "liter",
+"start": 49.423,
+"end": 49.644
+},
+{
+"word": "and",
+"start": 49.679,
+"end": 49.748
+},
+{
+"word": "a",
+"start": 49.783,
+"end": 49.806
+},
+{
+"word": "half",
+"start": 49.853,
+"end": 49.992
+},
+{
+"word": "an",
+"start": 50.027,
+"end": 50.085
+},
+{
+"word": "hour.",
+"start": 50.12,
+"end": 50.515
+},
+{
+"word": "So",
+"start": 51.037,
+"end": 51.165
+},
+{
+"word": "drink",
+"start": 51.211,
+"end": 51.385
+},
+{
+"word": "your",
+"start": 51.42,
+"end": 51.536
+},
+{
+"word": "water.",
+"start": 51.583,
+"end": 52.024
+},
+{
+"word": "Just",
+"start": 52.152,
+"end": 52.303
+},
+{
+"word": "give",
+"start": 52.337,
+"end": 52.477
+},
+{
+"word": "your",
+"start": 52.512,
+"end": 52.628
+},
+{
+"word": "kidneys",
+"start": 52.663,
+"end": 52.964
+},
+{
+"word": "time",
+"start": 52.999,
+"end": 53.231
+},
+{
+"word": "to",
+"start": 53.266,
+"end": 53.324
+},
+{
+"word": "finish",
+"start": 53.371,
+"end": 53.58
+},
+{
+"word": "the",
+"start": 53.615,
+"end": 53.684
+},
+{
+"word": "paperwork.",
+"start": 53.719,
+"end": 54.474
+}
+]
