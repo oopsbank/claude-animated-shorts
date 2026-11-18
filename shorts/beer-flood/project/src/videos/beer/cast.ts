@@ -317,6 +317,11 @@ const streetLife = (out: Stage, cam: CamInfo, t: number, tau: number, id: number
     const x = -3.4 + k * 1.7, s = q((t * 2 + k * 0.3) % 1, 6);
     card(out, `foam${s}`, 500, 260, (p) => fxFoam(p, s * 10 + k), x, beerDepth(x, zf - 0.6, tau) + 0.15, zf - 0.4, 2.2, 1.15);
   }
+  // brown splashes breaking on the crest
+  if (id === 1 && zf > 3 && zf < 60) for (let k = 0; k < 3; k++) {
+    const u = q(((t * 1.3 + k * 0.33) % 1) * 0.8 + 0.1, 15), x = -2.6 + k * 2.6;
+    card(out, `bsplash${k}|${u}`, 800, 800, (p) => fxBeerSplash(p, u, k), x, beerDepth(x, zf - 1.2, tau) - 0.3 + 1.6, zf - 0.6, 3.4, 3.4);
+  }
   // a bucket riding the beer
   if (tau > TW + 1.5) {
     const bz = Math.min(zf - 2.5, 30 + 0.4 * (tau - TW)), bx = 1.4;

@@ -217,7 +217,7 @@ const CAMS: Record<number, Key[]> = {
   ],
   // 5 George walks in, stops and looks up; then the slipped hoop
   5: [
-    { f: 386, s: (f) => dolly([GEORGE[0] + 3.2, 1.55, GEORGE[2] + 4.2], [GEORGE[0] - 0.4, 1.45, GEORGE[2]], pushK(f, 386, 0.0025), { fov: 40 }) },
+    { f: 386, s: (f) => dolly([GEORGE[0] + 2.4, 1.55, GEORGE[2] + 9], [GEORGE[0] + 2.0, 1.45, GEORGE[2]], pushK(f, 386, 0.0025), { fov: 46 }) },
     { f: 440, dur: 26, s: (f) => dolly([GEORGE[0] + 2.0, 1.2, GEORGE[2] + 3.0], [GEORGE[0] - 0.1, 1.75, GEORGE[2]], pushK(f, 440, 0.003), { fov: 38, roll: -0.035 }) },
     { f: 477, cut: true, s: (f) => dolly(at(vatFront(V0, 1.6, 0), [-1.0, 0.4, 3.3]), at(vatFront(V0, 1.15, 0), [0.4, 0, 0]), pushK(f, 477, 0.003), { fov: 38 }) },
   ],
