@@ -1,4 +1,4 @@
-# What If You Drank Too Much Water? (draft 1)
+# What If You Drank Too Much Water? (draft 2, director's cut)
 
 Format: 55-70 s vertical short, cartoon 3D style (`templates/bridge/` look). Voice: English, one steady tone.
 
@@ -17,23 +17,26 @@ Format: 55-70 s vertical short, cartoon 3D style (`templates/bridge/` look). Voi
    - https://www.scientificamerican.com/article/strange-but-true-drinking-too-much-water-can-kill/
    - Handled respectfully: no name, no jokes about the death itself.
 
-## Script (~225 words, ~61 s at 3.7 words/s)
+## Director's decisions (retention)
+- **Hook in the bar, not the kitchen.** "Whiskey vs water" is a contrast the viewer gets in under 2 s, and the glass sliding toward camera is motion on frame 1.
+- **Keep the real 2007 case, short and quiet.** The sudden drop in tone at ~40 s is a pattern break right where viewers usually leave, and it proves the video isn't just a cartoon joke. No name, no number, no joke, no music under it.
+- **Shorter: ~200 words, ~55 s.** Every beat that didn't add a new picture was cut.
+- **Loop ending.** The last shot is the bartender sliding a new glass of water, framed exactly like frame 1, so the replay looks seamless.
+- **A new picture every 2-3 s** (cut, glide or reaction), queue grows in 4 visible steps, impact shake on "They drink."
+
+## Script (~200 words, ~55 s at 3.7 words/s)
 
 | # | Beat | Voice | Picture |
 |---|---|---|---|
-| 1 | Hook | The most dangerous drink in this town isn't whiskey. It's water. | Saloon-style bar; bartender slides a glass of water; white flash. |
-| 2 | Setting | Your body is mostly water, and it guards one number like treasure: how salty that water is. | Cut-away cartoon body; a little salt-shaker guard at a vault door. |
-| 3 | Action 1 | Drink a glass. Your kidneys handle it. | Kidneys as two clerks at a counter, one stamp. |
-| 4 | Action 2 | A liter in an hour? Still fine. That's their top speed. | Clerks stamping fast, queue of water drops. |
+| 1 | Hook | The most dangerous drink in this bar isn't whiskey. It's water. | Frame 1: glass of water slides toward camera; bartender deadpan; white flash. |
+| 2 | Setting | Your body is mostly water, and it guards one number like treasure: how salty that water is. | Push into the customer's chest; a salt-shaker guard at a vault door. |
+| 3 | Action 1 | Drink a glass. Your kidneys handle it. | Kidneys = two clerks at a counter, one stamp. |
+| 4 | Action 2 | A liter in an hour? Fine. That's their top speed. | Clerks stamping fast; short queue of water drops. |
 | 5 | Action 3 | Two liters. Now there's a queue. | Queue snakes around the room. |
-| 6 | Action 4 | Three. The queue is out the door and down the street. | Wide shot: water-drop queue fills the town street. |
-| 7 | Snap | The extra water has nowhere to go. It dilutes the salt, and your cells do what thirsty things do. They drink. | Salt guard gets swept away; cells puff up like balloons. |
-| 8 | Deadpan | Luckily, most cells can just swell a little. Unluckily, your brain lives in a box made of bone. | Cells relax / cut to brain character in a bony box, squished. |
-| 9 | Analogy | It's a dry sponge in a glass jar. Add water, the sponge grows. The jar doesn't. Headache, confusion, sleepiness: that's the sponge pushing on the jar. | Sponge in jar on a kitchen table, swelling, glass creaks. |
-| 10 | Real | It's real. In 2007, a radio contest to drink the most water ended with a contestant dying the same day. | Quiet shot: empty radio studio, a row of water bottles. No characters joking. |
-| 11 | Rule | The U.S. Army had trainees in hospital from over-drinking, so it wrote a rule: no more than about a liter and a half an hour. | Soldiers marching (reuse bridge cast), sergeant holds up a canteen with a line. |
-| 12 | Twist | So drink your water. Just let your kidneys finish the paperwork. | Back at the bar: bartender takes the glass back, pours half out; clerks give a thumbs up. |
-
-## Open questions for approval
-- Tone of beat 10 (the real case): keep it, soften it further, or cut it.
-- Bar setting for the hook vs. a plain kitchen.
+| 6 | Action 4 | Three. The queue is out the door and down the street. | Crane up: water-drop queue fills the town street (reuse the town). |
+| 7 | Snap | The extra water has nowhere to go. It dilutes the salt, and your cells do what thirsty things do. They drink. | Salt guard swept away; cells puff up; impact shake on "drink". |
+| 8 | Deadpan | Luckily, most cells can just swell a little. Unluckily, your brain lives in a box made of bone. | Cells shrug / hard cut: brain character squished in a bony box. |
+| 9 | Analogy | Picture a sponge in a glass jar. The sponge grows. The jar doesn't. Headache, confusion, sleepiness: that's the sponge hitting the glass. | Kitchen table, sponge swelling, glass creaks. |
+| 10 | Real | And it's real. In 2007, a radio contest to drink the most water ended with a contestant dying that same day. | Silence under the music; slow push on an empty radio studio, row of bottles. |
+| 11 | Rule | After trainees ended up in hospital, the U.S. Army wrote a rule: no more than about a liter and a half an hour. | Soldiers marching (reuse the bridge cast); sergeant taps a line on a canteen. |
+| 12 | Twist + loop | So drink your water. Just give your kidneys time to finish the paperwork. | Clerks thumbs-up; bartender slides a new glass toward camera = frame 1. |
