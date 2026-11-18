@@ -37,6 +37,6 @@ Format: 55-70 s vertical short, cartoon 3D style (`templates/bridge/` look). Voi
 | 7 | Snap | The extra water has nowhere to go. It dilutes the salt, and your cells do what thirsty things do. They drink. | Salt guard swept away; cells puff up; impact shake on "drink". |
 | 8 | Deadpan | Luckily, most cells can just swell a little. Unluckily, your brain lives in a box made of bone. | Cells shrug / hard cut: brain character squished in a bony box. |
 | 9 | Analogy | Picture a sponge in a glass jar. The sponge grows. The jar doesn't. Headache, confusion, sleepiness: that's the sponge hitting the glass. | Kitchen table, sponge swelling, glass creaks. |
-| 10 | Real | And it's real. In 2007, a radio contest to drink the most water ended with a contestant dying that same day. | Silence under the music; slow push on an empty radio studio, row of bottles. |
+| 10 | Real | And it's real. In 2007, a radio contest to drink the most water ended with a contestant dying that same day. | Music cuts out; slow push on an empty radio studio, row of bottles. |
 | 11 | Rule | After trainees ended up in hospital, the U.S. Army wrote a rule: no more than about a liter and a half an hour. | Soldiers marching (reuse the bridge cast); sergeant taps a line on a canteen. |
 | 12 | Twist + loop | So drink your water. Just give your kidneys time to finish the paperwork. | Clerks thumbs-up; bartender slides a new glass toward camera = frame 1. |
