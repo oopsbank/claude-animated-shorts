@@ -144,12 +144,14 @@ export class World {
       bulb.position.set(x, 2.78, 0); bulb.layers.set(NOINK); R.add(bulb);
     }
     // the glass: its own group so it can slide
-    const gl = lam("glassBody", () => ({ color: "#d6f1ff" })), wt = lam("glassWater", () => ({ color: "#62bde9" }));
-    const gb = new THREE.Mesh(new THREE.CylinderGeometry(0.062, 0.05, 0.16, 20), gl); gb.position.y = 0.08;
-    const gw = new THREE.Mesh(new THREE.CylinderGeometry(0.0625, 0.0505, 0.115, 20), wt); gw.position.y = 0.06; gw.scale.set(1.01, 1, 1.01);
+    const gl = new THREE.MeshPhongMaterial({ color: "#e8f8ff", specular: "#ffffff", shininess: 80, transparent: true, opacity: 0.3, depthWrite: false });
+    const wt = lam("glassWater", () => ({ color: "#62bde9" }));
+    const gb = new THREE.Mesh(new THREE.CylinderGeometry(0.064, 0.052, 0.16, 24, 1, true), gl); gb.position.y = 0.08; gb.renderOrder = 2;
+    const gw = new THREE.Mesh(new THREE.CylinderGeometry(0.058, 0.048, 0.11, 24), wt); gw.position.y = 0.06;
+    const lip = new THREE.Mesh(new THREE.TorusGeometry(0.064, 0.004, 6, 32), new THREE.MeshBasicMaterial({ color: "#ffffff" })); lip.rotation.x = Math.PI / 2; lip.position.y = 0.16; lip.layers.set(NOINK);
     const hi = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.11, 0.004), new THREE.MeshBasicMaterial({ color: "#ffffff" })); hi.position.set(-0.03, 0.09, 0.052); hi.layers.set(NOINK);
-    for (const m of [gb, gw]) { m.castShadow = true; m.receiveShadow = true; }
-    this.glass.add(gb, gw, hi); R.add(this.glass);
+    gw.castShadow = true; gw.receiveShadow = true;
+    this.glass.add(gb, gw, hi, lip); R.add(this.glass);
 
     // ---- BODY OFFICE (kidney counter + vault) ----
     floor(OFFICE - 3, 26, 22, lam("officeTiles", () => ({ map: rep(tiles("officeT", "#e9d8c4", "#d9bfa8"), 1, 1) })), 13, 11, -6);
