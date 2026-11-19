@@ -26,3 +26,12 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Compare side-by-side with a reference frame. Numbers and adjectives lie; pictures don't.
 - When the user corrects something, fix it **and** add a rule so it never happens again.
 - Show every pose and every joint at 2x zoom before calling it done.
+
+## Scripts and topics
+- Classic science facts score low on originality (toast, the ring-road traffic jam, tickling yourself, tomato juice on planes, Leidenfrost, "objects in mirror"). Prefer a lesser-known *angle* or a fresh phenomenon, and judge originality by "is this already a viral short?", not by "is it true?".
+- A hook must state a fact, never give an instruction ("Flip the tab…", "Shut your freezer…"), and must not contain the mechanism ("half your brain stays on guard"). Count the words with a script, not by eye.
+- Check each source against the specific claim in your hook. The ketchup source's physicist called the "57" tip marketing; the noise study found only sweet suppressed and umami boosted, not salt; a convex passenger mirror is *allowed*, not required.
+- A pop-science number repeated by the press ("taste drops 30%", "1% water", "delays up to 2 s") must be checked against the paper or press release. If it doesn't match, hedge it or drop it.
+- Keep a payoff physically true: a door whose pressure has evened out becomes easy to open, but it never opens by itself.
+- Never show or say brand names (Heinz, Cheerios, an airline). Plan the payoff so it works without the brand, or drop the topic.
+- Reviewers' originality scores drift without the reference channel's full title list. Put that list in the repo before the next topic round.
