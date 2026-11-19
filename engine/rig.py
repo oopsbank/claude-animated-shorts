@@ -43,12 +43,35 @@ def _render(kw, scale):
 
 
 # ---------------------------------------------------------------- spec -> bean kwargs
+import re
+_SRC = open(bean.__file__).read()
+ARM_POSES = set(re.findall(r"pose == '(\w+)'", _SRC)) | {'hang'}
+HATS = set(re.findall(r"kind (?:==|in) \(?'(\w+)'", _SRC)) | {'cap', 'beanie', 'hardhat', 'tophat'}
+STANDIN = {'arm': {'ride': 'hold'}, 'hat': {'helmet': 'hardhat'}}
+OUTFIT_COL = {'stripes': '#f2f2f2', 'buttons': '#e8c45a', 'tie': '#c0353a', 'belt': '#3a2a20', 'apron': '#f4f1e8',
+              'overalls': '#3b5b9a', 'coat_open': '#f4f4f4', 'collar': '#f4f4f4'}
+_warned = set()
+
+
+def _warn(msg):
+    if msg not in _warned: _warned.add(msg); print('  [rig stand-in]', msg, flush=True)
+
+
+def arm_ok(p):
+    if p in ARM_POSES: return p
+    sub = STANDIN['arm'].get(p, 'hang'); _warn(f'arm pose {p!r} not in bean.py yet -> {sub!r}'); return sub
+
+
 def bean_kwargs(spec):
-    kw = {k: v for k, v in spec.items() if k in PARAMS}
+    kw = {k: v for k, v in spec.items() if k in PARAMS and v is not None}
     if 'color' in spec and 'shirt' not in kw: kw['shirt'] = spec['color']
-    for k in ('outfit',):
-        if k in kw and isinstance(kw[k], list): kw[k] = tuple(tuple(i) if isinstance(i, list) else i for i in kw[k])
     if isinstance(kw.get('outfit'), str): kw.pop('outfit')            # named outfits come with wardrobe; ignore for now
+    if isinstance(kw.get('outfit'), (list, tuple)):
+        kw['outfit'] = tuple((i, OUTFIT_COL.get(i, '#f2f2f2')) if isinstance(i, str) else tuple(i) for i in kw['outfit'])
+    if kw.get('hat') and kw['hat'] not in HATS:
+        sub = STANDIN['hat'].get(kw['hat']); _warn(f"hat {kw['hat']!r} not in bean.py yet -> {sub!r}")
+        if sub: kw['hat'] = sub
+        else: kw.pop('hat')
     return kw
 
 
@@ -172,8 +195,9 @@ def mouth_track(words, f0, f1, fps=30, lead=1, min_hold=2):
 _cache = {}
 
 
-def card(spec, pose, expr, facing, scale, lid=0.0, mouth=None):
-    kw = bean_kwargs(spec); kw.update(arm_pose=tuple(pose), expr=expr, facing=float(facing))
+def card(spec, pose, expr, facing, scale, lid=0.0, mouth=None, prop='keep'):
+    kw = bean_kwargs(dict(spec, prop=spec.get('prop') if prop == 'keep' else prop))
+    kw.update(arm_pose=tuple(arm_ok(p) for p in pose), expr=expr, facing=float(facing))
     if mouth and HAS_MOUTH: kw['mouth'] = mouth
     if lid and HAS_LID: kw['lid'] = lid
     key = (repr(sorted(kw.items())), round(scale, 3))

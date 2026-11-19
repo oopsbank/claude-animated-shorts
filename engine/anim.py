@@ -110,6 +110,25 @@ def lid_at(f, starts):
 
 
 # ---------------------------------------------------------------- character track
+def screen_side(view):
+    """Rider-side (shots.json convention) -> screen sign: a character facing us has their left on screen right."""
+    return 1.0 if view in ('rear', 'back') else -1.0
+
+
+def normalize_beat(b, view):
+    """Map the real shots.json beat fields onto engine state keys.
+    arm_pose [rider_left, rider_right] -> pose (screen-left, screen-right); lean / body_lean (deg, negative = rider's left)
+    -> screen lean (deg, + = top toward screen right)."""
+    b = dict(b); sg = screen_side(view)
+    if 'arm_pose' in b:
+        ap = b.pop('arm_pose')
+        if isinstance(ap, (list, tuple)): b['pose'] = tuple(ap) if sg > 0 else (ap[1], ap[0])
+        else: b['pose'] = (ap, ap)
+    for k in ('body_lean', 'lean'):
+        if k in b and b[k] is not None: b['hold_lean'] = float(b.pop(k)) * sg
+    return b
+
+
 class Track:
     """The acting of one character through one shot, computed up-front so every frame is a pure lookup."""
 
@@ -118,25 +137,30 @@ class Track:
         sw = (shot_span['w0'], shot_span['w1'])
         self.facing0 = float(spec.get('facing', 0.0))
         self.x0 = float(spec.get('x', 0.5))
-        st = {'pose': spec.get('pose', 'idle'), 'expr': spec.get('expr', 'neutral'), 'facing': self.facing0}
+        view = spec.get('view', 'front')
+        if 'arm_pose' in spec: spec = dict(spec, **{k: v for k, v in normalize_beat({'arm_pose': spec['arm_pose']}, view).items()})
+        st = {'pose': spec.get('pose', 'idle'), 'expr': spec.get('expr', 'neutral'), 'facing': self.facing0,
+              'prop': spec.get('prop'), 'hold_lean': 0.0}
         self.events = []         # (land frame, word frame, beat dict, state before)
         self.blinks = blink_schedule(seed, self.f0 - 60, self.f1 + 60)
         for b in sorted(spec.get('beats', []), key=lambda b: b.get('at_word', 0)):
+            b = normalize_beat(b, view)
             land, wf = beat_frame(sw, words, b.get('at_word', 0))
             if 'at_frame_offset' in b: land += int(b['at_frame_offset'])
             prev = dict(st)
-            for k in ('pose', 'expr', 'facing'):
+            for k in ('pose', 'expr', 'facing', 'prop', 'hold_lean'):
                 if k in b: st[k] = b[k]
             if land <= self.f0 + 1:          # a beat on the shot's first word sets the starting state
                 self.facing0 = float(st['facing']); st0 = dict(st)
-                spec = dict(spec, pose=st0['pose'], expr=st0['expr']); self.spec = spec
+                spec = dict(spec, pose=st0['pose'], expr=st0['expr'], prop=st0['prop'], hold_lean=st0['hold_lean']); self.spec = spec
                 if 'x' in b: self.x0 = float(b['x'])
                 continue
             self.events.append({'land': land, 'word': wf, 'beat': b, 'prev': prev, 'new': dict(st)})
             if b.get('expr') and b['expr'] != prev['expr']:
                 self.blinks.append(land - 1)        # shut frames (land, land+1) hide the expression swap
         self.blinks.sort()
-        self.start = {'pose': self.spec.get('pose', 'idle'), 'expr': self.spec.get('expr', 'neutral'), 'facing': self.facing0}
+        self.start = {'pose': self.spec.get('pose', 'idle'), 'expr': self.spec.get('expr', 'neutral'), 'facing': self.facing0,
+                      'prop': self.spec.get('prop'), 'hold_lean': float(self.spec.get('hold_lean', 0.0))}
         self._moves()
 
     # x travel: hop-steps between x targets, ending on the beat's landing frame
@@ -186,6 +210,7 @@ class Track:
             st.update(e['new']); pose = new_pose
             if pose_change or b.get('action'):
                 lean += settle(n, 2.4 * side)                             # overshoot toward the action, settle
+        lean += self.hold_lean_at(f)
         # actions (hop / jolt / shrug / shake / nod) on top
         for e in self.events:
             a = e['beat'].get('action'); n = f - e['land']
@@ -201,8 +226,20 @@ class Track:
         x, hop_lift, moving = self.x_at(f)
         if moving: lift += 0.04 * hop_lift; grounded = hop_lift < 1e-6; lean += 2.0 * (1 if self._dir(f) > 0 else -1)
         lid = lid_at(f, self.blinks)
-        return {'pose': pose, 'expr': st['expr'], 'facing': round(float(st['facing']), 2), 'lean': lean,
+        return {'pose': pose, 'expr': st['expr'], 'prop': st.get('prop'), 'facing': round(float(st['facing']), 2), 'lean': lean,
                 'lift': lift, 'grounded': grounded, 'lid': lid, 'x': x, 'moving': moving}
+
+    def hold_lean_at(self, f):
+        v = float(self.start['hold_lean'])
+        for e in self.events:
+            a, b = float(e['prev']['hold_lean']), float(e['new']['hold_lean'])
+            if a == b: continue
+            n = f - e['land']
+            if n < -ANTIC: break
+            if n < 0: return a - 0.12 * (b - a) * smooth((n + ANTIC + 1) / (ANTIC + 1))      # lean back a little first
+            u = n / SETTLE
+            v = b if u >= 1 else lerp(a, b, out_back(u, 1.3))
+        return v
 
     def _dir(self, f):
         for start, end, xa, xb, n, hop in self.moves:
@@ -233,8 +270,23 @@ class Camera:
         mv = c.get('move', 'push_in')
         amt = float(c.get('amount', min(0.06, 0.0012 * n)))   # default: slow push ~0.12 %/f, capped at 6 % per shot
         self.push = {'push_in': amt, 'pull_out': -amt}.get(mv, 0.0)
+        # directional moves from shots.json: glide / follow / pan (x) and tilt_up / tilt_down (y), "amount" = frame fraction
+        self.travel = None
+        if mv in ('glide', 'follow', 'pan', 'tilt_up', 'tilt_down') and 'to' not in c and 'glides' not in c:
+            a = float(c.get('amount', 0.06)); self.push = 0.0
+            self.base['zoom'] = max(self.base['zoom'], 1 + a + 0.01)
+            m = 0.5 - 0.5 / self.base['zoom']                       # largest centre offset that shows no border
+            sg = -1.0 if c.get('direction') in ('left', 'up') or mv == 'tilt_up' else 1.0
+            axis = 'y' if mv.startswith('tilt') else 'x'
+            if mv == 'pan':
+                land, _ = beat_frame(sw, words, c.get('at_word', 0)); f_a, f_b = land - 6, land + 22
+            else: f_a, f_b = self.f0, self.f1
+            self.travel = (axis, -sg * m, sg * m, f_a, f_b, 'smoother' if mv != 'follow' else 'linear')
+        if mv == 'shake':                                           # nervous handheld beat: small kicks every ~8 f
+            self.push = 0.0; self.shake = float(c.get('amount', 0.01)) / 0.01 * 0.5
+        else: self.shake = 0.0
         self.glides = []
-        for g in c.get('glides', [c] if mv == 'glide' else []):
+        for g in c.get('glides', [c] if mv == 'glide' and 'to' in c else []):
             land, wf = beat_frame(sw, words, g.get('at_word', 0))
             self.glides.append((land, int(g.get('dur', 10)), g.get('to', {}), g.get('ease', 'out')))
         self.kicks = sorted(set(kicks) | {beat_frame(sw, words, k)[1] for k in c.get('kick', [])})
@@ -250,11 +302,19 @@ class Camera:
                 k = out_cubic(u) if ease == 'out' else smoother(u)
             z = lerp(z, float(to.get('zoom', z)), k); x = lerp(x, float(to.get('x', x)), k)
             y = lerp(y, float(to.get('y', y)), k); r = lerp(r, float(to.get('roll', r)), k)
+        if self.travel:
+            axis, a0, a1, f_a, f_b, ease = self.travel
+            u = seg(f, f_a, f_b); u = smoother(u) if ease == 'smoother' else 0.15 * smooth(u / 0.15) if u < 0.15 else u
+            off = lerp(a0, a1, u)
+            if axis == 'x': x = 0.5 + off
+            else: y = 0.5 + off
         # slow push across the shot; it stops at the first impact
         stop = next((kf for kf in self.kicks if kf >= self.f0), None)
         pn = min(n, stop - self.f0) if stop is not None and f >= stop else n
         z *= 1 + self.push * clamp(pn / L)
         kx = ky = kr = 0.0
+        if self.shake:
+            a = self.shake * kick((f - self.f0) % 9) * 0.7; kx += 4.5 * a; ky += 2.7 * a
         for kf in self.kicks:
             a = kick(f - kf); kx += 4.5 * a; ky += 2.7 * a; kr += 0.23 * a
         return {'zoom': max(0.2, z), 'x': x, 'y': y, 'roll': r + kr, 'dx': kx, 'dy': ky}

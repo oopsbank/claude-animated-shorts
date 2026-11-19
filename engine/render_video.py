@@ -14,7 +14,12 @@ import anim  # noqa: E402
 from anim import W, H, FPS, smooth, clamp, lerp  # noqa: E402
 
 PLATE_DEFAULTS = {'horizon_y': H * 0.4, 'light_dir': 'left', 'tint': '#fff8f0'}
-XFADE, WHIP = 8, 8                 # transition lengths in frames, centred on the cut
+XFADE, WHIP = 8, 8
+_T = os.path.join(HERE, 'test', 'plates')
+STANDIN_PLATES = {}
+if os.environ.get('ENGINE_STANDIN', '1') == '1' and os.path.exists(os.path.join(_T, 'village__M__day.jpg')):
+    STANDIN_PLATES = {'medium': os.path.join(_T, 'village__M__day.jpg'), 'close': os.path.join(_T, 'village__M__day.jpg'),
+                      'wide': os.path.join(_T, 'village__A__day.jpg')}                 # transition lengths in frames, centred on the cut
 
 
 # ---------------------------------------------------------------- loading
@@ -27,6 +32,11 @@ def find_plate(shot, dirs):
         cands += [os.path.join(d, name + ext) for d in dirs for ext in ('.png', '.jpg')]
     for p in cands:
         if os.path.exists(p): return p
+    if STANDIN_PLATES:                # sets not built yet: stand-in plate by shot size
+        size = shot.get('size') or ('wide' if 'wide' in shot.get('cam', '') else 'medium')
+        p = STANDIN_PLATES.get(size) or STANDIN_PLATES['medium']
+        print(f"  [plate stand-in] {shot.get('id')}: {shot.get('set')}/{shot.get('cam')}/{shot.get('light')} missing -> {os.path.basename(p)}")
+        return p
     raise SystemExit(f"plate not found for shot {shot.get('id')}: tried {cands}")
 
 
@@ -80,6 +90,22 @@ def setup(shots_path, words_path, plate_dirs):
         p = find_plate(s, plate_dirs)
         if p not in G['plates']: G['plates'][p] = load_plate(p)
         s['_plate'] = p
+        for c in s.get('characters', []):
+            ins = c.get('insert')
+            if ins and not s.get('_insert'):
+                alt = dict(s, cam=ins.get('cam', s['cam']), size='wide' if 'top' in ins.get('cam', '') else 'close')
+                q = find_plate(alt, plate_dirs)
+                if q not in G['plates']: G['plates'][q] = load_plate(q)
+                a0 = anim.beat_frame((sp['w0'], sp['w1']), words, ins.get('at_word', 0))[1]
+                a1 = anim.beat_frame((sp['w0'], sp['w1']), words, ins['until_word'])[1] if 'until_word' in ins else sp['f1']
+                s['_insert'] = (a0 - anim.LEAD, a1 - anim.LEAD, q)
+        # two-shots: characters with no facing turn a little toward each other
+        cs = s.get('characters', [])
+        if len(cs) >= 2:
+            for c in cs:
+                if 'facing' not in c and c.get('view', 'front') == 'front':
+                    others = [o.get('x', 0.5) for o in cs if o is not c]
+                    c['facing'] = 0.35 if sum(others) / len(others) > c.get('x', 0.5) else -0.35
         G['tracks'][k] = [anim.Track(c, sp, words, seed=zlib.crc32(f"{c.get('id', '')}/{k}".encode())) for c in s.get('characters', [])]
         kicks = []
         for e in s.get('fx', []):
@@ -134,11 +160,12 @@ def place_characters(base, k, f, meta):
             if f < wf: continue
         s = meta['px_per_m'] * float(spec.get('height_m', 1.75)) / (3.5 * 2 * 111) * float(spec.get('scale', 1.0))
         mouth = G['mouths'][k][i].get(f, 'closed') if spec.get('talk') else None
-        im, g = rig.card(spec, st['pose'], st['expr'], st['facing'], s, st['lid'], mouth)
+        im, g = rig.card(spec, st['pose'], st['expr'], st['facing'], s, st['lid'], mouth, prop=st.get('prop'))
         breath = 1 + 0.004 * math.sin(2 * math.pi * (f / FPS) / 2.8 + i)            # rule 28, anchored at the soles
         if abs(breath - 1) > 1e-4:
             im = im.resize((im.width, int(round(im.height * breath))), Image.BICUBIC)
         sx, sy = 300 * s, 975 * s * breath
+        ft0 = feet_of(im.getchannel('A'), sx)                 # feet measured before the lean rotation (stable stroke band)
         if abs(st['lean']) > 0.05: im = im.rotate(-st['lean'], resample=Image.BICUBIC, center=(sx, sy))
         im = tint_card(im, meta.get('tint', '#fff8f0'))
         fig_h = 777 * s
@@ -146,6 +173,10 @@ def place_characters(base, k, f, meta):
         ox, oy = int(round(gx - sx)), int(round(gy - sy))
         ft = feet_of(im.getchannel('A'), sx)
         if ft and abs(st['lean']) > 0.05: oy += int(round(sy - ft['y'])) - 1   # rotating about the soles drops one foot: re-plant it
+        if ft0 and ft:     # report the foot strokes' x after the rotation, from the unrotated band (rotation about the soles)
+            th = math.radians(st['lean'])
+            rx = lambda x: None if x is None else sx + (x - sx) * math.cos(th)
+            ft = {'y': ft['y'], 'l': rx(ft0['l']), 'r': rx(ft0['r'])}
         # contact shadow: soft blue-grey ellipse, shrinks and fades as the character leaves the ground
         kk = clamp(st['lift'] / 0.1); r = 75 * s * (1 - 0.4 * kk)
         sh = Image.new('L', (int(4 * r) + 4, int(r) + 4), 0)
@@ -159,7 +190,7 @@ def place_characters(base, k, f, meta):
                     'foot_y': ft['y'] + oy if ft else None, 'foot_l': ft['l'] + ox if ft and ft['l'] is not None else None,
                     'foot_r': ft['r'] + ox if ft and ft['r'] is not None else None, 'ground_y': meta['ground_y'],
                     'bbox': [bb[0] + ox, bb[1] + oy, bb[2] + ox, bb[3] + oy] if bb else None,
-                    'head': [gx, oy + g['crown']], 'pose': list(st['pose']), 'facing': st['facing'], 'expr': st['expr'], 'mouth': mouth, 'lid': st['lid']})
+                    'head': [gx, oy + g['crown']], 'scale': s, 'pose': list(st['pose']), 'facing': st['facing'], 'expr': st['expr'], 'mouth': mouth, 'lid': st['lid']})
     return out
 
 
@@ -174,6 +205,7 @@ def place_fx(base, k, f, chars):
         t = (f - start + 0.5) / dur
         size = int(float(e.get('size', 0.35)) * W)
         kw = {kk: v for kk, v in e.items() if kk not in ('name', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor')}
+        if mod and 'line' not in kw and chars: kw['line'] = 10 * chars[0].get('scale', 0.5)   # fx area: line = 10 x card scale
         try:
             im = (mod.render if mod else stub_fx)(e['name'], t, size, **kw)
         except KeyError:
@@ -208,7 +240,10 @@ def camera_xform(img, c):
 
 
 def render_shot(k, f):
-    shot = G['shots'][k]; plate, meta = G['plates'][shot['_plate']]
+    shot = G['shots'][k]; pkey = shot['_plate']
+    ins = shot.get('_insert')
+    if ins and ins[0] <= f < ins[1]: pkey = ins[2]
+    plate, meta = G['plates'][pkey]
     base = plate.convert('RGBA')
     chars = place_characters(base, k, f, meta)
     fxs = place_fx(base, k, f, chars)
@@ -306,7 +341,7 @@ def main():
         for i, m in enumerate(pool.imap(work, [(f, a.out, ext) for f in frames], chunksize=4)):
             metas.append(m)
             if i % 150 == 0: print(f'  frame {m["f"]}/{n}', flush=True)
-    track = {'fps': FPS, 'size': [W, H], 'n': n, 'spans': [dict(sp, id=s.get('id'), crop=s.get('crop')) for s, sp in zip(G['shots'], G['spans'])],
+    track = {'fps': FPS, 'size': [W, H], 'n': n, 'spans': [dict(sp, id=s.get('id'), crop=s.get('crop') or s.get('size') == 'close') for s, sp in zip(G['shots'], G['spans'])],
              'beats': beats_report(), 'frames': metas, 'transitions': [s.get('transition', 'cut') for s in G['shots']]}
     json.dump(track, open(os.path.join(a.out, 'track.json'), 'w'))
     if not a.no_mp4 and not a.frames:

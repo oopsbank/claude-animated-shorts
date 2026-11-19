@@ -20,7 +20,7 @@ shots = [
      'set': 'village', 'cam': 'A', 'light': 'day', 'camera': {'move': 'push_in', 'amount': 0.04, 'focus': [0.5, 0.62]},
      'characters': [dict(RIDER, x=0.40, facing=0.4, expr='smile'),
                     dict(KID, x=0.63, facing=-0.4, expr='neutral', beats=[{'at_word': 3, 'pose': 'think', 'expr': 'nervous'}])]},
-    {'id': 's03', 'text': 'Just before the turn, the handlebars flick right.', 'transition': 'whip',
+    {'id': 's03', 'crop': True, 'text': 'Just before the turn, the handlebars flick right.', 'transition': 'whip',
      'set': 'village', 'cam': 'M', 'light': 'day',
      'camera': {'move': 'push_in', 'amount': 0.03, 'glides': [{'at_word': 6, 'dur': 10, 'ease': 'out', 'to': {'zoom': 1.12, 'y': 0.42}}]},
      'characters': [dict(RIDER, x=0.5, facing=0.0, expr='neutral', beats=[{'at_word': 6, 'pose': 'point', 'expr': 'stern', 'facing': 0.5}])],

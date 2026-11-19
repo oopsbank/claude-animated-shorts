@@ -106,6 +106,7 @@
   },
   {
    "id": "s03",
+   "crop": true,
    "text": "Just before the turn, the handlebars flick right.",
    "transition": "whip",
    "set": "village",
