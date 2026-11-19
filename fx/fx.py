@@ -39,7 +39,7 @@ def pop(t, a, b, pre=0.35, dip=0.22, s=1.9):
 
 
 def fade(t, a, b=1.0): return 1 - smooth(seg(t, a, b))
-def shrink(t, a, b=1.0): return 1 - in_cubic(seg(t, a, b))
+def shrink(t, a, b=1.0): return 1 - smooth(seg(t, a, b))   # ease in-out: gone well before b, no exit pop
 
 
 # ---------------------------------------------------------------- colour helpers
@@ -170,7 +170,7 @@ def fx_explosion(t, n, u, e, kw):
     k = pop(t, 0.13, 0.34, pre=0.22, dip=0.12, s=1.4)
     cool = smooth(seg(t, 0.36, 0.78))                       # fire -> smoke
     rise = u * 0.32 * smooth(seg(t, 0.3, 1.0))
-    out = fade(t, 0.84, 1.0)
+    out = fade(t, 0.9, 1.0)
     body = mixc(col, smoke, cool)
     puffs = []
     m = 9
@@ -212,7 +212,7 @@ def fx_impact_star(t, n, u, e, kw):
     k = pop(t, 0.1, 0.28, pre=0.3, dip=0.16, s=2.4)
     k *= 1 + 0.05 * math.sin(2 * math.pi * seg(t, 0.28, 0.6) * 2) * fade(t, 0.4, 0.6)   # settling throb
     k *= 1 - 0.12 * smooth(seg(t, 0.35, 0.7))              # slow settle during the hold: never a frozen sprite
-    k *= shrink(t, 0.68, 0.98)
+    k *= shrink(t, 0.64, 0.95)
     ang = kw.get('angle', 0) + 14 * (1 - out_cubic(seg(t, 0.1, 0.5))) - 12 * smooth(seg(t, 0.3, 1))
     jit = [rng.uniform(0.78, 1.0) for _ in range(pts_n)]
     outer = ('p', star_pts(cx, cy, pts_n, u * 0.78 * k, u * 0.36 * k, ang, jit), col)
@@ -247,7 +247,7 @@ def fx_dust_puff(t, n, u, e, kw):
             f = (i + 0.5) / m
             go = out_cubic(seg(t, 0.08 + 0.03 * i, 0.75))
             grow = pop(t, 0.06 + 0.02 * i, 0.32 + 0.03 * i, pre=0.35, dip=0.28, s=1.5)
-            r = u * (0.26 - 0.1 * f) * grow * shrink(t, 0.42 + 0.08 * i, 0.9 + 0.025 * i) * rng.uniform(0.9, 1.1)
+            r = u * (0.26 - 0.1 * f) * grow * shrink(t, 0.42 + 0.08 * i, 0.86 + 0.03 * i) * rng.uniform(0.9, 1.1)
             x = cx + s * u * (0.08 + 0.95 * f * go)
             y = gy - r * (1 - 0.35 * squash) - u * 0.22 * out_quad(seg(t, 0.15, 1)) * (1 - f * 0.5)
             shapes.append(('e', x, y, r * (1 + 0.45 * squash), r * (1 - 0.35 * squash), col))
@@ -255,7 +255,7 @@ def fx_dust_puff(t, n, u, e, kw):
     rc = u * 0.24 * pop(t, 0.04, 0.28, pre=0.4, dip=0.3, s=1.3) * shrink(t, 0.3, 0.7)
     shapes.append(('e', cx, gy - rc * (1 - 0.35 * squash), rc * (1 + 0.5 * squash), rc * (1 - 0.35 * squash), col))
     k = max(p[3] for p in shapes) / (u * 0.26)
-    return group(n, shapes, ink_w(e, k), details=caps, alpha=fade(t, 0.7, 1.0) * clamp(t / 0.03))
+    return group(n, shapes, ink_w(e, k), details=caps, alpha=fade(t, 0.9, 1.0) * clamp(t / 0.03))
 
 
 def fx_speed_lines(t, n, u, e, kw):
@@ -301,10 +301,10 @@ def fx_sweat_drop(t, n, u, e, kw):
     wob = 0.06 * math.sin(2 * math.pi * 2.5 * seg(t, 0.3, 0.55)) * fade(t, 0.35, 0.55)
     creep = 0.12 * smooth(seg(t, 0.28, 0.45))               # slow creep while it gathers weight
     slide = creep + 0.88 * in_quad(seg(t, 0.45, 0.9))
-    hold = 0.12 * bump(seg(t, 0.36, 0.48))                  # squash wide just before it lets go (anticipation)
+    hold = 0.12 * bump(seg(t, 0.36, 0.48)) - 0.05 * bump(seg(t, 0.48, 0.58))                # squash wide just before it lets go (anticipation)
     stretch = 0.32 * bump(seg(t, 0.46, 1.0))
-    sx = (1 + wob + hold - 0.15 * stretch) * k * shrink(t, 0.8, 0.98)
-    sy = (1 - wob - hold + stretch) * k * shrink(t, 0.8, 0.98)
+    sx = (1 + wob + hold - 0.15 * stretch) * k * shrink(t, 0.7, 0.96)
+    sy = (1 - wob - hold + stretch) * k * shrink(t, 0.7, 0.96)
     cx = n / 2 + flip * u * 0.12 * slide
     cy = n / 2 - u * 0.3 + u * 0.75 * slide
     r = u * 0.3
@@ -319,7 +319,7 @@ def fx_anger_vein(t, n, u, e, kw):
     k = pop(t, 0.1, 0.27, pre=0.35, dip=0.2, s=2.2)
     for pk in (0.4, 0.55, 0.7):                             # three throbs through the hold
         k *= 1 + 0.15 * bump(seg(t, pk - 0.05, pk + 0.07)) ** 2
-    k *= shrink(t, 0.78, 0.98)
+    k *= shrink(t, 0.7, 0.96)
     jit = 4 * math.sin(t * 60) * bump(seg(t, 0.3, 0.75))
     strokes = []
     R = u * 0.7 * k
@@ -360,17 +360,11 @@ def fx_glow_eyes(t, n, u, e, kw):
     flick = 1 + 0.05 * pulse
     glow = clamp(t / 0.12) * (0.7 + 0.3 * pulse + 0.3 * bump(seg(t, 0.16, 0.32))) * fade(t, 0.72, 0.98)
     im = new(n)
-    halo = new(n); hd = ImageDraw.Draw(halo)
-    for s_ in (-1, 1):
-        x = cx + s_ * gap
-        for f, a in ((2.0, 110), (1.35, 190)):
-            hr = r * f * flick
-            hd.ellipse(((x - hr) * S, (cy - hr * (0.4 + 0.5 * o)) * S, (x + hr) * S, (cy + hr * (0.4 + 0.5 * o)) * S),
-                       fill=col + (a,))
-    # blur only the alpha and keep the colour solid: blurring straight RGBA drags in black from empty pixels (grey smudge)
-    mask = halo.getchannel('A').filter(ImageFilter.GaussianBlur(r * 0.45 * S))
-    halo = Image.new('RGBA', halo.size, col + (0,)); halo.putalpha(mask)
-    comp(im, opacity(halo, glow))
+    # halo: flat cel-style rings (no blur; DRAWING_RULES 1), two steps of the eye colour at low alpha
+    for f, a in ((1.75, 0.28), (1.35, 0.45)):
+        rings = [('p', almond(cx + s_ * gap, cy, r * f * flick, r * 0.62 * f * max(o, 0.3) * flick, -s_ * slant), col)
+                 for s_ in (-1, 1)]
+        comp(im, group(n, rings, 0, alpha=a * glow))
     eyes, cores = [], []
     for s_ in (-1, 1):
         x = cx + s_ * gap
@@ -383,7 +377,7 @@ def fx_glow_eyes(t, n, u, e, kw):
 
 def fx_sparkle(t, n, u, e, kw):
     rng = random.Random(kw.get('seed', 13))
-    col = rgb(kw.get('color', '#fff1a0'))
+    col = rgb(kw.get('color', '#ffe45c'))
     cnt = kw.get('count', 5)
     cx, cy = n / 2, n / 2
     shapes, cores, ks = [], [], []
@@ -476,14 +470,14 @@ def xform(pts, px, py, sx, sy, ang, k, dx=0, dy=0):
     for p in pts:
         x = px + (p[0] - px) * sx * k; y = py + (p[1] - py) * sy * k
         x, y = rot(x, y, px, py, ang)
-        out.append((x + dx, y + dy) + tuple(p[2:]))
+        out.append((x + dx, y + dy) + tuple(w * k for w in p[2:]))   # stroke widths shrink with the glyph
     return out
 
 
 def fx_question_mark(t, n, u, e, kw):
     col = rgb(kw.get('color', '#ffd84a'))
     cx, cy = n / 2, n / 2
-    k = pop(t, 0.12, 0.32, pre=0.35, dip=0.25, s=2.0) * shrink(t, 0.8, 1.0)
+    k = pop(t, 0.12, 0.32, pre=0.35, dip=0.25, s=2.0) * shrink(t, 0.7, 0.96)
     sx, sy = squash_stretch(t, 0.12, 0.45)
     ang = kw.get('tilt', 8) + 14 * math.sin(2 * math.pi * 1.5 * seg(t, 0.2, 0.75)) * (1 - seg(t, 0.2, 0.75))
     lift = -u * 0.15 * smooth(seg(t, 0.72, 1.0))
@@ -498,7 +492,7 @@ def fx_question_mark(t, n, u, e, kw):
     lift += u * 0.04 * math.sin(2 * math.pi * 1.5 * seg(t, 0.35, 0.85)) * bump(seg(t, 0.35, 0.85))
     grow = smooth(seg(t, 0.08, 0.16))                       # glyph grows out of a round blob
     stroke = ('s', xform(pts, *piv, sx, sy, ang, k, 0, lift), col)
-    kd = pop(t, 0.18, 0.38, pre=0.3, dip=0.2, s=2.4) * shrink(t, 0.8, 1.0)  # the dot lands a beat later (overlap)
+    kd = pop(t, 0.18, 0.38, pre=0.3, dip=0.2, s=2.4) * shrink(t, 0.7, 0.96)  # the dot lands a beat later (overlap)
     dx, dy = xform([(cx, cy + u * 0.52)], *piv, sx, sy, ang, 1, 0, lift)[0]
     dot = ('c', dx, dy, u * 0.12 * kd, col)
     hl = [('c', *xform([(hook_c[0] - R * 0.7, hook_c[1] - R * 0.55)], *piv, sx, sy, ang, k, 0, lift)[0], w * 0.18 * k,
@@ -515,7 +509,7 @@ def fx_question_mark(t, n, u, e, kw):
 def fx_exclaim(t, n, u, e, kw):
     col = rgb(kw.get('color', '#ff4a3a'))
     cx, cy = n / 2, n / 2
-    k = pop(t, 0.1, 0.28, pre=0.3, dip=0.2, s=3.0) * shrink(t, 0.8, 1.0)
+    k = pop(t, 0.1, 0.28, pre=0.3, dip=0.2, s=3.0) * shrink(t, 0.7, 0.96)
     sx, sy = squash_stretch(t, 0.1, 0.4)
     shake = u * 0.04 * math.sin(t * 90) * bump(seg(t, 0.28, 0.55))
     ang = kw.get('tilt', -6) + 5 * math.sin(t * 70) * bump(seg(t, 0.28, 0.55))
@@ -523,7 +517,7 @@ def fx_exclaim(t, n, u, e, kw):
     piv = (cx, cy + u * 0.75)
     bar = [(cx, cy - u * 0.5, u * 0.28), (cx, cy - u * 0.15, u * 0.22), (cx, cy + u * 0.22, u * 0.11)]
     bar = ('s', xform(bar, *piv, sx, sy, ang, k, shake, lift), col)
-    kd = pop(t, 0.16, 0.34, pre=0.3, dip=0.2, s=2.6) * shrink(t, 0.8, 1.0)
+    kd = pop(t, 0.16, 0.34, pre=0.3, dip=0.2, s=2.6) * shrink(t, 0.7, 0.96)
     dx, dy = xform([(cx, cy + u * 0.5)], *piv, sx, sy, ang, 1, shake, lift)[0]
     dot = ('c', dx, dy, u * 0.13 * kd, col)
     hl = [('c', *xform([(cx - u * 0.06, cy - u * 0.5)], *piv, sx, sy, ang, k, shake, lift)[0], u * 0.045 * k, light(col, 0.6))]
@@ -564,7 +558,7 @@ def note_shapes(x, y, h, ang, col, double=False):
 
 def fx_music_note(t, n, u, e, kw):
     rng = random.Random(kw.get('seed', 19))
-    cols = kw.get('colors') or [kw.get('color', '#b98aff'), '#5fd0ff', '#ff7ab8']
+    cols = kw.get('colors') or [kw.get('color', '#a774ff'), '#2fa8ec', '#ff5fa8']
     cnt = kw.get('count', 3)
     cx, by = n / 2, n / 2 + u * 0.7                        # notes rise from bottom centre (a mouth / speaker)
     im = new(n)
