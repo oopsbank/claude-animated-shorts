@@ -7,3 +7,5 @@ An original solid-colour stickman, about 5 heads tall. It has a tube body, smoot
   - Poses: stand, wave, walk, run, point, shrug, think, cheer.
   - Hats: helmet, sailor.
 - `scripts/sheets.py <outdir>`: rebuilds the reference sheets and the per-expression PNGs in this folder.
+
+**Before drawing or changing anything, read [`DRAWING_RULES.md`](DRAWING_RULES.md).** It lists the user's corrections: one flat colour, merged silhouette, continuous strokes, symmetric front view, each arm from its own shoulder, and foreshortening.
