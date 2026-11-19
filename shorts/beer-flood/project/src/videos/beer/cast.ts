@@ -11,6 +11,7 @@ import {
 import {
   FPS, V3, SHOTS, smooth, clamp01, TB, T_WALL, TW, T_SLIP, T_NOTICE, T_WRITE, T_FINE, T_POP, T_GAVEL, T_BLAME, T_HAND, T_SEVEN, T_FALL, T_RUN,
   VATS, GEORGE, BOSS, EXP, TABLE, BENCH, STREET, WALL_T, beerDepth, vatState,
+  thumbProps,
 } from "./story";
 import { LIGHTS } from "./lights";
 import { NOINK } from "./ink";
@@ -449,6 +450,20 @@ export const stage = (id: number, t: number, tau: number, cam: CamInfo): Stage =
   if (id === 10 && tau > 22.2 && tau < TB[1]) creaks(out, 1, t, 2);
   if (id === 11 && tau < TB[2]) creaks(out, 2, t, 2);
   if (s.place === "street") { streetLife(out, cam, t, tau, id); breachFx(out, tau); }
+  const th = thumbProps();
+  if (th && id === 1) {
+    (th.people ?? []).forEach(([x, z, e, sc], k) => stand(out, cam, t, rs(k), x, 0, z, e as Expr, { prop: ["hands", 0.9] }, sc ?? 1));
+    const zf = zFront(tau);
+    const top = beerDepth(0, zf - 0.3, tau);
+    for (let k = 0; k < 9; k++) { // a ragged foam lip all along the crest, in front of the face
+      const x = -4.2 + k * 1.05, s = (k * 0.37) % 1;
+      card(out, `tfoam${k}`, 500, 260, (p) => fxFoam(p, s * 10 + k), x, top - 0.15 + 0.25 * (k % 2), zf + 0.35, 2.6, 1.35);
+    }
+    for (let k = 0; k < (th.splash ?? 0); k++) {
+      const x = -3.4 + (k * 6.8) / Math.max(1, (th.splash ?? 1) - 1), u = 0.3 + 0.12 * (k % 3);
+      card(out, `bsplash${k % 3}|${q(u, 15)}`, 800, 800, (p) => fxBeerSplash(p, q(u, 15), k % 3), x, top + 1.1 + 0.4 * (k % 2), zf + 0.6, 4.0, 4.0);
+    }
+  }
   if (id === 13 && zFront(tau) > CELLAR[2] - 0.8) cellarFx(out, t);
   if (id === 15) arrows(out, t);
   if (id === 16 || id === 17) dinner(out, cam, t, id);

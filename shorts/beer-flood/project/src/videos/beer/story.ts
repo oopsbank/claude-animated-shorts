@@ -1,7 +1,12 @@
 // Timeline of "The Street That Drowned in Beer": shots timed to the voice words (shorts/beer-flood/voice/words.json),
 // story physics (vat bursts, the brick wall, the beer flood as a height field) and the camera grammar of the bridge
 // short: continuous slow push-ins, symmetric smootherstep glides, big reframes as cuts, 7-frame impact kicks.
+import { getInputProps } from "remotion";
 export const FPS = 30;
+/** thumbnail stills only: inputProps `{ thumb: { pos, look, fov } }` replaces the shot-1 camera */
+export type Thumb = { pos: V3; look: V3; fov?: number; roll?: number; amp?: number; splash?: number; people?: [number, number, string, number?][] };
+let THUMB_C: Thumb | undefined | null = null;
+export const thumbProps = (): Thumb | undefined => { if (THUMB_C === null) THUMB_C = (getInputProps() as { thumb?: Thumb }).thumb; return THUMB_C; };
 export const TOTAL = 1948;
 export const D0 = 0; // ground level (build.ts houses stand on D0)
 export type V3 = [number, number, number];
@@ -74,7 +79,7 @@ export const beerDepth = (x: number, z: number, tau: number): number => {
   if (inStreet && tau > TW) {
     const s = tau - TW, zf = WALL_T + 6.6 * s ** 0.95;
     const base = 1.15 - 0.3 * smooth(s / 8);
-    const crest = 1.25 * Math.exp(-s / 6) + 0.25;
+    const crest = (1.25 * Math.exp(-s / 6) + 0.25) * (thumbProps()?.amp ?? 1);
     const w = 0.12 * Math.sin(z * 1.3 - tau * 5 + x * 0.7) + 0.06 * Math.sin(x * 2.1 + tau * 3);
     let sd = 0;
     if (z < zf) sd = base + crest * Math.exp(-(((z - zf) / 2.2) ** 2)) + w * smooth((zf - z) / 2);
@@ -292,6 +297,8 @@ export const kickAt = (t: number) => {
   return a;
 };
 export const camAt = (id: number, f: number): Cam => {
+  const th = thumbProps();
+  if (th && id === 1) return { pos: th.pos, look: th.look, fov: th.fov ?? 46, roll: th.roll ?? 0 };
   const c = run(CAMS[id], f), a = kickAt(T(f));
   if (!a) return c;
   const d: V3 = [c.look[0] - c.pos[0], c.look[1] - c.pos[1], c.look[2] - c.pos[2]];
