@@ -1,0 +1,5 @@
+_tmp/
+__pycache__/
+*.blend
+*.blend1
+test/
