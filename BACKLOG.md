@@ -19,6 +19,9 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [x] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES. (+ `pants`, `outfit=` presets: sailor, captain, soldier, chef, detective, worker, farmer; sheet `stick_outfits.png`)
 - [ ] P2 Think pose: a tiny dark ink sliver under the right elbow (visible at 2x, already in the original pose). Also, in the think pose with a coat, the left sleeve merges with the coat body.
 - [ ] P3 Side-on back sleeve in a light colour (chef run) merges with a same-colour torso at the shoulder. Consider a slightly tinted back sleeve.
+> **ON HOLD (2026-11-19):** the Producer session reported the stickman is paused in favour of bean-head characters. State at the pause:
+> - Done and reviewed: outfits (66ded12).
+> - Code exists in `stickman.py` but is NOT reviewed: hats (`HATS`), held props (`prop=`, `prop_hand=`, `hand_anchors()`, new `hold` pose), lip-sync mouths (`mouth=`). The automatic hat check (nothing below hy-49 over the face) fails for the `cap` and `captain` visors, which touch the hy-49 line, and for the worried sweat drop, which is drawn over every hat. `stick_hats.png`, `stick_props.png` and `stick_mouths.png` are not built yet.
 - [ ] P1 Hats: cap, top hat, captain, cowboy, chef, hard hat, crown, in addition to helmet and sailor.
 - [ ] P1 Held props: a hand anchor point, plus prop sprites (bag, rock, phone, lantern, sword, paper, cup).
 - [ ] P1 Mouth shapes for lip sync (closed, small, open, wide, O, smile-talk) selectable on top of any expression.
