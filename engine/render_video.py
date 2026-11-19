@@ -125,6 +125,8 @@ def setup(shots_path, words_path, plate_dirs):
 
 def init_worker(*a):
     os.environ['ENGINE_QUIET'] = '1'; setup(*a)
+    n = int(os.environ.get('ENGINE_LENGTH', 0))
+    if n: G['spans'][-1]['f1'] = n; G['n'] = n
 
 
 # ---------------------------------------------------------------- compositing
@@ -221,7 +223,7 @@ def place_fx(base, k, f, chars):
             if c and c['bbox']:
                 if e.get('anchor', 'head') == 'head': x, y = c['head'][0] + float(e.get('dx', 0)) * W, c['head'][1] - size * 0.15
                 else: x, y = (c['bbox'][0] + c['bbox'][2]) / 2, c['ground_y']
-        cy = 0.72 if e['name'] in ('dust_puff', 'splash') else 0.5             # ground-anchored effects
+        cy = {'dust_puff': 0.72, 'splash': 0.72, 'lean_arc': 1.0}.get(e['name'], 0.5)             # ground-anchored effects
         base.alpha_composite(im.convert('RGBA'), (int(x - size / 2), int(y - size * cy)))
         out.append({'name': e['name'], 't': round(t, 3)})
     return out
@@ -330,11 +332,16 @@ def main():
     ap.add_argument('shots'); ap.add_argument('words'); ap.add_argument('out')
     ap.add_argument('--plates', action='append', default=[]); ap.add_argument('--frames', default=None)
     ap.add_argument('--workers', type=int, default=4); ap.add_argument('--audio', default=None)
-    ap.add_argument('--png', action='store_true'); ap.add_argument('--no-mp4', action='store_true')
+    ap.add_argument('--png', action='store_true'); ap.add_argument('--length', type=int, default=None); ap.add_argument('--no-mp4', action='store_true')
     a = ap.parse_args()
     a.plates.append(os.path.join(HERE, 'test', 'plates'))
     os.makedirs(os.path.join(a.out, 'frames'), exist_ok=True)
     setup(a.shots, a.words, a.plates)
+    lj = os.path.join(os.path.dirname(os.path.abspath(a.words)), 'length.json')
+    if a.length is None and os.path.exists(lj): a.length = int(json.load(open(lj))['frames'])
+    if a.length:                      # audio owns the picture length: stretch/trim the last shot to match
+        G['spans'][-1]['f1'] = max(G['spans'][-1]['f0'] + 1, a.length); G['n'] = a.length
+        if a.length < G['spans'][-1]['f0']: raise SystemExit(f'--length {a.length} ends before the last shot starts')
     n = G['n']
     for sh in G['shots']:                       # report rig stand-ins once, in the main process
         for c in sh.get('characters', []):
@@ -348,6 +355,7 @@ def main():
     print(f"{len(G['shots'])} shots, {n} frames ({n / FPS:.2f} s); fx: {'fx/fx.py' if G['fx'] else 'stub'}; "
           f"mouth: {'bean' if G['rig'].HAS_MOUTH else 'overlay'}; lid: {'bean' if G['rig'].HAS_LID else 'overlay'}", flush=True)
     metas = []
+    os.environ['ENGINE_LENGTH'] = str(n)
     with Pool(a.workers, initializer=init_worker, initargs=(a.shots, a.words, a.plates)) as pool:
         for i, m in enumerate(pool.imap(work, [(f, a.out, ext) for f in frames], chunksize=4)):
             metas.append(m)
@@ -357,7 +365,7 @@ def main():
     json.dump(track, open(os.path.join(a.out, 'track.json'), 'w'))
     if not a.no_mp4 and not a.frames:
         cmd = ['ffmpeg', '-v', 'error', '-y', '-framerate', str(FPS), '-i', os.path.join(a.out, 'frames', f'f_%05d.{ext}')]
-        if a.audio: cmd += ['-i', a.audio, '-c:a', 'aac', '-b:a', '192k', '-shortest']
+        if a.audio: cmd += ['-i', a.audio, '-c:a', 'aac', '-b:a', '192k']
         cmd += ['-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-r', str(FPS), '-movflags', '+faststart',
                 os.path.join(a.out, 'video.mp4')]
         subprocess.run(cmd, check=True)
