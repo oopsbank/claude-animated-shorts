@@ -12,7 +12,9 @@ sfx.json (optional, hand-placed topic cues):
      {"cue": "lean", "shot": "s04", "at_word": 2}]
   word = global index into words.json, or shot + at_word (index inside that shot, like shots.json beats).
   cue names: see lib/sfx_x.py GEN. level = LU vs the voice (max momentary), default per cue.
-Automatic cues from shots.json: an ambience bed per set, a whoosh on each set/cam change, and every fx entry.
+     {"mute": "s17:speed_lines"}      <- silence an automatic fx cue of one shot
+Automatic cues from shots.json: an ambience bed per set, a whoosh on each set/cam change, and every fx entry
+(camera shakes get no automatic sound: add a cue if the shake is an impact).
 
 Mix: voice high-passed + gently compressed (no EQ colour, no pitch); music ducked -3 dB under words (keyed by
 words.json) with per-section levels relative to the voice; SFX events at their LU-vs-voice level; master gain to
@@ -43,7 +45,7 @@ DUCK_DB = -3.0
 FINAL_DIP_DB = -3.0              # extra music dip under the last word of every sentence
 RING = 0.8                       # s after the last word when no --frames is given (sting rings out)
 BED_LU = -30.0                   # ambience bed, integrated LU vs the voice
-MUSIC_LU = {"hook": -8.5, "body": -9.0, "mystery": -10.0, "explain": -9.5, "payoff": -9.5, "sting": -7.0}
+MUSIC_LU = {"hook": -8.5, "body": -9.0, "mystery": -10.0, "explain": -9.5, "payoff": -8.5, "sting": -7.0}
 
 
 # ================================================================ words / structure
@@ -179,15 +181,14 @@ def section_curve(m, v, sec, n, v_int):
     gains["sting"] = (v_int + MUSIC_LU["sting"] - Lm) if np.isfinite(Lm) else 0.0
     pts.append((ts - 0.02, gains["sting"]))
     pts.sort()
-    c = np.zeros(n)
+    # piecewise ramps that start AT each section's first word: a cut takes 0.25 s; a raise takes 1.2 s, so the
+    # previous section's ringing tails and reverb are not boosted under the new line's first words
     t = np.arange(n) / SR
-    for a, g in pts:
-        c[t >= a] = g
-    c[t < pts[0][0]] = pts[0][1]
-    # 0.25 s ramp that STARTS at the section's first word (a centred smooth lifts the bed early, under the last
-    # words of the previous section)
-    k = ns(0.25)
-    c = ndimage.uniform_filter1d(c, k, mode="nearest", origin=-(k // 2))
+    c = np.full(n, pts[0][1])
+    for (a, g0), (b, g1) in zip(pts, pts[1:]):
+        r = 1.2 if g1 > g0 else 0.25
+        u = np.clip((t - b) / r, 0, 1)
+        c = np.where(t >= b, g0 + (g1 - g0) * (0.5 - 0.5 * np.cos(np.pi * u)), c)
     return c, gains
 
 
@@ -225,6 +226,8 @@ def limiter(x, ceil_db=CEIL_DBTP, look=0.003, rel=0.08):
 def sfx_events(words, shots, cues, sec):
     """-> list of dict(t, cue, level, pan, what)"""
     ev = []
+    muted = {c["mute"] for c in cues if "mute" in c}          # {"mute": "s17:speed_lines"} silences one shot's fx
+    cues = [c for c in cues if "cue" in c]
     wt = lambda i: words[max(0, min(len(words) - 1, i))]["start"]
     if shots:
         first = shot_word_index(shots, words)
@@ -233,11 +236,9 @@ def sfx_events(words, shots, cues, sec):
             i0 = first[s["id"]]
             if prev is not None and (s.get("set"), s.get("cam")) != (prev.get("set"), prev.get("cam")):
                 ev.append(dict(t=wt(i0) - 0.06, cue="whoosh", off=-0.2, what=f"transition {prev['id']}->{s['id']} ({s.get('set')}/{s.get('cam')})"))
-            if (s.get("camera") or {}).get("move") == "shake":
-                ev.append(dict(t=wt(i0), cue="impact", what=f"camera shake {s['id']}", level=-14))
             for fx in s.get("fx", []):
                 name = fx["name"]
-                if name in X.SILENT:
+                if name in X.SILENT or f"{s['id']}:{name}" in muted:
                     continue
                 if name not in X.GEN:
                     print(f"WARNING: no sound for fx '{name}' in {s['id']}")

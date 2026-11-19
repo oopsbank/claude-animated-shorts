@@ -21,6 +21,7 @@ Processing after the API call:
 import argparse
 import base64
 import json
+import math
 import os
 import re
 import subprocess
@@ -42,6 +43,7 @@ FORMAT = "mp3_44100_128"                  # available on the free tier; decoded 
 LEAD, TAIL = 0.04, 0.20                   # s of silence kept before the first / after the last word
 MAX_GAP = {".": 0.20, "!": 0.20, "?": 0.22, ",": 0.12, ";": 0.14, ":": 0.14, "-": 0.12, "": 0.10}
 XFADE = 0.008
+BREATH = 0.32                             # kept after a closing quote and before "You see," / "Wait,"
 FLOOR_DB = 45.0                           # word edges: 10 ms RMS above (speech peak level - FLOOR_DB)
 
 
@@ -204,6 +206,11 @@ def tighten(words, x):
     for i in range(len(words) - 2, -1, -1):
         e, s = words[i]["end"], words[i + 1]["start"]
         lim = gap_limit(words[i]["word"])
+        nxt = " ".join(w["word"] for w in words[i + 1:i + 3]).lower()
+        if re.search(r"[.!?,][\"”’]$", words[i]["word"]) or re.match(r"(you see|wait)\b", nxt):
+            lim = BREATH                                    # end of a quote, or a breath before the pivot / mystery
+        elif lim >= 0.2:
+            lim += 0.03 * math.sin(i * 2.399)               # sentence gaps vary 0.17-0.23 s, not one fixed value
         excess = (s - e) - lim
         if excess < 0.02:
             continue

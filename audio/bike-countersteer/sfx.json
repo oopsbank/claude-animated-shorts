@@ -4,5 +4,7 @@
  {"cue": "tyre_skid", "shot": "s09", "at_word": 5, "level": -15, "note": "bike runs wide across the track"},
  {"cue": "lean", "shot": "s13", "at_word": 12, "note": "the bike tips left"},
  {"cue": "freewheel", "shot": "s17", "at_word": 0, "level": -17, "note": "bicycle coasting in"},
- {"cue": "bike_bell", "shot": "s17", "at_word": 2, "pan": 0.3, "note": "bell on 'bicycles'"}
+ {"cue": "bike_bell", "shot": "s17", "at_word": 2, "level": -14, "pan": 0.3, "note": "bell on 'bicycles'"},
+ {"mute": "s17:speed_lines"},
+ {"mute": "s17:exclaim"}
 ]

@@ -34,6 +34,9 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - The API's end time for a word before a comma includes the pause. Snap word edges to the waveform before using them for lip sync or gap stats.
 - A music sting on the last word masks the punchline. Start it at the word's **end**.
 - Sentence-final words trail off quietly. Dip the music an extra 3 dB under them, and start section level changes *at* the section's first word (a centred smooth lifts the bed under the end of the previous line).
+- Don't flatten every pause to one value: sentence gaps of exactly 0.20 s sound mechanical. Vary them (0.17-0.23 s) and keep a ~0.3 s breath after a closing quote and before the "Wait," / "You see," pivots, while keeping gaps >0.25 s under 1 s in total.
+- When a section's music gain *rises*, ramp it over ~1.2 s. A fast raise boosts the previous section's ringing tails under the new line's first word (it masked "Wait,").
+- A camera shake is not always an impact: never add an automatic impact sound to it. Cue the sound from the story.
 - Limit to -1.2 dBTP, not -1.0: fades and 24-bit writing after the limiter, and codecs, can overshoot.
 
 ## Process
