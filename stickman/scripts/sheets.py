@@ -8,7 +8,7 @@ F = ImageFont.truetype(FB, 40); f2 = ImageFont.truetype(FR, 26); F3 = ImageFont.
 BG = (240, 237, 230, 255); TXT = (30, 30, 40); SUB = (120, 120, 130)
 COL = '#4a86e0'
 ex = [('neutral', 'Bình thường'), ('happy', 'Vui'), ('angry', 'Giận'), ('surprised', 'Ngạc nhiên'), ('worried', 'Lo lắng'),
-      ('scared', 'Sợ hãi'), ('sad', 'Buồn'), ('smug', 'Tự mãn'), ('determined', 'Quyết tâm')]
+      ('scared', 'Sợ hãi'), ('sad', 'Buồn'), ('smug', 'Tự mãn'), ('thinking', 'Đang nghĩ'), ('determined', 'Quyết tâm')]
 
 def face_crop(im):
     top = im.getbbox()[1]
@@ -31,7 +31,7 @@ for i, (e, label) in enumerate(ex):
 sheet.save(f'{OUT}/stick_expressions.png')
 
 ps = [('stand', 'Đứng', 'neutral'), ('wave', 'Vẫy tay', 'happy'), ('walk', 'Bước đi', 'neutral'), ('run', 'Chạy', 'scared'),
-      ('point', 'Chỉ tay', 'angry'), ('shrug', 'Nhún vai', 'smug'), ('think', 'Suy nghĩ', 'worried'), ('cheer', 'Ăn mừng', 'happy')]
+      ('point', 'Chỉ tay', 'angry'), ('shrug', 'Nhún vai', 'smug'), ('think', 'Suy nghĩ', 'thinking'), ('cheer', 'Ăn mừng', 'happy')]
 cols = ['#4a86e0', '#e0583f', '#3fae6a', '#f2b234', '#8a5cd6', '#4a86e0', '#e0583f', '#3fae6a']
 ch = 700
 sh = Image.new('RGBA', (cw * len(ps), T + 40 + ch + 20), BG); d = ImageDraw.Draw(sh)

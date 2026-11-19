@@ -19,7 +19,7 @@ POSES = {
     'run':   dict(armL=(-55, -125), armR=(45, -15), legL=(-38, 8), legR=(30, 85)),
     'point': dict(armL=(24, 10), armR=(-82, -88), legL=(11, 1), legR=(-11, -1)),
     'shrug': dict(armL=(60, -35), armR=(-60, 35), legL=(10, 1), legR=(-10, -1)),
-    'think': dict(armL=(24, 10), armR=(-30, -160), legL=(10, 1), legR=(-10, -1)),
+    'think': dict(armL=(10, -84, 0.72), armR=(-30, 160), legL=(10, 1), legR=(-10, -1)),   # arm across the belly, other hand on the chin
     'cheer': dict(armL=(145, 160), armR=(-145, -160), legL=(16, 2), legR=(-16, -2)),
 }
 
@@ -39,10 +39,10 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     hip = (300, 520); shoulder = (300, 262)
     seg_arm, seg_leg = 124, 205
 
-    def limb(root, ang, seg):
-        a1, a2 = (math.radians(a) for a in ang)
+    def limb(root, ang, seg):              # ang = (upper, lower[, lower-length factor])
+        a1, a2 = math.radians(ang[0]), math.radians(ang[1]); seg2 = seg * (ang[2] if len(ang) > 2 else 1.0)
         j = (root[0] - math.sin(a1) * seg, root[1] + math.cos(a1) * seg)
-        e = (j[0] - math.sin(a2) * seg, j[1] + math.cos(a2) * seg)
+        e = (j[0] - math.sin(a2) * seg2, j[1] + math.cos(a2) * seg2)
         return root, j, e
 
     def path(root, j, e, n=60):            # smooth quadratic through the joint
@@ -75,7 +75,6 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     side = pose in SIDE_POSES
     body = [(lpts(legs[1]), T), (lpts(legs[0]), T), (torso, TB)]
     if side: body.insert(0, (lpts(arms[1]), T))
-    elif pose == 'think': body.insert(0, (lpts(arms[0]), T))          # hanging arm; chin arm drawn over the face later
     else: body = [(lpts(arms[0]), T), (lpts(arms[1]), T)] + body
     for pts, w in body: stamp(pts, w + 2 * OUT, INK)
     for pts, w in body: stamp(pts, w, C)
@@ -86,8 +85,8 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     cap = Image.new('L', im.size, 0); ImageDraw.Draw(cap).ellipse([(hx - R * 1.25) * S, (hy - R * 1.9) * S, (hx + R * 1.25) * S, (hy + R * 0.15) * S], fill=150)
     cap = ImageChops.multiply(cap.filter(ImageFilter.GaussianBlur(26 * S)), m)
     lay = Image.new('RGBA', im.size, hi + (255,)); lay.putalpha(cap); im.alpha_composite(lay); d = ImageDraw.Draw(im)
-    if side:
-        front_arm(lpts(arms[0]))
+    if side or pose == 'think':
+        front_arm(lpts(arms[0]))           # think: the crossed arm sits in front of the torso
 
     # ---------------- face ----------------
     K = (16, 14, 22, 255); WH = (255, 255, 255, 255)
@@ -139,6 +138,10 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
         eye(eL, 'dot', 20); eye(eR, 'dot', 20); brow(eL, -6, -24, 5); brow(eR, 6, -24, 5)
         d.arc([(fx - 18) * S, (my + 2) * S, (fx + 18) * S, (my + 26) * S], 200, 340, fill=K, width=5 * S)
         d.ellipse([(eL - 5) * S, (ey + 18) * S, (eL + 5) * S, (ey + 34) * S], fill=(140, 200, 255, 255))
+    elif expr == 'thinking':               # eyes glance up-right, one brow raised, small skewed mouth
+        for cx in (eL, eR): d.ellipse([(cx + 2) * S, (ey - 20) * S, (cx + 20) * S, (ey + 4) * S], fill=K)
+        brow(eL, 0, -32, 6); brow(eR, -6, -40, 6)
+        d.line([(fx - 4) * S, (my + 4) * S, (fx + 20) * S, (my - 2) * S], fill=K, width=5 * S)
     elif expr == 'determined':
         eye(eL, 'squint'); eye(eR, 'squint'); brow(eL, 6, -20, 8); brow(eR, -6, -20, 8)
         d.line([(fx - 18) * S, (my + 2) * S, (fx + 18) * S, (my - 2) * S], fill=K, width=6 * S)
