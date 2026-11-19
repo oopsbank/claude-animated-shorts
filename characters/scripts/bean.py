@@ -303,7 +303,7 @@ def draw_face(C, expr, cx, cy, u, facing, glasses, moustache, has_hat, mouth=Non
         if M:
             for k in (-6, 0, 6): L([(mx + k * u, my - 4 * u), (mx + k * u, my + 4 * u)], 1.6 * u)
         if M: L([(mx - 12 * u, my), (mx + 12 * u, my)], 1.6 * u)
-    if mouth: mouth_shape(d, mouth, mx, my, u, 1.0, 1)
+    if mouth: mouth_shape(d, CLOSED_FOR.get(expr, 'dash') if mouth == 'closed' else mouth, mx, my, u, 1.0, 1)
     if glasses:
         for x in (eL, eR):
             d.ellipse(((x - 10 * u) * S, (cy - 9 * u) * S, (x + 10 * u) * S, (cy + 9 * u) * S), outline=K, width=int(2.6 * u * S))
@@ -383,16 +383,21 @@ def _rot_layer(im, deg, center, translate=(0, 0)):
     return im.rotate(-deg, resample=Image.BICUBIC, center=(center[0] * S, center[1] * S),
                      translate=(translate[0] * S, translate[1] * S))
 
-def mouth_shape(d, kind, mx, my, u, sx=1.0, s=1):
-    """Mouths shared by expressions and lip sync. sx squeezes the width (3/4 and side views)."""
+# 'closed' follows the expression, so a smiling face does not drop to a neutral dash on every closed-mouth frame
+CLOSED_FOR = {'grin': 'smile_closed', 'smile': 'smile_closed', 'smug': 'smirk', 'stern': 'frown', 'pained': 'frown', 'nervous': 'wave'}
+
+def mouth_shape(d, kind, mx, my, u, sx=1.0, s=1, far=1.0):
+    """Mouths shared by expressions and lip sync. sx squeezes the width (3/4 and side views); far < 1 shrinks the
+    half of the mouth on the far side of a 3/4 face (the +s side)."""
     K = INK
-    def X(v): return mx + v * u * sx
+    def X(v): return mx + v * u * sx * (far if v * s > 0 else 1.0)
     def L(pts, w): d.line([(x * S, y * S) for x, y in pts], fill=K, width=max(1, int(w * S)), joint='curve')
     def box(x0, y0, x1, y1): return ((X(x0)) * S, (my + y0 * u) * S, (X(x1)) * S, (my + y1 * u) * S)
     if kind in ('dash', 'closed'):
         L([(X(-5.5), my + 0.4 * u * s), (X(5.5), my - 0.4 * u * s)], 4 * u)
     elif kind == 'frown': d.arc(box(-7, 0, 7, 7), 200, 340, fill=K, width=int(4 * u * S))
     elif kind == 'smirk': d.arc(box(-7, -5, 7, 3), 20, 160, fill=K, width=int(4 * u * S))
+    elif kind == 'smile_closed': d.arc(box(-8, -5, 8, 4), 15, 165, fill=K, width=int(4 * u * S))
     elif kind == 'wave': L([(X(-9 + k * 1.8), my + math.sin(k * 1.3) * 1.5 * u) for k in range(11)], 3.5 * u)
     elif kind == 'grin':
         d.chord(box(-12, -8, 12, 8), 0, 180, fill=MOUTH)
@@ -404,16 +409,19 @@ def mouth_shape(d, kind, mx, my, u, sx=1.0, s=1):
         for k in (-6, 0, 6): L([(X(k), my - 4 * u), (X(k), my + 4 * u)], 1.6 * u)
         L([(X(-12), my), (X(12), my)], 1.6 * u)
     # ---- lip-sync shapes: one anchor, similar sizes, so they swap cleanly frame to frame
-    elif kind == 'small': d.ellipse(box(-4.5, -2.5, 4.5, 3.5), fill=MOUTH, outline=K, width=int(2.2 * u * S))
+    elif kind == 'small':                                   # a short open slit (a dot read as 'closed' at video size)
+        d.ellipse(box(-5.5, -2.6, 5.5, 3.4), fill=MOUTH, outline=K, width=int(2.2 * u * S))
+        d.chord(box(-3, 0.6, 3, 3.4), 180, 360, fill=TONGUE)
     elif kind == 'open':
         d.ellipse(box(-7, -4, 7, 9), fill=MOUTH, outline=K, width=int(2.5 * u * S))
         d.chord(box(-4.5, 3, 4.5, 9), 180, 360, fill=TONGUE)
-    elif kind == 'wide':
-        d.rounded_rectangle(box(-12, -5, 12, 7), radius=int(4.5 * u * S), fill=MOUTH, outline=K, width=int(2.5 * u * S))
-        d.rectangle((X(-10) * S, (my - 3.6 * u) * S, X(10) * S, (my - 1.2 * u) * S), fill=(255, 255, 255))
-        d.chord(box(-6, 2, 6, 7.5), 180, 360, fill=TONGUE)
-    elif kind == 'O':
-        d.ellipse(box(-5, -5, 5, 8), fill=MOUTH, outline=K, width=int(2.6 * u * S))
+    elif kind == 'wide':                                    # capped near 20u wide; it grows in height, not width
+        d.rounded_rectangle(box(-10, -6, 10, 9), radius=int(4.5 * u * S), fill=MOUTH, outline=K, width=int(2.5 * u * S))
+        d.rectangle((X(-8.2) * S, (my - 4.6 * u) * S, X(8.2) * S, (my - 2.0 * u) * S), fill=(255, 255, 255))
+        d.chord(box(-5.5, 3, 5.5, 9.5), 180, 360, fill=TONGUE)
+    elif kind == 'O':                                       # taller than 'open', with a lighter inside
+        d.ellipse(box(-4.6, -6, 4.6, 8.5), fill=MOUTH, outline=K, width=int(2.6 * u * S))
+        d.ellipse(box(-2.2, -2, 2.2, 5), fill=mix(MOUTH, TONGUE, 0.55))
     elif kind == 'smile_talk':
         d.chord(box(-10, -6, 10, 8), 0, 180, fill=MOUTH)
         d.arc(box(-10, -6, 10, 8), 0, 180, fill=K, width=int(2.5 * u * S)); L([(X(-10), my + u), (X(10), my + u)], 2.5 * u)
@@ -460,7 +468,8 @@ def draw_face_turned(C, expr, hx, hy, u, s, view, glasses, moustache, has_hat, m
     if view != 'front': L([(ncx + s * nr * math.cos(math.radians(t)), ncy + nr * math.sin(math.radians(t))) for t in range(-110, 111, 10)], 3.2 * u)
     mx = hx + s * (31 if view == 'side' else 17 if view == '3q' else 0) * u; my = hy + (21 if view == 'side' else 20) * u
     sx = 0.62 if view == 'side' else 0.85 if view == '3q' else 1.0
-    mouth_shape(d, mouth or mk, mx, my, u, sx, s)
+    mk2 = (CLOSED_FOR.get(expr, 'dash') if mouth == 'closed' else mouth) if mouth else mk
+    mouth_shape(d, mk2, mx, my, u, sx, s, far=0.85 if view == '3q' else 1.0)
     if moustache:
         col = hexrgb(moustache)
         for sg in ((s,) if view == 'side' else (-1, 1)):

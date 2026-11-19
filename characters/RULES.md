@@ -19,3 +19,9 @@ The spec is `references/reports/characters.md` §2. The anatomy and animation ru
 12. **Edge-on discs** (lamps seen from the side) need a housing and a coloured lens stroke. A bare ink line read as a stray mark.
 13. **Text that carries a joke must read at video size.** The helmet sticker on the back of the head is about 1.45a wide (most of the shell). Small stickers on the side of the helmet are decoration only.
 14. A **second, fixed handlebar** must read as a bar, not a fork: make it wider than the steering bar, thick, a different colour, with a clamp block and bolt heads.
+
+## Lip sync (`mouth=`)
+15. **Every mouth shape must differ in silhouette at video size.** A dot `small` read as `closed`, and a round `O` read as `open`. `small` is an open slit with a tongue hint, and `O` is taller than `open` with a lighter inside.
+16. **Keep mouth widths close** (`wide` is capped near 20u and grows in height), so the mouth does not jump between frames.
+17. **`closed` follows the expression** (`CLOSED_FOR`). Otherwise a smiling face drops to a neutral dash on every closed-mouth frame.
+18. **In 3/4 view, shrink the far half of the mouth** by about 15%.

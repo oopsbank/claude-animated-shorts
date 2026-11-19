@@ -6,7 +6,7 @@ from bean import character, MOUTHS
 from PIL import Image, ImageDraw, ImageFont
 CH_ = dict(build='adult', skin='#c98e63', shirt='#2f6fb3', pants='#e8e2d0', hat='cap', hat_col='#2b2f3a', glasses=True, seed=9)
 ROWS = [('Trước · neutral', dict(view='front', expr='neutral')), ('3/4 · grin', dict(view='3q', expr='grin', facing=1)),
-        ('Nghiêng · stern', dict(view='side', expr='stern', facing=1)), ('Chớp mắt · smile', dict(view='front', expr='smile', blink=True))]
+        ('Nghiêng · stern', dict(view='side', expr='stern', facing=1)), ('Chớp mắt · smile', dict(view='front', expr='smile', blink=True)), ('Trước · grin', dict(view='front', expr='grin'))]
 F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 28)
 cw, lab = 260, 300
 sheet = Image.new('RGBA', (lab + cw * (len(MOUTHS) + 1), 60 + cw * len(ROWS)), (240, 237, 230, 255)); d = ImageDraw.Draw(sheet)
