@@ -410,8 +410,8 @@ def mouth_shape(d, kind, mx, my, u, sx=1.0, s=1, far=1.0):
         L([(X(-12), my), (X(12), my)], 1.6 * u)
     # ---- lip-sync shapes: one anchor, similar sizes, so they swap cleanly frame to frame
     elif kind == 'small':                                   # a short open slit (a dot read as 'closed' at video size)
-        d.ellipse(box(-5.5, -2.6, 5.5, 3.4), fill=MOUTH, outline=K, width=int(2.2 * u * S))
-        d.chord(box(-3, 0.6, 3, 3.4), 180, 360, fill=TONGUE)
+        d.ellipse(box(-5.5, -3.1, 5.5, 3.9), fill=MOUTH, outline=K, width=int(2.2 * u * S))
+        d.chord(box(-3, 0.9, 3, 3.9), 180, 360, fill=TONGUE)
     elif kind == 'open':
         d.ellipse(box(-7, -4, 7, 9), fill=MOUTH, outline=K, width=int(2.5 * u * S))
         d.chord(box(-4.5, 3, 4.5, 9), 180, 360, fill=TONGUE)
@@ -420,13 +420,44 @@ def mouth_shape(d, kind, mx, my, u, sx=1.0, s=1, far=1.0):
         d.rectangle((X(-8.2) * S, (my - 4.6 * u) * S, X(8.2) * S, (my - 2.0 * u) * S), fill=(255, 255, 255))
         d.chord(box(-5.5, 3, 5.5, 9.5), 180, 360, fill=TONGUE)
     elif kind == 'O':                                       # taller than 'open', with a lighter inside
-        d.ellipse(box(-4.6, -6, 4.6, 8.5), fill=MOUTH, outline=K, width=int(2.6 * u * S))
-        d.ellipse(box(-2.2, -2, 2.2, 5), fill=mix(MOUTH, TONGUE, 0.55))
+        d.ellipse(box(-4.6, -4.5, 4.6, 10), fill=MOUTH, outline=K, width=int(2.6 * u * S))
+        d.ellipse(box(-2.2, -0.5, 2.2, 6.5), fill=mix(MOUTH, TONGUE, 0.55))
     elif kind == 'smile_talk':
         d.chord(box(-10, -6, 10, 8), 0, 180, fill=MOUTH)
         d.arc(box(-10, -6, 10, 8), 0, 180, fill=K, width=int(2.5 * u * S)); L([(X(-10), my + u), (X(10), my + u)], 2.5 * u)
         d.chord(box(-5, 3.5, 5, 8), 180, 360, fill=TONGUE)
     else: raise ValueError(f'unknown mouth {kind!r}; lip-sync mouths are {MOUTHS}')
+
+def profile_mouth(d, kind, hx, my, u, s):
+    """Side view mouths. Every shape shares one anchor: hinged at the back corner (hx+27u) and reaching the front
+    at hx+37u, >= 3u inside the head's ink ring. Front shapes squeezed onto a profile read as pasted on."""
+    K = INK; bx, fx = hx + s * 27 * u, hx + s * 37 * u
+    def L(pts, w=4): d.line([(x * S, y * S) for x, y in pts], fill=K, width=int(w * u * S), joint='curve')
+    def poly(pts, col): q = [(x * S, y * S) for x, y in pts]; d.polygon(q, fill=col); d.line(q + q[:1], fill=K, width=int(2.3 * u * S), joint='curve')
+    def curve(y_back, y_front, sag, n=10):
+        return [(bx + (fx - bx) * t, y_back + (y_front - y_back) * t + sag * 4 * t * (1 - t)) for t in (i / n for i in range(n + 1))]
+    if kind in ('dash', 'closed'): L(curve(my + 0.8 * u, my, 0))
+    elif kind == 'frown': L(curve(my + 2.5 * u, my, -1.2 * u))
+    elif kind in ('smirk', 'smile_closed'): L(curve(my - 2.6 * u, my + 0.5 * u, 1.4 * u))
+    elif kind == 'wave': L([(bx + (fx - bx) * k / 10, my + math.sin(k * 1.3) * 1.5 * u) for k in range(11)], 3.5)
+    elif kind == 'small': poly([(bx + s * 1 * u, my), (fx, my - 3.4 * u), (fx, my + 4.4 * u)], MOUTH)
+    elif kind == 'open':
+        poly([(bx, my), (fx, my - 4.5 * u), (fx, my + 7 * u)], MOUTH)
+        d.polygon([(x * S, y * S) for x, y in [(fx - s * 4.5 * u, my + 4 * u), (fx - s * 0.8 * u, my + 3 * u), (fx - s * 0.8 * u, my + 6 * u)]], fill=TONGUE)
+    elif kind == 'wide':
+        poly([(bx - s * 1 * u, my - 0.5 * u), (fx, my - 6 * u), (fx, my + 8.5 * u)], MOUTH)
+        d.polygon([(x * S, y * S) for x, y in [(bx + s * 3 * u, my - 1.2 * u), (fx - s * 0.9 * u, my - 4.9 * u), (fx - s * 0.9 * u, my - 2.6 * u), (bx + s * 4 * u, my - 0.2 * u)]], fill=(255, 255, 255))
+        d.polygon([(x * S, y * S) for x, y in [(fx - s * 6 * u, my + 5 * u), (fx - s * 0.9 * u, my + 3.5 * u), (fx - s * 0.9 * u, my + 7.5 * u)]], fill=TONGUE)
+    elif kind == 'O':                                     # a pucker: lips pushed out to (and a little past) the face edge
+        cx_ = hx + s * 41 * u
+        d.ellipse(((cx_ - 4.2 * u) * S, (my - 4.6 * u) * S, (cx_ + 4.2 * u) * S, (my + 5.4 * u) * S), fill=mix(MOUTH, TONGUE, 0.25), outline=K, width=int(2.6 * u * S))
+        d.ellipse(((cx_ + s * 1 * u - 1.6 * u) * S, (my - 1.6 * u) * S, (cx_ + s * 1 * u + 1.6 * u) * S, (my + 2.4 * u) * S), fill=MOUTH)
+    elif kind == 'smile_talk':                            # upturned back corner + an upper-lip line: unlike 'small'
+        poly([(bx - s * 1 * u, my - 4.5 * u), (fx, my - 1.5 * u), (fx - s * 1 * u, my + 6.5 * u)], MOUTH)
+        L([(bx - s * 2 * u, my - 5.4 * u), (fx + s * 0.5 * u, my - 2 * u)], 3)
+        d.polygon([(x * S, y * S) for x, y in [(fx - s * 4 * u, my + 3.8 * u), (fx - s * 1.2 * u, my + 3 * u), (fx - s * 1.5 * u, my + 5.6 * u)]], fill=TONGUE)
+    else: return False
+    return True
 
 def draw_face_turned(C, expr, hx, hy, u, s, view, glasses, moustache, has_hat, mouth=None, blink=False):
     d = C.d; K = INK
@@ -469,7 +500,8 @@ def draw_face_turned(C, expr, hx, hy, u, s, view, glasses, moustache, has_hat, m
     mx = hx + s * (31 if view == 'side' else 17 if view == '3q' else 0) * u; my = hy + (21 if view == 'side' else 20) * u
     sx = 0.62 if view == 'side' else 0.85 if view == '3q' else 1.0
     mk2 = (CLOSED_FOR.get(expr, 'dash') if mouth == 'closed' else mouth) if mouth else mk
-    mouth_shape(d, mk2, mx, my, u, sx, s, far=0.85 if view == '3q' else 1.0)
+    if not (view == 'side' and mouth and profile_mouth(d, mk2, hx, my, u, s)):
+        mouth_shape(d, mk2, mx, my, u, sx, s, far=0.85 if view == '3q' else 1.0)
     if moustache:
         col = hexrgb(moustache)
         for sg in ((s,) if view == 'side' else (-1, 1)):
@@ -546,8 +578,8 @@ def turned(view='side', build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#
                 L0, L1_ = (3, 13) if view == 'front' else (2, 7)
                 heel = (e[0] - sd[k] * L0 * u, e[1]); toe = (e[0] + sd[k] * L1_ * u, e[1])
             else:
-                a2 = math.atan2(s * (e[0] - j[0]), e[1] - j[1])
-                f = (s * math.cos(a2 * 0.85), -math.sin(a2 * 0.85))
+                a2 = math.atan2(s * (e[0] - j[0]), e[1] - j[1]); fk = P.get('foot_k', 0.85)   # >1: clearer heel strike / push-off
+                f = (s * math.cos(a2 * fk), -math.sin(a2 * fk))
                 heel = (e[0] - f[0] * 3 * u, e[1] - f[1] * 3 * u); toe = (e[0] + f[0] * 13 * u, e[1] + f[1] * 13 * u)
             out[k] = (root, j, e, heel, toe)
         return out

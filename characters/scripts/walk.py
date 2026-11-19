@@ -22,14 +22,14 @@ def walk_pose(t, amp=21.0):
     s, c = math.sin(ph), math.cos(ph)
     thN, thF = amp * c, -amp * c                                  # thigh: N forward at ph=0
     swN, swF = max(0.0, -s) ** 1.4, max(0.0, s) ** 1.4            # a leg swings while its thigh moves forward
-    downN = 8 * max(0.0, s) ** 3 * (1 - swN)                       # the stance knee gives a little after contact (DOWN)
-    downF = 8 * max(0.0, -s) ** 3 * (1 - swF)
-    legN = (thN + 0.35 * 30 * swN + downN * 0.3, thN - 0.9 * 34 * swN - downN)   # swing: thigh lifts forward, shin trails
-    legF = (thF + 0.35 * 30 * swF + downF * 0.3, thF - 0.9 * 34 * swF - downF)
+    downN = 4 * max(0.0, s) ** 3 * (1 - swN)                       # the stance knee gives a little after contact (DOWN)
+    downF = 4 * max(0.0, -s) ** 3 * (1 - swF)
+    legN = (thN + 0.5 * 30 * swN + downN * 0.3, thN - 1.35 * 34 * swN - downN)   # swing: thigh lifts forward, shin trails
+    legF = (thF + 0.5 * 30 * swF + downF * 0.3, thF - 1.35 * 34 * swF - downF)
     lag = 0.4                                                       # arms peak a little after the legs (overlap)
-    a = 20 * math.cos(ph - lag)                                     # opposite the legs: near arm goes back when the near leg goes forward
-    fa = 14 + 8 * math.cos(ph - lag - 0.6)                          # forearm trails and stays bent forward
-    return dict(legN=legN, legF=legF, armN=(-a, -a + fa), armF=(a, a + fa), lean=4.0, tilt=-1.0)
+    a = 40 * math.cos(ph - lag)                                     # opposite the legs: near arm goes back when the near leg goes forward
+    fa = 18 + 16 * math.cos(ph - lag - 0.9)                         # forearm trails and stays bent forward
+    return dict(legN=legN, legF=legF, armN=(-a, -a + fa), armF=(a, a + fa), lean=7.0, tilt=-2.0, foot_k=1.35)
 
 def _foot_x(leg, L, s=1):
     a1, a2 = math.radians(leg[0]), math.radians(leg[1])

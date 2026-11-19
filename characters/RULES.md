@@ -25,3 +25,9 @@ The spec is `references/reports/characters.md` §2. The anatomy and animation ru
 16. **Keep mouth widths close** (`wide` is capped near 20u and grows in height), so the mouth does not jump between frames.
 17. **`closed` follows the expression** (`CLOSED_FOR`). Otherwise a smiling face drops to a neutral dash on every closed-mouth frame.
 18. **In 3/4 view, shrink the far half of the mouth** by about 15%.
+19. **Side-view mouths are profile shapes** with one anchor (back corner at hx+27u, front edge at hx+37u): wedges that open toward the face edge, a profile line for `closed`, and a pucker at the edge for `O`. Front shapes squeezed onto a profile read as pasted on.
+
+## Walk (`walk.py`)
+20. Bend the swinging knee hard at passing (shin trailing about 45°) and keep the stance leg almost straight. A weak bend left the legs straight and crossed at passing.
+21. **Arms in side view hang over the torso, so swing them wider** (about ±40°) with the forearm trailing, or the swing disappears. Lean about 7°: 4° did not read against the bean's own belly bulge.
+22. Exaggerate the feet (`foot_k` 1.35): toe up at heel strike, toe down at push-off.
