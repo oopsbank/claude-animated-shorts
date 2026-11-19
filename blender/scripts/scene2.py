@@ -147,6 +147,16 @@ cl.new(tex.outputs['Color'], cp.inputs['Base Color']); cl.new(tex.outputs['Alpha
 cl.new(tex.outputs['Color'], cp.inputs['Emission Color']); cp.inputs['Emission Strength'].default_value = 0.8
 cp.inputs['Roughness'].default_value = 0.9
 
+# ---------- optional 3D stickman (replaces the 2D card) ----------
+body = None
+if os.environ.get('STICK3D'):
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import stick3d
+    pose, expr = (('think', 'thinking') if SHOT == 'B' else ('wave', 'happy'))
+    pose = os.environ.get('POSE', pose); expr = os.environ.get('EXPR', expr)
+    body = stick3d.build('stick', pose, expr, os.environ.get('COLOR', '#4a86e0'), 1.75, os.path.dirname(os.path.abspath(OUT)))
+    card.hide_render = True
+
 # ---------- camera ----------
 cam = bpy.data.cameras.new('cam'); cam.lens = 27
 co = bpy.data.objects.new('cam', cam); sc.collection.objects.link(co); sc.camera = co
@@ -162,7 +172,12 @@ if SHOT == 'B':
     co.rotation_euler = (tgt - co.location).to_track_quat('-Z', 'Y').to_euler()
     co.rotation_euler.y += math.radians(-4)
 card.rotation_euler.z = math.atan2(co.location.x - card.location.x, -(co.location.y - card.location.y))
-cam.dof.focus_object = card; cam.dof.aperture_fstop = 1.2 if SHOT == 'B' else 2.0
+if body:
+    body.location = card.location
+    body.rotation_euler.z = card.rotation_euler.z
+    sc.view_layers[0].update()
+    cam.dof.focus_distance = (co.location - (Vector(card.location) + Vector((0, 0, 1.45)))).length
+cam.dof.focus_object = None if body else card; cam.dof.aperture_fstop = 1.2 if SHOT == 'B' else 2.0
 cam.dof.use_dof = not COMP_DOF
 
 # ---------- ink: Freestyle, world only ----------
@@ -177,6 +192,13 @@ for o in (card, gnd):
     for c in o.users_collection: c.objects.unlink(o)
     nolines.objects.link(o)
 ls.select_by_collection = True; ls.collection = nolines; ls.collection_negation = 'EXCLUSIVE'
+if body:   # stickman: its own lineset, outer silhouette only (no crease ticks at the joints), thin dark ink
+    nolines.objects.link(body)
+    ls2 = fs.linesets.new('stick'); ls2.select_by_visibility = True; ls2.select_by_edge_types = True
+    ls2.select_silhouette = True; ls2.select_border = False; ls2.select_crease = False; ls2.select_external_contour = True
+    ls2.select_by_collection = True; ls2.collection = bpy.data.collections['stick']; ls2.collection_negation = 'INCLUSIVE'
+    st2 = bpy.data.linestyles.new('stick_ink'); ls2.linestyle = st2
+    st2.color = (0.07, 0.06, 0.10); st2.thickness = 2.4 * SCALE / 100; st2.alpha = 1.0
 lst = ls.linestyle or bpy.data.linestyles.new('ink'); ls.linestyle = lst
 lst.color = (0.0, 0.0, 0.0); lst.alpha = 1.0; lst.thickness = 3.4 * SCALE / 100
 md = lst.thickness_modifiers.new('dist', 'DISTANCE_FROM_CAMERA')

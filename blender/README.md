@@ -15,3 +15,11 @@ Setup (run from this folder):
 - Put the character card at `assets/sailor.png`, or set `CARD`.
 
 Measured on a 4-CPU cloud container with no GPU, 720x1280 at 32 samples: about 58 s per frame for A, about 70 s for B. A full video needs a GPU render.
+
+## 3D stickman
+- `scripts/stick3d.py`: `build(name, pose, expr, color, height)` builds a 3D stickman from the same skeleton as the 2D one (`stickman/scripts/stickman.py`) and follows `stickman/DRAWING_RULES.md`:
+  - Tube limbs with round ends, voxel-merged into one seamless body.
+  - Each arm from its own shoulder, and real depth for foreshortened limbs.
+  - One flat colour, with the 2D face projected onto the front of the head.
+  - Its own silhouette-only Freestyle lineset, so there are no crease ticks at the joints.
+- To use it in the scene: `STICK3D=1 python scripts/scene2.py out.png 32 100 0 A`. Optional variables: `POSE`, `EXPR`, `COLOR`. Shot A defaults to wave + happy, shot B to think + thinking.
