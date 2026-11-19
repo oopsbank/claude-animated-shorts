@@ -25,11 +25,15 @@ POSES = {
 
 SIDE_POSES = {'walk', 'run'}
 
-def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
-    if pose in SIDE_POSES and look == 0.0: look = 0.7      # side-on body: face turns toward the direction of travel
+def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixed=False):
+    # pose: a name from POSES, or a dict of joint angles (for animation); dict keys '_name' / '_side' set the style.
+    # fixed=True keeps the hip at x=300 (no auto-centring) so animated frames don't jitter sideways.
+    name = pose if isinstance(pose, str) else pose.get('_name', 'custom')
+    P = POSES[pose] if isinstance(pose, str) else pose
+    side = name in SIDE_POSES or (not isinstance(pose, str) and pose.get('_side', False))
+    if side and look == 0.0: look = 0.7      # side-on body: face turns toward the direction of travel
     C = hexrgb(color); INK = (18, 16, 26); hi = mixc(C, (255, 255, 255), 0.22)
     im = Image.new('RGBA', (W * S, H * S), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    P = POSES[pose]
 
     R = 98                                  # head radius -> ~5 heads tall
     T = 50                                  # limb thickness
@@ -52,14 +56,14 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
                  (1 - t) ** 2 * root[1] + 2 * (1 - t) * t * cy + t * t * e[1]) for t in (i / n for i in range(n + 1))]
 
     legs = [limb(hip, P['legL'], seg_leg), limb(hip, P['legR'], seg_leg)]
-    if pose == 'think':                    # each arm from its OWN shoulder (left arm from the left, right from the right)
+    if name == 'think':                    # each arm from its OWN shoulder (left arm from the left, right from the right)
         arms = [limb((278, 262), P['armL'], seg_arm), limb((322, 262), P['armR'], seg_arm)]
     else:
         arms = [limb(shoulder, P['armL'], seg_arm), limb(shoulder, P['armR'], seg_arm)]
     lowest = max(max(p[1] for p in path(*l)) for l in legs) + T / 2
     dy = 975 - lowest
     xs = [p[0] for l in legs + arms for p in path(*l)] + [300 - R, 300 + R]
-    dx = 300 - (min(xs) + max(xs)) / 2
+    dx = 0 if fixed else 300 - (min(xs) + max(xs)) / 2
     def mv(pts): return [(x + dx, y + dy) for x, y in pts]
     head[0] += dx; head[1] += dy
 
@@ -76,13 +80,12 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     # back arm + legs + torso as ONE merged silhouette (no inner seams), like the reference
     # Facing the viewer: both arms belong to the one merged silhouette (symmetric, nothing turned).
     # Side-on poses (walk/run) layer a back arm behind and a front arm over the torso.
-    side = pose in SIDE_POSES
     body = [(lpts(legs[1]), T), (lpts(legs[0]), T), (torso, TB)]
     if side: body.insert(0, (lpts(arms[1]), T))
     else: body = [(lpts(arms[0]), T), (lpts(arms[1]), T)] + body
     for pts, w in body: stamp(pts, w + 2 * OUT, INK)
     for pts, w in body: stamp(pts, w, C)
-    if pose == 'think':
+    if name == 'think':
         # right upper arm down to its elbow, then the left arm whose forearm crosses the belly under that elbow,
         # then the right forearm rising in front to the chin
         ra = lpts(arms[1]); n2 = len(ra) // 2
@@ -153,6 +156,13 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
         for cx in (eL, eR): d.ellipse([(cx + 2) * S, (ey - 20) * S, (cx + 20) * S, (ey + 4) * S], fill=K)
         brow(eL, 0, -32, 6); brow(eR, -6, -40, 6)
         d.line([(fx - 4) * S, (my + 4) * S, (fx + 20) * S, (my - 2) * S], fill=K, width=5 * S)
+    elif expr in ('blink', 'blink_happy'):  # eyes closed for one or two frames
+        eye(eL, 'flat'); eye(eR, 'flat')
+        if expr == 'blink':
+            d.line([(fx - 16) * S, my * S, (fx + 16) * S, my * S], fill=K, width=5 * S)
+        else:
+            d.chord([(fx - 30) * S, (my - 22) * S, (fx + 30) * S, (my + 26) * S], 0, 180, fill=K)
+            d.chord([(fx - 18) * S, (my + 6) * S, (fx + 18) * S, (my + 24) * S], 0, 180, fill=(225, 95, 105, 255))
     elif expr == 'determined':
         eye(eL, 'squint'); eye(eR, 'squint'); brow(eL, 6, -20, 8); brow(eR, -6, -20, 8)
         d.line([(fx - 18) * S, (my + 2) * S, (fx + 18) * S, (my - 2) * S], fill=K, width=6 * S)
@@ -169,7 +179,7 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
         d.rounded_rectangle([(hx - 74) * S, (hy - R - 22) * S, (hx + 74) * S, (hy - R + 26) * S], radius=18 * S, fill=(244, 244, 240, 255), outline=INK, width=int(OUT * S))
         d.rectangle([(hx - 76) * S, (hy - R + 12) * S, (hx + 76) * S, (hy - R + 28) * S], fill=(38, 52, 104, 255))
 
-    if pose == 'think':                    # hand over the chin, seamlessly joined to the forearm drawn earlier
+    if name == 'think':                    # hand over the chin, seamlessly joined to the forearm drawn earlier
         hand = lpts(arms[1])
         stamp(hand[-12:], T + 2 * OUT, INK); stamp(hand[-24:], T, C)
     return im.resize((W, H), Image.LANCZOS)

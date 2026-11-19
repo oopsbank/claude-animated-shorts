@@ -147,6 +147,7 @@ cl.new(tex.outputs['Color'], cp.inputs['Base Color']); cl.new(tex.outputs['Alpha
 cl.new(tex.outputs['Color'], cp.inputs['Emission Color']); cp.inputs['Emission Strength'].default_value = 0.8
 cp.inputs['Roughness'].default_value = 0.9
 
+if os.environ.get('NOCHAR'): card.hide_render = True   # clean background plate for 2D compositing
 # ---------- optional 3D stickman (replaces the 2D card) ----------
 body = None
 if os.environ.get('STICK3D'):
