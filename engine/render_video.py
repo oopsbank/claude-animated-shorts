@@ -35,7 +35,7 @@ def find_plate(shot, dirs):
     if STANDIN_PLATES:                # sets not built yet: stand-in plate by shot size
         size = shot.get('size') or ('wide' if 'wide' in shot.get('cam', '') else 'medium')
         p = STANDIN_PLATES.get(size) or STANDIN_PLATES['medium']
-        print(f"  [plate stand-in] {shot.get('id')}: {shot.get('set')}/{shot.get('cam')}/{shot.get('light')} missing -> {os.path.basename(p)}")
+        if os.environ.get('ENGINE_QUIET') != '1': print(f"  [plate stand-in] {shot.get('id')}: {shot.get('set')}/{shot.get('cam')}/{shot.get('light')} missing -> {os.path.basename(p)}")
         return p
     raise SystemExit(f"plate not found for shot {shot.get('id')}: tried {cands}")
 
@@ -119,7 +119,7 @@ def setup(shots_path, words_path, plate_dirs):
 
 
 def init_worker(*a):
-    setup(*a)
+    os.environ['ENGINE_QUIET'] = '1'; setup(*a)
 
 
 # ---------------------------------------------------------------- compositing
@@ -331,6 +331,12 @@ def main():
     os.makedirs(os.path.join(a.out, 'frames'), exist_ok=True)
     setup(a.shots, a.words, a.plates)
     n = G['n']
+    for sh in G['shots']:                       # report rig stand-ins once, in the main process
+        for c in sh.get('characters', []):
+            G['rig'].bean_kwargs(c)
+            for b in [c] + c.get('beats', []):
+                ap = b.get('arm_pose')
+                for p in (ap if isinstance(ap, list) else [ap] if ap else []): G['rig'].arm_ok(p)
     rng = [int(v) for v in a.frames.split(':')] if a.frames else [0, n]
     ext = 'png' if a.png else 'jpg'
     frames = list(range(rng[0], min(rng[1], n), rng[2] if len(rng) > 2 else 1))

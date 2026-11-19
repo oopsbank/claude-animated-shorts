@@ -54,7 +54,7 @@ _warned = set()
 
 
 def _warn(msg):
-    if msg not in _warned: _warned.add(msg); print('  [rig stand-in]', msg, flush=True)
+    if msg not in _warned and os.environ.get('ENGINE_QUIET') != '1': _warned.add(msg); print('  [rig stand-in]', msg, flush=True)
 
 
 def arm_ok(p):
