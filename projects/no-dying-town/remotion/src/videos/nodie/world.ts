@@ -171,7 +171,7 @@ export class World {
     // ---- ROAD (hook + loop) ----
     ground(ROAD, 190, -300, 60);
     b.add(quad(V(ROAD - 2.6, 0.01, 40), V(ROAD + 2.6, 0.01, 40), V(ROAD + 2.6, 0.01, -260), V(ROAD - 2.6, 0.01, -260), 1, 30), lam("roadM", () => ({ map: rep(roadTex(), 1, 1) })));
-    box(ROAD + 1.85, 0, -2.65, ROAD + 1.95, 2.9, -2.55, post);
+    box(ROAD + 1.85, 0, -2.65, ROAD + 1.95, 1.37, -2.55, post);
     signMesh("roadSign", 1.15, 1.15, 600, 600, roadSign, ROAD + 1.9, 2.35, -2.52);
     signMesh("noDying", 1.25, 0.36, 700, 200, (p) => plate(p, "NO DYING", 700, 200), ROAD + 1.9, 1.55, -2.52);
     for (const [i, x, z] of [[0, -14, -30], [1, -6, -34], [2, 9, -32], [3, 16, -38], [4, -22, -44], [5, 24, -46]] as const) stiltHouse(ROAD + x, z, 6, 5, 3, COLS[i], i);
