@@ -142,7 +142,9 @@ lighting 5-6, ink 6, textures 5-6, characters 7, depth 6-7, composition 6-7 (fro
 4. **Verify** with a fresh Opus max agent: side-by-side sheets (`python scripts/sbs_sheet.py out.jpg --ours a b --ref r1 r2`), score each area out of 10 (colour day / golden, lighting, ink, textures, characters, depth, composition) plus a numbered fix list with frame numbers. Map each fix to the file owner and resume that owner's agent with SendMessage (keeps its context). Bridge scores: round 1 5/3/4/5/4/7/4/6 → round 2 5/4/5/6/4/7/6/6 → round 3 see notes.
 5. Contracts between owners live in exported constants (e.g. `NOINK` layer from ink.ts, `dofAt`/`FOREGROUND` from story.ts, `LIGHTS`/`LOOK` from lights.ts). Changing a contract means telling every owner that reads it.
 
-## Stickman characters
+## Characters
+The main cast is the bean-head style in `characters/` (see `characters/README.md` and `references/reports/characters.md` §2). The stickman is on hold.
+
 When a short uses the stickman character (`stickman/scripts/stickman.py`), read `stickman/DRAWING_RULES.md` before drawing or changing anything. It lists the user's corrections: one flat colour, merged silhouette, continuous strokes, symmetric front view, each arm from its own shoulder, and foreshortening. Check every new pose against it with a zoomed crop.
 
 ## Gotchas

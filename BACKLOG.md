@@ -17,7 +17,10 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P2 Shared `blender/sets/common.py`: sky, lights, ink, materials and plate JSON writer, so sets stay consistent.
 - [ ] P3 Parallax plates: a separate foreground layer PNG, so the engine can move it against the background.
 
-## wardrobe (`stickman/`)
+## characters (`characters/`): main cast, bean-head style (Producer prototype done, waiting for user approval)
+- [ ] P1 After approval: a wardrobe brief for the bean cast (more hats, outfits, props, side and 3/4 views, mouth shapes for lip sync, walk cycle following the stickman animation rules 20-29).
+
+## wardrobe (`stickman/`): ON HOLD by user decision (stickman reserved for later)
 - [ ] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES.
 - [ ] P1 Hats: cap, top hat, captain, cowboy, chef, hard hat, crown, in addition to helmet and sailor.
 - [ ] P1 Held props: a hand anchor point, plus prop sprites (bag, rock, phone, lantern, sword, paper, cup).
