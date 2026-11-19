@@ -170,7 +170,7 @@ def fx_explosion(t, n, u, e, kw):
     k = pop(t, 0.13, 0.34, pre=0.22, dip=0.12, s=1.4)
     cool = smooth(seg(t, 0.36, 0.78))                       # fire -> smoke
     rise = u * 0.32 * smooth(seg(t, 0.3, 1.0))
-    out = fade(t, 0.72, 1.0)
+    out = fade(t, 0.84, 1.0)
     body = mixc(col, smoke, cool)
     puffs = []
     m = 9
@@ -211,8 +211,9 @@ def fx_impact_star(t, n, u, e, kw):
     cx, cy = n / 2, n / 2
     k = pop(t, 0.1, 0.28, pre=0.3, dip=0.16, s=2.4)
     k *= 1 + 0.05 * math.sin(2 * math.pi * seg(t, 0.28, 0.6) * 2) * fade(t, 0.4, 0.6)   # settling throb
-    k *= shrink(t, 0.62, 1.0)
-    ang = kw.get('angle', 0) + 14 * (1 - out_cubic(seg(t, 0.1, 0.5))) - 6 * smooth(seg(t, 0.6, 1))
+    k *= 1 - 0.12 * smooth(seg(t, 0.35, 0.7))              # slow settle during the hold: never a frozen sprite
+    k *= shrink(t, 0.68, 0.98)
+    ang = kw.get('angle', 0) + 14 * (1 - out_cubic(seg(t, 0.1, 0.5))) - 12 * smooth(seg(t, 0.3, 1))
     jit = [rng.uniform(0.78, 1.0) for _ in range(pts_n)]
     outer = ('p', star_pts(cx, cy, pts_n, u * 0.78 * k, u * 0.36 * k, ang, jit), col)
     core = ('p', star_pts(cx, cy, pts_n, u * 0.42 * k, u * 0.2 * k, ang, jit), inner)
@@ -228,7 +229,7 @@ def fx_impact_star(t, n, u, e, kw):
             ticks.append(('s', [(cx + math.cos(a) * tl, cy + math.sin(a) * tl, w * 0.4),
                                 (cx + math.cos(a) * h, cy + math.sin(a) * h, w)], col))
     comp(im, group(n, ticks, e * 0.8))
-    comp(im, group(n, [outer], ink_w(e, k), details=[core], alpha=fade(t, 0.82, 1.0) * clamp(t / 0.03)))
+    comp(im, group(n, [outer], ink_w(e, k), details=[core], alpha=fade(t, 0.92, 1.0) * clamp(t / 0.03)))
     return im
 
 
@@ -266,7 +267,7 @@ def fx_speed_lines(t, n, u, e, kw):
     lines = []
     for i in range(cnt):
         y = cy + u * 0.85 * ((i + 0.5) / cnt * 2 - 1) + u * rng.uniform(-0.05, 0.05)
-        d0 = 0.03 + 0.25 * rng.random()
+        d0 = 0.03 + 0.12 * abs((i + 0.5) / cnt * 2 - 1) + 0.03 * rng.random()   # one ordered wave, middle first
         p = seg(t, d0, d0 + 0.68)
         if not 0 < p < 1: continue
         L = u * rng.uniform(1.1, 1.7)
@@ -275,7 +276,7 @@ def fx_speed_lines(t, n, u, e, kw):
         head = x0 - L * in_cubic(p)                         # tail end chases the head -> line grows then retracts
         tail = x0 - L * out_cubic(p) * 1.0
         a, b = (head, tail) if head > tail else (tail, head)
-        w = u * rng.uniform(0.05, 0.085) * bump(p) ** 0.5
+        w = u * rng.uniform(0.085, 0.12) * bump(p) ** 0.5
         lines.append(('s', [(b, y, w * 0.25), (a, y, w)], col))
     lay = group(n, lines, e)
     if ang: lay = lay.rotate(ang, resample=Image.BICUBIC, center=(cx * S, cy * S))
@@ -298,25 +299,27 @@ def fx_sweat_drop(t, n, u, e, kw):
     flip = -1 if kw.get('flip', False) else 1
     k = pop(t, 0.12, 0.3, pre=0.4, dip=0.3, s=2.0)
     wob = 0.06 * math.sin(2 * math.pi * 2.5 * seg(t, 0.3, 0.55)) * fade(t, 0.35, 0.55)
-    slide = in_quad(seg(t, 0.5, 0.92))
-    stretch = 0.3 * bump(seg(t, 0.55, 1.0))
-    sx = (1 + wob - 0.15 * stretch) * k * shrink(t, 0.78, 1.0)
-    sy = (1 - wob + stretch) * k * shrink(t, 0.78, 1.0)
+    creep = 0.12 * smooth(seg(t, 0.28, 0.45))               # slow creep while it gathers weight
+    slide = creep + 0.88 * in_quad(seg(t, 0.45, 0.9))
+    hold = 0.12 * bump(seg(t, 0.36, 0.48))                  # squash wide just before it lets go (anticipation)
+    stretch = 0.32 * bump(seg(t, 0.46, 1.0))
+    sx = (1 + wob + hold - 0.15 * stretch) * k * shrink(t, 0.8, 0.98)
+    sy = (1 - wob - hold + stretch) * k * shrink(t, 0.8, 0.98)
     cx = n / 2 + flip * u * 0.12 * slide
-    cy = n / 2 - u * 0.25 + u * 0.75 * slide
+    cy = n / 2 - u * 0.3 + u * 0.75 * slide
     r = u * 0.3
     body = ('p', teardrop(cx, cy, r, r * 2.2, ang=flip * -12 * slide, sx=sx, sy=sy), col)
     hl = ('e', cx - r * 0.38 * sx, cy - r * 0.15 * sy, r * 0.17 * sx, r * 0.3 * sy, light(col, 0.75))
-    return group(n, [body], ink_w(e, k), details=[hl], alpha=fade(t, 0.85, 1.0) * clamp(t / 0.03))
+    return group(n, [body], ink_w(e, k), details=[hl], alpha=fade(t, 0.92, 1.0) * clamp(t / 0.03))
 
 
 def fx_anger_vein(t, n, u, e, kw):
     col = rgb(kw.get('color', '#ff3b4a'))
     cx, cy = n / 2, n / 2
     k = pop(t, 0.1, 0.27, pre=0.35, dip=0.2, s=2.2)
-    for pk in (0.42, 0.62):                                 # two throbs
-        k *= 1 + 0.16 * bump(seg(t, pk - 0.06, pk + 0.08)) ** 2
-    k *= shrink(t, 0.76, 1.0)
+    for pk in (0.4, 0.55, 0.7):                             # three throbs through the hold
+        k *= 1 + 0.15 * bump(seg(t, pk - 0.05, pk + 0.07)) ** 2
+    k *= shrink(t, 0.78, 0.98)
     jit = 4 * math.sin(t * 60) * bump(seg(t, 0.3, 0.75))
     strokes = []
     R = u * 0.7 * k
@@ -329,39 +332,52 @@ def fx_anger_vein(t, n, u, e, kw):
         pts = bez(p0, p1, p2, 28)
         w = u * 0.17 * k
         strokes.append(('s', [(x, y, w * (0.55 + 0.45 * bump(i / 28))) for i, (x, y, _) in enumerate(pts)], col))
-    return group(n, strokes, ink_w(e, k), alpha=fade(t, 0.86, 1.0) * clamp(t / 0.03))
+    return group(n, strokes, ink_w(e, k), alpha=fade(t, 0.92, 1.0) * clamp(t / 0.03))
+
+
+def almond(cx, cy, rx, ry, ang, n=40):
+    """Eye shape: two arcs meeting in points at the corners (pointed ends read as eyes, not coins)."""
+    pts = []
+    for i in range(n):
+        a = 2 * math.pi * i / n
+        x = rx * math.cos(a); y = ry * math.sin(a) * (abs(math.sin(a)) ** 0.15) * (1 - 0.18 * math.cos(a) ** 2)
+        pts.append(rot(cx + x, cy + y, cx, cy, ang))
+    return pts
 
 
 def fx_glow_eyes(t, n, u, e, kw):
     col = rgb(kw.get('color', '#ffcf3a'))
-    gap = kw.get('gap', 0.45) * u
-    r = kw.get('radius', 0.17) * u
+    gap = kw.get('gap', 0.42) * u
+    r = kw.get('radius', 0.27) * u                          # half-width of each eye
+    slant = kw.get('slant', 14)                             # inner corners low = menacing; 0 = neutral, <0 = sad
     cx, cy = n / 2, n / 2
     # eyelid: a slit opens a little, blinks shut (anticipation), then snaps open with overshoot
     if t < 0.1: o = 0.2 * smooth(t / 0.1)
     elif t < 0.16: o = lerp(0.2, 0.06, smooth(seg(t, 0.1, 0.16)))
     else: o = lerp(0.06, 1, out_back(seg(t, 0.16, 0.34), 2.2))
-    o *= shrink(t, 0.76, 0.96) if t < 0.96 else 0
-    o = max(o, 0)
-    flick = 1 + 0.04 * math.sin(t * 47) * bump(seg(t, 0.34, 0.76))
-    glow = clamp(t / 0.12) * (0.55 + 0.45 * bump(seg(t, 0.22, 0.6)) + 0.25 * bump(seg(t, 0.16, 0.3))) * fade(t, 0.7, 1.0)
+    o = max(0.0, o * shrink(t, 0.78, 0.97)) if t < 0.97 else 0.0
+    pulse = bump(seg(t, 0.34, 0.76) * 3 % 1) * (0.34 < t < 0.76)   # three slow glow pulses during the hold
+    flick = 1 + 0.05 * pulse
+    glow = clamp(t / 0.12) * (0.7 + 0.3 * pulse + 0.3 * bump(seg(t, 0.16, 0.32))) * fade(t, 0.72, 0.98)
     im = new(n)
-    # halo: soft blurred colour around both eyes (warm by default, DRAWING_RULES 19)
     halo = new(n); hd = ImageDraw.Draw(halo)
-    for s in (-1, 1):
-        x = cx + s * gap
-        for f, a in ((2.6, 70), (1.7, 120)):
-            hr = r * f * (0.7 + 0.3 * o) * flick
-            hd.ellipse(((x - hr) * S, (cy - hr * (0.55 + 0.45 * o)) * S, (x + hr) * S, (cy + hr * (0.55 + 0.45 * o)) * S),
+    for s_ in (-1, 1):
+        x = cx + s_ * gap
+        for f, a in ((2.0, 110), (1.35, 190)):
+            hr = r * f * flick
+            hd.ellipse(((x - hr) * S, (cy - hr * (0.4 + 0.5 * o)) * S, (x + hr) * S, (cy + hr * (0.4 + 0.5 * o)) * S),
                        fill=col + (a,))
-    halo = halo.filter(ImageFilter.GaussianBlur(r * 0.7 * S))
+    # blur only the alpha and keep the colour solid: blurring straight RGBA drags in black from empty pixels (grey smudge)
+    mask = halo.getchannel('A').filter(ImageFilter.GaussianBlur(r * 0.45 * S))
+    halo = Image.new('RGBA', halo.size, col + (0,)); halo.putalpha(mask)
     comp(im, opacity(halo, glow))
     eyes, cores = [], []
-    for s in (-1, 1):
-        x = cx + s * gap
-        eyes.append(('e', x, cy, r * flick, r * o * flick, col))
-        cores.append(('e', x - r * 0.08 * s, cy - r * 0.1 * o, r * 0.55, r * 0.5 * o, light(col, 0.8)))
-    comp(im, group(n, eyes, ink_w(e, o, 0.25), details=cores, alpha=clamp(t / 0.03) * fade(t, 0.9, 1.0)))
+    for s_ in (-1, 1):
+        x = cx + s_ * gap
+        ang = -s_ * slant
+        eyes.append(('p', almond(x, cy, r * flick, r * 0.62 * o * flick, ang), col))
+        cores.append(('p', almond(x + s_ * r * 0.04, cy - r * 0.04 * o, r * 0.55, r * 0.3 * o, ang), light(col, 0.85)))
+    comp(im, group(n, eyes, ink_w(e, o, 0.25), details=cores, alpha=clamp(t / 0.03) * fade(t, 0.94, 1.0)))
     return im
 
 
@@ -479,13 +495,21 @@ def fx_question_mark(t, n, u, e, kw):
     pts += [(x, y, w) for x, y, _ in bez(pts[-1][:2], (cx + u * 0.04, cy - u * 0.05), (cx, cy + u * 0.16), 16)[1:]]
     pts[0] = pts[0][:2] + (w * 0.9,)
     piv = (cx, cy + u * 0.75)
+    lift += u * 0.04 * math.sin(2 * math.pi * 1.5 * seg(t, 0.35, 0.85)) * bump(seg(t, 0.35, 0.85))
+    grow = smooth(seg(t, 0.08, 0.16))                       # glyph grows out of a round blob
     stroke = ('s', xform(pts, *piv, sx, sy, ang, k, 0, lift), col)
     kd = pop(t, 0.18, 0.38, pre=0.3, dip=0.2, s=2.4) * shrink(t, 0.8, 1.0)  # the dot lands a beat later (overlap)
     dx, dy = xform([(cx, cy + u * 0.52)], *piv, sx, sy, ang, 1, 0, lift)[0]
     dot = ('c', dx, dy, u * 0.12 * kd, col)
     hl = [('c', *xform([(hook_c[0] - R * 0.7, hook_c[1] - R * 0.55)], *piv, sx, sy, ang, k, 0, lift)[0], w * 0.18 * k,
            light(col, 0.6))]
-    return group(n, [stroke, dot], ink_w(e, k), details=hl, alpha=fade(t, 0.86, 1.0) * clamp(t / 0.03))
+    blob = []
+    if grow < 1:                                            # anticipation: a squashed ball, not a comma
+        bk = pop(t, 0.12, 0.32, pre=0.35, dip=0.25, s=2.0) * (1 - grow)
+        blob = [('e', cx, cy - u * 0.05 + lift, u * 0.32 * bk * sx, u * 0.32 * bk * sy, col)]
+        stroke = ('s', [(x, y, w_ * grow) for x, y, w_ in stroke[1]], col)
+        dot = ('c', dot[1], dot[2], dot[3] * grow, col)
+    return group(n, blob + [stroke, dot], ink_w(e, k), details=hl if grow >= 1 else [], alpha=fade(t, 0.93, 1.0) * clamp(t / 0.03))
 
 
 def fx_exclaim(t, n, u, e, kw):
@@ -497,7 +521,7 @@ def fx_exclaim(t, n, u, e, kw):
     ang = kw.get('tilt', -6) + 5 * math.sin(t * 70) * bump(seg(t, 0.28, 0.55))
     lift = -u * 0.15 * smooth(seg(t, 0.72, 1.0))
     piv = (cx, cy + u * 0.75)
-    bar = [(cx, cy - u * 0.62, u * 0.3), (cx, cy - u * 0.25, u * 0.24), (cx, cy + u * 0.18, u * 0.12)]
+    bar = [(cx, cy - u * 0.5, u * 0.28), (cx, cy - u * 0.15, u * 0.22), (cx, cy + u * 0.22, u * 0.11)]
     bar = ('s', xform(bar, *piv, sx, sy, ang, k, shake, lift), col)
     kd = pop(t, 0.16, 0.34, pre=0.3, dip=0.2, s=2.6) * shrink(t, 0.8, 1.0)
     dx, dy = xform([(cx, cy + u * 0.5)], *piv, sx, sy, ang, 1, shake, lift)[0]
@@ -515,7 +539,7 @@ def fx_exclaim(t, n, u, e, kw):
             ticks.append(('s', [(o[0] + math.cos(ar) * r0, o[1] + math.sin(ar) * r0, u * 0.03),
                                 (o[0] + math.cos(ar) * r1, o[1] + math.sin(ar) * r1, u * 0.08 * bump(p))], col))
     comp(im, group(n, ticks, e * 0.8))
-    comp(im, group(n, [bar, dot], ink_w(e, k), details=hl, alpha=fade(t, 0.86, 1.0) * clamp(t / 0.03)))
+    comp(im, group(n, [bar, dot], ink_w(e, k), details=hl, alpha=fade(t, 0.93, 1.0) * clamp(t / 0.03)))
     return im
 
 
@@ -545,17 +569,17 @@ def fx_music_note(t, n, u, e, kw):
     cx, by = n / 2, n / 2 + u * 0.7                        # notes rise from bottom centre (a mouth / speaker)
     im = new(n)
     for i in range(cnt):
-        d0 = 0.02 + 0.3 * i / max(1, cnt - 1); life = 0.66
+        d0 = 0.02 + 0.32 * i / max(1, cnt - 1); life = 0.64
         p = seg(t, d0, d0 + life)
         if not 0 < p < 1: continue
-        k = pop(p, 0.14, 0.36, pre=0.35, dip=0.25, s=2.0) * shrink(p, 0.7, 1.0)
+        k = pop(p, 0.14, 0.36, pre=0.35, dip=0.25, s=2.0) * shrink(p, 0.66, 0.98)
         side = (-1) ** i
-        x = cx + side * u * 0.2 + side * u * 0.25 * smooth(p) + u * 0.12 * math.sin(p * 2 * math.pi * 1.2 + i)
+        x = cx + side * u * (0.18 + 0.22 * (i // 2)) + side * u * 0.42 * smooth(p) + u * 0.08 * math.sin(p * 2 * math.pi * 1.2 + i)
         y = by - u * 1.1 * out_quad(p)
         ang = 14 * math.sin(p * 2 * math.pi * 1.2 + i + 1)
         h = u * 0.55 * k
         shp = note_shapes(x - h * 0.2, y, h, ang, rgb(cols[i % len(cols)]), double=(i % 2 == 1))
-        comp(im, group(n, shp, ink_w(e, k), alpha=fade(p, 0.8, 1.0)))
+        comp(im, group(n, shp, ink_w(e, k), alpha=fade(p, 0.9, 1.0)))
     return im
 
 
@@ -580,7 +604,7 @@ def render(name, t, size=512, **kw):
     if name not in NAMES: raise KeyError(f'unknown fx {name!r}; known: {", ".join(NAMES)}')
     n = int(size); t = clamp(float(t))
     u = n / 2 * 0.9 * kw.get('scale', 1.0)
-    e = kw.get('line', max(2.0, min(4.0, n / 160)))
+    e = kw.get('line', 3.0 if n >= 96 else max(1.5, n / 32))   # same px as the stickman's ~3 px line
     im = NAMES[name][0](t, n, u, e, kw)
     return im.resize((n, n), Image.LANCZOS)
 
