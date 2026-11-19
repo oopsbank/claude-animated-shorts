@@ -23,7 +23,8 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 
 ## characters (`characters/`): main cast, bean-head style (owner: wardrobe session, from 2026-11-19)
 - [x] P1 Side view (`view='side'`, facing left/right, spec §2.7) and a 3/4 view. (`turned()` rig; `previews/views_v1.png`; reviewer PASS 8/7/7/8/8)
-- [ ] P1 Riding pose on a bicycle and a motorbike (side and 3/4), with 2D bike props: steer angle on the front wheel and bars, and a lean angle for the whole bike.
+- [x] P1 Riding pose on a bicycle and a motorbike (side and 3/4), with 2D bike props: steer angle on the front wheel and bars, and a lean angle for the whole bike. (`bikes.py`: bicycle, motorbike, nobs_bike; side/3q/rear/front/top; steer, lean, bike_lean + body_lean, knee_out, hold='fixed'; rear/front bean views; `helmet` hat with sticker; `previews/ride_v1.png`; reviewer PASS 7/8/7/8/8)
+- [ ] P2 Riding: the near leg in side view still makes a small S-bend near the seat tube; the 3/4 motorbike steer could read stronger; rear-view far hand hides behind a hard-leaning torso. Each `ride()` takes ~3 s (full-size masks in `turned`), so crop the layers if the engine needs speed.
 - [ ] P1 Mouth shapes for lip sync (`mouth=` closed, small, open, wide, O, smile_talk) overriding any expression.
 - [ ] P1 Animatable joints (arm/leg angles, head tilt, body lean, blink) and a foot-locked walk cycle (DRAWING_RULES 20-29).
 - [ ] P2 More hats, outfits and props as the script needs them (see `claude/area-scripts` BACKLOG, e.g. a broom).
