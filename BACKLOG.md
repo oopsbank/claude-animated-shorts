@@ -25,8 +25,11 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P3 Run cycle and sit pose, following DRAWING_RULES.
 
 ## fx (`fx/`)
-- [ ] P1 `fx/fx.py` with: explosion, impact_star, dust_puff, speed_lines, sweat_drop, anger_vein, glow_eyes, sparkle, splash, question_mark, exclaim, music_note.
-- [ ] P1 `fx/CATALOG.md` with preview strips.
+- [x] P1 `fx/fx.py` with: explosion, impact_star, dust_puff, speed_lines, sweat_drop, anger_vein, glow_eyes, sparkle, splash, question_mark, exclaim, music_note. (claude/area-fx) After 4 review rounds, 11 of 12 effects pass (every score >= 7). See `fx/RULES.md`.
+- [x] P1 `fx/CATALOG.md` with preview strips (`fx/previews/`), a demo GIF, and automatic checks in `fx/scripts/catalog.py`.
+- [ ] P1 glow_eyes: round 4 scored readability 6 and style 5 because the translucent blurred halo looked muddy. It now uses a solid flat outlined halo with rays, which has not been re-reviewed. Re-review it, and try a version with no halo (rays only) if it still reads as "big eyes" rather than "glow".
+- [ ] P2 fx polish from review round 4: sparkle peaks at 3/12 and should leave no sub-3 px specks; exclaim's tick dashes need a visible outline at night; the splash ring should fade by alpha, not by thinning; the question_mark hook should grow with its dot at 1/12; the double note in music_note should ease in over 2-3 frames; explosion and dust_puff leave pixel debris in their last third.
+- [ ] P2 engine: composite fx with `line=3.2*char_scale` so the fx outline matches the character's outline (see CATALOG.md).
 - [ ] P2 Light shafts and a lens flash.
 
 ## engine (`engine/`)

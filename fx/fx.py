@@ -364,15 +364,15 @@ def fx_glow_eyes(t, n, u, e, kw):
     im = new(n)
     # halo: ONE flat outlined almond ring, semi-opaque (cel glow, no blur; RULES 7), plus short outlined rays on the flare
     rings = [('p', almond(cx + s_ * gap, cy, r * 1.5 * flick, r * 0.62 * 1.5 * max(o, 0.35) * flick, -s_ * slant),
-              light(col, 0.35)) for s_ in (-1, 1)]
-    comp(im, group(n, rings, ink_w(e, o, 0.25) * 0.7, alpha=0.6 * glow))
+              light(col, 0.55)) for s_ in (-1, 1)]
+    comp(im, group(n, rings, ink_w(e, o, 0.25), alpha=clamp(glow * 2)))   # solid flat fill, alpha only at the ends
     rp = seg(t, 0.2, 0.62)
     if 0 < rp < 1:
         rays = []
         for s_ in (-1, 1):
             for a_ in (-60, -90, -120):
                 ar = math.radians(a_ - s_ * slant * 0.5); x = cx + s_ * gap
-                r0 = r * (1.0 + 0.25 * in_quad(rp)); r1 = r * (1.05 + 0.55 * out_cubic(rp))
+                r0 = r * (1.2 + 0.3 * in_quad(rp)); r1 = r * (1.25 + 0.6 * out_cubic(rp))
                 rays.append(('s', [(x + math.cos(ar) * r0, cy + math.sin(ar) * r0 * 0.9, r * 0.05),
                                    (x + math.cos(ar) * r1, cy + math.sin(ar) * r1 * 0.9, r * 0.16 * bump(rp))], col))
         comp(im, group(n, rays, e * 0.8))
@@ -569,7 +569,7 @@ def note_shapes(x, y, h, ang, col, double=False):
 
 def fx_music_note(t, n, u, e, kw):
     rng = random.Random(kw.get('seed', 19))
-    cols = kw.get('colors') or [kw.get('color', '#a774ff'), '#ff5fa8']
+    cols = kw.get('colors') or [kw.get('color', '#b58cff'), '#ff5fa8']
     cnt = kw.get('count', 2)
     cx, by = n / 2, n / 2 + u * 0.7                        # notes rise from bottom centre (a mouth / speaker)
     im = new(n)

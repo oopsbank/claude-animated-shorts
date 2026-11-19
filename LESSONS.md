@@ -22,6 +22,9 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - The scale of each pack differs (a Quaternius barrel is 0.2 units). Scale every model to real metres.
 
 ## Process
+- Review animation on a dense sheet (t = 1/12 .. 11/12), never only on a 5-frame strip. Pops at the entry or exit and frozen holds hide between the samples.
+- PIL `GaussianBlur` on straight RGBA drags black in from empty pixels, which gives grey or brown halos. Blur only the alpha channel and keep the RGB solid.
+- Feed each reviewer round the same inputs, and turn every fix into a rule (for example `fx/RULES.md`). Otherwise the next round undoes the last one: alpha fades get swapped for shrinks, then the shrink pops.
 - Render a cheap low-res still after every change, and look at it before rendering full size.
 - Compare side-by-side with a reference frame. Numbers and adjectives lie; pictures don't.
 - When the user corrects something, fix it **and** add a rule so it never happens again.
