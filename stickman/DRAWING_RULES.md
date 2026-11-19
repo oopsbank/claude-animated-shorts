@@ -36,3 +36,15 @@ These rules come from the user's corrections in review. Follow them for every ne
 ## Review habit
 18. Before showing a pose, render it large and look at a **zoomed crop of the shoulders, elbows and crossings**. Check rules 1, 8, 9, 12 and 14 in particular.
 19. In scenes, bloom or glow must never blow out the character's face. Only warm lights glow.
+
+## Animation (from walk-cycle and 12-principles references, applied in `scripts/anim_v2.py`)
+20. **Walk cycle** = contact -> down -> passing -> up, then mirrored. The hips are lowest just after contact (the stance knee gives a little) and highest after passing. Only the **swinging** leg bends its knee, most as it passes under the hip, with the thigh lifting slightly forward. The supporting leg stays nearly straight.
+21. **Foot locking: no sliding.** The hip travels exactly as far as the planted foot moves back. Compute the travel from the stance foot; never move the character at a constant speed.
+22. **Arms swing like pendulums from the shoulder,** opposite the legs, peaking a little **after** the legs (overlap). The forearm trails the upper arm.
+23. **Line of action:** lean about 4 degrees into the walk direction. Straighten up on the stop.
+24. **Stops:** finish on a contact pose, sink (down), bring the feet together, then let the arms settle with a damped swing (follow-through).
+25. **Every action** has anticipation (a small opposite move first), then the action with ease in/out, then overshoot and settle (`out_back`). Never use a plain linear blend between two poses.
+26. **Transitions that would pass limbs through each other go in stages.** Example for think: arms down first, then the hand to the chin, then the other arm crosses. Animate the shoulder positions (`_sh`) instead of letting them jump.
+27. **Front-view crouch:** the knees go out and the feet stay apart. Never let the shins meet, which reads as a loop.
+28. **Moving holds:** subtle breathing (about 0.6% scale) and blinks every 2 to 4 s. Never fully freeze.
+29. Start the walk-in just off-screen so the first frames are never empty.

@@ -57,7 +57,8 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
 
     legs = [limb(hip, P['legL'], seg_leg), limb(hip, P['legR'], seg_leg)]
     if name == 'think':                    # each arm from its OWN shoulder (left arm from the left, right from the right)
-        arms = [limb((278, 262), P['armL'], seg_arm), limb((322, 262), P['armR'], seg_arm)]
+        shx = P.get('_sh', (278, 322))      # shoulder x (animatable: 300,300 -> 278,322 while moving into the pose)
+        arms = [limb((shx[0], 262), P['armL'], seg_arm), limb((shx[1], 262), P['armR'], seg_arm)]
     else:
         arms = [limb(shoulder, P['armL'], seg_arm), limb(shoulder, P['armR'], seg_arm)]
     lowest = max(max(p[1] for p in path(*l)) for l in legs) + T / 2
