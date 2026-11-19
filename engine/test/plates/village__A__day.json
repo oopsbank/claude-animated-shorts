@@ -1,0 +1,10 @@
+{
+ "ground_x": 495.4,
+ "ground_y": 1423.8,
+ "px_per_m": 279.1,
+ "light": "day",
+ "shot": "A",
+ "tint": "#fff6ea",
+ "light_dir": "left",
+ "note": "stand-in: blender/scripts/scene2.py LIGHT=day NOCHAR=1 SHOT=A at 150%"
+}
