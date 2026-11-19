@@ -10,7 +10,7 @@ const h = delayRender("font");
 font.load().then((f) => { (document as any).fonts.add(f); continueRender(h); });
 
 export const Logo: React.FC = () => {
-  const { bg = "yellow", expr = "neutral" } = getInputProps() as any;
+  const { bg = "yellow", expr = "neutral", mark = "?" } = getInputProps() as any;
   const draw = useCallback((cv: HTMLCanvasElement | null) => {
     if (!cv) return;
     const g = cv.getContext("2d")!, S = 1080;
@@ -29,9 +29,9 @@ export const Logo: React.FC = () => {
     // a big inked question mark, tilted
     g.save(); g.translate(S * 0.75, S * 0.25); g.rotate(0.22);
     g.font = "900 290px CapFont"; g.textAlign = "center"; g.textBaseline = "middle";
-    g.lineJoin = "round"; g.lineWidth = 38; g.strokeStyle = "#160b14"; g.strokeText("?", 0, 12); g.strokeText("?", 0, 0);
-    g.fillStyle = "#ffffff"; g.fillText("?", 0, 0);
+    g.lineJoin = "round"; g.lineWidth = 38; g.strokeStyle = "#160b14"; g.strokeText(mark, 0, 12); g.strokeText(mark, 0, 0);
+    g.fillStyle = "#ffffff"; g.fillText(mark, 0, 0);
     g.restore();
-  }, [bg, expr]);
+  }, [bg, expr, mark]);
   return <AbsoluteFill><canvas ref={draw} width={1080} height={1080} style={{ width: "100%", height: "100%" }} /></AbsoluteFill>;
 };
