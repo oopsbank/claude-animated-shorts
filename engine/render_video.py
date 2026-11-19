@@ -144,6 +144,8 @@ def place_characters(base, k, f, meta):
         fig_h = 777 * s
         gx = st['x'] * W; gy = meta['ground_y'] - st['lift'] * fig_h
         ox, oy = int(round(gx - sx)), int(round(gy - sy))
+        ft = feet_of(im.getchannel('A'), sx)
+        if ft and abs(st['lean']) > 0.05: oy += int(round(sy - ft['y'])) - 1   # rotating about the soles drops one foot: re-plant it
         # contact shadow: soft blue-grey ellipse, shrinks and fades as the character leaves the ground
         kk = clamp(st['lift'] / 0.1); r = 75 * s * (1 - 0.4 * kk)
         sh = Image.new('L', (int(4 * r) + 4, int(r) + 4), 0)
@@ -152,13 +154,12 @@ def place_characters(base, k, f, meta):
         col = Image.new('RGBA', sh.size, (52, 50, 78, 255))
         base.paste(col, (int(gx - 2 * r), int(meta['ground_y'] - sh.height / 2)), sh)
         base.alpha_composite(im, (ox, oy))
-        ft = feet_of(im.getchannel('A'), sx)
         bb = im.getchannel('A').point(lambda v: 255 if v > 40 else 0).getbbox()
         out.append({'id': spec.get('id', f'c{i}'), 'grounded': st['grounded'] and not st['moving'], 'moving': st['moving'],
                     'foot_y': ft['y'] + oy if ft else None, 'foot_l': ft['l'] + ox if ft and ft['l'] is not None else None,
                     'foot_r': ft['r'] + ox if ft and ft['r'] is not None else None, 'ground_y': meta['ground_y'],
                     'bbox': [bb[0] + ox, bb[1] + oy, bb[2] + ox, bb[3] + oy] if bb else None,
-                    'head': [gx, oy + g['crown']], 'pose': list(st['pose']), 'expr': st['expr'], 'mouth': mouth, 'lid': st['lid']})
+                    'head': [gx, oy + g['crown']], 'pose': list(st['pose']), 'facing': st['facing'], 'expr': st['expr'], 'mouth': mouth, 'lid': st['lid']})
     return out
 
 
@@ -305,7 +306,7 @@ def main():
         for i, m in enumerate(pool.imap(work, [(f, a.out, ext) for f in frames], chunksize=4)):
             metas.append(m)
             if i % 150 == 0: print(f'  frame {m["f"]}/{n}', flush=True)
-    track = {'fps': FPS, 'size': [W, H], 'n': n, 'spans': [dict(sp, id=s.get('id')) for s, sp in zip(G['shots'], G['spans'])],
+    track = {'fps': FPS, 'size': [W, H], 'n': n, 'spans': [dict(sp, id=s.get('id'), crop=s.get('crop')) for s, sp in zip(G['shots'], G['spans'])],
              'beats': beats_report(), 'frames': metas, 'transitions': [s.get('transition', 'cut') for s in G['shots']]}
     json.dump(track, open(os.path.join(a.out, 'track.json'), 'w'))
     if not a.no_mp4 and not a.frames:

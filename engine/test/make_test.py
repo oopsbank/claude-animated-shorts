@@ -38,7 +38,7 @@ shots = [
      'set': 'village', 'cam': 'M', 'light': 'day', 'camera': {'move': 'push_in', 'amount': 0.05},
      'characters': [dict(RIDER, x=0.5, facing=0.0, expr='smile', talk=True,
                          beats=[{'at_word': 2, 'facing': -0.5, 'pose': 'point'}, {'at_word': 5, 'facing': 0.0, 'pose': 'cheer', 'expr': 'grin', 'action': 'hop'}])],
-     'fx': [{'name': 'sparkle', 'at_word': 6, 'x': 0.5, 'y': 0.33, 'size': 0.5, 'dur': 1.2}]},
+     'fx': [{'name': 'sparkle', 'at_word': 6, 'x': 0.5, 'y': 0.2, 'size': 0.45, 'dur': 1.2}]},
 ]
 json.dump({'slug': 'bike-countersteer-standin', 'title': 'Why Your Bike Steers Backwards First (engine stand-in)', 'shots': shots},
           open(os.path.join(out, 'shots.json'), 'w'), indent=1)
