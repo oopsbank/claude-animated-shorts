@@ -16,7 +16,9 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P3 Parallax plates: a separate foreground layer PNG, so the engine can move it against the background.
 
 ## wardrobe (`stickman/`)
-- [ ] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES.
+- [x] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES. (+ `pants`, `outfit=` presets: sailor, captain, soldier, chef, detective, worker, farmer; sheet `stick_outfits.png`)
+- [ ] P2 Think pose: a tiny dark ink sliver under the right elbow (visible at 2x, already in the original pose). Also, in the think pose with a coat, the left sleeve merges with the coat body.
+- [ ] P3 Side-on back sleeve in a light colour (chef run) merges with a same-colour torso at the shoulder. Consider a slightly tinted back sleeve.
 - [ ] P1 Hats: cap, top hat, captain, cowboy, chef, hard hat, crown, in addition to helmet and sailor.
 - [ ] P1 Held props: a hand anchor point, plus prop sprites (bag, rock, phone, lantern, sword, paper, cup).
 - [ ] P1 Mouth shapes for lip sync (closed, small, open, wide, O, smile-talk) selectable on top of any expression.

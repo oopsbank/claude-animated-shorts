@@ -42,3 +42,34 @@ for i, ((p, label, e), c) in enumerate(zip(ps, cols)):
     sh.alpha_composite(im, (i * cw + (cw - im.width) // 2, T + 40))
 sh.save(f'{OUT}/stick_poses.png')
 print('ok')
+
+# ---------------- wardrobe sheets ----------------
+def grid(title, cells, out, cols, cw=300, ch=560, lab=70):
+    """cells: [(image 600x1000, label, sublabel)] laid out in rows of `cols`."""
+    rows = (len(cells) + cols - 1) // cols
+    g = Image.new('RGBA', (cw * cols, T + rows * (ch + lab + 20)), BG); dd = ImageDraw.Draw(g)
+    dd.text((30, 26), title, font=F, fill=TXT)
+    for k, (im, label, sub) in enumerate(cells):
+        r, c = divmod(k, cols); x0, y0 = c * cw, T + r * (ch + lab + 20)
+        body = im.resize((int(ch * 0.6), ch), Image.LANCZOS)
+        g.alpha_composite(body, (x0 + (cw - body.width) // 2, y0))
+        w = dd.textlength(label, font=F3); dd.text((x0 + (cw - w) / 2, y0 + ch + 2), label, font=F3, fill=TXT)
+        w = dd.textlength(sub, font=f2); dd.text((x0 + (cw - w) / 2, y0 + ch + 40), sub, font=f2, fill=SUB)
+    g.save(out)
+
+oc = [('Áo sơ mi', 'shirt=True', dict(shirt=True), '#4a86e0', 'neutral', 'stand'),
+      ('Áo khoác dài', 'coat=True', dict(coat=True), '#e0583f', 'happy', 'stand'),
+      ('Đồng phục', 'uniform=True', dict(uniform=True), '#3fae6a', 'determined', 'stand'),
+      ('Tạp dề', 'apron=True', dict(apron=True, shirt='#6fb3d9'), '#f2b234', 'happy', 'stand'),
+      ('Thủy thủ', "outfit='sailor'", dict(outfit='sailor'), '#4a86e0', 'happy', 'stand'),
+      ('Thuyền trưởng', "outfit='captain'", dict(outfit='captain'), '#e0583f', 'smug', 'stand'),
+      ('Đầu bếp', "outfit='chef'", dict(outfit='chef'), '#f2b234', 'happy', 'stand'),
+      ('Thám tử', "outfit='detective'", dict(outfit='detective'), '#8a5cd6', 'thinking', 'think'),
+      ('Công nhân', "outfit='worker'", dict(outfit='worker'), '#3fae6a', 'determined', 'point'),
+      ('Lính', "outfit='soldier'", dict(outfit='soldier'), '#e0583f', 'angry', 'shrug'),
+      ('Nông dân', "outfit='farmer'", dict(outfit='farmer'), '#8a5cd6', 'happy', 'wave'),
+      ('Khoác – đi', 'coat, walk', dict(coat=True), '#4a86e0', 'neutral', 'walk'),
+      ('Bếp – chạy', 'chef, run', dict(outfit='chef'), '#f2b234', 'scared', 'run'),
+      ('Đồng phục – đi', 'uniform, walk', dict(uniform=True), '#3fae6a', 'neutral', 'walk')]
+grid('Stickman – trang phục', [(draw(e, p, c, **kw), lab, sub) for lab, sub, kw, c, e, p in oc], f'{OUT}/stick_outfits.png', 7)
+print('wardrobe ok')
