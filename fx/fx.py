@@ -247,9 +247,10 @@ def fx_dust_puff(t, n, u, e, kw):
             f = (i + 0.5) / m
             go = out_cubic(seg(t, 0.08 + 0.03 * i, 0.75))
             grow = pop(t, 0.06 + 0.02 * i, 0.32 + 0.03 * i, pre=0.35, dip=0.28, s=1.5)
-            r = u * (0.26 - 0.1 * f) * grow * shrink(t, 0.42 + 0.08 * i, 0.86 + 0.03 * i) * rng.uniform(0.9, 1.1)
+            r = u * (0.26 - 0.1 * f) * grow * shrink(t, 0.42 + 0.08 * i, 0.86 + 0.03 * i) * rng.uniform(0.7, 1.25)
+            hy = u * rng.uniform(0.0, 0.18) * smooth(seg(t, 0.3, 1.0))   # puffs drift up at different rates
             x = cx + s * u * (0.08 + 0.95 * f * go)
-            y = gy - r * (1 - 0.35 * squash) - u * 0.22 * out_quad(seg(t, 0.15, 1)) * (1 - f * 0.5)
+            y = gy - r * (1 - 0.35 * squash) - u * 0.22 * out_quad(seg(t, 0.15, 1)) * (1 - f * 0.5) - hy
             shapes.append(('e', x, y, r * (1 + 0.45 * squash), r * (1 - 0.35 * squash), col))
             caps.append(('e', x - r * 0.2, y - r * 0.3, r * 0.5, r * 0.4 * (1 - 0.35 * squash), light(col, 0.35)))
     rc = u * 0.24 * pop(t, 0.04, 0.28, pre=0.4, dip=0.3, s=1.3) * shrink(t, 0.3, 0.7)
@@ -295,18 +296,18 @@ def teardrop(cx, cy, r, tip, ang=0.0, sx=1.0, sy=1.0, nseg=36):
 
 
 def fx_sweat_drop(t, n, u, e, kw):
-    col = rgb(kw.get('color', '#8fd8ff'))
+    col = rgb(kw.get('color', '#5cc0ff'))
     flip = -1 if kw.get('flip', False) else 1
     k = pop(t, 0.12, 0.3, pre=0.4, dip=0.3, s=2.0)
     wob = 0.06 * math.sin(2 * math.pi * 2.5 * seg(t, 0.3, 0.55)) * fade(t, 0.35, 0.55)
     creep = 0.12 * smooth(seg(t, 0.28, 0.45))               # slow creep while it gathers weight
-    slide = creep + 0.88 * in_quad(seg(t, 0.45, 0.9))
+    slide = creep + 0.88 * in_quad(seg(t, 0.45, 0.86))
     hold = 0.12 * bump(seg(t, 0.36, 0.48)) - 0.05 * bump(seg(t, 0.48, 0.58))                # squash wide just before it lets go (anticipation)
     stretch = 0.32 * bump(seg(t, 0.46, 1.0))
     sx = (1 + wob + hold - 0.15 * stretch) * k * shrink(t, 0.7, 0.96)
     sy = (1 - wob - hold + stretch) * k * shrink(t, 0.7, 0.96)
     cx = n / 2 + flip * u * 0.12 * slide
-    cy = n / 2 - u * 0.3 + u * 0.75 * slide
+    cy = n / 2 - u * 0.45 + u * 1.05 * slide
     r = u * 0.3
     body = ('p', teardrop(cx, cy, r, r * 2.2, ang=flip * -12 * slide, sx=sx, sy=sy), col)
     hl = ('e', cx - r * 0.38 * sx, cy - r * 0.15 * sy, r * 0.17 * sx, r * 0.3 * sy, light(col, 0.75))
@@ -316,15 +317,15 @@ def fx_sweat_drop(t, n, u, e, kw):
 def fx_anger_vein(t, n, u, e, kw):
     col = rgb(kw.get('color', '#ff3b4a'))
     cx, cy = n / 2, n / 2
-    k = pop(t, 0.1, 0.27, pre=0.35, dip=0.2, s=2.2)
-    for pk in (0.4, 0.55, 0.7):                             # three throbs through the hold
-        k *= 1 + 0.15 * bump(seg(t, pk - 0.05, pk + 0.07)) ** 2
+    k = pop(t, 0.14, 0.36, pre=0.4, dip=0.26, s=2.6)
+    for pk in (0.47, 0.6):                                  # two clear throbs through the hold
+        k *= 1 + 0.18 * bump(seg(t, pk - 0.06, pk + 0.06))
     k *= shrink(t, 0.7, 0.96)
     jit = 4 * math.sin(t * 60) * bump(seg(t, 0.3, 0.75))
-    strokes = []
+    strokes, hls = [], []
     R = u * 0.7 * k
     for q in (45, 135, 225, 315):
-        a1, a2 = math.radians(q - 38 + jit), math.radians(q + 38 + jit)
+        a1, a2 = math.radians(q - 33 + jit), math.radians(q + 33 + jit)
         am = math.radians(q + jit)
         p0 = (cx + R * math.cos(a1), cy + R * math.sin(a1))
         p2 = (cx + R * math.cos(a2), cy + R * math.sin(a2))
@@ -332,7 +333,8 @@ def fx_anger_vein(t, n, u, e, kw):
         pts = bez(p0, p1, p2, 28)
         w = u * 0.17 * k
         strokes.append(('s', [(x, y, w * (0.55 + 0.45 * bump(i / 28))) for i, (x, y, _) in enumerate(pts)], col))
-    return group(n, strokes, ink_w(e, k), alpha=fade(t, 0.92, 1.0) * clamp(t / 0.03))
+        hls.append(('s', [(x, y, w * 0.18 * bump(i / 28)) for i, (x, y, _) in enumerate(pts) if 6 <= i <= 22], light(col, 0.55)))
+    return group(n, strokes, ink_w(e, k), details=hls, alpha=fade(t, 0.92, 1.0) * clamp(t / 0.03))
 
 
 def almond(cx, cy, rx, ry, ang, n=40):
@@ -360,11 +362,20 @@ def fx_glow_eyes(t, n, u, e, kw):
     flick = 1 + 0.05 * pulse
     glow = clamp(t / 0.12) * (0.7 + 0.3 * pulse + 0.3 * bump(seg(t, 0.16, 0.32))) * fade(t, 0.72, 0.98)
     im = new(n)
-    # halo: flat cel-style rings (no blur; DRAWING_RULES 1), two steps of the eye colour at low alpha
-    for f, a in ((1.75, 0.28), (1.35, 0.45)):
-        rings = [('p', almond(cx + s_ * gap, cy, r * f * flick, r * 0.62 * f * max(o, 0.3) * flick, -s_ * slant), col)
-                 for s_ in (-1, 1)]
-        comp(im, group(n, rings, 0, alpha=a * glow))
+    # halo: ONE flat outlined almond ring, semi-opaque (cel glow, no blur; RULES 7), plus short outlined rays on the flare
+    rings = [('p', almond(cx + s_ * gap, cy, r * 1.5 * flick, r * 0.62 * 1.5 * max(o, 0.35) * flick, -s_ * slant),
+              light(col, 0.35)) for s_ in (-1, 1)]
+    comp(im, group(n, rings, ink_w(e, o, 0.25) * 0.7, alpha=0.6 * glow))
+    rp = seg(t, 0.2, 0.62)
+    if 0 < rp < 1:
+        rays = []
+        for s_ in (-1, 1):
+            for a_ in (-60, -90, -120):
+                ar = math.radians(a_ - s_ * slant * 0.5); x = cx + s_ * gap
+                r0 = r * (1.0 + 0.25 * in_quad(rp)); r1 = r * (1.05 + 0.55 * out_cubic(rp))
+                rays.append(('s', [(x + math.cos(ar) * r0, cy + math.sin(ar) * r0 * 0.9, r * 0.05),
+                                   (x + math.cos(ar) * r1, cy + math.sin(ar) * r1 * 0.9, r * 0.16 * bump(rp))], col))
+        comp(im, group(n, rays, e * 0.8))
     eyes, cores = [], []
     for s_ in (-1, 1):
         x = cx + s_ * gap
@@ -448,12 +459,12 @@ def fx_splash(t, n, u, e, kw):
     kk = max([k, dip * 0.6])
     comp(im, group(n, shapes, ink_w(e, kk), details=hls, alpha=fade(t, 0.82, 1.0) * clamp(t / 0.03)))
     # expanding ring on the surface after the crown falls
-    rp = seg(t, 0.5, 1.0)
+    rp = seg(t, 0.5, 0.95)
     if 0 < rp < 1:
-        rr = u * (0.4 + 0.5 * out_cubic(rp)); w = u * 0.04 * (1 - rp)
+        rr = u * (0.4 + 0.5 * out_cubic(rp)); w = u * 0.06 * (1 - smooth(rp))
         ring = [(cx + rr * math.cos(a), by + rr * 0.2 * math.sin(a), w)
                 for a in (2 * math.pi * j / 64 for j in range(65))]
-        comp(im, group(n, [('s', ring, light(col, 0.3))], e * 0.6 * (1 - rp), alpha=fade(rp, 0.3, 1.0)))
+        comp(im, group(n, [('s', ring, col)], e * 0.8, alpha=fade(rp, 0.85, 1.0)))
     return im
 
 
@@ -558,8 +569,8 @@ def note_shapes(x, y, h, ang, col, double=False):
 
 def fx_music_note(t, n, u, e, kw):
     rng = random.Random(kw.get('seed', 19))
-    cols = kw.get('colors') or [kw.get('color', '#a774ff'), '#2fa8ec', '#ff5fa8']
-    cnt = kw.get('count', 3)
+    cols = kw.get('colors') or [kw.get('color', '#a774ff'), '#ff5fa8']
+    cnt = kw.get('count', 2)
     cx, by = n / 2, n / 2 + u * 0.7                        # notes rise from bottom centre (a mouth / speaker)
     im = new(n)
     for i in range(cnt):
