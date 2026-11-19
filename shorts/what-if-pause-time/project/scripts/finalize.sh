@@ -1,9 +1,9 @@
 #!/bin/bash
 # put the thumbnail in front as the first 3 frames (0.1 s), shift the audio by the same 0.1 s:
-#   out/pause_content.mp4      -> ../final/pause_time_final.mp4
+#   (subtitled version only)
 #   out/pause_content_subs.mp4 -> ../final/pause_time_final_subs.mp4
 cd "$(dirname "$0")/.."
-for pair in "out/pause_content.mp4 ../final/pause_time_final.mp4" "out/pause_content_subs.mp4 ../final/pause_time_final_subs.mp4"; do
+for pair in "out/pause_content_subs.mp4 ../final/pause_time_final_subs.mp4"; do
   set -- $pair
   ffmpeg -v error -y -loop 1 -framerate 30 -t 0.1 -i ../final/pause_time_thumbnail.png -i $1 \
     -filter_complex "[0:v]scale=1080:1920,format=yuv420p,setsar=1[t];[1:v]setsar=1[m];[t][m]concat=n=2:v=1:a=0[v];[1:a]adelay=100|100,apad[a]" \
