@@ -3,7 +3,7 @@
 Take the highest-priority open item in **your area**. Tick it (`[x]`) with the commit hash when done. Add anything you discover under the right area. P1 = needed for the first video, P2 = quality, P3 = nice to have.
 
 ## scripts (`scripts/`)
-- [x] P1 Pick 10 original "Why/How" topics: an everyday physical or psychological phenomenon with a visual mechanism. Avoid the reference channel's topics. Write `scripts/TOPICS.md` with a one-line hook, the mechanism, 2+ sources and a visual-potential score for each. **The user picks one.** Done: `scripts/TOPICS.md` v5 (4 review rounds; topics 1-5 pass every criterion; 6-7 fixed but not re-reviewed; 8-10 are below the originality bar). Waiting on the user's pick.
+- [x] P1 Pick 10 original "Why/How" topics: an everyday physical or psychological phenomenon with a visual mechanism. Avoid the reference channel's topics. Write `scripts/TOPICS.md` with a one-line hook, the mechanism, 2+ sources and a visual-potential score for each. **The user picks one.** Done: `scripts/TOPICS.md` v5 (4 review rounds; topics 1-5 pass every criterion; 6-7 fixed but not re-reviewed; 8-10 are below the originality bar). Waiting on the user's pick. (a8e1727)
 - [ ] P1 For the chosen topic: `SCRIPT.md` + `shots.json`, following `QA.md` › scripts.
 - [ ] P2 A list of the sets, outfits, props and FX each topic needs, forwarded to those areas' backlogs.
 - [ ] P1 Put the reference channel's full title list in `references/` (titles only), so topic originality can be checked rather than guessed. Without it, reviewer originality scores drift from round to round.
