@@ -1,0 +1,892 @@
+[
+{
+"word": "One",
+"start": 0.0,
+"end": 0.163
+},
+{
+"word": "night",
+"start": 0.197,
+"end": 0.372
+},
+{
+"word": "in",
+"start": 0.406,
+"end": 0.476
+},
+{
+"word": "1986,",
+"start": 0.511,
+"end": 1.382
+},
+{
+"word": "a",
+"start": 1.44,
+"end": 1.509
+},
+{
+"word": "lake",
+"start": 1.579,
+"end": 1.765
+},
+{
+"word": "in",
+"start": 1.8,
+"end": 1.858
+},
+{
+"word": "Cameroon",
+"start": 1.916,
+"end": 2.345
+},
+{
+"word": "killed",
+"start": 2.415,
+"end": 2.635
+},
+{
+"word": "seventeen",
+"start": 2.67,
+"end": 3.03
+},
+{
+"word": "hundred",
+"start": 3.065,
+"end": 3.309
+},
+{
+"word": "people.",
+"start": 3.344,
+"end": 3.796
+},
+{
+"word": "It",
+"start": 4.005,
+"end": 4.11
+},
+{
+"word": "didn't",
+"start": 4.145,
+"end": 4.365
+},
+{
+"word": "flood.",
+"start": 4.412,
+"end": 4.83
+},
+{
+"word": "It",
+"start": 5.039,
+"end": 5.155
+},
+{
+"word": "didn't",
+"start": 5.19,
+"end": 5.399
+},
+{
+"word": "boil.",
+"start": 5.433,
+"end": 5.863
+},
+{
+"word": "It",
+"start": 5.944,
+"end": 6.049
+},
+{
+"word": "just",
+"start": 6.084,
+"end": 6.211
+},
+{
+"word": "breathed",
+"start": 6.246,
+"end": 6.536
+},
+{
+"word": "out.",
+"start": 6.583,
+"end": 6.966
+},
+{
+"word": "The",
+"start": 7.57,
+"end": 7.674
+},
+{
+"word": "next",
+"start": 7.709,
+"end": 7.872
+},
+{
+"word": "morning,",
+"start": 7.93,
+"end": 8.243
+},
+{
+"word": "the",
+"start": 8.278,
+"end": 8.371
+},
+{
+"word": "villages",
+"start": 8.406,
+"end": 8.742
+},
+{
+"word": "were",
+"start": 8.777,
+"end": 8.893
+},
+{
+"word": "silent.",
+"start": 8.928,
+"end": 9.462
+},
+{
+"word": "No",
+"start": 9.845,
+"end": 9.996
+},
+{
+"word": "fire.",
+"start": 10.077,
+"end": 10.495
+},
+{
+"word": "No",
+"start": 10.6,
+"end": 10.716
+},
+{
+"word": "damage.",
+"start": 10.774,
+"end": 11.285
+},
+{
+"word": "Just",
+"start": 11.494,
+"end": 11.668
+},
+{
+"word": "cows",
+"start": 11.726,
+"end": 12.028
+},
+{
+"word": "lying",
+"start": 12.086,
+"end": 12.307
+},
+{
+"word": "in",
+"start": 12.341,
+"end": 12.399
+},
+{
+"word": "the",
+"start": 12.434,
+"end": 12.504
+},
+{
+"word": "fields",
+"start": 12.539,
+"end": 12.841
+},
+{
+"word": "like",
+"start": 12.875,
+"end": 13.015
+},
+{
+"word": "they'd",
+"start": 13.038,
+"end": 13.212
+},
+{
+"word": "fallen",
+"start": 13.247,
+"end": 13.491
+},
+{
+"word": "asleep.",
+"start": 13.526,
+"end": 14.037
+},
+{
+"word": "Here's",
+"start": 14.42,
+"end": 14.64
+},
+{
+"word": "the",
+"start": 14.675,
+"end": 14.745
+},
+{
+"word": "crazy",
+"start": 14.78,
+"end": 15.023
+},
+{
+"word": "part.",
+"start": 15.058,
+"end": 15.348
+},
+{
+"word": "Deep",
+"start": 15.499,
+"end": 15.685
+},
+{
+"word": "under",
+"start": 15.743,
+"end": 15.906
+},
+{
+"word": "the",
+"start": 15.941,
+"end": 16.01
+},
+{
+"word": "lake,",
+"start": 16.045,
+"end": 16.277
+},
+{
+"word": "volcanic",
+"start": 16.312,
+"end": 16.73
+},
+{
+"word": "gas",
+"start": 16.788,
+"end": 17.009
+},
+{
+"word": "had",
+"start": 17.043,
+"end": 17.125
+},
+{
+"word": "been",
+"start": 17.16,
+"end": 17.287
+},
+{
+"word": "seeping",
+"start": 17.334,
+"end": 17.601
+},
+{
+"word": "in",
+"start": 17.636,
+"end": 17.705
+},
+{
+"word": "for",
+"start": 17.752,
+"end": 17.856
+},
+{
+"word": "centuries.",
+"start": 17.891,
+"end": 18.413
+},
+{
+"word": "The",
+"start": 18.622,
+"end": 18.715
+},
+{
+"word": "bottom",
+"start": 18.75,
+"end": 18.959
+},
+{
+"word": "water",
+"start": 19.006,
+"end": 19.261
+},
+{
+"word": "held",
+"start": 19.307,
+"end": 19.458
+},
+{
+"word": "it",
+"start": 19.493,
+"end": 19.551
+},
+{
+"word": "like",
+"start": 19.586,
+"end": 19.725
+},
+{
+"word": "a",
+"start": 19.749,
+"end": 19.772
+},
+{
+"word": "shaken",
+"start": 19.818,
+"end": 20.109
+},
+{
+"word": "soda,",
+"start": 20.167,
+"end": 20.596
+},
+{
+"word": "and",
+"start": 20.747,
+"end": 20.852
+},
+{
+"word": "the",
+"start": 20.886,
+"end": 20.956
+},
+{
+"word": "cold",
+"start": 20.991,
+"end": 21.2
+},
+{
+"word": "water",
+"start": 21.246,
+"end": 21.49
+},
+{
+"word": "on",
+"start": 21.548,
+"end": 21.618
+},
+{
+"word": "top",
+"start": 21.664,
+"end": 21.838
+},
+{
+"word": "was",
+"start": 21.885,
+"end": 21.989
+},
+{
+"word": "the",
+"start": 22.024,
+"end": 22.094
+},
+{
+"word": "cap.",
+"start": 22.129,
+"end": 22.523
+},
+{
+"word": "That",
+"start": 22.907,
+"end": 23.092
+},
+{
+"word": "night,",
+"start": 23.15,
+"end": 23.359
+},
+{
+"word": "something,",
+"start": 23.394,
+"end": 23.835
+},
+{
+"word": "maybe",
+"start": 23.905,
+"end": 24.091
+},
+{
+"word": "a",
+"start": 24.126,
+"end": 24.149
+},
+{
+"word": "landslide,",
+"start": 24.195,
+"end": 24.788
+},
+{
+"word": "nobody",
+"start": 24.973,
+"end": 25.194
+},
+{
+"word": "knows",
+"start": 25.229,
+"end": 25.403
+},
+{
+"word": "for",
+"start": 25.438,
+"end": 25.542
+},
+{
+"word": "sure,",
+"start": 25.577,
+"end": 25.914
+},
+{
+"word": "popped",
+"start": 26.041,
+"end": 26.274
+},
+{
+"word": "the",
+"start": 26.308,
+"end": 26.378
+},
+{
+"word": "cap.",
+"start": 26.425,
+"end": 26.796
+},
+{
+"word": "The",
+"start": 27.133,
+"end": 27.226
+},
+{
+"word": "lake",
+"start": 27.284,
+"end": 27.469
+},
+{
+"word": "fizzed.",
+"start": 27.504,
+"end": 27.969
+},
+{
+"word": "A",
+"start": 28.12,
+"end": 28.189
+},
+{
+"word": "cloud",
+"start": 28.247,
+"end": 28.514
+},
+{
+"word": "shot",
+"start": 28.549,
+"end": 28.723
+},
+{
+"word": "up,",
+"start": 28.781,
+"end": 29.002
+},
+{
+"word": "and",
+"start": 29.06,
+"end": 29.176
+},
+{
+"word": "because",
+"start": 29.211,
+"end": 29.443
+},
+{
+"word": "this",
+"start": 29.478,
+"end": 29.606
+},
+{
+"word": "gas",
+"start": 29.675,
+"end": 29.896
+},
+{
+"word": "is",
+"start": 29.942,
+"end": 30.012
+},
+{
+"word": "heavier",
+"start": 30.082,
+"end": 30.314
+},
+{
+"word": "than",
+"start": 30.349,
+"end": 30.465
+},
+{
+"word": "air,",
+"start": 30.523,
+"end": 30.778
+},
+{
+"word": "it",
+"start": 30.813,
+"end": 30.894
+},
+{
+"word": "rolled",
+"start": 30.941,
+"end": 31.161
+},
+{
+"word": "downhill,",
+"start": 31.196,
+"end": 31.777
+},
+{
+"word": "into",
+"start": 31.846,
+"end": 32.009
+},
+{
+"word": "the",
+"start": 32.067,
+"end": 32.137
+},
+{
+"word": "valleys,",
+"start": 32.183,
+"end": 32.566
+},
+{
+"word": "into",
+"start": 32.601,
+"end": 32.764
+},
+{
+"word": "the",
+"start": 32.81,
+"end": 32.88
+},
+{
+"word": "villages.",
+"start": 32.915,
+"end": 33.495
+},
+{
+"word": "People",
+"start": 33.936,
+"end": 34.168
+},
+{
+"word": "felt",
+"start": 34.203,
+"end": 34.366
+},
+{
+"word": "warm,",
+"start": 34.412,
+"end": 34.819
+},
+{
+"word": "smelled",
+"start": 34.935,
+"end": 35.26
+},
+{
+"word": "rotten",
+"start": 35.306,
+"end": 35.527
+},
+{
+"word": "eggs,",
+"start": 35.596,
+"end": 35.852
+},
+{
+"word": "and",
+"start": 35.875,
+"end": 35.968
+},
+{
+"word": "passed",
+"start": 36.026,
+"end": 36.293
+},
+{
+"word": "out.",
+"start": 36.328,
+"end": 36.711
+},
+{
+"word": "Some",
+"start": 37.094,
+"end": 37.291
+},
+{
+"word": "woke",
+"start": 37.326,
+"end": 37.512
+},
+{
+"word": "up",
+"start": 37.547,
+"end": 37.64
+},
+{
+"word": "a",
+"start": 37.686,
+"end": 37.709
+},
+{
+"word": "day",
+"start": 37.756,
+"end": 37.872
+},
+{
+"word": "later.",
+"start": 37.918,
+"end": 38.209
+},
+{
+"word": "Many",
+"start": 38.243,
+"end": 38.418
+},
+{
+"word": "never",
+"start": 38.452,
+"end": 38.615
+},
+{
+"word": "did.",
+"start": 38.65,
+"end": 39.044
+},
+{
+"word": "And",
+"start": 39.428,
+"end": 39.544
+},
+{
+"word": "the",
+"start": 39.579,
+"end": 39.648
+},
+{
+"word": "lake?",
+"start": 39.683,
+"end": 40.066
+},
+{
+"word": "Its",
+"start": 40.449,
+"end": 40.612
+},
+{
+"word": "blue",
+"start": 40.647,
+"end": 40.832
+},
+{
+"word": "water",
+"start": 40.867,
+"end": 41.111
+},
+{
+"word": "had",
+"start": 41.146,
+"end": 41.239
+},
+{
+"word": "turned",
+"start": 41.274,
+"end": 41.483
+},
+{
+"word": "deep",
+"start": 41.517,
+"end": 41.68
+},
+{
+"word": "red:",
+"start": 41.75,
+"end": 42.133
+},
+{
+"word": "iron",
+"start": 42.284,
+"end": 42.551
+},
+{
+"word": "from",
+"start": 42.586,
+"end": 42.713
+},
+{
+"word": "the",
+"start": 42.748,
+"end": 42.818
+},
+{
+"word": "bottom,",
+"start": 42.853,
+"end": 43.236
+},
+{
+"word": "rusting",
+"start": 43.34,
+"end": 43.642
+},
+{
+"word": "in",
+"start": 43.677,
+"end": 43.723
+},
+{
+"word": "the",
+"start": 43.758,
+"end": 43.828
+},
+{
+"word": "air.",
+"start": 43.886,
+"end": 44.292
+},
+{
+"word": "Today,",
+"start": 44.815,
+"end": 45.116
+},
+{
+"word": "pipes",
+"start": 45.151,
+"end": 45.384
+},
+{
+"word": "pull",
+"start": 45.418,
+"end": 45.569
+},
+{
+"word": "water",
+"start": 45.616,
+"end": 45.883
+},
+{
+"word": "up",
+"start": 45.929,
+"end": 46.022
+},
+{
+"word": "from",
+"start": 46.057,
+"end": 46.173
+},
+{
+"word": "the",
+"start": 46.208,
+"end": 46.277
+},
+{
+"word": "bottom,",
+"start": 46.312,
+"end": 46.695
+},
+{
+"word": "so",
+"start": 46.823,
+"end": 46.928
+},
+{
+"word": "the",
+"start": 46.974,
+"end": 47.044
+},
+{
+"word": "lake",
+"start": 47.079,
+"end": 47.253
+},
+{
+"word": "burps",
+"start": 47.288,
+"end": 47.555
+},
+{
+"word": "a",
+"start": 47.589,
+"end": 47.613
+},
+{
+"word": "little",
+"start": 47.647,
+"end": 47.845
+},
+{
+"word": "every",
+"start": 47.88,
+"end": 48.089
+},
+{
+"word": "day",
+"start": 48.135,
+"end": 48.321
+},
+{
+"word": "instead",
+"start": 48.356,
+"end": 48.599
+},
+{
+"word": "of",
+"start": 48.634,
+"end": 48.681
+},
+{
+"word": "all",
+"start": 48.716,
+"end": 48.82
+},
+{
+"word": "at",
+"start": 48.855,
+"end": 48.913
+},
+{
+"word": "once,",
+"start": 48.971,
+"end": 49.354
+},
+{
+"word": "like",
+"start": 49.563,
+"end": 49.714
+},
+{
+"word": "it",
+"start": 49.749,
+"end": 49.807
+},
+{
+"word": "did",
+"start": 49.842,
+"end": 49.958
+},
+{
+"word": "one",
+"start": 50.004,
+"end": 50.12
+},
+{
+"word": "night",
+"start": 50.155,
+"end": 50.329
+},
+{
+"word": "in",
+"start": 50.364,
+"end": 50.422
+},
+{
+"word": "1986.",
+"start": 50.457,
+"end": 51.502
+}
+]
