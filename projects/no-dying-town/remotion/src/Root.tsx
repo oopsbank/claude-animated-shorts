@@ -7,6 +7,7 @@ import { CaptionedWater } from "./videos/captions/Captions";
 import { WaterShort, WATER_FRAMES } from "./videos/water/Water";
 import { NoDieShort, NODIE_FRAMES } from "./videos/nodie/Town";
 import { CaptionedNoDie } from "./videos/nodie/Captions";
+import { NoDieThumb } from "./videos/nodie/Thumb";
 export const Root: React.FC = () => (
   <>
     <Composition id="BridgeShort" component={BridgeShort} durationInFrames={BRIDGE_FRAMES} fps={30} width={1080} height={1920} />
@@ -16,5 +17,6 @@ export const Root: React.FC = () => (
     <Composition id="Logo" component={Logo} durationInFrames={1} fps={30} width={1080} height={1080} />
     <Composition id="NoDieCaptioned" component={CaptionedNoDie} durationInFrames={NODIE_FRAMES} fps={30} width={1080} height={1920} />
     <Composition id="NoDieShort" component={NoDieShort} durationInFrames={NODIE_FRAMES} fps={30} width={1080} height={1920} />
+    <Composition id="NoDieThumb" component={NoDieThumb} durationInFrames={1} fps={30} width={1080} height={1920} />
   </>
 );
