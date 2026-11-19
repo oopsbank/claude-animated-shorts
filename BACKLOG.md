@@ -40,8 +40,13 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P2 Character tint from the plate JSON `tint`, plus a rim light from `light_dir`.
 
 ## audio (`audio/`)
-- [ ] P1 Voice from `SCRIPT.md` via ElevenLabs (connected), and `words.json` from word timestamps.
-- [ ] P1 SFX and music bed: reuse `templates/audio/`, with ducking, -14 LUFS and the exact length.
+- [x] P1 Voice from `SCRIPT.md` via ElevenLabs (connected), and `words.json` from word timestamps. Done: the voice is Liam (`audio/VOICE.md`), `audio/tts.py`, and `audio/bike-countersteer/` (231 words, 62.8 s, 3.68 words/s, 0 gaps >0.25 s). Quota used: 1,251/10,000.
+- [x] P1 SFX and music bed: reuse `templates/audio/`, with ducking, -14 LUFS and the exact length. Done: `audio/build_mix.py`, `lib/score.py` and `lib/sfx_x.py`. The bike mix is -14.0 LUFS, -1.2 dBTP, 1908 frames = 63.600 s, with the bed 8.5-10.2 LU under the speech (median).
+- [ ] P1 When the engine fixes the picture length, re-run `build_mix.py --frames N` (free: no TTS). The current mix assumes **1908 frames** (`audio/bike-countersteer/length.json`).
+- [ ] P2 Re-run `build_mix.py` whenever `shots.json` changes (the fx entries drive the SFX). New fx names need an entry in `lib/sfx_x.py` GEN or SILENT.
+- [ ] P2 The limiter peaks at 3.7 dB gain reduction on voice consonants (active on 9% of samples). Try a fast voice peak stage before the mix. LRA is 1.2 vs the reference 2.4; ease the voice compression if the draft sounds squashed.
+- [ ] P2 A motorbike engine/rev SFX for the track shots (s06-s09) once the picture shows which bike is moving.
+- [ ] P3 A human listening pass by the Director on the draft video (the checks so far are numbers and waveforms only).
 
 ## videos (`videos/`)
 - [ ] P1 Assemble the first video once scripts, sets, wardrobe, fx, engine and audio are at P1. Run QA, then **ask the user to review the draft**.
