@@ -12,15 +12,20 @@ This repo is worked on by **several Claude sessions in parallel**, each owning o
 ## Areas, owners and folders
 Each session edits **only its own folders**. If you need a change elsewhere, add it to `BACKLOG.md` for that area's owner.
 
-| Area | Folder | Produces |
-|---|---|---|
-| scripts | `scripts/<slug>/` | `SCRIPT.md` (facts and sources at the top, then the voice-over) and `shots.json` |
-| sets | `blender/sets/<set>/` | `build.py` plus rendered plates `plates/<set>__<cam>__<light>.png` with a `.json` beside each |
-| wardrobe | `stickman/` | the `draw()` API: expressions, poses, outfits, hats, held props, mouth shapes |
-| fx | `fx/` | `fx.py` with `render(name, t, size, **kw) -> RGBA PIL image` |
-| engine | `engine/` | `render_video.py shots.json words.json -> frames -> mp4` (picture only) |
-| audio | `audio/` | `voice.wav`, `words.json`, SFX, music, `mix.wav` |
-| videos | `videos/<slug>/` | final `video.mp4` (not committed if >50 MB), `qa/` reports, `NOTES.md` |
+| Crew role (session name) | Area | Folder | Produces |
+|---|---|---|---|
+| 🎬 Biên kịch (Screenwriter) | scripts | `scripts/<slug>/` | `SCRIPT.md` (facts and sources at the top, then the voice-over) and `shots.json` |
+| 🏛️ Thiết kế bối cảnh (Production Designer) | sets | `blender/sets/<set>/` | `build.py` plus rendered plates `plates/<set>__<cam>__<light>.png` with a `.json` beside each |
+| 👔 Phục trang (Costume Designer) | wardrobe | `stickman/` | the `draw()` API: expressions, poses, outfits, hats, held props, mouth shapes |
+| 💥 Kỹ xảo (VFX Artist) | fx | `fx/` | `fx.py` with `render(name, t, size, **kw) -> RGBA PIL image` |
+| 🕺 Hoạt họa (Animator) | engine | `engine/` | `render_video.py shots.json words.json -> frames -> mp4` (picture only) |
+| 🎧 Âm thanh (Sound Designer) | audio | `audio/` | `voice.wav`, `words.json`, SFX, music, `mix.wav` |
+| ✂️ Dựng phim (Editor) | videos | `videos/<slug>/` | final `video.mp4` (not committed if >50 MB), `qa/` reports, `NOTES.md` |
+
+Coordination roles:
+- 🎥 **Nhà sản xuất (Producer)**: the orchestrating session. It creates the crew sessions, monitors them and relays the user's decisions.
+- 🌙 **Trợ lý đạo diễn (1st AD)**: the nightly scheduled task. It integrates branches, does one backlog item, and writes `reports/nightly/`.
+- The user is the **Đạo diễn (Director)**: they approve topics and scripts, review drafts, and give the final OK to publish.
 
 ## Data contracts
 
