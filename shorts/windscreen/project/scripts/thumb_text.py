@@ -1,5 +1,5 @@
 # Thumbnail title over the rendered background (scripts/thumb.mjs), in the subtitle style: Inter ExtraBold, cream /
-# beer-gold fill, thick dark-brown outline, hard drop shadow. usage: python3 thumb_text.py bg.png out.png
+# gold fill, thick dark-brown outline, hard drop shadow. usage: python3 thumb_text.py bg.png out.png
 import sys
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 FONT = "public/Inter-ExtraBold.otf"
@@ -27,8 +27,8 @@ def line(text, size, fill, cx, cy, rot=0.0, stroke=None):
 
 
 s = W / 1080
-line("LONDON, 1814", int(78 * s), CREAM, W * 0.5, H * 0.07, 2.0)
-line("A TIDAL WAVE", int(126 * s), CREAM, W * 0.5, H * 0.145, -2.0)
-line("OF BEER", int(232 * s), GOLD, W * 0.5, H * 0.245, -3.0, stroke=int(26 * s))
+line("WHAT IF YOUR PILOT", int(92 * s), CREAM, W * 0.5, H * 0.075, 2.0)
+line("GOT SUCKED", int(146 * s), GOLD, W * 0.5, H * 0.16, -2.5, stroke=int(18 * s))
+line("OUT?!", int(230 * s), GOLD, W * 0.5, H * 0.28, -3.0, stroke=int(26 * s))
 bg.convert("RGB").save(sys.argv[2], quality=95)
 print("ok", sys.argv[2], bg.size)
