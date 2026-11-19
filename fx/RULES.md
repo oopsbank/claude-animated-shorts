@@ -9,7 +9,7 @@ These are fx-specific lessons from review. Follow them for every new effect, and
 5. **Scale stroke widths with the sprite.** When a glyph is transformed, scale `w` with `k` as well as the positions. Otherwise a shrinking "?" becomes a fat blob.
 6. **Tiny shapes get a thinner outline** (`min(e, r*0.6)`). A full 3 px line on a 1 px dot reads as a black speck that pops.
 7. **No blurred glows.** Gaussian halos break the flat style and smear on day plates. Use flat cel rings at low alpha. If you ever must blur, blur only the alpha and keep the RGB solid, because blurring straight RGBA drags in black.
-8. **Outline weight:** use `line` = 3 px in output pixels at the character's scale, not a size-relative width. That way the effect and the stickman share one line weight.
+8. **Line style follows the main cast** (bean-head, `characters.md` §2). Use plum ink `#241726`, drawn as one ink pass grown by `e` and shifted toward 64° (bottom-right) by 0.5e, so the line is thin on the top-left and about 3x thicker on the bottom-right. Fills get the soft crescent shade (`crescent()`, like `fill_shaded()` in bean.py). Size `line` to the character's scale (about `10*char_scale`), not to the sprite size.
 9. **Draw outlines first, then all fills** (one merged silhouette, DRAWING_RULES 8). Details such as highlights and cores go on top with no outline.
 10. **Day contrast:** pale fills (pale yellow, cyan) vanish on a light sky. Pick saturated mid-tones (`#ffe45c`, `#2fa8ec`) and let the ink outline carry the edge at night.
 11. **Stagger groups in an order** (middle first, or left to right). Random delays look like pops.

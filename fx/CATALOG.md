@@ -1,6 +1,6 @@
 # FX catalog
 
-`fx/fx.py` draws every effect procedurally (4x supersampled, flat colour, `#12101a` outline), in the same style as `stickman/scripts/stickman.py`.
+`fx/fx.py` draws every effect procedurally (4x supersampled, flat saturated colour, soft crescent shading, plum ink `#241726` that is thin on the top-left and about 3x thicker on the bottom-right), in the bean-head cast style (`characters/scripts/bean.py`, spec `references/reports/characters.md` §2).
 
 ```python
 import sys; sys.path.insert(0, 'fx'); import fx
@@ -12,7 +12,7 @@ img = fx.render('explosion', t=0.3, size=400, color='#ff8a1f')   # RGBA 400x400,
 - **Common kwargs:**
   - `color`: hex or RGB.
   - `scale`: default 1.
-  - `line`: the outline width in output px. The default is 3, the same as the stickman's line when both are composited at the same scale. If the engine scales the character by `k`, pass `line=3.2*k`.
+  - `line`: the mean ink width in output px. The thin side is 0.5x and the thick side 1.5x. The default is 5. To match the cast's props, pass `line=10*k` when the engine scales the 600x1000 character card by `k`.
   - `seed`: varies the layout.
 - **Anchors:**
   - `dust_puff` and `splash` sit their base on a ground line at about 0.72 of the canvas height.

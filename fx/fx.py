@@ -1,5 +1,6 @@
-# Procedural 2D cartoon effects for the shorts pipeline (flat colour + thin dark ink outline, same style as
-# stickman/scripts/stickman.py). Contract (PIPELINE.md > FX):
+# Procedural 2D cartoon effects for the shorts pipeline, in the bean-head cast style (characters/scripts/bean.py,
+# spec references/reports/characters.md §2): flat saturated fills, plum ink #241726 thin on the top-left and ~3x thicker
+# on the bottom-right (shadow) side, soft crescent shading. Contract (PIPELINE.md > FX):
 #     render(name, t, size, **kw) -> RGBA PIL.Image  (size x size), t runs 0..1 over the effect's life.
 # Every effect is empty at t=0 and t=1 and goes: anticipation (small build / squash) -> peak (ease + overshoot)
 # -> fade (shrink + alpha), see fx/RULES.md.
@@ -7,10 +8,10 @@
 # the OUTPUT image, default scales with size), seed (layout variation). Effect-specific kwargs are listed in NAMES.
 # usage: python fx.py <name> <t> [size] out.png
 import math, random, sys
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-S = 4                                   # supersampling, like stickman.py
-INK = (18, 16, 26)                      # #12101a
+S = 4                                   # supersampling, like bean.py
+INK = (36, 23, 38)                      # #241726 plum ink, same as the bean cast (characters/scripts/bean.py)
 
 
 # ---------------------------------------------------------------- easing / timing
@@ -72,17 +73,24 @@ def resample(pts, step):
     return out
 
 
-def shape(d, sh, e, col=None):
+THICK = (math.cos(math.radians(64)) * 0.5, math.sin(math.radians(64)) * 0.5)   # ink shift per unit e -> 1:3 thin/thick
+SH_FX = (0.86, 0.80, 0.90)              # crescent shade multiplier (cool, like the cast's cloth/skin shadow)
+
+
+def shape(d, sh, e, col=None, off=(0.0, 0.0)):
+    """Draw one shape grown by `e` px and moved by off*e_eff (the ink pass uses THICK: thin top-left, thick bottom-right)."""
     k = sh[0]; c = col or sh[-1]
     if k == 'c':
         _, x, y, r, _c = sh
         if r < 0.3: return
-        r = (r + min(e, r * 0.6)) * S                      # tiny shapes get a thinner line: never a lone ink dot
+        ee = min(e, r * 0.6); x += off[0] * ee; y += off[1] * ee     # tiny shapes get a thinner line: no lone ink dot
+        r = (r + ee) * S
         d.ellipse((x * S - r, y * S - r, x * S + r, y * S + r), fill=c)
     elif k == 'e':
         _, x, y, rx, ry, _c = sh
         if min(rx, ry) < 0.3: return
-        e = min(e, min(rx, ry) * 0.6); rx = (rx + e) * S; ry = (ry + e) * S
+        e = min(e, min(rx, ry) * 0.6); x += off[0] * e; y += off[1] * e
+        rx = (rx + e) * S; ry = (ry + e) * S
         d.ellipse((x * S - rx, y * S - ry, x * S + rx, y * S + ry), fill=c)
     elif k == 's':
         pts = sh[1]
@@ -90,12 +98,17 @@ def shape(d, sh, e, col=None):
         wmin = min(p[2] for p in pts)
         if max(p[2] for p in pts) < 0.3: return
         e = min(e, max(p[2] for p in pts) * 0.5)
+        ox, oy = off[0] * e, off[1] * e
         for x, y, w in resample(pts, max(0.4, (wmin + 2 * e) * 0.2)):
             r = (w / 2 + e) * S
-            if r > 0: d.ellipse((x * S - r, y * S - r, x * S + r, y * S + r), fill=c)
+            if r > 0: d.ellipse(((x + ox) * S - r, (y + oy) * S - r, (x + ox) * S + r, (y + oy) * S + r), fill=c)
     elif k == 'p':
-        P = [(x * S, y * S) for x, y in sh[1]]
-        if len(P) < 3: return
+        pts = sh[1]
+        if len(pts) < 3: return
+        if e > 0:
+            xs = [q[0] for q in pts]; ys = [q[1] for q in pts]
+            e = min(e, max(0.5, min(max(xs) - min(xs), max(ys) - min(ys)) * 0.3))
+        P = [((x + off[0] * e) * S, (y + off[1] * e) * S) for x, y in pts]
         d.polygon(P, fill=c)
         if e > 0:
             w = max(1, int(round(2 * e * S)))
@@ -104,13 +117,48 @@ def shape(d, sh, e, col=None):
             for x, y in P: d.ellipse((x - r, y - r, x + r, y + r), fill=c)
 
 
-def group(n, shapes, e, details=(), alpha=1.0, ink=INK):
-    """Draw one outlined silhouette layer. `details` are extra shapes drawn after the fills with no outline."""
-    lay = new(n); d = ImageDraw.Draw(lay)
-    if e > 0:
-        for sh in shapes: shape(d, sh, e, ink)
+def size_of(sh):
+    k = sh[0]
+    if k == 'c': return sh[3]
+    if k == 'e': return min(sh[3], sh[4])
+    if k == 's': return max(p[2] for p in sh[1]) / 2 if sh[1] else 0
+    xs = [q[0] for q in sh[1]]; ys = [q[1] for q in sh[1]]
+    return min(max(xs) - min(xs), max(ys) - min(ys)) / 2
+
+
+def crescent(lay, size, light=(-0.7, -0.7), k=SH_FX):
+    """Cast-style soft crescent shadow: darken the fill except where the mask shifted toward the light still covers it
+    (same idea as fill_shaded() in characters/scripts/bean.py). `size` = typical shape radius in px."""
+    if size < 2: return lay
+    a = lay.getchannel('A')
+    sh = int(round(0.3 * size * S))
+    lit = ImageChops.offset(a, int(light[0] * sh), int(light[1] * sh))
+    lit = lit.filter(ImageFilter.GaussianBlur(max(1, 0.12 * size * S)))
+    lit = ImageChops.multiply(lit, a)
+    r, g, b, _ = lay.split()
+    dark = Image.merge('RGBA', (r.point(lambda v: int(v * k[0])), g.point(lambda v: int(v * k[1])),
+                                b.point(lambda v: int(v * k[2])), a))
+    lay2 = lay.copy(); lay2.putalpha(lit)
+    dark.alpha_composite(lay2)
+    return dark
+
+
+def group(n, shapes, e, details=(), alpha=1.0, ink=INK, shade=True):
+    """One outlined silhouette layer in the cast style: plum ink (thin top-left, ~3x thicker bottom-right) under all
+    fills (one merged silhouette, no seams), soft crescent shading on the fills, then `details` with no outline."""
+    fills = new(n); d = ImageDraw.Draw(fills)
     for sh in shapes: shape(d, sh, 0)
-    for sh in details: shape(d, sh, 0)
+    if shade and shapes:
+        sizes = sorted(size_of(sh) for sh in shapes)
+        fills = crescent(fills, sizes[len(sizes) // 2])
+    lay = new(n)
+    if e > 0:
+        dd = ImageDraw.Draw(lay)
+        for sh in shapes: shape(dd, sh, e, ink, THICK)
+    lay.alpha_composite(fills)
+    if details:
+        dd = ImageDraw.Draw(lay)
+        for sh in details: shape(dd, sh, 0)
     return opacity(lay, alpha)
 
 
@@ -609,7 +657,7 @@ def render(name, t, size=512, **kw):
     if name not in NAMES: raise KeyError(f'unknown fx {name!r}; known: {", ".join(NAMES)}')
     n = int(size); t = clamp(float(t))
     u = n / 2 * 0.9 * kw.get('scale', 1.0)
-    e = kw.get('line', 3.0 if n >= 96 else max(1.5, n / 32))   # same px as the stickman's ~3 px line
+    e = kw.get('line', 5.0 if n >= 160 else max(2.0, n / 32))   # mean ink px; thin 0.5x / thick 1.5x (cast props ~10*scale)
     im = NAMES[name][0](t, n, u, e, kw)
     return im.resize((n, n), Image.LANCZOS)
 

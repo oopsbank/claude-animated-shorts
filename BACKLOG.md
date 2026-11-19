@@ -27,7 +27,15 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 ## fx (`fx/`)
 - [x] P1 `fx/fx.py` with: explosion, impact_star, dust_puff, speed_lines, sweat_drop, anger_vein, glow_eyes, sparkle, splash, question_mark, exclaim, music_note. (claude/area-fx) After 4 review rounds, 11 of 12 effects pass (every score >= 7). See `fx/RULES.md`.
 - [x] P1 `fx/CATALOG.md` with preview strips (`fx/previews/`), a demo GIF, and automatic checks in `fx/scripts/catalog.py`.
-- [ ] P1 glow_eyes: round 4 scored readability 6 and style 5 because the translucent blurred halo looked muddy. It now uses a solid flat outlined halo with rays, which has not been re-reviewed. Re-review it, and try a version with no halo (rays only) if it still reads as "big eyes" rather than "glow".
+- [x] Restyled the fx to the bean-head cast (plum ink #241726, 3:1 thick/thin weight, crescent shading), as the Producer asked. An independent review passed all 12 effects at 7 or higher (glow_eyes 8/7/7). The previews are `fx/previews/with_cast.png`.
+- [ ] P2 fx polish from the cast review:
+  - glow_eyes: scale in from a slit, sit it about 70% smaller and below the brows when placed on a face;
+  - anger_vein and question_mark: ease the exit over 2-3 more frames;
+  - splash: give the ripple ring the 3:1 ink weight;
+  - speed_lines: taper the tails;
+  - sweat_drop: default scale about 1.3x;
+  - sparkle: fade the minis out instead of shrinking them below 10 px;
+  - dust_puff: a darker crescent on day plates.
 - [ ] P2 fx polish from review round 4: sparkle peaks at 3/12 and should leave no sub-3 px specks; exclaim's tick dashes need a visible outline at night; the splash ring should fade by alpha, not by thinning; the question_mark hook should grow with its dot at 1/12; the double note in music_note should ease in over 2-3 frames; explosion and dust_puff leave pixel debris in their last third.
 - [ ] P2 engine: composite fx with `line=3.2*char_scale` so the fx outline matches the character's outline (see CATALOG.md).
 - [ ] P2 Light shafts and a lens flash.
