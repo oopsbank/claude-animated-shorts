@@ -34,6 +34,8 @@ def find_plate(shot, dirs):
         if os.path.exists(p): return p
     if STANDIN_PLATES:                # sets not built yet: stand-in plate by shot size
         size = shot.get('size') or ('wide' if 'wide' in shot.get('cam', '') else 'medium')
+        if size == 'medium' and len(shot.get('characters', [])) >= 2:      # the M stand-in is too tight for a two-shot
+            size = 'wide'; shot['_standin_zoom'] = 1.3
         p = STANDIN_PLATES.get(size) or STANDIN_PLATES['medium']
         if os.environ.get('ENGINE_QUIET') != '1': print(f"  [plate stand-in] {shot.get('id')}: {shot.get('set')}/{shot.get('cam')}/{shot.get('light')} missing -> {os.path.basename(p)}")
         return p
@@ -82,6 +84,7 @@ G = {}
 
 def setup(shots_path, words_path, plate_dirs):
     import rig
+    anim.RIG_OK = 'rig' in rig.PARAMS
     doc = json.load(open(shots_path)); words = json.load(open(words_path))
     if isinstance(words, dict): words = words.get('words', [])
     shots = doc['shots']; spans = anim.shot_spans(shots, words)
@@ -111,6 +114,7 @@ def setup(shots_path, words_path, plate_dirs):
         for e in s.get('fx', []):
             if e.get('kick'): kicks.append(anim.beat_frame((sp['w0'], sp['w1']), words, e.get('at_word', 0))[1])
         cam = dict(s.get('camera') or {})
+        if s.get('_standin_zoom') and 'zoom' not in cam: cam['zoom'] = s['_standin_zoom']
         if 'focus' not in cam and s.get('characters'):      # aim the push at the characters' chests, not the plate centre
             pm = G['plates'][p][1]; fig = pm['px_per_m'] * 1.75
             xs = [float(c.get('x', 0.5)) for c in s['characters']]

@@ -9,6 +9,7 @@ import math, random
 
 FPS = 30
 W, H = 1080, 1920
+RIG_OK = False           # set by the renderer when bean.py supports rig=/view=
 LEAD = 2                 # beats land 2 frames before the word onset (reference 0-3 f)
 ANTIC = 3                # anticipation frames before a pose swap
 SETTLE = 8               # overshoot + settle frames after a pose swap
@@ -159,6 +160,8 @@ class Track:
             if b.get('expr') and b['expr'] != prev['expr']:
                 self.blinks.append(land - 1)        # shut frames (land, land+1) hide the expression swap
         self.blinks.sort()
+        # no bike rig in bean.py yet: a 20-34 deg bike lean on a standing figure tips it over, so scale it down
+        self.lean_k, self.lean_max = (0.3, 8.0) if spec.get('rig') and not RIG_OK else (1.0, 90.0)
         self.start = {'pose': self.spec.get('pose', 'idle'), 'expr': self.spec.get('expr', 'neutral'), 'facing': self.facing0,
                       'prop': self.spec.get('prop'), 'hold_lean': float(self.spec.get('hold_lean', 0.0))}
         self._moves()
@@ -233,6 +236,10 @@ class Track:
                 'lift': lift, 'grounded': grounded, 'lid': lid, 'x': x, 'moving': moving}
 
     def hold_lean_at(self, f):
+        v = self._hold_lean_at(f) * self.lean_k
+        return max(-self.lean_max, min(self.lean_max, v))
+
+    def _hold_lean_at(self, f):
         v = float(self.start['hold_lean'])
         for e in self.events:
             a, b = float(e['prev']['hold_lean']), float(e['new']['hold_lean'])
@@ -272,7 +279,8 @@ class Camera:
         n = max(1, self.f1 - self.f0)
         mv = c.get('move', 'push_in')
         amt = float(c.get('amount', min(0.06, 0.0012 * n)))   # default: slow push ~0.12 %/f, capped at 6 % per shot
-        self.push = {'push_in': amt, 'pull_out': -amt}.get(mv, 0.0)
+        # 'hold' still breathes: the reference camera is almost never dead still (0.14 %/f median push in quiet frames)
+        self.push = {'push_in': amt, 'pull_out': -amt, 'hold': min(0.04, 0.001 * n)}.get(mv, 0.0)
         # directional moves from shots.json: glide / follow / pan (x) and tilt_up / tilt_down (y), "amount" = frame fraction
         self.travel = None
         if mv in ('glide', 'follow', 'pan', 'tilt_up', 'tilt_down') and 'to' not in c and 'glides' not in c:
