@@ -1,0 +1,962 @@
+[
+ {
+  "word": "There's",
+  "start": 0.0,
+  "end": 0.255
+ },
+ {
+  "word": "a",
+  "start": 0.29,
+  "end": 0.313
+ },
+ {
+  "word": "town",
+  "start": 0.36,
+  "end": 0.546
+ },
+ {
+  "word": "in",
+  "start": 0.592,
+  "end": 0.65
+ },
+ {
+  "word": "Norway",
+  "start": 0.708,
+  "end": 0.975
+ },
+ {
+  "word": "where",
+  "start": 1.01,
+  "end": 1.138
+ },
+ {
+  "word": "you're",
+  "start": 1.173,
+  "end": 1.335
+ },
+ {
+  "word": "not",
+  "start": 1.358,
+  "end": 1.463
+ },
+ {
+  "word": "allowed",
+  "start": 1.498,
+  "end": 1.73
+ },
+ {
+  "word": "to",
+  "start": 1.753,
+  "end": 1.811
+ },
+ {
+  "word": "die.",
+  "start": 1.869,
+  "end": 2.322
+ },
+ {
+  "word": "And",
+  "start": 2.659,
+  "end": 2.786
+ },
+ {
+  "word": "honestly?",
+  "start": 2.833,
+  "end": 3.355
+ },
+ {
+  "word": "They",
+  "start": 3.506,
+  "end": 3.646
+ },
+ {
+  "word": "have",
+  "start": 3.68,
+  "end": 3.808
+ },
+ {
+  "word": "a",
+  "start": 3.831,
+  "end": 3.855
+ },
+ {
+  "word": "very",
+  "start": 3.901,
+  "end": 4.075
+ },
+ {
+  "word": "good",
+  "start": 4.122,
+  "end": 4.261
+ },
+ {
+  "word": "reason.",
+  "start": 4.307,
+  "end": 4.76
+ },
+ {
+  "word": "This",
+  "start": 5.039,
+  "end": 5.201
+ },
+ {
+  "word": "is",
+  "start": 5.248,
+  "end": 5.317
+ },
+ {
+  "word": "Longyearbyen.",
+  "start": 5.375,
+  "end": 6.188
+ },
+ {
+  "word": "One",
+  "start": 6.374,
+  "end": 6.525
+ },
+ {
+  "word": "of",
+  "start": 6.56,
+  "end": 6.606
+ },
+ {
+  "word": "the",
+  "start": 6.641,
+  "end": 6.711
+ },
+ {
+  "word": "northernmost",
+  "start": 6.769,
+  "end": 7.245
+ },
+ {
+  "word": "towns",
+  "start": 7.279,
+  "end": 7.558
+ },
+ {
+  "word": "on",
+  "start": 7.593,
+  "end": 7.663
+ },
+ {
+  "word": "Earth.",
+  "start": 7.732,
+  "end": 8.127
+ },
+ {
+  "word": "Where",
+  "start": 8.406,
+  "end": 8.591
+ },
+ {
+  "word": "people",
+  "start": 8.626,
+  "end": 8.835
+ },
+ {
+  "word": "carry",
+  "start": 8.87,
+  "end": 9.067
+ },
+ {
+  "word": "rifles,",
+  "start": 9.137,
+  "end": 9.509
+ },
+ {
+  "word": "in",
+  "start": 9.532,
+  "end": 9.601
+ },
+ {
+  "word": "case",
+  "start": 9.648,
+  "end": 9.822
+ },
+ {
+  "word": "of",
+  "start": 9.845,
+  "end": 9.903
+ },
+ {
+  "word": "polar",
+  "start": 9.95,
+  "end": 10.194
+ },
+ {
+  "word": "bears.",
+  "start": 10.228,
+  "end": 10.658
+ },
+ {
+  "word": "Here's",
+  "start": 10.995,
+  "end": 11.227
+ },
+ {
+  "word": "the",
+  "start": 11.262,
+  "end": 11.331
+ },
+ {
+  "word": "crazy",
+  "start": 11.366,
+  "end": 11.644
+ },
+ {
+  "word": "part.",
+  "start": 11.679,
+  "end": 12.051
+ },
+ {
+  "word": "The",
+  "start": 12.179,
+  "end": 12.283
+ },
+ {
+  "word": "ground",
+  "start": 12.318,
+  "end": 12.538
+ },
+ {
+  "word": "here",
+  "start": 12.585,
+  "end": 12.747
+ },
+ {
+  "word": "never",
+  "start": 12.794,
+  "end": 12.968
+ },
+ {
+  "word": "thaws.",
+  "start": 13.014,
+  "end": 13.525
+ },
+ {
+  "word": "It's",
+  "start": 13.769,
+  "end": 13.932
+ },
+ {
+  "word": "frozen",
+  "start": 13.966,
+  "end": 14.268
+ },
+ {
+  "word": "solid,",
+  "start": 14.326,
+  "end": 14.675
+ },
+ {
+  "word": "all",
+  "start": 14.71,
+  "end": 14.884
+ },
+ {
+  "word": "year",
+  "start": 14.942,
+  "end": 15.069
+ },
+ {
+  "word": "round.",
+  "start": 15.116,
+  "end": 15.557
+ },
+ {
+  "word": "In",
+  "start": 15.998,
+  "end": 16.114
+ },
+ {
+  "word": "1918,",
+  "start": 16.149,
+  "end": 16.799
+ },
+ {
+  "word": "the",
+  "start": 16.834,
+  "end": 16.904
+ },
+ {
+  "word": "Spanish",
+  "start": 16.939,
+  "end": 17.217
+ },
+ {
+  "word": "flu",
+  "start": 17.252,
+  "end": 17.438
+ },
+ {
+  "word": "reached",
+  "start": 17.508,
+  "end": 17.728
+ },
+ {
+  "word": "the",
+  "start": 17.763,
+  "end": 17.833
+ },
+ {
+  "word": "town.",
+  "start": 17.867,
+  "end": 18.297
+ },
+ {
+  "word": "Young",
+  "start": 18.576,
+  "end": 18.773
+ },
+ {
+  "word": "miners",
+  "start": 18.808,
+  "end": 19.086
+ },
+ {
+  "word": "died,",
+  "start": 19.133,
+  "end": 19.539
+ },
+ {
+  "word": "and",
+  "start": 19.586,
+  "end": 19.702
+ },
+ {
+  "word": "were",
+  "start": 19.737,
+  "end": 19.841
+ },
+ {
+  "word": "buried",
+  "start": 19.864,
+  "end": 20.097
+ },
+ {
+  "word": "in",
+  "start": 20.12,
+  "end": 20.178
+ },
+ {
+  "word": "the",
+  "start": 20.213,
+  "end": 20.282
+ },
+ {
+  "word": "little",
+  "start": 20.317,
+  "end": 20.526
+ },
+ {
+  "word": "cemetery.",
+  "start": 20.561,
+  "end": 21.141
+ },
+ {
+  "word": "But",
+  "start": 21.525,
+  "end": 21.664
+ },
+ {
+  "word": "decades",
+  "start": 21.71,
+  "end": 22.047
+ },
+ {
+  "word": "later,",
+  "start": 22.093,
+  "end": 22.407
+ },
+ {
+  "word": "people",
+  "start": 22.442,
+  "end": 22.674
+ },
+ {
+  "word": "noticed",
+  "start": 22.709,
+  "end": 22.999
+ },
+ {
+  "word": "something",
+  "start": 23.045,
+  "end": 23.335
+ },
+ {
+  "word": "creepy.",
+  "start": 23.382,
+  "end": 23.869
+ },
+ {
+  "word": "The",
+  "start": 24.206,
+  "end": 24.299
+ },
+ {
+  "word": "bodies",
+  "start": 24.345,
+  "end": 24.589
+ },
+ {
+  "word": "weren't",
+  "start": 24.624,
+  "end": 24.845
+ },
+ {
+  "word": "rotting.",
+  "start": 24.879,
+  "end": 25.297
+ },
+ {
+  "word": "The",
+  "start": 25.576,
+  "end": 25.669
+ },
+ {
+  "word": "ground",
+  "start": 25.704,
+  "end": 25.913
+ },
+ {
+  "word": "was",
+  "start": 25.947,
+  "end": 26.04
+ },
+ {
+  "word": "keeping",
+  "start": 26.087,
+  "end": 26.319
+ },
+ {
+  "word": "them,",
+  "start": 26.354,
+  "end": 26.54
+ },
+ {
+  "word": "like",
+  "start": 26.586,
+  "end": 26.737
+ },
+ {
+  "word": "a",
+  "start": 26.76,
+  "end": 26.783
+ },
+ {
+  "word": "giant",
+  "start": 26.841,
+  "end": 27.097
+ },
+ {
+  "word": "freezer.",
+  "start": 27.143,
+  "end": 27.631
+ },
+ {
+  "word": "And",
+  "start": 28.153,
+  "end": 28.269
+ },
+ {
+  "word": "a",
+  "start": 28.316,
+  "end": 28.339
+ },
+ {
+  "word": "freezer",
+  "start": 28.386,
+  "end": 28.664
+ },
+ {
+  "word": "full",
+  "start": 28.699,
+  "end": 28.827
+ },
+ {
+  "word": "of",
+  "start": 28.862,
+  "end": 28.908
+ },
+ {
+  "word": "flu",
+  "start": 28.943,
+  "end": 29.094
+ },
+ {
+  "word": "victims",
+  "start": 29.14,
+  "end": 29.489
+ },
+ {
+  "word": "is",
+  "start": 29.523,
+  "end": 29.605
+ },
+ {
+  "word": "not",
+  "start": 29.651,
+  "end": 29.756
+ },
+ {
+  "word": "a",
+  "start": 29.79,
+  "end": 29.814
+ },
+ {
+  "word": "great",
+  "start": 29.848,
+  "end": 30.023
+ },
+ {
+  "word": "neighbor.",
+  "start": 30.069,
+  "end": 30.51
+ },
+ {
+  "word": "So",
+  "start": 31.114,
+  "end": 31.218
+ },
+ {
+  "word": "in",
+  "start": 31.276,
+  "end": 31.334
+ },
+ {
+  "word": "1950,",
+  "start": 31.369,
+  "end": 31.996
+ },
+ {
+  "word": "the",
+  "start": 32.019,
+  "end": 32.089
+ },
+ {
+  "word": "town",
+  "start": 32.124,
+  "end": 32.321
+ },
+ {
+  "word": "stopped",
+  "start": 32.379,
+  "end": 32.612
+ },
+ {
+  "word": "burying",
+  "start": 32.646,
+  "end": 32.937
+ },
+ {
+  "word": "people.",
+  "start": 32.983,
+  "end": 33.378
+ },
+ {
+  "word": "In",
+  "start": 33.622,
+  "end": 33.738
+ },
+ {
+  "word": "1998,",
+  "start": 33.773,
+  "end": 34.458
+ },
+ {
+  "word": "scientists",
+  "start": 34.481,
+  "end": 34.957
+ },
+ {
+  "word": "even",
+  "start": 35.003,
+  "end": 35.154
+ },
+ {
+  "word": "flew",
+  "start": 35.212,
+  "end": 35.386
+ },
+ {
+  "word": "in",
+  "start": 35.433,
+  "end": 35.514
+ },
+ {
+  "word": "and",
+  "start": 35.572,
+  "end": 35.677
+ },
+ {
+  "word": "dug",
+  "start": 35.712,
+  "end": 35.851
+ },
+ {
+  "word": "up",
+  "start": 35.886,
+  "end": 35.955
+ },
+ {
+  "word": "those",
+  "start": 35.99,
+  "end": 36.164
+ },
+ {
+  "word": "miners,",
+  "start": 36.211,
+  "end": 36.64
+ },
+ {
+  "word": "hunting",
+  "start": 36.791,
+  "end": 37.058
+ },
+ {
+  "word": "for",
+  "start": 37.093,
+  "end": 37.175
+ },
+ {
+  "word": "the",
+  "start": 37.209,
+  "end": 37.279
+ },
+ {
+  "word": "virus",
+  "start": 37.314,
+  "end": 37.627
+ },
+ {
+  "word": "that",
+  "start": 37.662,
+  "end": 37.778
+ },
+ {
+  "word": "killed",
+  "start": 37.813,
+  "end": 38.01
+ },
+ {
+  "word": "fifty",
+  "start": 38.045,
+  "end": 38.254
+ },
+ {
+  "word": "million",
+  "start": 38.289,
+  "end": 38.533
+ },
+ {
+  "word": "people.",
+  "start": 38.579,
+  "end": 39.032
+ },
+ {
+  "word": "Technically,",
+  "start": 39.555,
+  "end": 40.042
+ },
+ {
+  "word": "dying",
+  "start": 40.077,
+  "end": 40.356
+ },
+ {
+  "word": "isn't",
+  "start": 40.39,
+  "end": 40.565
+ },
+ {
+  "word": "against",
+  "start": 40.599,
+  "end": 40.843
+ },
+ {
+  "word": "the",
+  "start": 40.878,
+  "end": 40.948
+ },
+ {
+  "word": "law.",
+  "start": 40.994,
+  "end": 41.331
+ },
+ {
+  "word": "But",
+  "start": 41.459,
+  "end": 41.586
+ },
+ {
+  "word": "if",
+  "start": 41.61,
+  "end": 41.668
+ },
+ {
+  "word": "you",
+  "start": 41.702,
+  "end": 41.772
+ },
+ {
+  "word": "get",
+  "start": 41.819,
+  "end": 41.923
+ },
+ {
+  "word": "very",
+  "start": 41.958,
+  "end": 42.132
+ },
+ {
+  "word": "old,",
+  "start": 42.19,
+  "end": 42.434
+ },
+ {
+  "word": "or",
+  "start": 42.469,
+  "end": 42.562
+ },
+ {
+  "word": "very",
+  "start": 42.608,
+  "end": 42.759
+ },
+ {
+  "word": "sick,",
+  "start": 42.817,
+  "end": 43.212
+ },
+ {
+  "word": "you",
+  "start": 43.421,
+  "end": 43.502
+ },
+ {
+  "word": "get",
+  "start": 43.548,
+  "end": 43.641
+ },
+ {
+  "word": "a",
+  "start": 43.676,
+  "end": 43.699
+ },
+ {
+  "word": "plane",
+  "start": 43.734,
+  "end": 43.955
+ },
+ {
+  "word": "ticket",
+  "start": 43.978,
+  "end": 44.222
+ },
+ {
+  "word": "to",
+  "start": 44.257,
+  "end": 44.303
+ },
+ {
+  "word": "the",
+  "start": 44.349,
+  "end": 44.419
+ },
+ {
+  "word": "mainland.",
+  "start": 44.454,
+  "end": 44.976
+ },
+ {
+  "word": "And",
+  "start": 45.127,
+  "end": 45.232
+ },
+ {
+  "word": "it",
+  "start": 45.267,
+  "end": 45.325
+ },
+ {
+  "word": "works",
+  "start": 45.36,
+  "end": 45.569
+ },
+ {
+  "word": "both",
+  "start": 45.603,
+  "end": 45.778
+ },
+ {
+  "word": "ways.",
+  "start": 45.836,
+  "end": 46.312
+ },
+ {
+  "word": "Pregnant",
+  "start": 46.695,
+  "end": 46.997
+ },
+ {
+  "word": "women",
+  "start": 47.032,
+  "end": 47.229
+ },
+ {
+  "word": "fly",
+  "start": 47.275,
+  "end": 47.461
+ },
+ {
+  "word": "south",
+  "start": 47.542,
+  "end": 47.763
+ },
+ {
+  "word": "weeks",
+  "start": 47.821,
+  "end": 48.018
+ },
+ {
+  "word": "before",
+  "start": 48.053,
+  "end": 48.274
+ },
+ {
+  "word": "they",
+  "start": 48.297,
+  "end": 48.402
+ },
+ {
+  "word": "give",
+  "start": 48.436,
+  "end": 48.576
+ },
+ {
+  "word": "birth.",
+  "start": 48.61,
+  "end": 48.959
+ },
+ {
+  "word": "So",
+  "start": 49.11,
+  "end": 49.226
+ },
+ {
+  "word": "almost",
+  "start": 49.272,
+  "end": 49.516
+ },
+ {
+  "word": "nobody",
+  "start": 49.563,
+  "end": 49.795
+ },
+ {
+  "word": "is",
+  "start": 49.83,
+  "end": 49.899
+ },
+ {
+  "word": "born",
+  "start": 49.934,
+  "end": 50.108
+ },
+ {
+  "word": "here.",
+  "start": 50.155,
+  "end": 50.445
+ },
+ {
+  "word": "Almost",
+  "start": 50.724,
+  "end": 51.025
+ },
+ {
+  "word": "nobody",
+  "start": 51.083,
+  "end": 51.327
+ },
+ {
+  "word": "dies",
+  "start": 51.374,
+  "end": 51.606
+ },
+ {
+  "word": "here.",
+  "start": 51.652,
+  "end": 51.954
+ },
+ {
+  "word": "Which",
+  "start": 52.14,
+  "end": 52.302
+ },
+ {
+  "word": "is",
+  "start": 52.337,
+  "end": 52.407
+ },
+ {
+  "word": "why",
+  "start": 52.442,
+  "end": 52.569
+ },
+ {
+  "word": "there's",
+  "start": 52.616,
+  "end": 52.802
+ },
+ {
+  "word": "a",
+  "start": 52.837,
+  "end": 52.86
+ },
+ {
+  "word": "town",
+  "start": 52.906,
+  "end": 53.104
+ },
+ {
+  "word": "in",
+  "start": 53.138,
+  "end": 53.196
+ },
+ {
+  "word": "Norway",
+  "start": 53.254,
+  "end": 53.545
+ },
+ {
+  "word": "where",
+  "start": 53.58,
+  "end": 53.707
+ },
+ {
+  "word": "you're",
+  "start": 53.73,
+  "end": 53.893
+ },
+ {
+  "word": "not",
+  "start": 53.916,
+  "end": 54.009
+ },
+ {
+  "word": "allowed",
+  "start": 54.044,
+  "end": 54.276
+ },
+ {
+  "word": "to",
+  "start": 54.311,
+  "end": 54.357
+ },
+ {
+  "word": "die.",
+  "start": 54.404,
+  "end": 54.984
+ }
+]
