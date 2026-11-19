@@ -4,7 +4,7 @@ This repo is worked on by **several Claude sessions in parallel**, each owning o
 
 ## The video we make
 - A vertical 1080x1920, 30 fps, 45-65 s explainer short: "Why / How + a surprising real phenomenon".
-- Our own **2D stickman** characters (`stickman/`) act over **3D background plates** rendered in Blender (`blender/`).
+- Our own **2D bean-head cartoon characters** (`characters/`, the main cast) act over **3D background plates** rendered in Blender (`blender/`). The stickman (`stickman/`) is **on hold**, reserved for later.
 - There is a voice-over, SFX and music, and no captions unless the user asks.
 - The script formula and visual targets are in [`references/STYLE_BIBLE.md`](references/STYLE_BIBLE.md). The reference channel is study material only: never copy its scripts, characters, shots or titles, and never name it in our videos.
 - Every character and story is ours. Facts must be real and sourced.
@@ -16,7 +16,7 @@ Each session edits **only its own folders**. If you need a change elsewhere, add
 |---|---|---|---|
 | 🎬 Biên kịch (Screenwriter) | scripts | `scripts/<slug>/` | `SCRIPT.md` (facts and sources at the top, then the voice-over) and `shots.json` |
 | 🏛️ Thiết kế bối cảnh (Production Designer) | sets | `blender/sets/<set>/` | `build.py` plus rendered plates `plates/<set>__<cam>__<light>.png` with a `.json` beside each |
-| 👔 Phục trang (Costume Designer) | wardrobe | `stickman/` | the `draw()` API: expressions, poses, outfits, hats, held props, mouth shapes |
+| 👔 Phục trang (Costume Designer) | wardrobe | `characters/` | the `character()` API: builds, expressions, arm poses, outfits, hats, hair, held props, mouth shapes, views, walk |
 | 💥 Kỹ xảo (VFX Artist) | fx | `fx/` | `fx.py` with `render(name, t, size, **kw) -> RGBA PIL image` |
 | 🕺 Hoạt họa (Animator) | engine | `engine/` | `render_video.py shots.json words.json -> frames -> mp4` (picture only) |
 | 🎧 Âm thanh (Sound Designer) | audio | `audio/` | `voice.wav`, `words.json`, SFX, music, `mix.wav` |
@@ -58,15 +58,25 @@ Coordination roles:
 - JSON: `{"ground_y": px, "px_per_m": px at the ground line, "horizon_y": px, "light_dir": "left|right|top", "tint": "#rrggbb"}`. The engine uses it to place and scale characters and to tint them toward the scene light.
 - Lights: at least `day`, `golden` and `night` for every set.
 
-### Stickman: `stickman/scripts/stickman.py`
-- Signature: `draw(expr, pose, color, hat=None, look=0.0, fixed=False, **outfit_kwargs) -> 600x1000 RGBA`, with the soles at y=975.
-- `pose` is a name from `POSES` or a dict of joint angles (see `anim_v2.py`).
-- New outfits, hats and props are keyword arguments with defaults, so old calls keep working.
-- **Every change must follow [`stickman/DRAWING_RULES.md`](stickman/DRAWING_RULES.md).**
+### Characters (main cast): `characters/scripts/bean.py`
+- Signature: `character(build, skin, shirt, pants, expr, facing, hat, hat_col, hair, hair_col, outfit, glasses, arm_pose, prop, seed, white_head, moustache, lean) -> 600x1000 RGBA`, with the soles at y=975 (see `characters/README.md`).
+- The style spec is `references/reports/characters.md` §2 (measured from the reference). It covers:
+  - proportions: adult 3.5 head-heights;
+  - shapes: superellipse bean heads and bean torsos;
+  - ink: plum #241726, thicker on the bottom/shadow side;
+  - limbs: thin ink-stroke limbs, dot hands, short feet strokes;
+  - faces: lidded deadpan eyes, no blush and no catchlights;
+  - shading: a soft crescent.
+- The anatomy rules in [`stickman/DRAWING_RULES.md`](stickman/DRAWING_RULES.md) also apply to this cast: each arm from its own shoulder, continuous strokes, foreshortening, and animation rules 20-29.
+- New options are keyword arguments with defaults, so old calls keep working.
+- **Characters are our own designs.** Share the style, never copy a reference character's look.
+
+### Stickman (on hold): `stickman/scripts/stickman.py`
+- `draw(expr, pose, color, hat=None, look=0.0, fixed=False)`. Do not develop it further unless the user asks.
 
 ### FX: `fx/fx.py`
 - `render(name, t, size, **kw)`: `t` runs 0..1 over the effect's life and the result is an RGBA image.
-- Use flat 2D cartoon sprites with a thin dark outline, in the same style as the stickman.
+- Use flat 2D cartoon sprites in the same style as the cast: plum ink #241726 with a thick/thin line weight and soft crescent shading.
 - `fx/CATALOG.md` lists every name with a preview PNG.
 
 ## Branches
@@ -75,7 +85,7 @@ Coordination roles:
 - Commit small and often. Never commit `packs/`, `.venv/`, `__pycache__/`, renders over 20 MB, or anything secret.
 
 ## The self-check loop (mandatory, every task)
-1. **Read** `PIPELINE.md`, `QA.md`, `LESSONS.md`, your area's rules (for example `stickman/DRAWING_RULES.md`) and your `BACKLOG.md` items.
+1. **Read** `PIPELINE.md`, `QA.md`, `LESSONS.md`, your area's rules (for example `references/reports/characters.md` §2 and `stickman/DRAWING_RULES.md`) and your `BACKLOG.md` items.
 2. **Build** the smallest thing that does the task.
 3. **Check it yourself** against the QA checklist for your area. Run the automatic checks, render previews, and look at zoomed crops.
 4. **Get an independent review.** Spawn a fresh reviewer agent with the previews, the relevant rules and the reference frames. Ask for a score per criterion out of 10 and a numbered fix list. It must not have seen your work in progress.
