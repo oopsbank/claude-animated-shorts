@@ -28,6 +28,9 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Frame for medium shots: a 1.75 m character should fill about 55-65% of the frame height, as most reference frames do. Wide shots with tiny characters are the exception.
 
 ## Process
+- Seed per-character randomness with a stable hash (`zlib.crc32`), never Python `hash()`: it differs between processes, so multiprocessing renders flicker.
+- Never upscale a 2D card to fit a medium shot; render it at the target scale (or downsample the supersampled canvas).
+- An independent reviewer scores acting low if a beat only swaps the face: every beat needs a body change (lean, arms, shoulders).
 - Render a cheap low-res still after every change, and look at it before rendering full size.
 - Compare side-by-side with a reference frame. Numbers and adjectives lie; pictures don't.
 - When the user corrects something, fix it **and** add a rule so it never happens again.

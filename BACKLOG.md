@@ -17,6 +17,7 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P1 New set `road` (a modern street or highway, Quaternius street pack): cams `roadside`, `in_car`, and lights `day`, `golden`.
 - [ ] P2 New set `interior` (a room, Quaternius house interior): cams `room_wide`, `table_close`.
 - [ ] P2 Shared `blender/sets/common.py`: sky, lights, ink, materials and plate JSON writer, so sets stay consistent.
+- [ ] P1 (requested by engine) Plate JSON should include `horizon_y`, `light_dir` and `tint` (scene2.py writes only ground_x/ground_y/px_per_m). The engine defaults them for now.
 - [ ] P3 Parallax plates: a separate foreground layer PNG, so the engine can move it against the background.
 - [ ] P1 (for `bike-countersteer`) A NEW `track` set: a riding-school track with a pit lane and a grass run-off. Cams: `track_wide`, `track_med`, `track_top` (top-down), `pit_med`, `pit_ots` (over the shoulder), `bike_close`, `bike_chase` (behind the rider), `grips_close`, `rider_close`. Lights: `day` and `golden`. Signs: "BODY-STEERING CHALLENGE" banner, "CORNERS MADE: 0" lap board, and a chalkboard "PUSH LEFT → GO LEFT" with a top-view bar/wheel drawing.
 - [ ] P1 (for `bike-countersteer`) `village`: a `street_med` cam (`day`, `golden`) on a street a bicycle can ride down.
@@ -24,6 +25,8 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 ## characters (`characters/`): main cast, bean-head style (Producer prototype done, waiting for user approval)
 - [ ] P1 After approval: a wardrobe brief for the bean cast (more hats, outfits, props, side and 3/4 views, mouth shapes for lip sync, walk cycle following the stickman animation rules 20-29).
 - [ ] P1 (for `bike-countersteer`) A `ride` arm pose plus a seated lower body; a `helmet` hat (open-face, eyes visible) and a `helmet` held prop; a `broom` balanced on the palm (`broom_flick`, `broom_tip`); bike rigs `bicycle`, `motorbike` and `nobs_bike` (a second handlebar fixed to the frame) in `side`/`front`/`rear`/`top` views; `lean` (rider and bike together), plus `body_lean`/`bike_lean` (separate) and `knee_out`; `view: rear` for the bean body. Cast specs are in `scripts/bike-countersteer/build.py` (`CAST`).
+
+- [ ] P1 (requested by engine) In `bean.py character()`: `mouth=` (closed, small, open, wide, O, smile) and `lid=` (0..1, with 0.5 = half-shut) so the engine can drop its overlays; arm in-betweens (`arm_pose` accepting a blend, e.g. `('hang', 'point', 0.4)`, or explicit elbow/hand offsets) so gestures can ease and overshoot; optional `res=` (output scale) instead of the engine grabbing the 4x canvas.
 
 ## wardrobe (`stickman/`): ON HOLD by user decision (stickman reserved for later)
 - [ ] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES.
@@ -41,12 +44,16 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P1 (for `bike-countersteer`) `steer_arrow` (a curved arrow on the grips or front wheel, `direction=left|right|blocked`; blocked = a red stop bar) and `path_line` (dashed planned path vs actual path on a top-down track: `tight_left`, `wide_arc`, `kink_right_then_left`).
 
 ## engine (`engine/`)
-- [ ] P1 `render_video.py`: read `shots.json` + `words.json`, place characters on plates (`ground_y`, `px_per_m`), drive poses and expressions from beats with the anim_v2 principles, add camera moves (push-in, ease-out glide, shake), FX, and write the mp4.
-- [ ] P1 Lip sync from `words.json`: choose the mouth shape from the letters.
-- [ ] P1 `engine/qa.py`: the automatic checks in `QA.md` › engine and video.
-- [ ] P2 Crossfade and whip-pan transitions between shots.
+- [x] P1 (650c8f7) `render_video.py`: read `shots.json` + `words.json`, place characters on plates (`ground_y`, `px_per_m`), drive poses and expressions from beats with the anim_v2 principles, add camera moves (push-in, ease-out glide, shake), FX, and write the mp4.
+- [x] P1 (650c8f7, stand-in overlay until bean.py has `mouth=`) Lip sync from `words.json`: choose the mouth shape from the letters.
+- [x] P1 (650c8f7) `engine/qa.py`: the automatic checks in `QA.md` › engine and video.
+- [x] P2 (650c8f7) Crossfade and whip-pan transitions between shots.
+- [ ] P1 Review round 2 left (stopped at 2 rounds, Producer budget): acting 6, look 6. (a) Arm poses are 1-frame swaps, so a held point reads stiff: needs arm in-betweens from wardrobe, then anticipation/overshoot on the arm itself. (b) Crossfades between very different sizes ghost a giant head: prefer cuts or a matched position for those (scripts can set `transition`). (c) Wide stand-in plate: characters sit in the top half even at zoom 1.5, because the camera clamps to the plate; real `*_wide` cams should put the ground line lower.
+- [ ] P2 Frame stats: punched-in shots of the stand-in village plate fail lum/sat (12-18 of 20 frames pass). Re-check on the real `track` plates.
+- [ ] P2 Walk cycle with foot locking once wardrobe ships legs; until then x moves are hop-steps.
+- [ ] P2 Rear/top views and the bike rigs (composite `rig` + `view` cards, `bike_lean` separate from `body_lean`).
 - [ ] P2 Character tint from the plate JSON `tint`, plus a rim light from `light_dir`.
-- [ ] P1 (for `bike-countersteer`) Support the new `shots.json` fields: `rig` + `view` (bike composites), `insert` (a cut-in of another cam/rig from `at_word` to `until_word`), `camera.at_word`, `contact_shift`, `lean`/`body_lean`/`bike_lean`, `points_at`. Left/right are always the rider's own (see the note in `shots.json`).
+- [~] P1 (for `bike-countersteer`, 650c8f7: arm_pose rider-side, lean/body_lean, prop beats, insert, glide/follow/pan/tilt/shake/hold done; `rig`/`view`/`bike_lean`/`knee_out`/`contact_shift`/`points_at`/`broom_*`/`path` wait for wardrobe) Support the new `shots.json` fields: `rig` + `view` (bike composites), `insert` (a cut-in of another cam/rig from `at_word` to `until_word`), `camera.at_word`, `contact_shift`, `lean`/`body_lean`/`bike_lean`, `points_at`. Left/right are always the rider's own (see the note in `shots.json`).
 
 ## audio (`audio/`)
 - [ ] P1 Voice from `SCRIPT.md` via ElevenLabs (connected), and `words.json` from word timestamps.
