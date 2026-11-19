@@ -23,7 +23,10 @@ POSES = {
     'cheer': dict(armL=(145, 160), armR=(-145, -160), legL=(16, 2), legR=(-16, -2)),
 }
 
+SIDE_POSES = {'walk', 'run'}
+
 def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
+    if pose in SIDE_POSES and look == 0.0: look = 0.7      # side-on body: face turns toward the direction of travel
     C = hexrgb(color); INK = (18, 16, 26); hi = mixc(C, (255, 255, 255), 0.22)
     im = Image.new('RGBA', (W * S, H * S), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     P = POSES[pose]
@@ -67,7 +70,13 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
 
     torso = mv([(300, 232 + i * (520 - 232) / 40) for i in range(41)])
     # back arm + legs + torso as ONE merged silhouette (no inner seams), like the reference
-    body = [(lpts(arms[1]), T), (lpts(legs[1]), T), (lpts(legs[0]), T), (torso, TB)]
+    # Facing the viewer: both arms belong to the one merged silhouette (symmetric, nothing turned).
+    # Side-on poses (walk/run) layer a back arm behind and a front arm over the torso.
+    side = pose in SIDE_POSES
+    body = [(lpts(legs[1]), T), (lpts(legs[0]), T), (torso, TB)]
+    if side: body.insert(0, (lpts(arms[1]), T))
+    elif pose == 'think': body.insert(0, (lpts(arms[0]), T))          # hanging arm; chin arm drawn over the face later
+    else: body = [(lpts(arms[0]), T), (lpts(arms[1]), T)] + body
     for pts, w in body: stamp(pts, w + 2 * OUT, INK)
     for pts, w in body: stamp(pts, w, C)
     hx, hy = head
@@ -77,7 +86,7 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     cap = Image.new('L', im.size, 0); ImageDraw.Draw(cap).ellipse([(hx - R * 1.25) * S, (hy - R * 1.9) * S, (hx + R * 1.25) * S, (hy + R * 0.15) * S], fill=150)
     cap = ImageChops.multiply(cap.filter(ImageFilter.GaussianBlur(26 * S)), m)
     lay = Image.new('RGBA', im.size, hi + (255,)); lay.putalpha(cap); im.alpha_composite(lay); d = ImageDraw.Draw(im)
-    if pose != 'think':
+    if side:
         front_arm(lpts(arms[0]))
 
     # ---------------- face ----------------
@@ -147,7 +156,7 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
         d.rectangle([(hx - 76) * S, (hy - R + 12) * S, (hx + 76) * S, (hy - R + 28) * S], fill=(38, 52, 104, 255))
 
     if pose == 'think':                    # hand to chin drawn over the face
-        front_arm(lpts(arms[0]))
+        front_arm(lpts(arms[1]))
     return im.resize((W, H), Image.LANCZOS)
 
 if __name__ == '__main__':
