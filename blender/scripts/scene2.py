@@ -134,7 +134,25 @@ add.inputs['Color2'].default_value = (0.9, 0.95, 1.0, 1)
 wl.new(ramp.outputs['Color'], add.inputs['Color1']); wl.new(add.outputs['Color'], wn['Background'].inputs['Color'])
 wn['Background'].inputs['Strength'].default_value = 3.2
 
-# ---------- 2D hero card ----------
+# ---------- LIGHT=day: bright daylight (the reference's default look; see references/reports/recent_style_2026-11.md) ----------
+LIGHT = os.environ.get('LIGHT', 'night')
+if LIGHT == 'day':
+    moon.color = (1.0, 0.93, 0.82); moon.energy = 4.2; moon.angle = math.radians(4)
+    mo.rotation_euler = (math.radians(50), 0, math.radians(335))          # warm sun from the camera side, slightly left: lights the facades
+    fill.color = (0.80, 0.86, 1.0); fill.energy = 260                      # cool sky fill from the camera side
+    for o in [o for o in sc.objects if o.type == 'LIGHT' and o.data.type == 'POINT']: o.data.energy = 0
+    for m in bpy.data.materials:
+        if not m.use_nodes: continue
+        Pm = next((x for x in m.node_tree.nodes if x.type == 'BSDF_PRINCIPLED'), None)
+        if Pm and Pm.inputs['Emission Strength'].default_value > 0 and m.name.startswith(('Windows', 'glow')):
+            Pm.inputs['Emission Strength'].default_value = 0.3
+    # ramp elements are sorted by position: [0]=horizon 0.0, [1]=0.12, [2]=zenith 0.45
+    cr.elements[0].color = (0.80, 0.88, 1.0, 1); cr.elements[1].color = (0.55, 0.74, 0.98, 1)
+    cr.elements[2].color = (0.22, 0.48, 0.93, 1)
+    st.inputs['To Max'].default_value = 0.0                                  # no stars
+    wn['Background'].inputs['Strength'].default_value = 1.6
+
+
 img = bpy.data.images.load(os.environ.get('CARD', f'{A}/stick_neutral.png'))
 H = 1.75; Wc = H * 0.6
 bpy.ops.mesh.primitive_plane_add(size=1); card = bpy.context.object; card.name = 'card'
@@ -167,6 +185,12 @@ co.location = (0.7, -5.4, 1.35)
 tgt = Vector((0.0, 6.0, 2.0))
 co.rotation_euler = (tgt - co.location).to_track_quat('-Z', 'Y').to_euler()
 co.rotation_euler.y += math.radians(3)
+if SHOT == 'M':      # medium shot: a 1.75 m character fills ~55-65% of the frame height
+    cam.lens = 35
+    co.location = (0.45, -3.2, 1.2)
+    tgt = Vector((0.0, 3.0, 1.45))
+    co.rotation_euler = (tgt - co.location).to_track_quat('-Z', 'Y').to_euler()
+    co.rotation_euler.y += math.radians(2)
 if SHOT == 'B':
     card.location = (-1.15, 4.1, 0)
     cam.lens = 38
@@ -231,7 +255,20 @@ r = sc.render; r.engine = 'CYCLES'
 sc.cycles.device = 'CPU'; sc.cycles.samples = SAMPLES; sc.cycles.use_denoising = True; sc.cycles.max_bounces = 6
 r.resolution_x, r.resolution_y, r.resolution_percentage = 720, 1280, SCALE
 sc.view_settings.view_transform = 'Khronos PBR Neutral'; sc.view_settings.exposure = 0.0
+if LIGHT == 'day':
+    lst.color = (0.018, 0.009, 0.020)       # plum ink #241726 in LINEAR space (sRGB values look washed out here)
+    tint.color_ramp.elements[0].color = (0.36, 0.30, 0.25, 1); tint.color_ramp.elements[1].color = (0.55, 0.46, 0.37, 1)   # warm cobbles
+    sc.view_settings.exposure = 0.35
 r.filepath = os.path.abspath(OUT)  # shot ; r.image_settings.file_format = 'PNG'
+# plate metadata (PIPELINE.md contract): where a 1.75 m character standing at the card spot lands on screen
+from bpy_extras.object_utils import world_to_camera_view
+import json
+sc.view_layers[0].update()
+def scr(v):
+    p = world_to_camera_view(sc, co, Vector(v)); return p.x * r.resolution_x * r.resolution_percentage / 100, (1 - p.y) * r.resolution_y * r.resolution_percentage / 100
+gx, gy = scr(card.location); hx_, hy_ = scr(Vector(card.location) + Vector((0, 0, 1.75)))
+meta = {'ground_x': round(gx, 1), 'ground_y': round(gy, 1), 'px_per_m': round((gy - hy_) / 1.75, 1), 'light': os.environ.get('LIGHT', 'night'), 'shot': SHOT}
+json.dump(meta, open(os.path.splitext(os.path.abspath(OUT))[0] + '.json', 'w')); print('PLATE_META', meta)
 t = time.time(); bpy.ops.render.render(write_still=True)
 print(f'RENDER_SECONDS {time.time() - t:.1f}')
 bpy.ops.wm.save_as_mainfile(filepath=os.path.splitext(os.path.abspath(OUT))[0] + '.blend')

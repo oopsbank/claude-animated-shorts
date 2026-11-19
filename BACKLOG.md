@@ -15,13 +15,18 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P2 Shared `blender/sets/common.py`: sky, lights, ink, materials and plate JSON writer, so sets stay consistent.
 - [ ] P3 Parallax plates: a separate foreground layer PNG, so the engine can move it against the background.
 
-## wardrobe (`stickman/`)
-- [x] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES. (+ `pants`, `outfit=` presets: sailor, captain, soldier, chef, detective, worker, farmer; sheet `stick_outfits.png`)
-- [ ] P2 Think pose: a tiny dark ink sliver under the right elbow (visible at 2x, already in the original pose). Also, in the think pose with a coat, the left sleeve merges with the coat body.
-- [ ] P3 Side-on back sleeve in a light colour (chef run) merges with a same-colour torso at the shoulder. Consider a slightly tinted back sleeve.
-> **ON HOLD (2026-11-19):** the Producer session reported the stickman is paused in favour of bean-head characters. State at the pause:
-> - Done and reviewed: outfits (66ded12).
-> - Code exists in `stickman.py` but is NOT reviewed: hats (`HATS`), held props (`prop=`, `prop_hand=`, `hand_anchors()`, new `hold` pose), lip-sync mouths (`mouth=`). The automatic hat check (nothing below hy-49 over the face) fails for the `cap` and `captain` visors, which touch the hy-49 line, and for the worried sweat drop, which is drawn over every hat. `stick_hats.png`, `stick_props.png` and `stick_mouths.png` are not built yet.
+## characters (`characters/`): main cast, bean-head style (owner: wardrobe session, from 2026-11-19)
+- [ ] P1 Side view (`view='side'`, facing left/right, spec §2.7) and a 3/4 view.
+- [ ] P1 Riding pose on a bicycle and a motorbike (side and 3/4), with 2D bike props: steer angle on the front wheel and bars, and a lean angle for the whole bike.
+- [ ] P1 Mouth shapes for lip sync (`mouth=` closed, small, open, wide, O, smile_talk) overriding any expression.
+- [ ] P1 Animatable joints (arm/leg angles, head tilt, body lean, blink) and a foot-locked walk cycle (DRAWING_RULES 20-29).
+- [ ] P2 More hats, outfits and props as the script needs them (see `claude/area-scripts` BACKLOG, e.g. a broom).
+
+## wardrobe (`stickman/`): ON HOLD by user decision (stickman reserved for later)
+- [x] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES. (+ `pants`, `outfit=` presets; sheet `stick_outfits.png`, 66ded12)
+- [ ] P2 Think pose: a tiny dark ink sliver under the right elbow (already in the original pose). In the think pose with a coat, the left sleeve merges with the coat body.
+- [ ] P3 Side-on back sleeve in a light colour merges with a same-colour torso at the shoulder.
+> State at the pause: hats, held props (`prop=`, `hand_anchors()`, `hold` pose) and lip-sync mouths exist in `stickman.py` but are NOT reviewed. The hat check fails for the `cap` and `captain` visors (they touch hy-49) and for the worried sweat drop over hats. Hat/prop/mouth sheets are not built.
 - [ ] P1 Hats: cap, top hat, captain, cowboy, chef, hard hat, crown, in addition to helmet and sailor.
 - [ ] P1 Held props: a hand anchor point, plus prop sprites (bag, rock, phone, lantern, sword, paper, cup).
 - [ ] P1 Mouth shapes for lip sync (closed, small, open, wide, O, smile-talk) selectable on top of any expression.

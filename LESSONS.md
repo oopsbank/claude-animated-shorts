@@ -21,6 +21,12 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - A wide 9:16 shot has too much sky. Build layered back rows (houses climbing a hill) so the top third has content.
 - The scale of each pack differs (a Quaternius barrel is 0.2 units). Scale every model to real metres.
 
+- **Expose for daylight by default.** The reference's median frame luminance is 0.46 with near-white highlights; our night village was 0.21. Night is a story beat (~18% of frames), not the house look. Check every plate with `references/scripts/frame_stats.py`.
+- Freestyle line colours are **linear**, not sRGB: plum #241726 is (0.018, 0.009, 0.020). Typing sRGB values gives washed-out pink lines.
+- A Blender sun shines along its local -Z. Rotation (50°, 0, 335°) lights facades that face a camera looking +Y; 215° lit them from behind and left them in shadow.
+- `color_ramp.elements` are re-sorted by position after `elements.new()`. Index the elements by position, not by creation order.
+- Frame for medium shots: a 1.75 m character should fill about 55-65% of the frame height, as most reference frames do. Wide shots with tiny characters are the exception.
+
 ## Process
 - Render a cheap low-res still after every change, and look at it before rendering full size.
 - Compare side-by-side with a reference frame. Numbers and adjectives lie; pictures don't.

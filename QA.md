@@ -5,7 +5,7 @@ Every task ends with these checks: first the automatic checks, then your own loo
 ## Reviewer protocol
 Spawn a fresh agent. Give it:
 - 1-4 preview images, plus zoomed crops of the risky areas: joints, crossings, edges and faces.
-- The rules that apply: `stickman/DRAWING_RULES.md` and/or the area section below.
+- The rules that apply: `references/reports/characters.md` §2 (cast style), `stickman/DRAWING_RULES.md` (anatomy and animation) and/or the area section below.
 - 1-2 reference frames from `references/frames/` for the look.
 
 Ask it for a **score per criterion out of 10**, then a **numbered fix list with locations**, then "PASS" or "FAIL", in 200 words or fewer. Do not show it your earlier attempts or explain your intent. Map every fix to a change, and re-review after fixing.
@@ -27,12 +27,14 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
 - [ ] Composition leaves clear ground space at roughly 0.35-0.65 of the frame width for characters.
 - [ ] Reviewer scores: colour, lighting, ink, depth, composition and "would a character read clearly here".
 
-## wardrobe (stickman)
-- [ ] Every rule in `stickman/DRAWING_RULES.md` is met, especially 1, 8, 9, 12 and 14.
-- [ ] Outfits follow the body: front view stays symmetric, and side poses layer front over back.
-- [ ] Hats never cover the eyes. Props are held at the hand, never floating.
-- [ ] `sheets.py` regenerates the sheets and every new item appears on a sheet.
-- [ ] Old calls to `draw()` still work.
+## wardrobe (characters, bean-head cast)
+- [ ] Matches the spec in `references/reports/characters.md` §2: proportions, head shape, plum variable-width ink, thin stroke limbs, dot hands, face layout, no blush or catchlights, and crescent shading.
+- [ ] Anatomy rules from `stickman/DRAWING_RULES.md` hold: each arm from its own shoulder, continuous strokes, and foreshortening.
+- [ ] Hats sit low (covering about 25% of the head) and never hide the eyes. Brows sit just under the hat base. Props are held at the dot hand, read clearly at video size, and never float.
+- [ ] Clothing is clipped to the torso with at most 5 details.
+- [ ] `cast_sheet.py` (or a new sheet script) shows every new item.
+- [ ] Old calls to `character()` still work.
+- [ ] The character is original, not a copy of a reference character.
 - [ ] Reviewer scores at 2x zoom on joints and crossings: silhouette, joints, colour, face and outfit.
 
 ## fx
