@@ -11,5 +11,5 @@ Original characters in the channel's target style: bean heads, a bean torso, thi
   - outfits: buttons, tie, belt, apron, overalls, coat_open, stripes, collar
   - arm poses (left, right): hang, wave, point, hold, hip, chin
   - props: mug, clipboard, wrench
-- `scripts/cast_sheet.py out.png` renders the prototype cast. `out/in_scene_v1.jpg` shows two of them composited on the village night plate.
+- `scripts/cast_sheet.py out.png` renders the prototype cast (`previews/cast_v2.png`). `previews/in_scene_v1.jpg` shows two of them composited on the village night plate.
 - The stickman (`stickman/`) is on hold. Its drawing rules about anatomy (each arm from its own shoulder, foreshortening, continuous strokes) still apply here.
