@@ -22,7 +22,7 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P1 (for `bike-countersteer`) `village`: a `street_med` cam (`day`, `golden`) on a street a bicycle can ride down.
 
 ## characters (`characters/`): main cast, bean-head style (owner: wardrobe session, from 2026-11-19)
-- [ ] P1 Side view (`view='side'`, facing left/right, spec §2.7) and a 3/4 view.
+- [x] P1 Side view (`view='side'`, facing left/right, spec §2.7) and a 3/4 view. (`turned()` rig; `previews/views_v1.png`; reviewer PASS 8/7/7/8/8)
 - [ ] P1 Riding pose on a bicycle and a motorbike (side and 3/4), with 2D bike props: steer angle on the front wheel and bars, and a lean angle for the whole bike.
 - [ ] P1 Mouth shapes for lip sync (`mouth=` closed, small, open, wide, O, smile_talk) overriding any expression.
 - [ ] P1 Animatable joints (arm/leg angles, head tilt, body lean, blink) and a foot-locked walk cycle (DRAWING_RULES 20-29).
