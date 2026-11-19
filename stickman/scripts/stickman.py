@@ -19,7 +19,7 @@ POSES = {
     'run':   dict(armL=(-55, -125), armR=(45, -15), legL=(-38, 8), legR=(30, 85)),
     'point': dict(armL=(24, 10), armR=(-82, -88), legL=(11, 1), legR=(-11, -1)),
     'shrug': dict(armL=(60, -35), armR=(-60, 35), legL=(10, 1), legR=(-10, -1)),
-    'think': dict(armL=(10, -84, 0.72), armR=(-30, 160), legL=(10, 1), legR=(-10, -1)),   # arm across the belly, other hand on the chin
+    'think': dict(armL=(10, -93, 0.72), armR=(7, 175, 0.97, 0.8), legL=(10, 1), legR=(-10, -1)),   # arm across the belly, other hand on the chin
     'cheer': dict(armL=(145, 160), armR=(-145, -160), legL=(16, 2), legR=(-16, -2)),
 }
 
@@ -39,9 +39,10 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     hip = (300, 520); shoulder = (300, 262)
     seg_arm, seg_leg = 124, 205
 
-    def limb(root, ang, seg):              # ang = (upper, lower[, lower-length factor])
+    def limb(root, ang, seg):              # ang = (upper, lower[, lower-length factor[, upper-length factor]])
         a1, a2 = math.radians(ang[0]), math.radians(ang[1]); seg2 = seg * (ang[2] if len(ang) > 2 else 1.0)
-        j = (root[0] - math.sin(a1) * seg, root[1] + math.cos(a1) * seg)
+        seg1 = seg * (ang[3] if len(ang) > 3 else 1.0)       # < 1 = foreshortened (limb pointing at the viewer)
+        j = (root[0] - math.sin(a1) * seg1, root[1] + math.cos(a1) * seg1)
         e = (j[0] - math.sin(a2) * seg2, j[1] + math.cos(a2) * seg2)
         return root, j, e
 
@@ -51,8 +52,10 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
                  (1 - t) ** 2 * root[1] + 2 * (1 - t) * t * cy + t * t * e[1]) for t in (i / n for i in range(n + 1))]
 
     legs = [limb(hip, P['legL'], seg_leg), limb(hip, P['legR'], seg_leg)]
-    sh_ = (300, 240) if pose == 'think' else shoulder      # think: arm roots hide under the head
-    arms = [limb(sh_, P['armL'], seg_arm), limb(sh_, P['armR'], seg_arm)]
+    if pose == 'think':                    # each arm from its OWN shoulder (left arm from the left, right from the right)
+        arms = [limb((278, 262), P['armL'], seg_arm), limb((322, 262), P['armR'], seg_arm)]
+    else:
+        arms = [limb(shoulder, P['armL'], seg_arm), limb(shoulder, P['armR'], seg_arm)]
     lowest = max(max(p[1] for p in path(*l)) for l in legs) + T / 2
     dy = 975 - lowest
     xs = [p[0] for l in legs + arms for p in path(*l)] + [300 - R, 300 + R]
@@ -79,8 +82,13 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     else: body = [(lpts(arms[0]), T), (lpts(arms[1]), T)] + body
     for pts, w in body: stamp(pts, w + 2 * OUT, INK)
     for pts, w in body: stamp(pts, w, C)
-    if pose == 'think':                    # crossed arm first, then the chin arm over it; roots hidden by the head
-        part(lpts(arms[0]), T, C); part(lpts(arms[1]), T, C)
+    if pose == 'think':
+        # right upper arm down to its elbow, then the left arm whose forearm crosses the belly under that elbow,
+        # then the right forearm rising in front to the chin
+        ra = lpts(arms[1]); n2 = len(ra) // 2
+        part(ra[:n2 + 1], T, C)
+        part(lpts(arms[0]), T, C)
+        stamp(ra[n2 + 3:], T + 2 * OUT, INK); stamp(ra[n2 - 2:], T, C)
     hx, hy = head
     d.ellipse([(hx - R - OUT) * S, (hy - R - OUT) * S, (hx + R + OUT) * S, (hy + R + OUT) * S], fill=INK)
     d.ellipse([(hx - R) * S, (hy - R) * S, (hx + R) * S, (hy + R) * S], fill=C)
