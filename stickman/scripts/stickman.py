@@ -51,7 +51,8 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
                  (1 - t) ** 2 * root[1] + 2 * (1 - t) * t * cy + t * t * e[1]) for t in (i / n for i in range(n + 1))]
 
     legs = [limb(hip, P['legL'], seg_leg), limb(hip, P['legR'], seg_leg)]
-    arms = [limb(shoulder, P['armL'], seg_arm), limb(shoulder, P['armR'], seg_arm)]
+    sh_ = (300, 240) if pose == 'think' else shoulder      # think: arm roots hide under the head
+    arms = [limb(sh_, P['armL'], seg_arm), limb(sh_, P['armR'], seg_arm)]
     lowest = max(max(p[1] for p in path(*l)) for l in legs) + T / 2
     dy = 975 - lowest
     xs = [p[0] for l in legs + arms for p in path(*l)] + [300 - R, 300 + R]
@@ -78,6 +79,8 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     else: body = [(lpts(arms[0]), T), (lpts(arms[1]), T)] + body
     for pts, w in body: stamp(pts, w + 2 * OUT, INK)
     for pts, w in body: stamp(pts, w, C)
+    if pose == 'think':                    # crossed arm first, then the chin arm over it; roots hidden by the head
+        part(lpts(arms[0]), T, C); part(lpts(arms[1]), T, C)
     hx, hy = head
     d.ellipse([(hx - R - OUT) * S, (hy - R - OUT) * S, (hx + R + OUT) * S, (hy + R + OUT) * S], fill=INK)
     d.ellipse([(hx - R) * S, (hy - R) * S, (hx + R) * S, (hy + R) * S], fill=C)
@@ -85,8 +88,8 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
     cap = Image.new('L', im.size, 0); ImageDraw.Draw(cap).ellipse([(hx - R * 1.25) * S, (hy - R * 1.9) * S, (hx + R * 1.25) * S, (hy + R * 0.15) * S], fill=150)
     cap = ImageChops.multiply(cap.filter(ImageFilter.GaussianBlur(26 * S)), m)
     lay = Image.new('RGBA', im.size, hi + (255,)); lay.putalpha(cap); im.alpha_composite(lay); d = ImageDraw.Draw(im)
-    if side or pose == 'think':
-        front_arm(lpts(arms[0]))           # think: the crossed arm sits in front of the torso
+    if side:
+        front_arm(lpts(arms[0]))
 
     # ---------------- face ----------------
     K = (16, 14, 22, 255); WH = (255, 255, 255, 255)
@@ -158,8 +161,9 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0):
         d.rounded_rectangle([(hx - 74) * S, (hy - R - 22) * S, (hx + 74) * S, (hy - R + 26) * S], radius=18 * S, fill=(244, 244, 240, 255), outline=INK, width=int(OUT * S))
         d.rectangle([(hx - 76) * S, (hy - R + 12) * S, (hx + 76) * S, (hy - R + 28) * S], fill=(38, 52, 104, 255))
 
-    if pose == 'think':                    # hand to chin drawn over the face
-        front_arm(lpts(arms[1]))
+    if pose == 'think':                    # hand over the chin, seamlessly joined to the forearm drawn earlier
+        hand = lpts(arms[1])
+        stamp(hand[-12:], T + 2 * OUT, INK); stamp(hand[-24:], T, C)
     return im.resize((W, H), Image.LANCZOS)
 
 if __name__ == '__main__':
