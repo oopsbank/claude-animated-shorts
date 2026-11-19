@@ -14,7 +14,7 @@ import anim  # noqa: E402
 from anim import W, H, FPS, smooth, clamp, lerp  # noqa: E402
 
 PLATE_DEFAULTS = {'horizon_y': H * 0.4, 'light_dir': 'left', 'tint': '#fff8f0'}
-XFADE, WHIP = 8, 8
+XFADE, WHIP = 6, 8
 _T = os.path.join(HERE, 'test', 'plates')
 STANDIN_PLATES = {}
 if os.environ.get('ENGINE_STANDIN', '1') == '1' and os.path.exists(os.path.join(_T, 'village__M__day.jpg')):
@@ -110,7 +110,12 @@ def setup(shots_path, words_path, plate_dirs):
         kicks = []
         for e in s.get('fx', []):
             if e.get('kick'): kicks.append(anim.beat_frame((sp['w0'], sp['w1']), words, e.get('at_word', 0))[1])
-        G['cams'][k] = anim.Camera(s.get('camera'), sp, words, kicks)
+        cam = dict(s.get('camera') or {})
+        if 'focus' not in cam and s.get('characters'):      # aim the push at the characters' chests, not the plate centre
+            pm = G['plates'][p][1]; fig = pm['px_per_m'] * 1.75
+            xs = [float(c.get('x', 0.5)) for c in s['characters']]
+            cam['focus'] = [sum(xs) / len(xs), (pm['ground_y'] - 0.62 * fig) / H]
+        G['cams'][k] = anim.Camera(cam, sp, words, kicks)
         G['mouths'][k] = [rig.mouth_track(words[sp['w0']:sp['w1']], sp['f0'] - 30, sp['f1'] + 30) if c.get('talk') else {}
                           for c in s.get('characters', [])]
     n = spans[-1]['f1'] if spans else 0

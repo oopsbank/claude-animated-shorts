@@ -199,8 +199,9 @@ class Track:
             b = e['beat']; side = 1.0 if (e['new']['facing'] >= 0) else -1.0
             if n < 0:
                 # anticipation: lean away from the coming action, ease in
-                if pose_change or b.get('action'):
-                    lean += -1.6 * side * smooth((n + ANTIC + 1) / (ANTIC + 1))
+                react = b.get('expr') and b['expr'] != e['prev']['expr']
+                if pose_change or b.get('action') or react:   # every beat moves the body (expression-only: smaller)
+                    lean += (-2.2 if pose_change else -1.2) * side * smooth((n + ANTIC + 1) / (ANTIC + 1))
                 mid = staged(prev_pose, new_pose)
                 if mid != prev_pose and n >= -2: pose = mid           # staged transition: 2 frames through the mid pose
                 # turn: facing eases over the 3 frames before landing
@@ -209,7 +210,9 @@ class Track:
                 continue
             st.update(e['new']); pose = new_pose
             if pose_change or b.get('action'):
-                lean += settle(n, 2.4 * side)                             # overshoot toward the action, settle
+                lean += settle(n, 4.0 * side, SETTLE + 2)                 # overshoot toward the action, settle
+            elif b.get('expr') and b['expr'] != e['prev']['expr']:
+                lean += settle(n, 2.0 * side)                             # reaction: a small body take
         lean += self.hold_lean_at(f)
         # actions (hop / jolt / shrug / shake / nod) on top
         for e in self.events:
