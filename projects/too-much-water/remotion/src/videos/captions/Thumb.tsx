@@ -13,15 +13,15 @@ const T: React.FC<{ size: number; color: string; rot?: number; children: React.R
 
 export const WaterThumb: React.FC = () => {
   const v = (getInputProps() as any).v ?? "brain";
-  const brain = v === "brain";
+  const brain = v === "brain", glassA = v === "glassA";
   return (
     <AbsoluteFill style={{ backgroundColor: "black", overflow: "hidden" }}>
       <style>{`@font-face{font-family:CapFont;src:url(${staticFile("water/InterDisplay-Black.otf")}) format("opentype");font-weight:900}`}</style>
       <Img src={staticFile(brain ? "water/thumb_brain.jpg" : "water/thumb_glass.jpg")}
-        style={{ width: "100%", height: "100%", objectFit: "cover", transform: brain ? "scale(1.4) translateY(-6%)" : "scale(1.25) translate(6%, -6%)", transformOrigin: "50% 70%" }} />
+        style={{ width: "100%", height: "100%", objectFit: "cover", transform: brain ? "scale(1.4) translateY(-6%)" : glassA ? "scale(1.35) translate(-12%, -4%)" : "scale(1.25) translate(6%, -6%)", transformOrigin: "50% 70%" }} />
       <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(10,4,12,0.55) 0%, rgba(10,4,12,0) 42%)" }} />
       <AbsoluteFill style={{ alignItems: "center", paddingTop: 300, gap: 18 }}>
-        {brain ? (<>
+        {brain || glassA ? (<>
           <T size={92} color="#ffffff">What if you drank</T>
           <T size={150} color="#5fd0ff" rot={-2}>too much</T>
           <T size={190} color="#5fd0ff" rot={-2}>water?</T>
