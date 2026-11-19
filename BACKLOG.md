@@ -37,6 +37,9 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
   - sparkle: fade the minis out instead of shrinking them below 10 px;
   - dust_puff: a darker crescent on day plates.
 - [ ] P2 fx polish from review round 4: sparkle peaks at 3/12 and should leave no sub-3 px specks; exclaim's tick dashes need a visible outline at night; the splash ring should fade by alpha, not by thinning; the question_mark hook should grow with its dot at 1/12; the double note in music_note should ease in over 2-3 frames; explosion and dust_puff leave pixel debris in their last third.
+- [x] P1 FX for `bike-countersteer`: `steer_arrow` (`direction=left|right|blocked`), `path_line` (`tight_left`, `wide_arc`, `kink_right_then_left`), `lean_arc`, `wobble_lines`, `whoosh`, all in the bean style.
+  - Review: steer_arrow, wobble_lines and whoosh passed at 8. lean_arc and path_line passed in round 2 at 7.
+  - Round 3 asked for timing polish on blocked, path_line and lean_arc (the 'no' shake, the exit, and the wedge at the pivot). I fixed these and checked them on a dense sheet, but did not re-review them, to save usage.
 - [ ] P2 engine: composite fx with `line=3.2*char_scale` so the fx outline matches the character's outline (see CATALOG.md).
 - [ ] P2 Light shafts and a lens flash.
 

@@ -14,3 +14,5 @@ These are fx-specific lessons from review. Follow them for every new effect, and
 10. **Day contrast:** pale fills (pale yellow, cyan) vanish on a light sky. Pick saturated mid-tones (`#ffe45c`, `#2fa8ec`) and let the ink outline carry the edge at night.
 11. **Stagger groups in an order** (middle first, or left to right). Random delays look like pops.
 12. **Look at a dense sheet** (t = 1/12 .. 11/12) on day and night, not just the 5-frame strip. Exit pops and frozen holds only show there.
+13. **Diagram effects (arrows, paths, angle marks)** draw on along their length and exit by erasing along the path plus a short fade. Never flatten them. A 'blocked' sign must leave the blocked thing visible.
+14. **When two reviewers ask for opposite fixes, pick the drawing convention and write it down.** For example, an angle mark is a small wedge at the pivot. Don't flip it back and forth.

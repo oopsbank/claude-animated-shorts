@@ -82,3 +82,42 @@ popping, shaking ! with surprise ticks. Kwargs: color, tilt.
 notes rising and swaying. Kwargs: colors, count.
 
 ![music_note](previews/music_note.png)
+
+## Diagram effects (first video: `bike-countersteer`)
+
+### `steer_arrow`
+curved arrow showing a turn direction, or a red stop bar. Kwargs: direction=left|right|blocked, color, sweep (deg).
+
+![steer_arrow](previews/steer_arrow.png)
+
+`direction='blocked'`:
+
+![steer_arrow blocked](previews/steer_arrow_blocked.png)
+
+### `path_line`
+top-down track: dashed planned path + actual path drawn on with a rider dot. Kwargs: planned, actual (tight_left|wide_arc|kink_right_then_left or points), color, planned_color.
+
+![path_line](previews/path_line.png)
+
+`actual='kink_right_then_left'`:
+
+![path_line kink](previews/path_line_kink.png)
+
+### `lean_arc`
+lean-angle diagram: vertical ref, leaning line, arc + tick; pivot at bottom centre. Kwargs: angle (deg), side=left|right, color, ref.
+
+![lean_arc](previews/lean_arc.png)
+
+### `wobble_lines`
+wobbling motion arcs beside a wheel at the centre. Kwargs: color, sides=both|left|right.
+
+![wobble_lines](previews/wobble_lines.png)
+
+### `whoosh`
+tapered speed swoosh with two trailers. Kwargs: color, angle (travel direction, deg).
+
+![whoosh](previews/whoosh.png)
+
+These effects next to bean characters:
+
+![with cast](previews/with_cast_bike.png)

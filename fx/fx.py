@@ -636,6 +636,217 @@ def fx_music_note(t, n, u, e, kw):
     return im
 
 
+# ---------------------------------------------------------------- diagram-style effects (first video: countersteering)
+
+def sub_path(pts, f0, f1):
+    """Part of a polyline of (x, y, w) between length fractions f0..f1 (for draw-on / retract)."""
+    if f1 <= f0 or len(pts) < 2: return []
+    L = [0.0]
+    for p, q in zip(pts, pts[1:]): L.append(L[-1] + math.hypot(q[0] - p[0], q[1] - p[1]))
+    tot = L[-1] or 1
+    def at(f):
+        d = f * tot
+        for i in range(1, len(L)):
+            if L[i] >= d:
+                k = (d - L[i - 1]) / ((L[i] - L[i - 1]) or 1)
+                return tuple(lerp(pts[i - 1][j], pts[i][j], k) for j in range(3))
+        return pts[-1]
+    out = [at(f0)] + [p for p, l in zip(pts, L) if f0 * tot < l < f1 * tot] + [at(f1)]
+    return out
+
+
+def arrow_head(tip, ang, size, col):
+    """Triangle arrowhead pointing along `ang` (radians) with its point at `tip`."""
+    a, b = ang, size
+    return ('p', [(tip[0] + math.cos(a) * b * 0.55, tip[1] + math.sin(a) * b * 0.55),
+                  (tip[0] + math.cos(a + 2.35) * b * 0.6, tip[1] + math.sin(a + 2.35) * b * 0.6),
+                  (tip[0] + math.cos(a - 2.35) * b * 0.6, tip[1] + math.sin(a - 2.35) * b * 0.6)], col)
+
+
+def fx_steer_arrow(t, n, u, e, kw):
+    """Curved arrow over the top of a circle showing a turn direction (handlebar / steering overlay)."""
+    if kw.get('direction') == 'blocked': return stop_bar(t, n, u, e, kw)
+    col = rgb(kw.get('color', '#ff5a3c'))
+    sgn = 1 if kw.get('direction', 'right') in ('right', 'cw', 1) else -1
+    sweep = kw.get('sweep', 130)
+    cx, cy = n / 2, n / 2 + u * 0.25
+    R = u * 0.62
+    # anticipation: a short nudge the opposite way, then the arrow draws on with overshoot, holds, shrinks out
+    nudge = -0.06 * bump(seg(t, 0.0, 0.14))
+    grow = out_back(seg(t, 0.1, 0.4), 1.6) if t >= 0.1 else 0.0
+    k = smooth(seg(t, 0.0, 0.08)) * shrink(t, 0.62, 0.95) * (1 + 0.05 * bump(seg(t, 0.45, 0.62)))
+    a_mid = -90 + sgn * sweep * nudge * 3
+    a0 = math.radians(a_mid - sgn * sweep / 2)
+    span = sweep * max(0.08, grow) * (1 + 0.05 * math.sin(2 * math.pi * 2 * seg(t, 0.4, 0.65)))   # head nudges in the hold
+    w = u * 0.17 * k
+    pts = []
+    m = 40
+    for i in range(m + 1):
+        f = i / m; a = a0 + sgn * math.radians(span) * f
+        pts.append((cx + R * k * math.cos(a), cy + R * k * math.sin(a), w * (0.45 + 0.55 * f)))
+    a_end = a0 + sgn * math.radians(span)
+    tang = a_end + sgn * math.pi / 2
+    tip = (cx + R * k * math.cos(a_end) + math.cos(tang) * w * 0.4, cy + R * k * math.sin(a_end) + math.sin(tang) * w * 0.4)
+    head = arrow_head(tip, tang, u * 0.5 * k * min(1.0, 0.25 + grow * 1.5), col)   # head grows with the arc
+    return group(n, [('s', pts, col), head], ink_w(e, k), alpha=fade(t, 0.93, 1.0))
+
+
+def stop_bar(t, n, u, e, kw):
+    """steer_arrow(direction='blocked'): a greyed-out turn arrow with a red 'no' sign (ring + slash) slammed over it,
+    which shakes 'no'."""
+    col = rgb(kw.get('color', '#e8333a'))
+    cx, cy = n / 2, n / 2
+    lay = new(n)
+    # the attempted turn, greyed out, appears first
+    ghost = fx_steer_arrow(clamp(t * 0.9), n, u * 0.8, e * 0.8, dict(kw, direction=kw.get('turn', 'right'), color='#a9a2b6'))
+    comp(lay, opacity(ghost, 0.85 * fade(t, 0.8, 0.95)))
+    k = pop(t, 0.16, 0.36, pre=0.35, dip=0.22, s=2.6) * shrink(t, 0.66, 0.95)
+    wig = math.sin(2 * math.pi * 3 * seg(t, 0.34, 0.66)) * (1 - seg(t, 0.34, 0.66)) ** 0.7   # damped 'no' shake
+    x = cx + u * 0.3 + u * 0.12 * wig; cy = cy + u * 0.3; R_ = u * 0.42 * k; w = u * 0.12 * k   # sign sits low-right: the arrow stays readable
+    ring = [(x + R_ * math.cos(a), cy + R_ * math.sin(a), w) for a in (2 * math.pi * i / 60 for i in range(61))]
+    sa = math.radians(45 + 15 * wig)                         # the slash rocks +-15 deg with the shake
+    slash = [(x - R_ * math.cos(sa), cy - R_ * math.sin(sa), w), (x + R_ * math.cos(sa), cy + R_ * math.sin(sa), w)]
+    comp(lay, group(n, [('s', ring, col), ('s', slash, col)], ink_w(e, k), alpha=fade(t, 0.93, 1.0)))
+    return lay
+
+
+def chaikin(pts, it=4):
+    for _ in range(it):
+        out = [pts[0]]
+        for p, q in zip(pts, pts[1:]):
+            out += [(0.75 * p[0] + 0.25 * q[0], 0.75 * p[1] + 0.25 * q[1]), (0.25 * p[0] + 0.75 * q[0], 0.25 * p[1] + 0.75 * q[1])]
+        pts = out + [pts[-1]]
+    return pts
+
+
+# top-down tracks in content units (x right, y down), all starting bottom-centre heading up and ending toward the left
+PATHS = {
+    'tight_left': [(0.3, 0.95), (0.3, 0.2), (0.3, -0.15), (0.05, -0.38), (-0.4, -0.4), (-0.95, -0.4)],
+    'wide_arc': [(0.3, 0.95), (0.3, 0.2), (0.4, -0.45), (0.1, -0.85), (-0.5, -0.9), (-0.95, -0.85)],
+    'kink_right_then_left': [(0.3, 0.95), (0.3, 0.45), (0.65, 0.22), (0.45, -0.18), (0.05, -0.38), (-0.4, -0.4), (-0.95, -0.4)],
+}
+
+
+def fx_path_line(t, n, u, e, kw):
+    """Top-down track diagram: the planned path as a dashed line, then the actual path drawn on with a rider dot at
+    its head. planned / actual = a name from PATHS (or a list of (x, y) points in -1..1)."""
+    pc = rgb(kw.get('planned_color', '#f4f1ea')); ac = rgb(kw.get('color', '#ff8a1f'))
+    cx, cy = n / 2, n / 2
+    def track(spec, w):
+        pts = PATHS[spec] if isinstance(spec, str) else spec
+        return [(cx + x * u, cy + y * u, w) for x, y in chaikin(pts)]
+    w = u * 0.06
+    plan = track(kw.get('planned', 'tight_left'), w * 0.8)
+    act = track(kw.get('actual', 'wide_arc'), w)
+    # timing: planned path dashes in, actual path draws on with ease, both erase from the start at the end
+    off = smooth(seg(t, 0.82, 0.98))
+    pf = out_cubic(seg(t, 0.03, 0.3))
+    af = smooth(seg(t, 0.28, 0.78))
+    shapes = []
+    nd = 14
+    for i in range(nd):
+        f0, f1 = i / nd, i / nd + 0.55 / nd
+        f0, f1 = max(f0, off), min(f1, pf)
+        if f1 > f0: shapes.append(('s', sub_path(plan, f0, f1), pc))
+    lay = new(n)
+    act_s = []
+    if af > off + 0.002: act_s.append(('s', sub_path(act, off, af), ac))
+    if 0 < t < 0.97 and af > 0.001:                         # rider dot at the head, pops in with the line
+        hx, hy, _ = sub_path(act, 0, max(af, 0.002))[-1]
+        dk = pop(t, 0.26, 0.4, pre=0.4, dip=0.3, s=2.2) * shrink(t, 0.8, 0.96)
+        act_s.append(('c', hx, hy, u * 0.09 * dk, ac))
+    if act_s: comp(lay, group(n, act_s, e, shade=False))
+    comp(lay, group(n, shapes, e * 0.7, shade=False))      # planned dashes on top so the actual path never hides them
+    return opacity(lay, fade(t, 0.84, 1.0))                  # the erase-along-path also fades: no flat leftovers
+
+
+
+def fx_lean_arc(t, n, u, e, kw):
+    """Lean-angle diagram: a vertical reference, a line that leans to `angle` degrees, and the arc between them
+    with a tick at its middle. Pivot = bottom centre (the tyre contact point)."""
+    col = rgb(kw.get('color', '#ffd23a')); ref = rgb(kw.get('ref', '#f4f1ea'))
+    ang = kw.get('angle', 25) * (-1 if kw.get('side', 'left') == 'left' else 1)
+    px, py = n / 2, n / 2 + u * 0.85
+    L = u * 1.6 * out_cubic(seg(t, 0.0, 0.24))               # the lean line grows out of the pivot (no pop-in)
+    k = smooth(seg(t, 0.0, 0.1)) * shrink(t, 0.62, 0.95)
+    # the lean line swings out with anticipation (small opposite lean) and overshoot, then settles
+    if t < 0.14: a = -0.15 * ang * bump(seg(t, 0.02, 0.14))
+    else: a = ang * out_back(seg(t, 0.14, 0.42), 2.0)
+    a += ang * 0.08 * math.sin(2 * math.pi * 2 * seg(t, 0.42, 0.7)) * (1 - seg(t, 0.42, 0.7))
+    def ray(deg, length, w0, w1):
+        r = math.radians(deg - 90)
+        return [(px, py, w0), (px + math.cos(r) * length, py + math.sin(r) * length, w1)]
+    w = u * 0.07 * k
+    shapes = []
+    # dashed vertical reference
+    for i in range(5):
+        f0, f1 = i / 5, i / 5 + 0.11
+        shapes.append(('s', [(px, py - L * k * f0, w * 0.6), (px, py - L * k * f1, w * 0.6)], ref))
+    shapes.append(('s', ray(a, L * k, w * 1.4, w * 1.0), col))
+    # the angle itself: a pale filled wedge from the vertical to the lean line, edged by a clear arc (no crossing tick)
+    Ra = L * 0.36 * k; steps = max(2, int(abs(a) / 2))
+    arc = [(px + Ra * math.cos(math.radians(-90 + a * i / steps)), py + Ra * math.sin(math.radians(-90 + a * i / steps)), w * 1.1)
+           for i in range(steps + 1)]
+    wedge = []
+    if abs(a) > 1.5:
+        wedge = [('p', [(px, py)] + [(x, y) for x, y, _ in arc], light(col, 0.6))]
+        shapes.insert(0, ('s', arc, ref))                   # arc in the reference colour, under the lean line
+    shapes.append(('c', px, py, w * 1.3, col))                 # pivot dot
+    lay = new(n)
+    if wedge: comp(lay, group(n, wedge, 0, shade=False, alpha=0.92 * fade(t, 0.93, 1.0)))
+    return comp(lay, group(n, shapes, ink_w(e, k), shade=False, alpha=fade(t, 0.93, 1.0)))
+
+
+def fx_wobble_lines(t, n, u, e, kw):
+    """Short curved motion arcs beside a wheel that wobble ('((( )))'); the wheel sits at the canvas centre."""
+    col = rgb(kw.get('color', '#f4f1ea'))
+    sides = {'both': (-1, 1), 'left': (-1,), 'right': (1,)}[kw.get('sides', 'both')]
+    cx, cy = n / 2, n / 2
+    shapes = []
+    for s_ in sides:
+        for i in range(3):
+            d0 = 0.04 + 0.06 * i
+            k = pop(seg(t, d0, 1.0), 0.12, 0.32, pre=0.35, dip=0.25, s=2.0) * shrink(t, 0.66 + 0.06 * i, 0.9 + 0.03 * i)
+            if k <= 0.01: continue
+            wob = 12 * math.sin(2 * math.pi * 3 * t + i * 1.1) * bump(seg(t, 0.2, 0.85))   # the wobble
+            r = u * (0.5 + 0.16 * i)
+            span = 55 - 8 * i
+            m = 16; w = u * (0.1 - 0.015 * i) * k
+            base = 0 if s_ > 0 else 180
+            pts = []
+            for j in range(m + 1):
+                f = j / m; a = math.radians(base + wob * s_ + (f - 0.5) * span * k)
+                pts.append((cx + r * math.cos(a), cy + r * math.sin(a), w * (0.5 + 0.5 * bump(f))))
+            shapes.append(('s', pts, col))
+    if not shapes: return new(n)
+    return group(n, shapes, e * 0.8, shade=False, alpha=fade(t, 0.93, 1.0))
+
+
+def fx_whoosh(t, n, u, e, kw):
+    """Speed swoosh: a big tapered curve that draws on head-first and retracts tail-last, plus two thin trailers.
+    angle = travel direction in degrees (0 = moving right)."""
+    col = rgb(kw.get('color', '#e8f4ff'))
+    ang = kw.get('angle', 0)
+    cx, cy = n / 2, n / 2
+    lay = new(n)
+    curves = [(0.0, 1.0, 0.0), (0.22, 0.55, 0.08), (-0.24, 0.5, 0.12)]   # (y offset, thickness, delay)
+    shapes = []
+    for oy, th, d0 in curves:
+        p = seg(t, 0.04 + d0, 0.8 + d0 * 0.5)
+        if not 0 < p < 1: continue
+        head = out_cubic(seg(p, 0.0, 0.55)); tail = in_quad(seg(p, 0.25, 1.0))
+        base = bez((cx - u * 0.95, cy + u * (0.35 + oy)), (cx - u * 0.1, cy + u * (-0.45 + oy)), (cx + u * 0.9, cy + u * (0.05 + oy)), 40)
+        w = u * 0.2 * th * (1 - 0.85 * smooth(seg(p, 0.55, 1.0)))   # thins as it retracts: no blob left
+        base = [(x, y, w * (0.1 + 0.9 * (i / 40) ** 1.5)) for i, (x, y, _) in enumerate(base)]
+        part = sub_path(base, tail, head)
+        if len(part) >= 2: shapes.append(('s', part, col))
+    if not shapes: return lay
+    lay = group(n, shapes, e * 0.9, shade=False, alpha=fade(t, 0.92, 1.0))
+    if ang: lay = lay.rotate(ang, resample=Image.BICUBIC, center=(cx * S, cy * S))
+    return lay
+
+
+
 NAMES = {
     'explosion': (fx_explosion, 'puffy fire cloud + white flash core + sparks, cools to smoke and rises. color, core, smoke'),
     'impact_star': (fx_impact_star, 'spiky hit star + impact ticks. color, inner, points, angle'),
@@ -649,6 +860,11 @@ NAMES = {
     'question_mark': (fx_question_mark, 'popping, wobbling ?. color, tilt'),
     'exclaim': (fx_exclaim, 'popping, shaking ! with surprise ticks. color, tilt'),
     'music_note': (fx_music_note, 'notes rising and swaying. colors, count'),
+    'steer_arrow': (fx_steer_arrow, 'curved arrow showing a turn direction, or a red stop bar. direction=left|right|blocked, color, sweep (deg)'),
+    'path_line': (fx_path_line, 'top-down track: dashed planned path + actual path drawn on with a rider dot. planned, actual (tight_left|wide_arc|kink_right_then_left or points), color, planned_color'),
+    'lean_arc': (fx_lean_arc, 'lean-angle diagram: vertical ref, leaning line, arc + tick; pivot at bottom centre. angle (deg), side=left|right, color, ref'),
+    'wobble_lines': (fx_wobble_lines, 'wobbling motion arcs beside a wheel at the centre. color, sides=both|left|right'),
+    'whoosh': (fx_whoosh, 'tapered speed swoosh with two trailers. color, angle (travel direction, deg)'),
 }
 
 

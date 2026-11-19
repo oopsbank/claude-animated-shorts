@@ -42,7 +42,7 @@ def tile(kind, w=TILE, h=TILE):
     return im.convert('RGBA')
 
 
-def strip(name, ts=TS, size=TILE):
+def strip(name, ts=TS, size=TILE, **kw):
     pad, head = 6, 30
     W = len(ts) * (size + pad) + pad + 60
     H = head + 2 * (size + pad) + pad + 18
@@ -53,10 +53,14 @@ def strip(name, ts=TS, size=TILE):
         d.text((pad, y + size // 2 - 8), kind, fill=fx.INK, font=font(13))
         for c, t in enumerate(ts):
             x = 60 + pad + c * (size + pad)
-            bg = tile(kind, size, size); bg.alpha_composite(fx.render(name, t, size))
+            bg = tile(kind, size, size); bg.alpha_composite(fx.render(name, t, size, **kw))
             im.paste(bg.convert('RGB'), (x, y))
             if r == 1: d.text((x + size // 2 - 18, y + size + 2), f't={t:g}', fill=fx.INK, font=font(13))
     return im
+
+
+VARIANTS = {'steer_arrow_blocked': ('steer_arrow', {'direction': 'blocked'}),
+            'path_line_kink': ('path_line', {'planned': 'tight_left', 'actual': 'kink_right_then_left'})}
 
 
 def checks(name, frames=60, size=200):
@@ -95,6 +99,9 @@ if __name__ == '__main__':
         r = checks(nm); bad += not r['ok']
         print(f"{nm:14s} start={r['start']:.3f} end={r['end']:.3f} max_jump={r['max_jump']:.2f} "
               f"peak_at={r['peak_at']:.2f} {'OK' if r['ok'] else 'FAIL'}")
+    for vn, (nm, kw) in VARIANTS.items():                  # extra strips for kwargs that change the look
+        if sys.argv[1:] and nm not in names: continue
+        strip(nm, **kw).save(os.path.join(OUT, f'{vn}.png'))
     if not sys.argv[1:]:
         gif(['explosion', 'impact_star', 'splash', 'glow_eyes', 'music_note'], os.path.join(OUT, 'fx_demo.gif'))
     sys.exit(1 if bad else 0)
