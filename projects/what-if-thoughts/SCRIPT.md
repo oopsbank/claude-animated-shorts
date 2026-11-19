@@ -27,3 +27,8 @@ runs to the woods for silence and finds the squirrels are even louder. Punchline
 | 13 | 50.8-53.7 | woods | a squirrel: "can you hear us?" |
 | 14 | 53.7-61.9 | woods | every squirrel: "where did I bury my nuts?" |
 | 15 | 61.9-64.5 | city | people were the quiet ones |
+
+## Final
+- `final/what-if-thoughts_captioned_1080x1920.mp4`: 1938 frames, 64.6 s, 30 fps. The first 3 frames are the thumbnail, and the audio is delayed by 0.1 s. Loudness is −14.1 LUFS, true peak −1.2 dBTP.
+- `final/what-if-thoughts_thumbnail_1080x1920.png`
+- `remotion/`: the scene source (src/videos/thoughts, Root.tsx, render/encode scripts). It drops into the no-dying-town Remotion project.
