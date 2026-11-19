@@ -27,8 +27,9 @@ def line(text, size, fill, cx, cy, rot=0.0, stroke=None):
 
 
 s = W / 1080
-line("WHAT IF YOUR PILOT", int(92 * s), CREAM, W * 0.5, H * 0.075, 2.0)
-line("GOT SUCKED", int(146 * s), GOLD, W * 0.5, H * 0.16, -2.5, stroke=int(18 * s))
-line("OUT?!", int(230 * s), GOLD, W * 0.5, H * 0.28, -3.0, stroke=int(26 * s))
+# everything inside the middle 3:4 band (y 240 .. 1680 at 1080x1920)
+line("PAUSE TIME...", int(104 * s), CREAM, W * 0.5, H * 0.17, 2.0)
+line("BUT ONLY", int(122 * s), CREAM, W * 0.5, H * 0.245, -2.0)
+line("YOU AGE?!", int(172 * s), GOLD, W * 0.5, H * 0.335, -3.0, stroke=int(21 * s))
 bg.convert("RGB").save(sys.argv[2], quality=95)
 print("ok", sys.argv[2], bg.size)
