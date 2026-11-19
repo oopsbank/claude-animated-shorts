@@ -38,6 +38,11 @@ def imp(path, loc=(0, 0, 0), rz=0, s=1.0, rx=0, ink=True):
         for o in new: no_ink(o)
     return root
 
+def imp_h(path, height, loc=(0, 0, 0), rz=0, **kw):
+    """Import and scale uniformly so the model is `height` metres tall, standing on loc."""
+    r = imp(path, (0, 0, 0), rz, 1.0, **kw); mn, mx = dims(r); k = height / max(1e-6, mx.z - mn.z)
+    r.scale = (k,) * 3; r.location = (loc[0], loc[1], loc[2] - mn.z * k); return r
+
 def dims(root):
     """World-space bounding box (min, max) of an imported hierarchy (for scaling packs to metres)."""
     bpy.context.view_layer.update()
@@ -175,6 +180,8 @@ SIGN_STYLES = {   # background, text colour, border colour, font index, emissive
     'banner': ((196, 46, 46), (255, 246, 226), (120, 20, 24), 0, 0.0),
     'poster': ((246, 232, 196), (52, 30, 34), (120, 70, 40), 1, 0.0),
     'screen': ((16, 28, 40), (120, 255, 190), (40, 44, 52), 0, 2.5),
+    'chalk':  ((34, 58, 44), (240, 240, 228), (120, 78, 40), 0, 0.0),
+    'board':  ((24, 24, 30), (255, 214, 64), (200, 200, 205), 0, 0.0),
 }
 
 def _font(i, size):
@@ -183,9 +190,10 @@ def _font(i, size):
         if os.path.exists(f): return ImageFont.truetype(f, size)
     return ImageFont.load_default()
 
-def sign(text, style='plank', loc=(0, 0, 2), rz=0, w=2.0, h=0.7, depth=0.06, tex_dir=None):
+def sign(text, style='plank', loc=(0, 0, 2), rz=0, w=2.0, h=0.7, depth=0.06, tex_dir=None, draw=None, text_frac=1.0):
     """Readable custom signage for story jokes: text painted on a plank, banner, poster or screen. Returns the object.
-    Text may contain newlines; it is fitted to the board. The board is inked; the face is a textured plane."""
+    Text may contain newlines; it is fitted to the board. The board is inked; the face is a textured plane.
+    draw(ImageDraw, (x0, y0, x1, y1), fg) adds a drawing under the text, which then takes the top `text_frac` of the board."""
     from PIL import ImageDraw
     bg, fg, bd, fi, em = SIGN_STYLES[style]
     px = 128; Wt, Ht = int(w * px * 2), int(h * px * 2)
@@ -197,13 +205,15 @@ def sign(text, style='plank', loc=(0, 0, 2), rz=0, w=2.0, h=0.7, depth=0.06, tex
     while size > 8:
         f = _font(fi, size); bbs = [d.textbbox((0, 0), ln, font=f) for ln in lines]
         tw = max(bb[2] - bb[0] for bb in bbs); th = sum(bb[3] - bb[1] for bb in bbs) * 1.25
-        if tw < Wt * 0.86 and th < Ht * 0.78: break
+        if tw < Wt * 0.86 and th < Ht * 0.78 * text_frac: break
         size = int(size * 0.92)
-    y = (Ht - th) / 2
+    y = (Ht * text_frac - th) / 2 + (b if text_frac < 1 else 0)
     for ln, bb in zip(lines, bbs):
         d.text(((Wt - (bb[2] - bb[0])) / 2 - bb[0], y - bb[1]), ln, font=f, fill=fg); y += (bb[3] - bb[1]) * 1.25
+    if draw: draw(d, (b * 2, int(Ht * text_frac), Wt - b * 2, Ht - b * 2), fg)
     tex_dir = tex_dir or os.path.join(bpy.app.tempdir or '/tmp', 'signs'); os.makedirs(tex_dir, exist_ok=True)
-    path = os.path.join(tex_dir, f'sign_{abs(hash((text, style))) % 10**8}.png'); im.save(path)
+    import hashlib
+    path = os.path.join(tex_dir, 'sign_' + hashlib.md5((text + style).encode()).hexdigest()[:10] + '.png'); im.save(path)
     m = bpy.data.materials.new('sign_' + style); m.use_nodes = True; n = m.node_tree.nodes; P = n['Principled BSDF']
     t = n.new('ShaderNodeTexImage'); t.image = bpy.data.images.load(path); t.image.pack()
     m.node_tree.links.new(t.outputs['Color'], P.inputs['Base Color']); P.inputs['Roughness'].default_value = 0.8
@@ -329,8 +339,10 @@ def camera(loc, target, lens=27, roll=0.0):
     if co.name not in sc().collection.objects: sc().collection.objects.link(co)
     sc().camera = co; cam.lens = lens; cam.sensor_fit = 'AUTO'; cam.sensor_width = 36
     co.location = loc
-    co.rotation_euler = (Vector(target) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler()
-    co.rotation_euler.y += math.radians(roll)
+    if target is None: co.rotation_euler = (0, 0, math.radians(roll))   # straight down, image-up = +Y rotated by roll
+    else:
+        co.rotation_euler = (Vector(target) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler()
+        co.rotation_euler.y += math.radians(roll)
     cam.clip_start = 0.05; cam.clip_end = 600
     return co
 
@@ -404,7 +416,7 @@ def post(src, out, depth=None, haze=(0.7, 0.8, 1.0), haze_k=0.5, haze_gamma=1.6)
     o = 1 - (1 - a) * (1 - np.clip(glow, 0, 1))
     Image.fromarray((np.clip(o, 0, 1) * 255).astype(np.uint8)).save(out, optimize=True)
 
-def measure(cam_obj, stand, sun_obj, preset):
+def measure(cam_obj, stand, sun_obj, preset, top=False):
     """Project a 1.75 m marker standing at `stand` through the camera -> ground_y, px_per_m, horizon_y, light_dir."""
     s = sc(); bpy.context.view_layer.update()
     foot = Vector(stand); head = foot + Vector((0, 0, HERO_M))
@@ -413,6 +425,9 @@ def measure(cam_obj, stand, sun_obj, preset):
     fwd = cam_obj.matrix_world.to_3x3() @ Vector((0, 0, -1)); fwd.z = 0; fwd.normalize()
     far = cam_obj.location + fwd * 1e5
     hz = (1 - world_to_camera_view(s, cam_obj, far).y) * H
+    if top:   # looking straight down: the marker collapses to a point, so scale from 1 m along the ground
+        p1 = world_to_camera_view(s, cam_obj, foot + Vector((1, 0, 0))); hy = gy - abs(p1.x - pf.x) * W * HERO_M
+        hz = -1.0
     to_sun = (sun_obj.matrix_world.to_3x3() @ Vector((0, 0, 1))).normalized()
     right = (cam_obj.matrix_world.to_3x3() @ Vector((1, 0, 0))).normalized()
     dx = to_sun.dot(right)
@@ -450,6 +465,8 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90)):
             raw = os.path.join(tmp, base + '_raw.png'); sc().render.filepath = raw
             t = time.time(); bpy.ops.render.render(write_still=True)
             post(raw, os.path.join(out, base + '.png'), dpath, p['haze'], p['haze_k'] * c.get('haze_k', 1.0))
-            js = measure(co, c['stand'], sun, p); js.update(set=set_name, cam=cn, light=ln)
+            js = measure(co, c['stand'], sun, p, c.get('top', False)); js.update(set=set_name, cam=cn, light=ln)
+            if c.get('top'): js['view'] = 'top'
+            if c.get('note'): js['note'] = c['note']
             with open(os.path.join(out, base + '.json'), 'w') as f: json.dump(js, f, indent=1)
             print(f'PLATE {base} {time.time() - t:.0f}s {js}', flush=True)

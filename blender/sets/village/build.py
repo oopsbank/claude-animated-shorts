@@ -23,6 +23,11 @@ for i, (name, x, y, rz) in enumerate((('House_2', -9.0, 21.0, 5), ('House_1', 7.
 # side street (seen by street_low): houses lining the right of the square
 for name, x, y, rz in (('House_2', 9.5, 2.5, -90), ('House_1', 10.0, -5.0, -90), ('House_3', -9.5, 2.0, 90)):
     q(name, (x, y, 0), rz, HZ)
+# the lane south of the square (street_med: a street a bicycle can ride down)
+for i, y in enumerate((-12.0, -20.0, -28.0, -36.0)):
+    q(('House_1', 'House_2', 'House_3', 'House_2')[i], (-5.9, y, 0), 90 + (i % 2) * 6, HZ)
+    q(('House_2', 'House_3', 'House_1', 'House_1')[i], (5.9, y, 0), -90 - (i % 2) * 6, HZ)
+q('Barrel', (-3.6, -27.0, 0), 10, 4.6); q('Barrel', (-3.9, -26.2, 0), 40, 4.6)
 q('Well', (-2.3, 5.0, 0.45), 15, 1.9)
 q('MarketStand_1', (2.9, 6.0, 0), -20, 2.3)
 q('Cart', (0.9, 9.0, 0), 60, 1.9)
@@ -63,6 +68,8 @@ CAMS = {
                        fstop=2.4, ink_fade=(4.5, 9.0, 0.85), haze_range=(3, 60), per_light=per_light),
     'square_med': dict(loc=(0.75, -3.4, 1.3), target=(0.1, 6.0, 1.75), lens=30, roll=2, stand=(0.35, -0.2, 0), fstop=2.4,
                        ink_fade=(6, 25, 0.5), per_light=per_light),
+    'street_med': dict(loc=(0.45, -32.5, 1.3), target=(-0.1, 0.0, 2.4), lens=30, roll=0, stand=(0.1, -29.6, 0), fstop=2.4,
+                       ink_fade=(6, 30, 0.5), per_light=per_light),
     'street_low': dict(loc=(3.2, -5.8, 0.45), target=(0.8, 8.0, 2.8), lens=21, roll=-3, stand=(2.5, -2.9, 0), fstop=2.8,
                        per_light=per_light),
 }
