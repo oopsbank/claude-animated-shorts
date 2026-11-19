@@ -18,6 +18,9 @@ Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broug
 | `references/frames/` | 38 full-size reference frames (540x960) to compare your frames against |
 | `references/sheets/` | 20 contact sheets, one per reference short, 60 frames each (1,200 frames) |
 
+## Multi-session production
+Several Claude sessions build this pipeline in parallel. Each owns one area and follows [`PIPELINE.md`](PIPELINE.md), with a self-check loop ([`QA.md`](QA.md)), shared lessons ([`LESSONS.md`](LESSONS.md)) and a task queue ([`BACKLOG.md`](BACKLOG.md)).
+
 ## Install
 1. Copy this folder to `~/.claude/skills/cartoon-3d-short/` (clone it there, or download the ZIP).
 2. You need [Remotion](https://www.remotion.dev/) with `@remotion/three`, plus Node, Python 3 and ffmpeg.

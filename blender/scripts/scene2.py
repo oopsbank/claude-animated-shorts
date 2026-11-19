@@ -8,9 +8,11 @@ SAMPLES = int(sys.argv[2]) if len(sys.argv) > 2 else 32
 SCALE = int(sys.argv[3]) if len(sys.argv) > 3 else 100
 COMP_DOF = int(sys.argv[4]) if len(sys.argv) > 4 else 0
 SHOT = sys.argv[5] if len(sys.argv) > 5 else 'A'
-Q = os.path.abspath('../packs/quaternius-showcase/public/glb/medieval_village_pack')
-K = os.path.abspath('../packs/KayKit-Medieval-Hexagon-Pack-1.0/addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/props')
-A = os.path.abspath('assets')
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))   # repo root
+PACKS = os.environ.get('PACKS', os.path.join(ROOT, 'packs'))   # CC0 model packs (gitignored, cloned by the setup script)
+Q = os.path.join(PACKS, 'quaternius-showcase/public/glb/medieval_village_pack')
+K = os.path.join(PACKS, 'KayKit-Medieval-Hexagon-Pack-1.0/addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/props')
+A = os.path.join(ROOT, 'stickman')
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = bpy.context.scene
@@ -133,7 +135,7 @@ wl.new(ramp.outputs['Color'], add.inputs['Color1']); wl.new(add.outputs['Color']
 wn['Background'].inputs['Strength'].default_value = 3.2
 
 # ---------- 2D hero card ----------
-img = bpy.data.images.load(os.environ.get('CARD', f'{A}/sailor.png'))
+img = bpy.data.images.load(os.environ.get('CARD', f'{A}/stick_neutral.png'))
 H = 1.75; Wc = H * 0.6
 bpy.ops.mesh.primitive_plane_add(size=1); card = bpy.context.object; card.name = 'card'
 card.scale = (Wc, H, 1); card.rotation_euler = (math.radians(90), 0, 0)
@@ -232,4 +234,4 @@ sc.view_settings.view_transform = 'Khronos PBR Neutral'; sc.view_settings.exposu
 r.filepath = os.path.abspath(OUT)  # shot ; r.image_settings.file_format = 'PNG'
 t = time.time(); bpy.ops.render.render(write_still=True)
 print(f'RENDER_SECONDS {time.time() - t:.1f}')
-bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath('village.blend'))
+bpy.ops.wm.save_as_mainfile(filepath=os.path.splitext(os.path.abspath(OUT))[0] + '.blend')
