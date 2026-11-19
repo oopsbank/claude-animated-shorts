@@ -27,6 +27,18 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - `color_ramp.elements` are re-sorted by position after `elements.new()`. Index the elements by position, not by creation order.
 - Frame for medium shots: a 1.75 m character should fill about 55-65% of the frame height, as most reference frames do. Wide shots with tiny characters are the exception.
 
+## Audio
+- ElevenLabs free tier: always dry-run `tts.py` first and read the extracted text. The voice-over parser once grabbed "Facts and sources (… the voice-over)" instead of "## Voice-over". Prefer a heading that *starts* with "Voice-over", and take only the list items.
+- Cache the raw TTS response (`_tts_response.json`) and re-process from it. Trimming, pause tightening and word refinement must never cost characters.
+- The TTS take paused up to 1.08 s (14 s in total) at sentence ends and around dialogue. Always tighten pauses (cut the quietest part of the gap, with a crossfade) and re-measure words/s on the **full** script, not a one-sentence test. A single sentence over-reads the rate because it has no sentence gaps.
+- The API's end time for a word before a comma includes the pause. Snap word edges to the waveform before using them for lip sync or gap stats.
+- A music sting on the last word masks the punchline. Start it at the word's **end**.
+- Sentence-final words trail off quietly. Dip the music an extra 3 dB under them, and start section level changes *at* the section's first word (a centred smooth lifts the bed under the end of the previous line).
+- Don't flatten every pause to one value: sentence gaps of exactly 0.20 s sound mechanical. Vary them (0.17-0.23 s) and keep a ~0.3 s breath after a closing quote and before the "Wait," / "You see," pivots, while keeping gaps >0.25 s under 1 s in total.
+- When a section's music gain *rises*, ramp it over ~1.2 s. A fast raise boosts the previous section's ringing tails under the new line's first word (it masked "Wait,").
+- A camera shake is not always an impact: never add an automatic impact sound to it. Cue the sound from the story.
+- Limit to -1.2 dBTP, not -1.0: fades and 24-bit writing after the limiter, and codecs, can overshoot.
+
 ## Process
 - Render a cheap low-res still after every change, and look at it before rendering full size.
 - Compare side-by-side with a reference frame. Numbers and adjectives lie; pictures don't.

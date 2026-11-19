@@ -1,0 +1,1157 @@
+[
+ {
+  "word": "Ride",
+  "start": 0.04,
+  "end": 0.252
+ },
+ {
+  "word": "into",
+  "start": 0.277,
+  "end": 0.427
+ },
+ {
+  "word": "a",
+  "start": 0.427,
+  "end": 0.519
+ },
+ {
+  "word": "left",
+  "start": 0.567,
+  "end": 0.763
+ },
+ {
+  "word": "turn,",
+  "start": 0.788,
+  "end": 1.17
+ },
+ {
+  "word": "and",
+  "start": 1.262,
+  "end": 1.471
+ },
+ {
+  "word": "your",
+  "start": 1.52,
+  "end": 1.646
+ },
+ {
+  "word": "bike",
+  "start": 1.694,
+  "end": 1.913
+ },
+ {
+  "word": "steers",
+  "start": 1.926,
+  "end": 2.191
+ },
+ {
+  "word": "right",
+  "start": 2.226,
+  "end": 2.505
+ },
+ {
+  "word": "first,",
+  "start": 2.553,
+  "end": 2.941
+ },
+ {
+  "word": "without",
+  "start": 3.061,
+  "end": 3.321
+ },
+ {
+  "word": "you",
+  "start": 3.346,
+  "end": 3.425
+ },
+ {
+  "word": "knowing",
+  "start": 3.45,
+  "end": 3.704
+ },
+ {
+  "word": "it.",
+  "start": 3.74,
+  "end": 3.922
+ },
+ {
+  "word": "Meet",
+  "start": 4.147,
+  "end": 4.338
+ },
+ {
+  "word": "Dale.",
+  "start": 4.374,
+  "end": 4.744
+ },
+ {
+  "word": "Twenty",
+  "start": 4.963,
+  "end": 5.31
+ },
+ {
+  "word": "years",
+  "start": 5.358,
+  "end": 5.6
+ },
+ {
+  "word": "on",
+  "start": 5.637,
+  "end": 5.728
+ },
+ {
+  "word": "motorcycles,",
+  "start": 5.776,
+  "end": 6.471
+ },
+ {
+  "word": "and",
+  "start": 6.563,
+  "end": 6.773
+ },
+ {
+  "word": "he",
+  "start": 6.809,
+  "end": 6.877
+ },
+ {
+  "word": "swears",
+  "start": 6.925,
+  "end": 7.295
+ },
+ {
+  "word": "he",
+  "start": 7.343,
+  "end": 7.435
+ },
+ {
+  "word": "steers",
+  "start": 7.483,
+  "end": 7.794
+ },
+ {
+  "word": "by",
+  "start": 7.831,
+  "end": 7.945
+ },
+ {
+  "word": "leaning.",
+  "start": 7.993,
+  "end": 8.425
+ },
+ {
+  "word": "So",
+  "start": 8.653,
+  "end": 8.798
+ },
+ {
+  "word": "a",
+  "start": 8.846,
+  "end": 8.891
+ },
+ {
+  "word": "riding",
+  "start": 8.891,
+  "end": 9.216
+ },
+ {
+  "word": "school",
+  "start": 9.253,
+  "end": 9.518
+ },
+ {
+  "word": "hands",
+  "start": 9.566,
+  "end": 9.773
+ },
+ {
+  "word": "him",
+  "start": 9.798,
+  "end": 9.89
+ },
+ {
+  "word": "a",
+  "start": 9.926,
+  "end": 9.966
+ },
+ {
+  "word": "strange",
+  "start": 10.007,
+  "end": 10.412
+ },
+ {
+  "word": "bike.",
+  "start": 10.448,
+  "end": 10.795
+ },
+ {
+  "word": "It",
+  "start": 10.965,
+  "end": 11.079
+ },
+ {
+  "word": "has",
+  "start": 11.104,
+  "end": 11.265
+ },
+ {
+  "word": "two",
+  "start": 11.316,
+  "end": 11.497
+ },
+ {
+  "word": "handlebars:",
+  "start": 11.545,
+  "end": 12.128
+ },
+ {
+  "word": "a",
+  "start": 12.268,
+  "end": 12.325
+ },
+ {
+  "word": "normal",
+  "start": 12.336,
+  "end": 12.72
+ },
+ {
+  "word": "one,",
+  "start": 12.768,
+  "end": 13.08
+ },
+ {
+  "word": "and",
+  "start": 13.2,
+  "end": 13.301
+ },
+ {
+  "word": "one",
+  "start": 13.301,
+  "end": 13.545
+ },
+ {
+  "word": "bolted",
+  "start": 13.57,
+  "end": 13.87
+ },
+ {
+  "word": "to",
+  "start": 13.884,
+  "end": 13.94
+ },
+ {
+  "word": "the",
+  "start": 13.976,
+  "end": 14.056
+ },
+ {
+  "word": "frame",
+  "start": 14.093,
+  "end": 14.346
+ },
+ {
+  "word": "that",
+  "start": 14.371,
+  "end": 14.486
+ },
+ {
+  "word": "can't",
+  "start": 14.522,
+  "end": 14.741
+ },
+ {
+  "word": "steer.",
+  "start": 14.778,
+  "end": 15.186
+ },
+ {
+  "word": "\"Hold",
+  "start": 15.363,
+  "end": 15.567
+ },
+ {
+  "word": "the",
+  "start": 15.592,
+  "end": 15.672
+ },
+ {
+  "word": "fixed",
+  "start": 15.708,
+  "end": 15.974
+ },
+ {
+  "word": "bars,\"",
+  "start": 16.022,
+  "end": 16.484
+ },
+ {
+  "word": "says",
+  "start": 16.533,
+  "end": 16.74
+ },
+ {
+  "word": "the",
+  "start": 16.776,
+  "end": 16.856
+ },
+ {
+  "word": "instructor,",
+  "start": 16.881,
+  "end": 17.437
+ },
+ {
+  "word": "\"and",
+  "start": 17.557,
+  "end": 17.67
+ },
+ {
+  "word": "take",
+  "start": 17.718,
+  "end": 17.914
+ },
+ {
+  "word": "that",
+  "start": 17.939,
+  "end": 18.088
+ },
+ {
+  "word": "corner.\"",
+  "start": 18.136,
+  "end": 18.537
+ },
+ {
+  "word": "Dale",
+  "start": 18.857,
+  "end": 19.137
+ },
+ {
+  "word": "laughs,",
+  "start": 19.161,
+  "end": 19.592
+ },
+ {
+  "word": "rolls",
+  "start": 19.712,
+  "end": 19.986
+ },
+ {
+  "word": "onto",
+  "start": 20.022,
+  "end": 20.183
+ },
+ {
+  "word": "the",
+  "start": 20.22,
+  "end": 20.299
+ },
+ {
+  "word": "track,",
+  "start": 20.324,
+  "end": 20.677
+ },
+ {
+  "word": "and",
+  "start": 20.812,
+  "end": 20.926
+ },
+ {
+  "word": "leans",
+  "start": 20.974,
+  "end": 21.251
+ },
+ {
+  "word": "hard",
+  "start": 21.251,
+  "end": 21.542
+ },
+ {
+  "word": "left.",
+  "start": 21.59,
+  "end": 21.956
+ },
+ {
+  "word": "Almost",
+  "start": 22.135,
+  "end": 22.452
+ },
+ {
+  "word": "nothing",
+  "start": 22.5,
+  "end": 22.788
+ },
+ {
+  "word": "happens.",
+  "start": 22.836,
+  "end": 23.318
+ },
+ {
+  "word": "He",
+  "start": 23.521,
+  "end": 23.611
+ },
+ {
+  "word": "leans",
+  "start": 23.659,
+  "end": 23.889
+ },
+ {
+  "word": "harder,",
+  "start": 23.938,
+  "end": 24.326
+ },
+ {
+  "word": "sticks",
+  "start": 24.446,
+  "end": 24.759
+ },
+ {
+  "word": "his",
+  "start": 24.784,
+  "end": 24.887
+ },
+ {
+  "word": "knee",
+  "start": 24.924,
+  "end": 25.084
+ },
+ {
+  "word": "out,",
+  "start": 25.121,
+  "end": 25.347
+ },
+ {
+  "word": "and",
+  "start": 25.467,
+  "end": 25.688
+ },
+ {
+  "word": "wiggles",
+  "start": 25.688,
+  "end": 26.071
+ },
+ {
+  "word": "his",
+  "start": 26.096,
+  "end": 26.21
+ },
+ {
+  "word": "hips",
+  "start": 26.247,
+  "end": 26.466
+ },
+ {
+  "word": "like",
+  "start": 26.502,
+  "end": 26.651
+ },
+ {
+  "word": "he's",
+  "start": 26.676,
+  "end": 26.825
+ },
+ {
+  "word": "at",
+  "start": 26.85,
+  "end": 26.918
+ },
+ {
+  "word": "a",
+  "start": 26.943,
+  "end": 26.988
+ },
+ {
+  "word": "wedding.",
+  "start": 27.036,
+  "end": 27.435
+ },
+ {
+  "word": "The",
+  "start": 27.656,
+  "end": 27.736
+ },
+ {
+  "word": "bike",
+  "start": 27.784,
+  "end": 28.003
+ },
+ {
+  "word": "barely",
+  "start": 28.028,
+  "end": 28.328
+ },
+ {
+  "word": "turns",
+  "start": 28.365,
+  "end": 28.653
+ },
+ {
+  "word": "and",
+  "start": 28.678,
+  "end": 28.769
+ },
+ {
+  "word": "runs",
+  "start": 28.806,
+  "end": 29.013
+ },
+ {
+  "word": "wide",
+  "start": 29.013,
+  "end": 29.315
+ },
+ {
+  "word": "across",
+  "start": 29.328,
+  "end": 29.617
+ },
+ {
+  "word": "the",
+  "start": 29.642,
+  "end": 29.721
+ },
+ {
+  "word": "whole",
+  "start": 29.735,
+  "end": 29.919
+ },
+ {
+  "word": "track.",
+  "start": 29.932,
+  "end": 30.315
+ },
+ {
+  "word": "Twenty",
+  "start": 30.542,
+  "end": 30.856
+ },
+ {
+  "word": "years",
+  "start": 30.892,
+  "end": 31.111
+ },
+ {
+  "word": "of",
+  "start": 31.147,
+  "end": 31.216
+ },
+ {
+  "word": "riding,",
+  "start": 31.264,
+  "end": 31.587
+ },
+ {
+  "word": "and",
+  "start": 31.6,
+  "end": 31.68
+ },
+ {
+  "word": "he",
+  "start": 31.728,
+  "end": 31.819
+ },
+ {
+  "word": "can't",
+  "start": 31.867,
+  "end": 32.075
+ },
+ {
+  "word": "make",
+  "start": 32.111,
+  "end": 32.26
+ },
+ {
+  "word": "the",
+  "start": 32.285,
+  "end": 32.365
+ },
+ {
+  "word": "corner.",
+  "start": 32.39,
+  "end": 32.793
+ },
+ {
+  "word": "Wait,",
+  "start": 33.113,
+  "end": 33.45
+ },
+ {
+  "word": "if",
+  "start": 33.57,
+  "end": 33.682
+ },
+ {
+  "word": "leaning",
+  "start": 33.682,
+  "end": 34.007
+ },
+ {
+  "word": "your",
+  "start": 34.032,
+  "end": 34.147
+ },
+ {
+  "word": "body",
+  "start": 34.183,
+  "end": 34.391
+ },
+ {
+  "word": "doesn't",
+  "start": 34.427,
+  "end": 34.658
+ },
+ {
+  "word": "turn",
+  "start": 34.671,
+  "end": 34.843
+ },
+ {
+  "word": "the",
+  "start": 34.868,
+  "end": 34.947
+ },
+ {
+  "word": "bike,",
+  "start": 34.972,
+  "end": 35.257
+ },
+ {
+  "word": "what",
+  "start": 35.377,
+  "end": 35.527
+ },
+ {
+  "word": "does?",
+  "start": 35.563,
+  "end": 35.895
+ },
+ {
+  "word": "You",
+  "start": 36.215,
+  "end": 36.296
+ },
+ {
+  "word": "see,",
+  "start": 36.344,
+  "end": 36.54
+ },
+ {
+  "word": "bikes",
+  "start": 36.577,
+  "end": 36.842
+ },
+ {
+  "word": "turn",
+  "start": 36.867,
+  "end": 37.074
+ },
+ {
+  "word": "by",
+  "start": 37.122,
+  "end": 37.283
+ },
+ {
+  "word": "leaning",
+  "start": 37.294,
+  "end": 37.608
+ },
+ {
+  "word": "the",
+  "start": 37.645,
+  "end": 37.724
+ },
+ {
+  "word": "whole",
+  "start": 37.772,
+  "end": 37.991
+ },
+ {
+  "word": "bike,",
+  "start": 38.005,
+  "end": 38.325
+ },
+ {
+  "word": "and",
+  "start": 38.445,
+  "end": 38.537
+ },
+ {
+  "word": "to",
+  "start": 38.573,
+  "end": 38.63
+ },
+ {
+  "word": "lean",
+  "start": 38.666,
+  "end": 38.815
+ },
+ {
+  "word": "it",
+  "start": 38.852,
+  "end": 38.92
+ },
+ {
+  "word": "left,",
+  "start": 38.956,
+  "end": 39.326
+ },
+ {
+  "word": "you",
+  "start": 39.361,
+  "end": 39.535
+ },
+ {
+  "word": "steer",
+  "start": 39.547,
+  "end": 39.86
+ },
+ {
+  "word": "right",
+  "start": 39.908,
+  "end": 40.093
+ },
+ {
+  "word": "for",
+  "start": 40.129,
+  "end": 40.232
+ },
+ {
+  "word": "a",
+  "start": 40.257,
+  "end": 40.297
+ },
+ {
+  "word": "split",
+  "start": 40.315,
+  "end": 40.557
+ },
+ {
+  "word": "second.",
+  "start": 40.605,
+  "end": 40.976
+ },
+ {
+  "word": "That",
+  "start": 41.199,
+  "end": 41.421
+ },
+ {
+  "word": "nudge",
+  "start": 41.47,
+  "end": 41.7
+ },
+ {
+  "word": "pulls",
+  "start": 41.725,
+  "end": 41.967
+ },
+ {
+  "word": "the",
+  "start": 41.992,
+  "end": 42.072
+ },
+ {
+  "word": "wheels",
+  "start": 42.096,
+  "end": 42.35
+ },
+ {
+  "word": "out",
+  "start": 42.398,
+  "end": 42.548
+ },
+ {
+  "word": "from",
+  "start": 42.572,
+  "end": 42.699
+ },
+ {
+  "word": "under",
+  "start": 42.747,
+  "end": 42.931
+ },
+ {
+  "word": "you,",
+  "start": 42.979,
+  "end": 43.182
+ },
+ {
+  "word": "so",
+  "start": 43.302,
+  "end": 43.426
+ },
+ {
+  "word": "the",
+  "start": 43.474,
+  "end": 43.554
+ },
+ {
+  "word": "bike",
+  "start": 43.59,
+  "end": 43.798
+ },
+ {
+  "word": "tips",
+  "start": 43.822,
+  "end": 44.053
+ },
+ {
+  "word": "left,",
+  "start": 44.101,
+  "end": 44.393
+ },
+ {
+  "word": "then",
+  "start": 44.513,
+  "end": 44.73
+ },
+ {
+  "word": "turns",
+  "start": 44.778,
+  "end": 45.031
+ },
+ {
+  "word": "left.",
+  "start": 45.079,
+  "end": 45.417
+ },
+ {
+  "word": "It's",
+  "start": 45.594,
+  "end": 45.76
+ },
+ {
+  "word": "like",
+  "start": 45.785,
+  "end": 45.957
+ },
+ {
+  "word": "balancing",
+  "start": 45.994,
+  "end": 46.387
+ },
+ {
+  "word": "a",
+  "start": 46.435,
+  "end": 46.475
+ },
+ {
+  "word": "broom",
+  "start": 46.505,
+  "end": 46.724
+ },
+ {
+  "word": "on",
+  "start": 46.76,
+  "end": 46.817
+ },
+ {
+  "word": "your",
+  "start": 46.842,
+  "end": 46.944
+ },
+ {
+  "word": "palm:",
+  "start": 46.981,
+  "end": 47.315
+ },
+ {
+  "word": "to",
+  "start": 47.455,
+  "end": 47.534
+ },
+ {
+  "word": "tip",
+  "start": 47.582,
+  "end": 47.743
+ },
+ {
+  "word": "it",
+  "start": 47.779,
+  "end": 47.859
+ },
+ {
+  "word": "left,",
+  "start": 47.896,
+  "end": 48.211
+ },
+ {
+  "word": "flick",
+  "start": 48.331,
+  "end": 48.543
+ },
+ {
+  "word": "your",
+  "start": 48.568,
+  "end": 48.67
+ },
+ {
+  "word": "hand",
+  "start": 48.707,
+  "end": 48.868
+ },
+ {
+  "word": "right",
+  "start": 48.916,
+  "end": 49.112
+ },
+ {
+  "word": "first.",
+  "start": 49.148,
+  "end": 49.564
+ },
+ {
+  "word": "Riders",
+  "start": 49.789,
+  "end": 50.207
+ },
+ {
+  "word": "do",
+  "start": 50.255,
+  "end": 50.381
+ },
+ {
+  "word": "it",
+  "start": 50.429,
+  "end": 50.509
+ },
+ {
+  "word": "without",
+  "start": 50.522,
+  "end": 50.788
+ },
+ {
+  "word": "noticing,",
+  "start": 50.836,
+  "end": 51.275
+ },
+ {
+  "word": "but",
+  "start": 51.289,
+  "end": 51.403
+ },
+ {
+  "word": "the",
+  "start": 51.416,
+  "end": 51.496
+ },
+ {
+  "word": "fixed",
+  "start": 51.544,
+  "end": 51.809
+ },
+ {
+  "word": "bars",
+  "start": 51.857,
+  "end": 52.169
+ },
+ {
+  "word": "stopped",
+  "start": 52.217,
+  "end": 52.552
+ },
+ {
+  "word": "Dale's",
+  "start": 52.601,
+  "end": 52.878
+ },
+ {
+  "word": "hands",
+  "start": 52.914,
+  "end": 53.121
+ },
+ {
+  "word": "from",
+  "start": 53.146,
+  "end": 53.272
+ },
+ {
+  "word": "doing",
+  "start": 53.32,
+  "end": 53.539
+ },
+ {
+  "word": "it.",
+  "start": 53.576,
+  "end": 53.678
+ },
+ {
+  "word": "Motorcycle",
+  "start": 53.891,
+  "end": 54.437
+ },
+ {
+  "word": "schools",
+  "start": 54.45,
+  "end": 54.785
+ },
+ {
+  "word": "teach",
+  "start": 54.832,
+  "end": 55.039
+ },
+ {
+  "word": "it",
+  "start": 55.064,
+  "end": 55.122
+ },
+ {
+  "word": "on",
+  "start": 55.145,
+  "end": 55.214
+ },
+ {
+  "word": "purpose:",
+  "start": 55.261,
+  "end": 55.676
+ },
+ {
+  "word": "push",
+  "start": 55.816,
+  "end": 56.014
+ },
+ {
+  "word": "the",
+  "start": 56.051,
+  "end": 56.13
+ },
+ {
+  "word": "left",
+  "start": 56.178,
+  "end": 56.362
+ },
+ {
+  "word": "grip",
+  "start": 56.399,
+  "end": 56.583
+ },
+ {
+  "word": "forward",
+  "start": 56.631,
+  "end": 57.001
+ },
+ {
+  "word": "to",
+  "start": 57.072,
+  "end": 57.164
+ },
+ {
+  "word": "go",
+  "start": 57.212,
+  "end": 57.314
+ },
+ {
+  "word": "left.",
+  "start": 57.314,
+  "end": 57.711
+ },
+ {
+  "word": "And",
+  "start": 57.926,
+  "end": 58.061
+ },
+ {
+  "word": "yes,",
+  "start": 58.109,
+  "end": 58.363
+ },
+ {
+  "word": "bicycles",
+  "start": 58.399,
+  "end": 58.885
+ },
+ {
+  "word": "too.",
+  "start": 58.933,
+  "end": 59.242
+ },
+ {
+  "word": "So",
+  "start": 59.432,
+  "end": 59.637
+ },
+ {
+  "word": "Dale's",
+  "start": 59.685,
+  "end": 59.951
+ },
+ {
+  "word": "been",
+  "start": 59.976,
+  "end": 60.125
+ },
+ {
+  "word": "steering",
+  "start": 60.138,
+  "end": 60.427
+ },
+ {
+  "word": "the",
+  "start": 60.44,
+  "end": 60.52
+ },
+ {
+  "word": "wrong",
+  "start": 60.533,
+  "end": 60.764
+ },
+ {
+  "word": "way",
+  "start": 60.8,
+  "end": 60.926
+ },
+ {
+  "word": "for",
+  "start": 60.963,
+  "end": 61.077
+ },
+ {
+  "word": "twenty",
+  "start": 61.113,
+  "end": 61.379
+ },
+ {
+  "word": "years,",
+  "start": 61.415,
+  "end": 61.669
+ },
+ {
+  "word": "and",
+  "start": 61.682,
+  "end": 61.762
+ },
+ {
+  "word": "it's",
+  "start": 61.787,
+  "end": 61.913
+ },
+ {
+  "word": "the",
+  "start": 61.949,
+  "end": 62.029
+ },
+ {
+  "word": "only",
+  "start": 62.029,
+  "end": 62.308
+ },
+ {
+  "word": "way",
+  "start": 62.344,
+  "end": 62.493
+ },
+ {
+  "word": "he",
+  "start": 62.541,
+  "end": 62.633
+ },
+ {
+  "word": "ever",
+  "start": 62.681,
+  "end": 62.842
+ },
+ {
+  "word": "turned.",
+  "start": 62.867,
+  "end": 63.207
+ }
+]

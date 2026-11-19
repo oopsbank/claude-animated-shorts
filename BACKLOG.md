@@ -49,9 +49,15 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P1 (for `bike-countersteer`) Support the new `shots.json` fields: `rig` + `view` (bike composites), `insert` (a cut-in of another cam/rig from `at_word` to `until_word`), `camera.at_word`, `contact_shift`, `lean`/`body_lean`/`bike_lean`, `points_at`. Left/right are always the rider's own (see the note in `shots.json`).
 
 ## audio (`audio/`)
-- [ ] P1 Voice from `SCRIPT.md` via ElevenLabs (connected), and `words.json` from word timestamps.
-- [ ] P1 SFX and music bed: reuse `templates/audio/`, with ducking, -14 LUFS and the exact length.
-- [ ] P1 (for `bike-countersteer`) Voice-over: the 18 numbered lines in `scripts/bike-countersteer/SCRIPT.md` › Voice-over (231 words, aim for about 62 s).
+- [x] P1 (for `bike-countersteer`) Voice-over: the 18 numbered lines in `scripts/bike-countersteer/SCRIPT.md` › Voice-over (231 words, aim for about 62 s).
+- [x] P1 Voice from `SCRIPT.md` via ElevenLabs (connected), and `words.json` from word timestamps. Done: the voice is Liam (`audio/VOICE.md`), `audio/tts.py`, and `audio/bike-countersteer/` (231 words, 63.2 s, 3.66 words/s, 3 breath gaps of 0.32 s = 0.96 s total). Quota used: 1,251/10,000.
+- [x] P1 SFX and music bed: reuse `templates/audio/`, with ducking, -14 LUFS and the exact length. Done: `audio/build_mix.py`, `lib/score.py` and `lib/sfx_x.py`. The bike mix is -14.0 LUFS, -1.2 dBTP, 1921 frames = 64.033 s, with the bed 8.5-11.3 LU under the speech (median). Two review rounds: round 2 PASS on condition of 2 fixes, both applied (no automatic impact on camera shakes; breaths kept after the quote and before "Wait,"/"You see,"), plus the SFX cluster at 57 s thinned.
+- [ ] P1 When the engine fixes the picture length, re-run `build_mix.py --frames N` (free: no TTS). The current mix assumes **1921 frames** (`audio/bike-countersteer/length.json`).
+- [ ] P2 Re-run `build_mix.py` whenever `shots.json` changes (the fx entries drive the SFX). New fx names need an entry in `lib/sfx_x.py` GEN or SILENT.
+- [ ] P2 The limiter peaks at 3.7 dB gain reduction on voice consonants (active on 9% of samples). Try a fast voice peak stage before the mix. LRA is 1.2 vs the reference 2.4; ease the voice compression if the draft sounds squashed.
+- [ ] P2 A motorbike engine/rev SFX for the track shots (s06-s09) once the picture shows which bike is moving.
+- [ ] P2 Mystery and payoff sit 11.0 / 11.3 LU under the speech (reference 5-10): fine for clarity, but check by ear on the draft.
+- [ ] P3 A human listening pass by the Director on the draft video (the checks so far are numbers and waveforms only).
 
 ## videos (`videos/`)
 - [ ] P1 Assemble the first video once scripts, sets, wardrobe, fx, engine and audio are at P1. Run QA, then **ask the user to review the draft**.
