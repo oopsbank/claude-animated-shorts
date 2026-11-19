@@ -1,0 +1,967 @@
+[
+{
+"word": "What",
+"start": 0.0,
+"end": 0.197
+},
+{
+"word": "if",
+"start": 0.232,
+"end": 0.302
+},
+{
+"word": "night",
+"start": 0.406,
+"end": 0.604
+},
+{
+"word": "never",
+"start": 0.662,
+"end": 0.824
+},
+{
+"word": "came",
+"start": 0.871,
+"end": 1.045
+},
+{
+"word": "again?",
+"start": 1.08,
+"end": 1.567
+},
+{
+"word": "Picture",
+"start": 2.009,
+"end": 2.322
+},
+{
+"word": "it.",
+"start": 2.357,
+"end": 2.647
+},
+{
+"word": "The",
+"start": 2.984,
+"end": 3.1
+},
+{
+"word": "sun",
+"start": 3.146,
+"end": 3.379
+},
+{
+"word": "climbs",
+"start": 3.448,
+"end": 3.727
+},
+{
+"word": "to",
+"start": 3.762,
+"end": 3.831
+},
+{
+"word": "noon...",
+"start": 3.901,
+"end": 4.331
+},
+{
+"word": "and",
+"start": 4.435,
+"end": 4.563
+},
+{
+"word": "just",
+"start": 4.609,
+"end": 4.76
+},
+{
+"word": "stops.",
+"start": 4.795,
+"end": 5.352
+},
+{
+"word": "Right",
+"start": 5.793,
+"end": 5.991
+},
+{
+"word": "there.",
+"start": 6.026,
+"end": 6.467
+},
+{
+"word": "Forever.",
+"start": 6.85,
+"end": 7.43
+},
+{
+"word": "Day",
+"start": 7.814,
+"end": 8.046
+},
+{
+"word": "one",
+"start": 8.127,
+"end": 8.348
+},
+{
+"word": "feels",
+"start": 8.394,
+"end": 8.649
+},
+{
+"word": "amazing.",
+"start": 8.684,
+"end": 9.265
+},
+{
+"word": "Endless",
+"start": 9.392,
+"end": 9.752
+},
+{
+"word": "summer.",
+"start": 9.787,
+"end": 10.217
+},
+{
+"word": "Nobody",
+"start": 10.553,
+"end": 10.82
+},
+{
+"word": "has",
+"start": 10.855,
+"end": 10.96
+},
+{
+"word": "to",
+"start": 11.006,
+"end": 11.064
+},
+{
+"word": "go",
+"start": 11.111,
+"end": 11.215
+},
+{
+"word": "home.",
+"start": 11.273,
+"end": 11.656
+},
+{
+"word": "Kids",
+"start": 11.807,
+"end": 12.051
+},
+{
+"word": "play",
+"start": 12.098,
+"end": 12.307
+},
+{
+"word": "until",
+"start": 12.341,
+"end": 12.504
+},
+{
+"word": "they",
+"start": 12.539,
+"end": 12.643
+},
+{
+"word": "fall",
+"start": 12.69,
+"end": 12.841
+},
+{
+"word": "asleep",
+"start": 12.875,
+"end": 13.142
+},
+{
+"word": "standing",
+"start": 13.189,
+"end": 13.514
+},
+{
+"word": "up.",
+"start": 13.572,
+"end": 13.909
+},
+{
+"word": "But",
+"start": 14.512,
+"end": 14.64
+},
+{
+"word": "your",
+"start": 14.675,
+"end": 14.791
+},
+{
+"word": "body",
+"start": 14.826,
+"end": 15.011
+},
+{
+"word": "has",
+"start": 15.046,
+"end": 15.139
+},
+{
+"word": "a",
+"start": 15.174,
+"end": 15.197
+},
+{
+"word": "clock,",
+"start": 15.244,
+"end": 15.638
+},
+{
+"word": "and",
+"start": 15.743,
+"end": 15.859
+},
+{
+"word": "it's",
+"start": 15.894,
+"end": 16.01
+},
+{
+"word": "waiting",
+"start": 16.045,
+"end": 16.289
+},
+{
+"word": "for",
+"start": 16.323,
+"end": 16.405
+},
+{
+"word": "darkness.",
+"start": 16.439,
+"end": 16.881
+},
+{
+"word": "No",
+"start": 17.008,
+"end": 17.124
+},
+{
+"word": "dark,",
+"start": 17.182,
+"end": 17.496
+},
+{
+"word": "no",
+"start": 17.554,
+"end": 17.647
+},
+{
+"word": "sleep",
+"start": 17.693,
+"end": 17.891
+},
+{
+"word": "hormone.",
+"start": 17.926,
+"end": 18.332
+},
+{
+"word": "By",
+"start": 18.541,
+"end": 18.68
+},
+{
+"word": "day",
+"start": 18.738,
+"end": 18.854
+},
+{
+"word": "three,",
+"start": 18.901,
+"end": 19.145
+},
+{
+"word": "everyone",
+"start": 19.168,
+"end": 19.446
+},
+{
+"word": "is",
+"start": 19.481,
+"end": 19.551
+},
+{
+"word": "grumpy,",
+"start": 19.597,
+"end": 19.969
+},
+{
+"word": "clumsy,",
+"start": 20.004,
+"end": 20.387
+},
+{
+"word": "and",
+"start": 20.41,
+"end": 20.491
+},
+{
+"word": "seeing",
+"start": 20.538,
+"end": 20.77
+},
+{
+"word": "things.",
+"start": 20.816,
+"end": 21.2
+},
+{
+"word": "Then",
+"start": 21.478,
+"end": 21.629
+},
+{
+"word": "nature",
+"start": 21.699,
+"end": 21.954
+},
+{
+"word": "freaks",
+"start": 21.989,
+"end": 22.221
+},
+{
+"word": "out.",
+"start": 22.256,
+"end": 22.593
+},
+{
+"word": "Owls",
+"start": 22.802,
+"end": 23.092
+},
+{
+"word": "can't",
+"start": 23.127,
+"end": 23.313
+},
+{
+"word": "hunt.",
+"start": 23.359,
+"end": 23.731
+},
+{
+"word": "Fireflies",
+"start": 23.881,
+"end": 24.369
+},
+{
+"word": "can't",
+"start": 24.404,
+"end": 24.578
+},
+{
+"word": "find",
+"start": 24.624,
+"end": 24.822
+},
+{
+"word": "each",
+"start": 24.857,
+"end": 24.996
+},
+{
+"word": "other.",
+"start": 25.031,
+"end": 25.321
+},
+{
+"word": "Flowers",
+"start": 25.53,
+"end": 25.855
+},
+{
+"word": "that",
+"start": 25.89,
+"end": 26.006
+},
+{
+"word": "open",
+"start": 26.041,
+"end": 26.261
+},
+{
+"word": "at",
+"start": 26.296,
+"end": 26.366
+},
+{
+"word": "night",
+"start": 26.412,
+"end": 26.586
+},
+{
+"word": "just...",
+"start": 26.621,
+"end": 26.946
+},
+{
+"word": "don't.",
+"start": 27.55,
+"end": 27.968
+},
+{
+"word": "Meanwhile,",
+"start": 28.572,
+"end": 28.966
+},
+{
+"word": "the",
+"start": 28.99,
+"end": 29.059
+},
+{
+"word": "sun",
+"start": 29.094,
+"end": 29.257
+},
+{
+"word": "keeps",
+"start": 29.326,
+"end": 29.5
+},
+{
+"word": "cooking",
+"start": 29.535,
+"end": 29.756
+},
+{
+"word": "the",
+"start": 29.791,
+"end": 29.86
+},
+{
+"word": "same",
+"start": 29.895,
+"end": 30.069
+},
+{
+"word": "side",
+"start": 30.104,
+"end": 30.29
+},
+{
+"word": "of",
+"start": 30.313,
+"end": 30.36
+},
+{
+"word": "the",
+"start": 30.394,
+"end": 30.464
+},
+{
+"word": "planet.",
+"start": 30.499,
+"end": 30.905
+},
+{
+"word": "No",
+"start": 31.346,
+"end": 31.474
+},
+{
+"word": "night",
+"start": 31.532,
+"end": 31.706
+},
+{
+"word": "means",
+"start": 31.753,
+"end": 31.927
+},
+{
+"word": "no",
+"start": 31.985,
+"end": 32.078
+},
+{
+"word": "cooling",
+"start": 32.136,
+"end": 32.38
+},
+{
+"word": "off.",
+"start": 32.438,
+"end": 32.786
+},
+{
+"word": "The",
+"start": 33.123,
+"end": 33.216
+},
+{
+"word": "ground",
+"start": 33.25,
+"end": 33.448
+},
+{
+"word": "bakes,",
+"start": 33.494,
+"end": 33.819
+},
+{
+"word": "the",
+"start": 33.866,
+"end": 33.959
+},
+{
+"word": "lakes",
+"start": 34.005,
+"end": 34.202
+},
+{
+"word": "shrink,",
+"start": 34.237,
+"end": 34.586
+},
+{
+"word": "and",
+"start": 34.655,
+"end": 34.771
+},
+{
+"word": "the",
+"start": 34.806,
+"end": 34.876
+},
+{
+"word": "air",
+"start": 34.934,
+"end": 35.12
+},
+{
+"word": "gets",
+"start": 35.166,
+"end": 35.317
+},
+{
+"word": "hotter",
+"start": 35.363,
+"end": 35.584
+},
+{
+"word": "every",
+"start": 35.642,
+"end": 35.851
+},
+{
+"word": "single",
+"start": 35.886,
+"end": 36.141
+},
+{
+"word": "hour.",
+"start": 36.176,
+"end": 36.617
+},
+{
+"word": "Here's",
+"start": 37.221,
+"end": 37.43
+},
+{
+"word": "the",
+"start": 37.465,
+"end": 37.535
+},
+{
+"word": "crazy",
+"start": 37.569,
+"end": 37.825
+},
+{
+"word": "part.",
+"start": 37.871,
+"end": 38.231
+},
+{
+"word": "On",
+"start": 38.382,
+"end": 38.487
+},
+{
+"word": "the",
+"start": 38.521,
+"end": 38.591
+},
+{
+"word": "other",
+"start": 38.626,
+"end": 38.777
+},
+{
+"word": "side",
+"start": 38.812,
+"end": 38.974
+},
+{
+"word": "of",
+"start": 38.997,
+"end": 39.044
+},
+{
+"word": "the",
+"start": 39.079,
+"end": 39.148
+},
+{
+"word": "Earth,",
+"start": 39.23,
+"end": 39.439
+},
+{
+"word": "it's",
+"start": 39.462,
+"end": 39.601
+},
+{
+"word": "the",
+"start": 39.636,
+"end": 39.717
+},
+{
+"word": "opposite.",
+"start": 39.752,
+"end": 40.286
+},
+{
+"word": "Endless",
+"start": 40.669,
+"end": 41.017
+},
+{
+"word": "night.",
+"start": 41.064,
+"end": 41.424
+},
+{
+"word": "Freezing",
+"start": 41.528,
+"end": 41.865
+},
+{
+"word": "cold.",
+"start": 41.935,
+"end": 42.422
+},
+{
+"word": "The",
+"start": 42.759,
+"end": 42.863
+},
+{
+"word": "ocean",
+"start": 42.922,
+"end": 43.165
+},
+{
+"word": "slowly",
+"start": 43.235,
+"end": 43.537
+},
+{
+"word": "turns",
+"start": 43.583,
+"end": 43.792
+},
+{
+"word": "to",
+"start": 43.827,
+"end": 43.897
+},
+{
+"word": "ice.",
+"start": 43.978,
+"end": 44.373
+},
+{
+"word": "And",
+"start": 44.559,
+"end": 44.675
+},
+{
+"word": "right",
+"start": 44.733,
+"end": 44.907
+},
+{
+"word": "between",
+"start": 44.942,
+"end": 45.22
+},
+{
+"word": "them,",
+"start": 45.255,
+"end": 45.499
+},
+{
+"word": "on",
+"start": 45.569,
+"end": 45.673
+},
+{
+"word": "a",
+"start": 45.708,
+"end": 45.731
+},
+{
+"word": "thin",
+"start": 45.789,
+"end": 45.952
+},
+{
+"word": "ring",
+"start": 46.056,
+"end": 46.242
+},
+{
+"word": "of",
+"start": 46.288,
+"end": 46.346
+},
+{
+"word": "forever-sunset,",
+"start": 46.381,
+"end": 47.264
+},
+{
+"word": "that's",
+"start": 47.449,
+"end": 47.682
+},
+{
+"word": "where",
+"start": 47.716,
+"end": 47.879
+},
+{
+"word": "everyone",
+"start": 47.914,
+"end": 48.227
+},
+{
+"word": "would",
+"start": 48.262,
+"end": 48.413
+},
+{
+"word": "move.",
+"start": 48.448,
+"end": 48.901
+},
+{
+"word": "Billions",
+"start": 49.423,
+"end": 49.771
+},
+{
+"word": "of",
+"start": 49.806,
+"end": 49.864
+},
+{
+"word": "people,",
+"start": 49.911,
+"end": 50.305
+},
+{
+"word": "squeezed",
+"start": 50.41,
+"end": 50.747
+},
+{
+"word": "into",
+"start": 50.782,
+"end": 50.921
+},
+{
+"word": "one",
+"start": 51.002,
+"end": 51.153
+},
+{
+"word": "golden",
+"start": 51.2,
+"end": 51.478
+},
+{
+"word": "strip",
+"start": 51.537,
+"end": 51.746
+},
+{
+"word": "of",
+"start": 51.78,
+"end": 51.838
+},
+{
+"word": "evening.",
+"start": 51.908,
+"end": 52.361
+},
+{
+"word": "So",
+"start": 52.965,
+"end": 53.069
+},
+{
+"word": "the",
+"start": 53.104,
+"end": 53.174
+},
+{
+"word": "next",
+"start": 53.208,
+"end": 53.359
+},
+{
+"word": "time",
+"start": 53.383,
+"end": 53.522
+},
+{
+"word": "you're",
+"start": 53.545,
+"end": 53.708
+},
+{
+"word": "sad",
+"start": 53.731,
+"end": 53.905
+},
+{
+"word": "that",
+"start": 53.94,
+"end": 54.044
+},
+{
+"word": "the",
+"start": 54.079,
+"end": 54.149
+},
+{
+"word": "day",
+"start": 54.184,
+"end": 54.288
+},
+{
+"word": "is",
+"start": 54.323,
+"end": 54.393
+},
+{
+"word": "over,",
+"start": 54.439,
+"end": 54.764
+},
+{
+"word": "remember:",
+"start": 54.892,
+"end": 55.356
+},
+{
+"word": "the",
+"start": 55.542,
+"end": 55.635
+},
+{
+"word": "night",
+"start": 55.693,
+"end": 55.867
+},
+{
+"word": "isn't",
+"start": 55.902,
+"end": 56.076
+},
+{
+"word": "stealing",
+"start": 56.111,
+"end": 56.378
+},
+{
+"word": "your",
+"start": 56.413,
+"end": 56.529
+},
+{
+"word": "time.",
+"start": 56.564,
+"end": 56.935
+},
+{
+"word": "It's",
+"start": 57.179,
+"end": 57.353
+},
+{
+"word": "saving",
+"start": 57.376,
+"end": 57.643
+},
+{
+"word": "the",
+"start": 57.678,
+"end": 57.748
+},
+{
+"word": "planet.",
+"start": 57.771,
+"end": 58.201
+},
+{
+"word": "Now",
+"start": 58.537,
+"end": 58.665
+},
+{
+"word": "go",
+"start": 58.711,
+"end": 58.793
+},
+{
+"word": "to",
+"start": 58.851,
+"end": 58.909
+},
+{
+"word": "sleep.",
+"start": 58.955,
+"end": 59.362
+},
+{
+"word": "While",
+"start": 59.803,
+"end": 60.012
+},
+{
+"word": "you",
+"start": 60.047,
+"end": 60.116
+},
+{
+"word": "still",
+"start": 60.163,
+"end": 60.337
+},
+{
+"word": "can.",
+"start": 60.383,
+"end": 60.929
+}
+]
