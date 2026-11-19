@@ -1,0 +1,1219 @@
+{
+ "slug": "bike-countersteer",
+ "title": "Why Your Bike Steers Backwards First",
+ "words_per_s": 3.7,
+ "note": "Left/right/lean signs are always the RIDER's: negative lean = rider leans to their left; steer_arrow direction = rider's side; view rear = chase cam behind the rider. insert = cut-in of another rig/cam at that word; shot-level cut = switch cam at that word; contact_shift = slide the tyre contact patch sideways (rider side). at_word = 0-based word index within the shot text (split on spaces). Character look fields are kwargs of characters/scripts/bean.py character(); arm_pose \"ride\", hat \"helmet\", rig/view, knee_out, broom_* and props marked in SCRIPT.md are requested in BACKLOG.md.",
+ "shots": [
+  {
+   "id": "s01",
+   "text": "Ride into a left turn, and your bike steers right first, without you knowing it.",
+   "set": "village",
+   "cam": "street_med",
+   "light": "day",
+   "size": "medium",
+   "camera": {
+    "move": "push_in",
+    "amount": 0.05
+   },
+   "characters": [
+    {
+     "id": "you",
+     "x": 0.5,
+     "beats": [
+      {
+       "lean": 0,
+       "at_word": 0,
+       "arm_pose": "ride"
+      },
+      {
+       "lean": -18,
+       "at_word": 10
+      }
+     ],
+     "rig": "bicycle",
+     "view": "rear",
+     "build": "adult",
+     "skin": "#f6d2b0",
+     "shirt": "#3fb37f",
+     "pants": "#2f3f6b",
+     "hat": "beanie",
+     "hat_col": "#f2c230",
+     "seed": 11
+    }
+   ],
+   "fx": [
+    {
+     "name": "steer_arrow",
+     "x": 0.62,
+     "y": 0.62,
+     "direction": "right",
+     "at_word": 9
+    },
+    {
+     "name": "speed_lines",
+     "x": 0.2,
+     "y": 0.6,
+     "at_word": 0
+    }
+   ],
+   "props": [
+    "bicycle"
+   ]
+  },
+  {
+   "id": "s02",
+   "text": "Meet Dale. Twenty years on motorcycles, and he swears he steers by leaning.",
+   "set": "track",
+   "cam": "pit_med",
+   "light": "day",
+   "size": "medium",
+   "camera": {
+    "move": "hold"
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.48,
+     "beats": [
+      {
+       "expr": "smug",
+       "prop": "helmet",
+       "at_word": 0,
+       "arm_pose": [
+        "hip",
+        "hold"
+       ]
+      },
+      {
+       "lean": -10,
+       "expr": "grin",
+       "at_word": 12
+      }
+     ],
+     "hat": null,
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "sparkle",
+     "x": 0.4,
+     "y": 0.3,
+     "at_word": 2
+    }
+   ],
+   "props": [
+    "helmet_sticker:I STEER WITH MY HIPS",
+    "motorbike"
+   ]
+  },
+  {
+   "id": "s03",
+   "text": "So a riding school hands him a strange bike.",
+   "set": "track",
+   "cam": "track_wide",
+   "light": "day",
+   "size": "wide",
+   "camera": {
+    "move": "glide",
+    "direction": "right",
+    "amount": 0.08
+   },
+   "characters": [
+    {
+     "id": "instructor",
+     "x": 0.4,
+     "beats": [
+      {
+       "expr": "neutral",
+       "at_word": 4,
+       "arm_pose": [
+        "point",
+        "hold"
+       ]
+      }
+     ],
+     "build": "adult",
+     "skin": "#c98e63",
+     "shirt": "#2f6fb3",
+     "pants": "#e8e2d0",
+     "hat": "cap",
+     "hat_col": "#2b2f3a",
+     "glasses": true,
+     "outfit": [
+      "collar"
+     ],
+     "prop": "clipboard",
+     "seed": 9
+    },
+    {
+     "id": "dale",
+     "x": 0.62,
+     "beats": [
+      {
+       "expr": "nervous",
+       "at_word": 7
+      }
+     ],
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "question_mark",
+     "x": 0.66,
+     "y": 0.38,
+     "at_word": 7
+    }
+   ],
+   "props": [
+    "banner:BODY-STEERING CHALLENGE",
+    "nobs_bike"
+   ]
+  },
+  {
+   "id": "s04",
+   "text": "It has two handlebars: a normal one, and one bolted to the frame that can't steer.",
+   "set": "track",
+   "cam": "bike_close",
+   "light": "day",
+   "size": "close",
+   "camera": {
+    "move": "tilt_up",
+    "amount": 0.06
+   },
+   "characters": [],
+   "fx": [
+    {
+     "name": "sparkle",
+     "x": 0.45,
+     "y": 0.55,
+     "at_word": 5
+    },
+    {
+     "name": "exclaim",
+     "x": 0.55,
+     "y": 0.3,
+     "at_word": 9
+    },
+    {
+     "name": "steer_arrow",
+     "x": 0.5,
+     "y": 0.36,
+     "direction": "blocked",
+     "at_word": 14
+    }
+   ],
+   "props": [
+    "nobs_bike"
+   ]
+  },
+  {
+   "id": "s05",
+   "text": "\"Hold the fixed bars,\" says the instructor, \"and take that corner.\"",
+   "set": "track",
+   "cam": "pit_med",
+   "light": "day",
+   "size": "medium",
+   "camera": {
+    "move": "hold"
+   },
+   "characters": [
+    {
+     "id": "instructor",
+     "x": 0.36,
+     "beats": [
+      {
+       "expr": "stern",
+       "at_word": 0,
+       "arm_pose": [
+        "hang",
+        "hold"
+       ]
+      },
+      {
+       "expr": "smug",
+       "at_word": 10,
+       "arm_pose": [
+        "hold",
+        "point"
+       ]
+      }
+     ],
+     "build": "adult",
+     "skin": "#c98e63",
+     "shirt": "#2f6fb3",
+     "pants": "#e8e2d0",
+     "hat": "cap",
+     "hat_col": "#2b2f3a",
+     "glasses": true,
+     "outfit": [
+      "collar"
+     ],
+     "prop": "clipboard",
+     "seed": 9
+    },
+    {
+     "id": "dale",
+     "x": 0.66,
+     "beats": [
+      {
+       "expr": "smug",
+       "at_word": 0,
+       "arm_pose": [
+        "hip",
+        "hip"
+       ]
+      }
+     ],
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [],
+   "props": [
+    "nobs_bike"
+   ]
+  },
+  {
+   "id": "s06",
+   "text": "Dale laughs, rolls onto the track, and leans hard left.",
+   "set": "track",
+   "cam": "track_med",
+   "light": "day",
+   "size": "medium",
+   "camera": {
+    "move": "follow",
+    "direction": "left"
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.5,
+     "beats": [
+      {
+       "expr": "grin",
+       "at_word": 1,
+       "arm_pose": "ride"
+      },
+      {
+       "body_lean": -28,
+       "bike_lean": 3,
+       "expr": "smug",
+       "at_word": 7
+      }
+     ],
+     "rig": "nobs_bike",
+     "view": "rear",
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "dust_puff",
+     "x": 0.62,
+     "y": 0.86,
+     "direction": "right",
+     "at_word": 2
+    },
+    {
+     "name": "speed_lines",
+     "x": 0.25,
+     "y": 0.55,
+     "at_word": 5
+    }
+   ],
+   "props": [
+    "nobs_bike"
+   ]
+  },
+  {
+   "id": "s07",
+   "text": "Almost nothing happens.",
+   "set": "track",
+   "cam": "bike_chase",
+   "light": "day",
+   "size": "close",
+   "camera": {
+    "move": "hold"
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.5,
+     "beats": [
+      {
+       "body_lean": -28,
+       "bike_lean": 3,
+       "at_word": 0,
+       "arm_pose": "ride"
+      }
+     ],
+     "rig": "nobs_bike",
+     "view": "rear",
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [],
+   "props": [
+    "nobs_bike"
+   ]
+  },
+  {
+   "id": "s08",
+   "text": "He leans harder, sticks his knee out, and wiggles his hips like he's at a wedding.",
+   "set": "track",
+   "cam": "track_med",
+   "light": "day",
+   "size": "medium",
+   "camera": {
+    "move": "shake",
+    "amount": 0.01
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.5,
+     "beats": [
+      {
+       "body_lean": -28,
+       "bike_lean": 3,
+       "at_word": 0,
+       "arm_pose": "ride"
+      },
+      {
+       "body_lean": -32,
+       "bike_lean": 4,
+       "at_word": 1
+      },
+      {
+       "knee_out": true,
+       "at_word": 5
+      },
+      {
+       "body_lean": -20,
+       "at_word": 8
+      },
+      {
+       "body_lean": -34,
+       "at_word": 9
+      },
+      {
+       "body_lean": -20,
+       "at_word": 10
+      },
+      {
+       "body_lean": -34,
+       "at_word": 11
+      },
+      {
+       "body_lean": -22,
+       "at_word": 12
+      }
+     ],
+     "rig": "nobs_bike",
+     "view": "rear",
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "sweat_drop",
+     "x": 0.58,
+     "y": 0.32,
+     "at_word": 2
+    },
+    {
+     "name": "music_note",
+     "x": 0.3,
+     "y": 0.4,
+     "at_word": 15
+    }
+   ],
+   "props": [
+    "helmet_sticker:I STEER WITH MY HIPS"
+   ]
+  },
+  {
+   "id": "s09",
+   "text": "The bike barely turns and runs wide across the whole track.",
+   "set": "track",
+   "cam": "track_top",
+   "light": "day",
+   "size": "wide",
+   "camera": {
+    "move": "hold"
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.5,
+     "beats": [
+      {
+       "body_lean": -20,
+       "bike_lean": -5,
+       "at_word": 2
+      }
+     ],
+     "rig": "nobs_bike",
+     "view": "top",
+     "path": "wide_arc",
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "path_line",
+     "x": 0.5,
+     "y": 0.5,
+     "planned": "tight_left",
+     "actual": "wide_arc",
+     "at_word": 0
+    },
+    {
+     "name": "dust_puff",
+     "x": 0.82,
+     "y": 0.3,
+     "at_word": 7
+    }
+   ],
+   "props": []
+  },
+  {
+   "id": "s10",
+   "text": "Twenty years of riding, and he can't make the corner.",
+   "set": "track",
+   "cam": "pit_med",
+   "light": "day",
+   "size": "medium",
+   "camera": {
+    "move": "push_in",
+    "amount": 0.04
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.38,
+     "beats": [
+      {
+       "expr": "pained",
+       "at_word": 0,
+       "arm_pose": "hang"
+      }
+     ],
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    },
+    {
+     "id": "instructor",
+     "x": 0.68,
+     "beats": [
+      {
+       "expr": "neutral",
+       "at_word": 9,
+       "arm_pose": [
+        "hold",
+        "point"
+       ]
+      }
+     ],
+     "build": "adult",
+     "skin": "#c98e63",
+     "shirt": "#2f6fb3",
+     "pants": "#e8e2d0",
+     "hat": "cap",
+     "hat_col": "#2b2f3a",
+     "glasses": true,
+     "outfit": [
+      "collar"
+     ],
+     "prop": "clipboard",
+     "seed": 9
+    }
+   ],
+   "fx": [
+    {
+     "name": "sweat_drop",
+     "x": 0.42,
+     "y": 0.32,
+     "at_word": 9
+    }
+   ],
+   "props": [
+    "lap_board:CORNERS MADE: 0"
+   ]
+  },
+  {
+   "id": "s11",
+   "text": "Wait, if leaning your body doesn't turn the bike, what does?",
+   "set": "track",
+   "cam": "rider_close",
+   "light": "day",
+   "size": "close",
+   "camera": {
+    "move": "push_in",
+    "amount": 0.06
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.5,
+     "beats": [
+      {
+       "expr": "nervous",
+       "at_word": 0,
+       "arm_pose": [
+        "chin",
+        "hang"
+       ]
+      }
+     ],
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "question_mark",
+     "x": 0.65,
+     "y": 0.25,
+     "at_word": 10
+    }
+   ],
+   "props": []
+  },
+  {
+   "id": "s12",
+   "text": "You see, bikes turn by leaning the whole bike, and to lean it left, you steer right for a split second.",
+   "set": "track",
+   "cam": "bike_chase",
+   "light": "golden",
+   "size": "wide",
+   "camera": {
+    "move": "push_in",
+    "amount": 0.05
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.5,
+     "beats": [
+      {
+       "lean": 0,
+       "at_word": 0,
+       "arm_pose": "ride"
+      },
+      {
+       "lean": -20,
+       "at_word": 5
+      },
+      {
+       "lean": 0,
+       "at_word": 11
+      },
+      {
+       "lean": -20,
+       "at_word": 20
+      }
+     ],
+     "rig": "motorbike",
+     "view": "rear",
+     "insert": {
+      "at_word": 15,
+      "until_word": 19,
+      "cam": "track_top",
+      "view": "top"
+     },
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "steer_arrow",
+     "x": 0.5,
+     "y": 0.42,
+     "direction": "right",
+     "at_word": 16
+    },
+    {
+     "name": "path_line",
+     "x": 0.5,
+     "y": 0.5,
+     "planned": "tight_left",
+     "actual": "kink_right_then_left",
+     "at_word": 13
+    }
+   ],
+   "props": []
+  },
+  {
+   "id": "s13",
+   "text": "That nudge pulls the wheels out from under you, so the bike tips left, then turns left.",
+   "set": "track",
+   "cam": "bike_chase",
+   "light": "golden",
+   "size": "close",
+   "camera": {
+    "move": "pan",
+    "direction": "left",
+    "at_word": 15,
+    "amount": 0.12
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.5,
+     "beats": [
+      {
+       "lean": 0,
+       "at_word": 0,
+       "arm_pose": "ride"
+      },
+      {
+       "contact_shift": "right",
+       "at_word": 2
+      },
+      {
+       "lean": -24,
+       "at_word": 12
+      },
+      {
+       "lean": -26,
+       "at_word": 15
+      }
+     ],
+     "rig": "motorbike",
+     "view": "rear",
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "steer_arrow",
+     "x": 0.5,
+     "y": 0.82,
+     "direction": "right",
+     "at_word": 1
+    },
+    {
+     "name": "dust_puff",
+     "x": 0.56,
+     "y": 0.9,
+     "direction": "right",
+     "at_word": 4
+    }
+   ],
+   "props": []
+  },
+  {
+   "id": "s14",
+   "text": "It's like balancing a broom on your palm: to tip it left, flick your hand right first.",
+   "set": "track",
+   "cam": "pit_ots",
+   "light": "golden",
+   "size": "medium",
+   "camera": {
+    "move": "hold"
+   },
+   "characters": [
+    {
+     "id": "instructor",
+     "x": 0.42,
+     "beats": [
+      {
+       "prop": "broom_upright",
+       "at_word": 0,
+       "arm_pose": [
+        "hang",
+        "hold"
+       ]
+      },
+      {
+       "broom_flick": "right",
+       "at_word": 12
+      },
+      {
+       "broom_tip": "left",
+       "at_word": 16
+      }
+     ],
+     "prop": null,
+     "view": "rear",
+     "build": "adult",
+     "skin": "#c98e63",
+     "shirt": "#2f6fb3",
+     "pants": "#e8e2d0",
+     "hat": "cap",
+     "hat_col": "#2b2f3a",
+     "glasses": true,
+     "outfit": [
+      "collar"
+     ],
+     "seed": 9
+    },
+    {
+     "id": "dale",
+     "x": 0.7,
+     "beats": [
+      {
+       "expr": "nervous",
+       "at_word": 0,
+       "arm_pose": [
+        "chin",
+        "hang"
+       ]
+      },
+      {
+       "expr": "shock",
+       "at_word": 16
+      }
+     ],
+     "hat": null,
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "speed_lines",
+     "x": 0.58,
+     "y": 0.55,
+     "at_word": 12
+    },
+    {
+     "name": "sparkle",
+     "x": 0.4,
+     "y": 0.2,
+     "at_word": 16
+    }
+   ],
+   "props": [
+    "broom"
+   ]
+  },
+  {
+   "id": "s15",
+   "text": "Riders do it without noticing, but the fixed bars stopped Dale's hands from doing it.",
+   "set": "track",
+   "cam": "track_med",
+   "light": "golden",
+   "size": "medium",
+   "camera": {
+    "move": "push_in",
+    "amount": 0.07
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.5,
+     "beats": [
+      {
+       "lean": 0,
+       "at_word": 0,
+       "arm_pose": "ride"
+      },
+      {
+       "lean": -22,
+       "at_word": 4
+      }
+     ],
+     "rig": "motorbike",
+     "view": "rear",
+     "insert": {
+      "at_word": 7,
+      "rig": "nobs_bike",
+      "cam": "grips_close",
+      "view": "front"
+     },
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "steer_arrow",
+     "x": 0.62,
+     "y": 0.5,
+     "direction": "right",
+     "scale": 0.6,
+     "at_word": 0
+    },
+    {
+     "name": "sparkle",
+     "x": 0.6,
+     "y": 0.55,
+     "at_word": 11
+    },
+    {
+     "name": "steer_arrow",
+     "x": 0.5,
+     "y": 0.5,
+     "direction": "blocked",
+     "at_word": 9
+    }
+   ],
+   "props": [
+    "motorbike",
+    "nobs_bike"
+   ]
+  },
+  {
+   "id": "s16",
+   "text": "Motorcycle schools teach it on purpose: push the left grip forward to go left.",
+   "set": "track",
+   "cam": "pit_med",
+   "light": "golden",
+   "size": "medium",
+   "camera": {
+    "move": "hold"
+   },
+   "characters": [
+    {
+     "id": "instructor",
+     "x": 0.62,
+     "beats": [
+      {
+       "expr": "stern",
+       "at_word": 0,
+       "arm_pose": [
+        "hang",
+        "hold"
+       ]
+      },
+      {
+       "expr": "smug",
+       "points_at": "chalkboard",
+       "at_word": 6,
+       "arm_pose": [
+        "point",
+        "hold"
+       ]
+      }
+     ],
+     "build": "adult",
+     "skin": "#c98e63",
+     "shirt": "#2f6fb3",
+     "pants": "#e8e2d0",
+     "hat": "cap",
+     "hat_col": "#2b2f3a",
+     "glasses": true,
+     "outfit": [
+      "collar"
+     ],
+     "prop": "clipboard",
+     "seed": 9
+    },
+    {
+     "id": "dale",
+     "x": 0.3,
+     "beats": [
+      {
+       "expr": "nervous",
+       "at_word": 0,
+       "arm_pose": [
+        "chin",
+        "hang"
+       ]
+      },
+      {
+       "expr": "shock",
+       "at_word": 8
+      }
+     ],
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat": "helmet",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    }
+   ],
+   "fx": [
+    {
+     "name": "exclaim",
+     "x": 0.3,
+     "y": 0.3,
+     "at_word": 8
+    }
+   ],
+   "props": [
+    "chalkboard:PUSH LEFT → GO LEFT (drawing from above: left grip pushed forward, front wheel points right, bike leans left)"
+   ]
+  },
+  {
+   "id": "s17",
+   "text": "And yes, bicycles too.",
+   "set": "village",
+   "cam": "street_med",
+   "light": "golden",
+   "size": "medium",
+   "camera": {
+    "move": "glide",
+    "direction": "left",
+    "amount": 0.06
+   },
+   "characters": [
+    {
+     "id": "you",
+     "x": 0.5,
+     "beats": [
+      {
+       "lean": 0,
+       "at_word": 0,
+       "arm_pose": "ride"
+      },
+      {
+       "lean": -18,
+       "at_word": 2
+      }
+     ],
+     "rig": "bicycle",
+     "view": "rear",
+     "build": "adult",
+     "skin": "#f6d2b0",
+     "shirt": "#3fb37f",
+     "pants": "#2f3f6b",
+     "hat": "beanie",
+     "hat_col": "#f2c230",
+     "seed": 11
+    }
+   ],
+   "fx": [
+    {
+     "name": "speed_lines",
+     "x": 0.2,
+     "y": 0.6,
+     "at_word": 0
+    },
+    {
+     "name": "exclaim",
+     "x": 0.62,
+     "y": 0.28,
+     "at_word": 3
+    },
+    {
+     "name": "steer_arrow",
+     "x": 0.6,
+     "y": 0.62,
+     "direction": "right",
+     "scale": 0.6,
+     "at_word": 1
+    }
+   ],
+   "props": [
+    "bicycle"
+   ]
+  },
+  {
+   "id": "s18",
+   "text": "So Dale's been steering the wrong way for twenty years, and it's the only way he ever turned.",
+   "set": "track",
+   "cam": "pit_med",
+   "light": "golden",
+   "size": "medium",
+   "camera": {
+    "move": "push_in",
+    "amount": 0.05
+   },
+   "characters": [
+    {
+     "id": "dale",
+     "x": 0.4,
+     "beats": [
+      {
+       "expr": "pained",
+       "prop": "helmet",
+       "at_word": 0,
+       "arm_pose": [
+        "hold",
+        "hang"
+       ]
+      },
+      {
+       "expr": "nervous",
+       "at_word": 5
+      },
+      {
+       "expr": "smile",
+       "at_word": 13
+      }
+     ],
+     "hat": null,
+     "build": "stout",
+     "skin": "#ffe2c2",
+     "shirt": "#d9452f",
+     "pants": "#30343f",
+     "hat_col": "#f4f1e8",
+     "moustache": "#6b4426",
+     "outfit": [
+      "stripes"
+     ],
+     "seed": 4
+    },
+    {
+     "id": "instructor",
+     "x": 0.7,
+     "beats": [
+      {
+       "expr": "neutral",
+       "at_word": 0,
+       "arm_pose": [
+        "hold",
+        "hang"
+       ]
+      },
+      {
+       "expr": "smug",
+       "at_word": 17
+      }
+     ],
+     "build": "adult",
+     "skin": "#c98e63",
+     "shirt": "#2f6fb3",
+     "pants": "#e8e2d0",
+     "hat": "cap",
+     "hat_col": "#2b2f3a",
+     "glasses": true,
+     "outfit": [
+      "collar"
+     ],
+     "prop": "clipboard",
+     "seed": 9
+    }
+   ],
+   "fx": [],
+   "props": [
+    "helmet_sticker:I STEER WITH MY HIPS",
+    "lap_board:CORNERS MADE: 0"
+   ]
+  }
+ ]
+}
