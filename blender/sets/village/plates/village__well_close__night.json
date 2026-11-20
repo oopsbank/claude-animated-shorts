@@ -1,11 +1,11 @@
 {
- "ground_y": 1796.0,
- "px_per_m": 640.64,
- "horizon_y": 861.1,
+ "ground_y": 1778.7,
+ "px_per_m": 638.91,
+ "horizon_y": 858.0,
  "light_dir": "top",
  "tint": "#a9b0e6",
- "stand_x": 0.581,
- "ground_x": 627.0,
+ "stand_x": 0.431,
+ "ground_x": 465.6,
  "set": "village",
  "cam": "well_close",
  "light": "night"
