@@ -94,6 +94,29 @@ def main():
             if not 0 <= b['word_frame'] - b['land'] <= 3 or not b['shot_f0'] <= b['land'] < b['shot_f1']]
     check('beats land 0-3 f before their word', late, f"{len(tr['beats'])} beats; off: {late[:5]}")
 
+    # ---- captions (PIPELINE.md > Captions)
+    if tr.get('captions'):
+        fps_ = tr['fps']; ws = tr['words']; ev = tr['captions']; on = {m['f']: m.get('caption') for m in tr['frames']}
+        sync = []
+        for e in ev:                                   # each caption appears 0-2 f before its first word is spoken
+            wf = min((int(round(w['start'] * fps_)) for w in ws if int(round(w['start'] * fps_)) >= e[0]), default=e[0])
+            if not 0 <= wf - e[0] <= 2: sync.append((e[2], e[0], wf))
+        check('captions land 0-2 f before their word', sync, f'{len(ev)} captions; off: {sync[:4]}')
+        quiet = []
+        for a_, b_ in zip(ws, ws[1:]):                 # nothing on screen inside silences > 0.4 s
+            if b_['start'] - a_['end'] > 0.4:
+                for f in range(int(round(a_['end'] * fps_)) + 3, int(round(b_['start'] * fps_)) - 2):
+                    if on.get(f): quiet.append(f)
+        check('no caption during silences > 0.4 s', quiet, f'{len(quiet)} frames; first: {quiet[:4]}')
+        cover = []
+        for m in tr['frames']:
+            cb = m.get('caption')
+            if not cb: continue
+            for c in m['chars']:
+                fb = c.get('face_screen')
+                if fb and not (cb[2] < fb[0] or cb[0] > fb[2] or cb[3] < fb[1] or cb[1] > fb[3]): cover.append((m['f'], c['id']))
+        check('captions never cover a face', cover, f'{len(cover)} frames; first: {cover[:4]}')
+
     # ---- frame stats (warning): one frame per second
     fs = os.path.join(ROOT, 'references', 'scripts', 'frame_stats.py'); stat_lines = []
     if os.path.exists(fs):
