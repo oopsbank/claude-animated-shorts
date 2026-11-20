@@ -5,8 +5,14 @@
  "light_dir": "top",
  "tint": "#ffbf86",
  "stand_x": 0.321,
+ "ground_x": 347.2,
  "set": "track",
  "cam": "track_wide",
  "light": "golden",
- "ground_x": 346.7
+ "targets": {
+  "banner": [
+   739.5,
+   782.6
+  ]
+ }
 }

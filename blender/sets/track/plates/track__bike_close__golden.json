@@ -5,8 +5,8 @@
  "light_dir": "top",
  "tint": "#ffbf86",
  "stand_x": 0.553,
+ "ground_x": 597.1,
  "set": "track",
  "cam": "bike_close",
- "light": "golden",
- "ground_x": 597.2
+ "light": "golden"
 }

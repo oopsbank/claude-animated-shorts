@@ -1,12 +1,18 @@
 {
- "ground_y": 1672.4,
- "px_per_m": 493.52,
- "horizon_y": 1027.1,
- "light_dir": "top",
+ "ground_y": 1732.8,
+ "px_per_m": 479.84,
+ "horizon_y": 1098.2,
+ "light_dir": "right",
  "tint": "#ffbf86",
- "stand_x": 0.25,
+ "stand_x": 0.4,
+ "ground_x": 431.7,
  "set": "track",
  "cam": "track_med",
  "light": "golden",
- "ground_x": 270.0
+ "targets": {
+  "banner": [
+   639.5,
+   718.6
+  ]
+ }
 }

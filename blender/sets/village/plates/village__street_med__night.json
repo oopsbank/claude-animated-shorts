@@ -7,6 +7,5 @@
  "stand_x": 0.344,
  "set": "village",
  "cam": "street_med",
- "light": "night",
- "ground_x": 371.5
+ "light": "night"
 }
