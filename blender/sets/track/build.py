@@ -106,22 +106,27 @@ for x in (-14, -5, 4, 13):                     # garage door openings (dark), on
 C.sign('RIDING SCHOOL', 'banner', loc=(0, -12.7, 4.95), w=10.0, h=1.0)
 # chalkboard on an easel and the lap board on the garage wall
 def push_left(d, box, fg):
-    """Top view: bar with the left grip pushed forward, front wheel pointing right, arrow: bike leans/turns left."""
-    x0, y0, x1, y1 = box; cx = (x0 + x1) / 2; h = y1 - y0; w = x1 - x0; lw = max(3, int(h / 40))
-    by = y0 + h * 0.62; ang = math.radians(-20)          # handlebar rotated: left end forward (up), right end back
-    hx, hy = w * 0.26 * math.cos(ang), w * 0.26 * math.sin(ang)
-    d.line([(cx - hx, by + hy), (cx + hx, by - hy)], fill=fg, width=lw * 2)
-    wl = h * 0.22; wx, wy = wl * math.sin(math.radians(20)), wl * math.cos(math.radians(20))   # wheel points right
-    d.rounded_rectangle([cx - h * 0.04, by - wl * 0.1, cx + h * 0.04, by + wl * 0.1], radius=3, outline=fg, width=lw)
-    d.line([(cx - wx, by + wy), (cx + wx, by - wy)], fill=fg, width=lw * 3)
-    ax = cx - hx; ay = by + hy                                 # arrow at the left grip: push forward
-    d.line([(ax, ay), (ax, ay - h * 0.25)], fill=(255, 220, 90), width=lw); d.polygon([(ax - h * 0.05, ay - h * 0.22), (ax + h * 0.05, ay - h * 0.22), (ax, ay - h * 0.32)], fill=(255, 220, 90))
-    d.arc([cx + w * 0.18, by - h * 0.32, cx + w * 0.44, by + h * 0.05], 200, 330, fill=fg, width=lw)   # "turns left" curl
-    d.polygon([(cx + w * 0.19, by - h * 0.08), (cx + w * 0.25, by - h * 0.17), (cx + w * 0.16, by - h * 0.19)], fill=fg)
-cb = C.sign('PUSH LEFT → GO LEFT', 'chalk', loc=(-0.6, -12.0, 1.6), rz=190, w=1.3, h=1.05, draw=push_left, text_frac=0.34)
+    """Top view of a bike's front end (front = up): left grip pushed forward, front wheel turned right,
+    and a curved arrow showing the bike then goes left."""
+    x0, y0, x1, y1 = box; w, h = x1 - x0, y1 - y0; lw = max(3, int(h / 45)); yel = (255, 214, 80)
+    cx, cy = x0 + w * 0.36, y0 + h * 0.62; a = math.radians(18)          # steering angle: wheel turned right
+    def rot(px, py): return (cx + px * math.cos(a) - py * math.sin(a), cy + px * math.sin(a) + py * math.cos(a))
+    wl, ww = h * 0.36, h * 0.07                                           # front wheel: long thin rounded shape, ahead of the bar
+    d.polygon([rot(-ww, -wl * 0.15), rot(ww, -wl * 0.15), rot(ww, -wl), rot(0, -wl - ww), rot(-ww, -wl)], outline=fg, width=lw)
+    d.line([rot(0, 0), rot(0, -wl * 0.15)], fill=fg, width=lw * 2)
+    bl = w * 0.22; d.line([rot(-bl, 0), rot(bl, 0)], fill=fg, width=lw * 2)    # handlebar
+    for sx in (-1, 1): d.line([rot(sx * bl, 0), rot(sx * bl * 0.78, 0)], fill=fg, width=lw * 5)   # grips
+    gx, gy = rot(-bl * 0.9, 0)                                            # push arrow at the LEFT grip, pointing forward (up)
+    d.line([(gx, gy), (gx, gy - h * 0.24)], fill=yel, width=lw * 2)
+    d.polygon([(gx - h * 0.05, gy - h * 0.22), (gx + h * 0.05, gy - h * 0.22), (gx, gy - h * 0.31)], fill=yel)
+    ax, ay = x0 + w * 0.80, y0 + h * 0.55                                 # result: the bike curls LEFT
+    d.line([(ax, ay + h * 0.3), (ax, ay - h * 0.05)], fill=fg, width=lw * 2)
+    d.arc([ax - w * 0.24, ay - h * 0.28, ax, ay + h * 0.14], 270, 360, fill=fg, width=lw * 2)
+    d.polygon([(ax - w * 0.12, ay - h * 0.36), (ax - w * 0.12, ay - h * 0.20), (ax - w * 0.21, ay - h * 0.28)], fill=fg)
+cb = C.sign('PUSH LEFT → GO LEFT', 'chalk', loc=(-0.55, -11.8, 1.7), rz=190, w=1.5, h=1.3, draw=push_left, text_frac=0.34)
 legs = C.mat('easel', (0.45, 0.28, 0.14))
 for dx in (-0.6, 0.6): C.cyl(0.035, 2.0, (-0.6 + dx * 0.9, -12.1, 0.95), legs, rot=(6, 0, 0), verts=6)
-C.sign('CORNERS MADE: 0', 'board', loc=(1.25, -12.7, 2.75), rz=180, w=2.4, h=0.7)
+C.sign('CORNERS MADE: 0', 'board', loc=(0.85, -12.7, 2.7), rz=180, w=2.2, h=0.66)
 # tyre stacks, cones, a toolbox trolley
 tyre = C.mat('tyre', (0.05, 0.05, 0.06), rough=0.9)
 def tyres(x, y, n):
@@ -170,19 +175,20 @@ for k in range(5):   # grandstand steps along the far straight's outside
 C.box((42, 0.3, 6), (0, CY + 2 * R + TW / 2 + 11.2, 3), groof)
 
 C.stylise(emissive_prefixes=('__none__',))
-C.point((0, -12.5, 3.6), power=300, radius=1.5)          # warm garage spill (golden only)
+C.point((-6.0, -10.5, 3.0), power=120, radius=1.5)          # warm garage spill (golden only)
 
 # ---------- cameras ----------
 TOP_X = L / 2 + R / 2 + 2
 CAMS = {
     'track_wide': dict(loc=(-6.0, -5.5, 4.2), target=(16.0, 14.0, 0.8), lens=22, roll=0, stand=(0.5, 2.6, 0), fstop=None,
                        haze_range=(5, 200)),
-    'track_med': dict(loc=(-0.6, -0.6, 1.3), target=(9.0, 10.0, 1.9), lens=30, roll=0, stand=(1.2, 2.2, 0), fstop=2.4,
+    'track_med': dict(loc=(-0.6, -0.6, 1.3), target=(9.0, 5.0, 2.5), lens=24, roll=0, stand=(1.7, 1.0, 0), fstop=2.4,
                       ink_fade=(6, 40, 0.5), haze_range=(4, 200)),
-    'track_top': dict(loc=(TOP_X, CY + R, 62.0), target=None, lens=35, roll=0, stand=(L / 2 - 2, CY, 0), fstop=None, top=True,
-                      haze_range=(40, 120), haze_k=0.3, note='top-down view: px_per_m measured along the ground'),
+    'track_top': dict(loc=(TOP_X + 1.0, CY + R - 6.0, 46.0), target=None, lens=35, roll=0, stand=(L / 2 + R * 0.707, CY + R - R * 0.707, 0), fstop=None, top=True,
+                      haze_range=(40, 120), haze_k=0.3, light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.05), 'golden': dict(grade_sat=0.95, grade_gain=1.15)}, note='top-down view: px_per_m measured along the ground'),
     'pit_med': dict(loc=(0.75, -7.2, 1.35), target=(0.15, -16.0, 1.9), lens=26, roll=0, stand=(0.8, -9.75, 0), fstop=2.8,
-                    ink_fade=(4, 30, 0.5), haze_range=(3, 120)),
+                    ink_fade=(4, 30, 0.5), haze_range=(3, 120),
+                    light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.18), 'golden': dict(grade_sat=1.0, grade_gain=1.15)}),
     'pit_ots': dict(loc=(1.3, -12.4, 1.6), target=(0.0, 6.0, 1.7), lens=32, roll=0, stand=(0.2, -8.9, 0), fstop=2.4,
                     ink_fade=(4, 40, 0.5), haze_range=(3, 200),
                     note='over the shoulder: stand = the facing character; the near character is composited large at the frame edge'),
@@ -190,10 +196,12 @@ CAMS = {
                        ink_fade=(3, 20, 0.6), haze_range=(3, 150)),
     'bike_chase': dict(loc=(-15.0, 4.0, 1.4), target=(20.0, 6.5, 1.2), lens=26, roll=0, stand=(-10.0, 4.4, 0), fstop=2.8,
                        haze_range=(4, 200)),
-    'grips_close': dict(loc=(5.5, 3.6, 1.2), target=(6.8, 4.9, 1.0), lens=45, roll=-3, stand=(6.7, 4.8, 0), fstop=1.8,
+    'grips_close': dict(loc=(5.1, 3.2, 1.2), target=(6.8, 4.9, 1.05), lens=45, roll=-3, stand=(6.7, 4.8, 0), fstop=1.8,
                         ink_fade=(3, 15, 0.7), haze_range=(2, 120)),
     'rider_close': dict(loc=(-1.0, 1.95, 1.5), target=(0.6, 4.6, 1.45), lens=40, roll=0, stand=(0.2, 3.6, 0), fstop=1.8,
                         ink_fade=(3, 15, 0.7), haze_range=(2, 150)),
 }
-LIGHTS = {'day': dict(az=-30, elev=50, exposure=-0.25, haze_k=0.2), 'golden': dict(az=-55, elev=14, exposure=0.1, haze_k=0.2)}
+C.INK_FADE, C.INK_RANGE = (35, 120, 0.4), (6, 80)   # an open track: keep outlines on the far trees and gantry
+LIGHTS = {'day': dict(az=-30, elev=50, exposure=-0.25, haze_k=0.2, grade_sat=1.3, grade_gain=1.0),
+          'golden': dict(az=-35, elev=16, sun_e=8.0, amb=(0.42, 0.50, 0.95), haze=(1.0, 0.70, 0.40), exposure=0.0, haze_k=0.2, grade_sat=1.25, grade_gain=1.0)}
 C.main('track', CAMS, LIGHTS)

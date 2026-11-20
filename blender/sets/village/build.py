@@ -70,8 +70,9 @@ CAMS = {
                        ink_fade=(6, 25, 0.5), per_light=per_light),
     'street_med': dict(loc=(0.45, -32.5, 1.3), target=(-0.1, 0.0, 2.4), lens=30, roll=0, stand=(0.1, -29.6, 0), fstop=2.4,
                        ink_fade=(6, 30, 0.5), per_light=per_light),
-    'street_low': dict(loc=(3.2, -5.8, 0.45), target=(0.8, 8.0, 2.8), lens=21, roll=-3, stand=(2.5, -2.9, 0), fstop=2.8,
+    'street_low': dict(loc=(3.2, -5.8, 0.45), target=(0.8, 8.0, 2.8), lens=21, roll=-3, stand=(3.15, -3.1, 0), fstop=2.8,
                        per_light=per_light),
 }
-LIGHTS = {'day': dict(az=25, elev=48), 'golden': dict(az=-20, elev=14), 'night': dict(az=210)}
+LIGHTS = {'day': dict(az=25, elev=48, grade_sat=1.12, grade_gain=0.97), 'golden': dict(az=-20, elev=14),
+          'night': dict(az=210, grade_sat=0.92, grade_gain=1.12)}
 C.main('village', CAMS, LIGHTS)
