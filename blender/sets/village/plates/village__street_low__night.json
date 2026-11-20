@@ -5,6 +5,7 @@
  "light_dir": "top",
  "tint": "#a9b0e6",
  "stand_x": 0.658,
+ "ground_x": 710.7,
  "set": "village",
  "cam": "street_low",
  "light": "night"

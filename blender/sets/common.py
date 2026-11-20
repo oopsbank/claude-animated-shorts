@@ -103,7 +103,7 @@ def cobble_mat(scale=3.6, c0=(0.30, 0.22, 0.16), c1=(0.42, 0.32, 0.22)):
     rmp = n.new('ShaderNodeValToRGB'); rmp.color_ramp.elements[0].position = 0.02; rmp.color_ramp.elements[1].position = 0.06
     rmp.color_ramp.elements[0].color = (0.30, 0.24, 0.24, 1); rmp.color_ramp.elements[1].color = (1, 1, 1, 1)
     l.new(vor.outputs['Distance'], rmp.inputs['Fac'])
-    tint = n.new('ShaderNodeValToRGB')
+    tint = n.new('ShaderNodeValToRGB'); tint.name = 'tint'
     tint.color_ramp.elements[0].color = (*c0, 1); tint.color_ramp.elements[1].color = (*c1, 1)
     l.new(vor2.outputs['Color'], tint.inputs['Fac'])
     mul = n.new('ShaderNodeMixRGB'); mul.blend_type = 'MULTIPLY'; mul.inputs['Fac'].default_value = 1
@@ -237,7 +237,7 @@ def point(loc, color=(1.0, 0.62, 0.30), power=500, radius=0.3):
 def lamp_post(x, y, h=3.4, glow_col=(1.0, 0.40, 0.08), power=150):
     """Simple stylised iron street lamp with a warm practical."""
     iron = bpy.data.materials.get('iron') or mat('iron', (0.04, 0.04, 0.06), rough=0.6)
-    glow = bpy.data.materials.get('lampglow') or emissive(mat('lampglow', glow_col, 0.3), glow_col, 0.3)   # stays amber, never white
+    glow = bpy.data.materials.get('lampglow') or emissive(mat('lampglow', glow_col, 0.15), glow_col, 0.15)   # stays amber, never white
     cyl(0.07, h, (x, y, h / 2), iron); cyl(0.16, 0.25, (x, y, 0.12), iron)
     bpy.ops.mesh.primitive_cube_add(size=0.34, location=(x, y, h + 0.15)); assign(bpy.context.object, glow)
     bpy.ops.mesh.primitive_cone_add(vertices=4, radius1=0.33, depth=0.28, location=(x, y, h + 0.46),
