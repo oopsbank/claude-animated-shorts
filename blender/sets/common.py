@@ -234,10 +234,10 @@ def point(loc, color=(1.0, 0.62, 0.30), power=500, radius=0.3):
     o = bpy.data.objects.new('pt', ld); bpy.data.collections['lights'].objects.link(o); o.location = loc
     PRACTICALS.append((o, power)); return o
 
-def lamp_post(x, y, h=3.4, glow_col=(1.0, 0.42, 0.10), power=300):
+def lamp_post(x, y, h=3.4, glow_col=(1.0, 0.40, 0.08), power=150):
     """Simple stylised iron street lamp with a warm practical."""
     iron = bpy.data.materials.get('iron') or mat('iron', (0.04, 0.04, 0.06), rough=0.6)
-    glow = bpy.data.materials.get('lampglow') or emissive(mat('lampglow', glow_col, 0.6), glow_col, 0.6)   # stays amber, never white
+    glow = bpy.data.materials.get('lampglow') or emissive(mat('lampglow', glow_col, 0.3), glow_col, 0.3)   # stays amber, never white
     cyl(0.07, h, (x, y, h / 2), iron); cyl(0.16, 0.25, (x, y, 0.12), iron)
     bpy.ops.mesh.primitive_cube_add(size=0.34, location=(x, y, h + 0.15)); assign(bpy.context.object, glow)
     bpy.ops.mesh.primitive_cone_add(vertices=4, radius1=0.33, depth=0.28, location=(x, y, h + 0.46),
@@ -346,20 +346,20 @@ def camera(loc, target, lens=27, roll=0.0):
     cam.clip_start = 0.05; cam.clip_end = 600
     return co
 
-def ink(pct=100, fade=(14, 40, 0.5), thick=3.4, color=(0.018, 0.009, 0.020), rng=(3, 30)):   # linear plum #241726
+def ink(pct=100, fade=(14, 40, 0.5), thick=3.4, color=(0.018, 0.009, 0.020), rng=(3, 30), border=False, far_k=0.45):   # linear plum #241726
     s = sc(); s.render.use_freestyle = True; s.render.line_thickness_mode = 'ABSOLUTE'
     vl = s.view_layers[0]; vl.use_freestyle = True
     fs = vl.freestyle_settings; fs.crease_angle = math.radians(140)
     ls = fs.linesets[0] if len(fs.linesets) else fs.linesets.new('ink')
     ls.select_by_visibility = True; ls.select_by_edge_types = True
-    ls.select_silhouette = True; ls.select_border = False; ls.select_crease = True; ls.select_external_contour = True
+    ls.select_silhouette = True; ls.select_border = border; ls.select_crease = True; ls.select_external_contour = True
     ls.select_by_collection = True; ls.collection = bpy.data.collections['noink']; ls.collection_negation = 'EXCLUSIVE'
     lst = ls.linestyle or bpy.data.linestyles.new('ink'); ls.linestyle = lst
     for m in list(lst.thickness_modifiers): lst.thickness_modifiers.remove(m)
     for m in list(lst.alpha_modifiers): lst.alpha_modifiers.remove(m)
     lst.color = color; lst.alpha = 1.0; lst.thickness = thick * (W * pct / 100) / 1080
     md = lst.thickness_modifiers.new('dist', 'DISTANCE_FROM_CAMERA')
-    md.range_min, md.range_max = rng; md.value_min = 1.0; md.value_max = 0.45; md.blend = 'MULTIPLY'
+    md.range_min, md.range_max = rng; md.value_min = 1.0; md.value_max = far_k; md.blend = 'MULTIPLY'
     am = lst.alpha_modifiers.new('fade', 'DISTANCE_FROM_CAMERA')
     am.range_min, am.range_max, am.influence = fade; am.mapping = 'LINEAR'; am.invert = True; am.blend = 'MULTIPLY'
 
@@ -439,7 +439,7 @@ def measure(cam_obj, stand, sun_obj, preset, top=False):
             'light_dir': ld, 'tint': preset['tint'], 'stand_x': round(pf.x, 3),
             'ground_x': round(pf.x * W, 1)}
 
-INK_FADE, INK_RANGE = (14, 40, 0.5), (3, 30)   # a set with big distances raises these
+INK_FADE, INK_RANGE, INK_BORDER, INK_FAR_K = (14, 40, 0.5), (3, 30), False, 0.45   # a set with big distances raises these
 
 def project_targets(cam_obj, targets):
     """Screen px of named 3D points (sign centres etc.) that are inside the frame and not hidden behind geometry."""
@@ -473,7 +473,7 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
         cam = co.data; cam.dof.use_dof = bool(c.get('fstop'))
         cam.dof.focus_distance = (co.location - (Vector(c['stand']) + Vector((0, 0, 1.2)))).length
         cam.dof.aperture_fstop = c.get('fstop') or 2.0
-        ink(a.pct, c.get('ink_fade', INK_FADE), c.get('ink_thick', 3.4), rng=c.get('ink_range', INK_RANGE))
+        ink(a.pct, c.get('ink_fade', INK_FADE), c.get('ink_thick', 3.4), rng=c.get('ink_range', INK_RANGE), border=INK_BORDER, far_k=INK_FAR_K)
         dpath = os.path.join(tmp, f'{cn}_depth.png')
         if not (a.repost and os.path.exists(dpath)): _depth_pass(dpath, *c.get('haze_range', haze_range))
         for ln in lights:
