@@ -66,3 +66,27 @@ The output folder gets `frames/f_NNNNN.jpg`, `video.mp4`, and `track.json`. The 
 - **Two-shots:** standing characters closer than their body widths are spread apart symmetrically (logged as `[layout]`).
 - **Bike-only shots:** a shot with no characters and a bike in `props` shows `bikes.draw_bike()` at the plate's `stand_x`.
 - Plate `targets` may be px or fractions.
+
+## Captions (`captions.py`, PIPELINE.md > Captions)
+- Captions come from `words.json`, one word at a time. A word of 2 letters or fewer, said quickly, rides along with the next word.
+- Each caption shows 1 f before its word and clears in silences over 0.4 s.
+- **Style:** Inter Black at 6.8 % of the frame height (keywords 7.8 %), an outline at 11 % of the font size, a soft shadow, and the baseline at 66 % of the height. Set `ENGINE_CAPTION_FONT` to use another font.
+- **Pop:** 1.25 (keywords 1.4) -> 1.0 over 4 f, with an ease-out and a slight overshoot.
+- **Keywords** are yellow #ffd23f. They are picked automatically:
+  - numbers;
+  - left/right;
+  - the title's content words;
+  - the last content word of the script (the payoff);
+  - `captions.keywords` (shots.json top level or per shot).
+- **Faces:** a caption never covers a face. Placement is tested at the largest pop size, with a 6 px margin, and the caption nudges up or down past the face.
+- **Options:** `captions: {"enabled": false, "case": "upper"|"as_is"}`.
+- `qa.py` checks sync (0-2 f early), silences and face cover.
+
+## Grade (`grade.py`)
+- The main process renders each shot's middle frame, and each cut-in's, then solves a tone curve:
+  - gamma toward mean luminance 0.43-0.51 (golden 0.42-0.49);
+  - a highlight lift so p98 stays at 0.88 or more;
+  - a soft shoulder at 0.96 so white faces never clip;
+  - a slight warm balance when the cool share is over 0.28;
+  - a saturation trim into 0.33-0.50.
+- The parameters are written to `out/grade.json`, and the workers apply them as a LUT. `--no-grade` turns it off.

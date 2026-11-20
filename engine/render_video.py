@@ -11,6 +11,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..'))
 sys.path.insert(0, HERE)
 import anim  # noqa: E402
+import captions as CAP  # noqa: E402
+import grade as GRADE  # noqa: E402
 from anim import W, H, FPS, smooth, clamp, lerp  # noqa: E402
 
 PLATE_DEFAULTS = {'horizon_y': H * 0.4, 'light_dir': 'left', 'tint': '#fff8f0'}
@@ -126,6 +128,10 @@ def setup(shots_path, words_path, plate_dirs):
                           for c in s.get('characters', [])]
     n = spans[-1]['f1'] if spans else 0
     G['n'] = n
+    cap = doc.get('captions', {})
+    G['captions'] = [] if cap.get('enabled') is False else CAP.schedule(words, doc, 10 ** 9, cap.get('case', 'upper'))
+    gp = os.environ.get('ENGINE_GRADE_FILE')
+    G['grades'] = json.load(open(gp)) if gp and os.path.exists(gp) else {}
     return G
 
 
@@ -299,6 +305,8 @@ def place_characters(base, k, f, meta):
                     'foot_y': ft['y'] + oy if ft else None, 'foot_l': ft['l'] + ox if ft and ft['l'] is not None else None,
                     'foot_r': ft['r'] + ox if ft and ft['r'] is not None else None, 'ground_y': ground,
                     'bbox': [bb[0] + ox, bb[1] + oy, bb[2] + ox, bb[3] + oy] if bb else None,
+                    'face': None if spec.get('view') in ('rear', 'top') else
+                            [gx - 125 * s, oy + g['crown'], gx + 125 * s, oy + g['crown'] + 240 * s],   # head ~2a x 2b card units
                     'head': [gx, oy + g['crown']], 'scale': s, 'rig': {k: (round(v, 1) if isinstance(v, float) else v) for k, v in st['rig'].items()} if st.get('rig') else None, 'pose': list(st['pose']), 'facing': st['facing'], 'expr': st['expr'], 'mouth': mouth, 'lid': st['lid']})
     return out
 
@@ -389,11 +397,16 @@ def render_shot(k, f):
     chars = place_characters(base, k, f, meta)
     fxs = place_fx(base, k, f, chars)
     img, to_screen, cam = camera_xform(base.convert('RGB'), G['cams'][k].at(f))
+    gk = f'{k}:insert' if (ins and ins[0] <= f < ins[1]) else str(k)          # cut-ins have their own plate grade
+    if G['grades'].get(gk): img = GRADE.apply(img, G['grades'][gk])
     for c in chars:
         if c['bbox']:
             x0, y0, x1, y1 = c['bbox']; pts = [to_screen(x, y) for x in (x0, x1) for y in (y0, y1)]
             c['screen_bbox'] = [round(min(p[0] for p in pts), 1), round(min(p[1] for p in pts), 1),
                                 round(max(p[0] for p in pts), 1), round(max(p[1] for p in pts), 1)]
+            if c.get('face'):                     # face box (plate coords) -> screen, for caption placement
+                fx0, fy0, fx1, fy1 = c['face']; q = [to_screen(x, y) for x in (fx0, fx1) for y in (fy0, fy1)]
+                c['face_screen'] = [round(min(p[0] for p in q)), round(min(p[1] for p in q)), round(max(p[0] for p in q)), round(max(p[1] for p in q))]
     return img, {'shot': shot.get('id', k), 'chars': chars, 'fx': fxs, 'cam': cam, 'crop_any': crop_any}
 
 
@@ -434,9 +447,15 @@ def render_frame(f):
                 img = motion_blur_x(img, speed * 0.5)
                 meta = mb if u >= 0.5 else ma
             meta = dict(meta, transition=tr, transition_u=round(u, 3))
-            return f, img, meta
+            return f, img, add_caption(img, meta, f)
     img, meta = render_shot(k, f)
-    return f, img, meta
+    return f, img, add_caption(img, meta, f)
+
+
+def add_caption(img, meta, f):
+    faces = [c['face_screen'] for c in meta.get('chars', []) if c.get('face_screen')]
+    box = CAP.draw(img, G['captions'], f, faces, W, H) if G['captions'] else None
+    return dict(meta, caption=list(box) if box else None)
 
 
 def work(args):
@@ -466,7 +485,7 @@ def main():
     ap.add_argument('shots'); ap.add_argument('words'); ap.add_argument('out')
     ap.add_argument('--plates', action='append', default=[]); ap.add_argument('--frames', default=None)
     ap.add_argument('--workers', type=int, default=4); ap.add_argument('--audio', default=None)
-    ap.add_argument('--png', action='store_true'); ap.add_argument('--length', type=int, default=None); ap.add_argument('--no-mp4', action='store_true')
+    ap.add_argument('--png', action='store_true'); ap.add_argument('--length', type=int, default=None); ap.add_argument('--no-grade', action='store_true'); ap.add_argument('--no-mp4', action='store_true')
     a = ap.parse_args()
     a.plates.append(os.path.join(HERE, 'test', 'plates'))
     os.makedirs(os.path.join(a.out, 'frames'), exist_ok=True)
@@ -491,6 +510,19 @@ def main():
           f"mouth: {'bean' if G['rig'].HAS_MOUTH else 'overlay'}; lid: {'bean' if G['rig'].HAS_LID else 'overlay'}", flush=True)
     metas = []
     os.environ['ENGINE_LENGTH'] = str(n)
+    if not a.no_grade:                # per-shot grade, solved once from each shot's middle frame
+        gp = os.path.join(a.out, 'grade.json'); grades = {}
+        for k, (sh, sp) in enumerate(zip(G['shots'], G['spans'])):
+            ins = sh.get('_insert')
+            mid = [(str(k), (sp['f0'] + sp['f1']) // 2)]
+            if ins:
+                mid.append((f'{k}:insert', (ins[0] + ins[1]) // 2))
+                if ins[0] <= mid[0][1] < ins[1]: mid[0] = (str(k), sp['f0'] + 3 if ins[0] > sp['f0'] + 3 else sp['f1'] - 3)
+            for key, fm in mid:
+                img, _ = render_shot(k, fm)
+                grades[key] = GRADE.solve(img, golden=sh.get('light') == 'golden')
+        json.dump(grades, open(gp, 'w'), indent=1); os.environ['ENGINE_GRADE_FILE'] = gp
+        print('  grade:', ', '.join(f"{k} {v['before']['lum']:.2f}->g{v['gamma']:.2f}" for k, v in grades.items()), flush=True)
     # ProcessPoolExecutor, not Pool: if a worker dies (e.g. out of memory) Pool.imap waits forever; this raises.
     # Contiguous chunks keep consecutive frames in one worker, so its card cache hits.
     from concurrent.futures import ProcessPoolExecutor
@@ -499,7 +531,7 @@ def main():
             metas.append(m)
             if i % 150 == 0: print(f'  frame {m["f"]}/{n}', flush=True)
     track = {'fps': FPS, 'size': [W, H], 'n': n, 'spans': [dict(sp, id=s.get('id'), crop=s.get('crop') or s.get('size') == 'close') for s, sp in zip(G['shots'], G['spans'])],
-             'beats': beats_report(), 'frames': metas, 'transitions': [s.get('transition', 'cut') for s in G['shots']]}
+             'beats': beats_report(), 'frames': metas, 'captions': G['captions'], 'words': G['words'], 'transitions': [s.get('transition', 'cut') for s in G['shots']]}
     json.dump(track, open(os.path.join(a.out, 'track.json'), 'w'))
     if not a.no_mp4 and not a.frames:
         cmd = ['ffmpeg', '-v', 'error', '-y', '-framerate', str(FPS), '-i', os.path.join(a.out, 'frames', f'f_%05d.{ext}')]
