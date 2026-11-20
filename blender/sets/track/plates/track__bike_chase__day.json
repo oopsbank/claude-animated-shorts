@@ -1,0 +1,12 @@
+{
+ "ground_y": 1338.5,
+ "px_per_m": 276.14,
+ "horizon_y": 952.1,
+ "light_dir": "right",
+ "tint": "#fff4e4",
+ "stand_x": 0.489,
+ "set": "track",
+ "cam": "bike_chase",
+ "light": "day",
+ "ground_x": 528.1
+}

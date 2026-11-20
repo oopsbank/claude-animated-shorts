@@ -1,0 +1,12 @@
+{
+ "ground_y": 1290.0,
+ "px_per_m": 107.9,
+ "horizon_y": 824.3,
+ "light_dir": "top",
+ "tint": "#ffbf86",
+ "stand_x": 0.321,
+ "set": "track",
+ "cam": "track_wide",
+ "light": "golden",
+ "ground_x": 346.7
+}

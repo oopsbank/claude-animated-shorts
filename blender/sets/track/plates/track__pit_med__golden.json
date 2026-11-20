@@ -1,0 +1,12 @@
+{
+ "ground_y": 1811.5,
+ "px_per_m": 561.17,
+ "horizon_y": 1046.5,
+ "light_dir": "right",
+ "tint": "#ffbf86",
+ "stand_x": 0.383,
+ "set": "track",
+ "cam": "pit_med",
+ "light": "golden",
+ "ground_x": 413.6
+}

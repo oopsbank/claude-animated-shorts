@@ -1,0 +1,12 @@
+{
+ "ground_y": 1250.9,
+ "px_per_m": 439.84,
+ "horizon_y": 922.9,
+ "light_dir": "top",
+ "tint": "#fff4e4",
+ "stand_x": 0.553,
+ "set": "track",
+ "cam": "bike_close",
+ "light": "day",
+ "ground_x": 597.2
+}

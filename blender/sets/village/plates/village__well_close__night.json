@@ -1,0 +1,12 @@
+{
+ "ground_y": 1796.0,
+ "px_per_m": 640.64,
+ "horizon_y": 861.1,
+ "light_dir": "top",
+ "tint": "#a9b0e6",
+ "stand_x": 0.581,
+ "set": "village",
+ "cam": "well_close",
+ "light": "night",
+ "ground_x": 627.5
+}
