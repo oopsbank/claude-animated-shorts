@@ -5,8 +5,8 @@
  "light_dir": "left",
  "tint": "#ffbf86",
  "stand_x": 0.581,
+ "ground_x": 627.0,
  "set": "village",
  "cam": "well_close",
- "light": "golden",
- "ground_x": 627.5
+ "light": "golden"
 }
