@@ -326,7 +326,7 @@ def draw_prop(C, kind, hand, u):
        'helmet' or 'helmet:<sticker text>' - an open-face helmet held by its edge, sticker large enough to read."""
     x, y = hand
     if kind.startswith('broom'):
-        tilt = {'broom_upright': 0, 'broom_tip_left': -24, 'broom_tip_right': 24}.get(kind)
+        tilt = {'broom_upright': 0, 'broom_tip_left': -18, 'broom_tip_right': 18}.get(kind)
         if tilt is None: tilt = float(kind.split(':', 1)[1]) if ':' in kind else 0.0
         return _broom(C, x, y, u, tilt)
     if kind.startswith('helmet'):
@@ -884,5 +884,8 @@ def _held_helmet(C, x, y, u, sticker):
     C.clip_layer(opening, circ)
     C.d.line([(px * S, py * S) for px, py in circ + circ[:1]], fill=INK, width=int(4 * S), joint='curve')
     C.d.line([((cx - 0.05 * a) * S, (cy - a + 4 * u) * S), ((cx + 0.6 * a) * S, (cy - 0.55 * a) * S)], fill=(176, 174, 186), width=int(6 * u * S))
-    if sticker: _sticker(C, cx + 0.32 * a, cy + 0.12 * a, 1.25 * a, 0.7 * a, sticker, rot=-4)
+    strap = [(cx - 0.35 * a, cy + 0.9 * a), (cx - 0.1 * a, cy + 1.32 * a), (cx + 0.35 * a, cy + 1.38 * a), (cx + 0.62 * a, cy + 0.78 * a)]
+    C.stroke(bend_path(strap[0], strap[2], strap[3], 16), 4.5 * u + 5, INK); C.stroke(bend_path(strap[0], strap[2], strap[3], 16), 4.5 * u, (70, 66, 78))   # chin strap
+    C.d.rectangle(((cx + 0.2 * a) * S, (cy + 1.3 * a) * S, (cx + 0.44 * a) * S, (cy + 1.46 * a) * S), fill=(200, 204, 212), outline=INK, width=int(2.4 * S))   # buckle
+    if sticker: _sticker(C, cx + 0.22 * a, cy + 0.1 * a, 1.5 * a, 0.78 * a, sticker, rot=-4)
     C.dot(x, y, 5.5 * u)
