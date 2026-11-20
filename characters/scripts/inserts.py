@@ -48,7 +48,7 @@ def broom_insert(pose='broom_upright', w=1080, h=1920, sleeve='#2f6fb3', skin='#
         _hand(C, x, y, u, skin)
     if P['flick']:                                        # a ghost hand where the flick started, then speed lines
         sgn = P['flick']; gx = hx - sgn * 0.22 * w
-        arm(gx, hy, alpha=90)
+        arm(gx, hy, alpha=150)
         for i, dy in enumerate((-0.02, 0.005, 0.03)):
             x0 = hx - sgn * (0.10 + 0.03 * i) * w; x1 = gx + sgn * 0.02 * w
             C.d.line([(x0 * S, (hy + dy * h) * S), (x1 * S, (hy + dy * h) * S)], fill=mix(INK, (255, 255, 255), 0.35), width=int(9 * S))
