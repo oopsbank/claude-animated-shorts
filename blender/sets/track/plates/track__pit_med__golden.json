@@ -1,22 +1,22 @@
 {
- "ground_y": 1811.5,
- "px_per_m": 561.17,
- "horizon_y": 1046.5,
+ "ground_y": 1808.7,
+ "px_per_m": 559.21,
+ "horizon_y": 1046.4,
  "light_dir": "right",
  "tint": "#ffbf86",
- "stand_x": 0.383,
- "ground_x": 413.7,
+ "stand_x": 0.439,
+ "ground_x": 474.1,
  "set": "track",
  "cam": "pit_med",
  "light": "golden",
  "targets": {
   "chalkboard": [
-   830.9,
-   942.8
+   777.5,
+   928.1
   ],
   "lapboard": [
-   421.7,
-   708.7
+   259.8,
+   630.8
   ]
  }
 }
