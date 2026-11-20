@@ -214,7 +214,33 @@ def mouth_track(words, f0, f1, fps=30, lead=1, min_hold=2):
 
 
 # ---------------------------------------------------------------- card cache
-_cache = {}
+from collections import OrderedDict
+
+
+class Budget(OrderedDict):
+    """LRU cache of images bounded by total bytes (shared by every card cache in this worker). Close-up cards are
+    ~4000 px square (64 MB); a count limit let 4 workers grow to 16 GB and get OOM-killed."""
+    total = 0
+    LIMIT = int(float(os.environ.get('ENGINE_CACHE_MB', 900)) * 2 ** 20)
+    caches = []
+
+    def __init__(self): super().__init__(); Budget.caches.append(self)
+
+    def get(self, k):
+        v = OrderedDict.get(self, k)
+        if v is not None: self.move_to_end(k)
+        return v
+
+    def put(self, k, im):
+        self[k] = im; Budget.total += im.width * im.height * 4
+        while Budget.total > Budget.LIMIT:
+            victim = max((c for c in Budget.caches if c), key=len, default=None)
+            if victim is None or (victim is self and len(self) == 1): break
+            _, old = victim.popitem(last=False); Budget.total -= old.width * old.height * 4
+        return im
+
+
+_cache = Budget()
 
 
 def card(spec, pose, expr, facing, scale, lid=0.0, mouth=None, prop='keep'):
@@ -228,8 +254,7 @@ def card(spec, pose, expr, facing, scale, lid=0.0, mouth=None, prop='keep'):
     key = (repr(sorted(kw.items())), round(scale, 3))
     im = _cache.get(key)
     if im is None:
-        if len(_cache) > 160: _cache.clear()
-        im = _cache[key] = _render(kw, scale)
+        im = _cache.put(key, _render(kw, scale))
     g = face_geom(kw, scale)
     if mouth and not HAS_MOUTH:
         im = draw_mouth(im, g, 'smile' if expr in HAPPY and mouth in ('open', 'wide') else mouth, expr, bool(kw.get('moustache')))
@@ -239,7 +264,7 @@ def card(spec, pose, expr, facing, scale, lid=0.0, mouth=None, prop='keep'):
 
 BEAN_MOUTH = {'smile': 'smile_talk'}
 RIDE_PARAMS = set(inspect.signature(bikes.ride).parameters) if bikes else set()
-_rcache = {}
+_rcache = Budget()
 
 
 def ride_card(spec, scale, rp, expr, mouth=None, lid=0.0, crank=30.0):
@@ -261,17 +286,16 @@ def ride_card(spec, scale, rp, expr, mouth=None, lid=0.0, crank=30.0):
     key = (repr(sorted((k, v if k != 'char' else repr(sorted(v.items()))) for k, v in kw.items())), round(scale, 3))
     im = _rcache.get(key)
     if im is None:
-        if len(_rcache) > 120: _rcache.clear()
-        im = _rcache[key] = _hires(bikes.ride, kw, (1000, 1000), scale)
+        im = _rcache.put(key, _hires(bikes.ride, kw, (1000, 1000), scale))
     return im
 
 
-_bcache = {}
+_bcache = Budget()
 
 
 def bike_card(kind, scale, view='3q', steer=0.0):
     """A bike alone as a prop (bikes.draw_bike): 1000x1000 card, ground at 975."""
     key = (kind, view, round(steer), round(scale, 3))
-    if key not in _bcache:
-        _bcache[key] = _hires(bikes.draw_bike, dict(kind=kind, view=view, steer=round(steer)), (1000, 1000), scale)
-    return _bcache[key]
+    im = _bcache.get(key)
+    if im is None: im = _bcache.put(key, _hires(bikes.draw_bike, dict(kind=kind, view=view, steer=round(steer)), (1000, 1000), scale))
+    return im

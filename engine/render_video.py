@@ -474,8 +474,11 @@ def main():
           f"mouth: {'bean' if G['rig'].HAS_MOUTH else 'overlay'}; lid: {'bean' if G['rig'].HAS_LID else 'overlay'}", flush=True)
     metas = []
     os.environ['ENGINE_LENGTH'] = str(n)
-    with Pool(a.workers, initializer=init_worker, initargs=(a.shots, a.words, a.plates)) as pool:
-        for i, m in enumerate(pool.imap(work, [(f, a.out, ext) for f in frames], chunksize=4)):
+    # ProcessPoolExecutor, not Pool: if a worker dies (e.g. out of memory) Pool.imap waits forever; this raises.
+    # Contiguous chunks keep consecutive frames in one worker, so its card cache hits.
+    from concurrent.futures import ProcessPoolExecutor
+    with ProcessPoolExecutor(a.workers, initializer=init_worker, initargs=(a.shots, a.words, a.plates)) as pool:
+        for i, m in enumerate(pool.map(work, [(f, a.out, ext) for f in frames], chunksize=12)):
             metas.append(m)
             if i % 150 == 0: print(f'  frame {m["f"]}/{n}', flush=True)
     track = {'fps': FPS, 'size': [W, H], 'n': n, 'spans': [dict(sp, id=s.get('id'), crop=s.get('crop') or s.get('size') == 'close') for s, sp in zip(G['shots'], G['spans'])],
