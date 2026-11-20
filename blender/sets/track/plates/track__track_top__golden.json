@@ -1,14 +1,14 @@
 {
- "ground_y": 1562.2,
- "px_per_m": 30.11,
+ "ground_y": 1271.1,
+ "px_per_m": 77.78,
  "horizon_y": -1.0,
  "light_dir": "left",
  "tint": "#ffbf86",
- "stand_x": 0.11,
+ "stand_x": 0.464,
+ "ground_x": 501.1,
  "set": "track",
  "cam": "track_top",
  "light": "golden",
  "view": "top",
- "note": "top-down view: px_per_m measured along the ground",
- "ground_x": 118.8
+ "note": "top-down view: px_per_m measured along the ground"
 }

@@ -1,12 +1,12 @@
 {
- "ground_y": 2291.4,
- "px_per_m": 1375.48,
- "horizon_y": 699.6,
+ "ground_y": 2045.4,
+ "px_per_m": 1045.15,
+ "horizon_y": 810.7,
  "light_dir": "top",
  "tint": "#ffbf86",
- "stand_x": 0.423,
+ "stand_x": 0.44,
+ "ground_x": 475.4,
  "set": "track",
  "cam": "grips_close",
- "light": "golden",
- "ground_x": 456.8
+ "light": "golden"
 }

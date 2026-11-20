@@ -5,8 +5,18 @@
  "light_dir": "right",
  "tint": "#ffbf86",
  "stand_x": 0.383,
+ "ground_x": 413.7,
  "set": "track",
  "cam": "pit_med",
  "light": "golden",
- "ground_x": 413.6
+ "targets": {
+  "chalkboard": [
+   830.9,
+   942.8
+  ],
+  "lapboard": [
+   421.7,
+   708.7
+  ]
+ }
 }

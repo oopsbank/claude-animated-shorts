@@ -234,10 +234,10 @@ def point(loc, color=(1.0, 0.62, 0.30), power=500, radius=0.3):
     o = bpy.data.objects.new('pt', ld); bpy.data.collections['lights'].objects.link(o); o.location = loc
     PRACTICALS.append((o, power)); return o
 
-def lamp_post(x, y, h=3.4, glow_col=(1.0, 0.42, 0.10), power=300):
+def lamp_post(x, y, h=3.4, glow_col=(1.0, 0.40, 0.08), power=150):
     """Simple stylised iron street lamp with a warm practical."""
     iron = bpy.data.materials.get('iron') or mat('iron', (0.04, 0.04, 0.06), rough=0.6)
-    glow = bpy.data.materials.get('lampglow') or emissive(mat('lampglow', glow_col, 0.6), glow_col, 0.6)   # stays amber, never white
+    glow = bpy.data.materials.get('lampglow') or emissive(mat('lampglow', glow_col, 0.3), glow_col, 0.3)   # stays amber, never white
     cyl(0.07, h, (x, y, h / 2), iron); cyl(0.16, 0.25, (x, y, 0.12), iron)
     bpy.ops.mesh.primitive_cube_add(size=0.34, location=(x, y, h + 0.15)); assign(bpy.context.object, glow)
     bpy.ops.mesh.primitive_cone_add(vertices=4, radius1=0.33, depth=0.28, location=(x, y, h + 0.46),
@@ -346,20 +346,20 @@ def camera(loc, target, lens=27, roll=0.0):
     cam.clip_start = 0.05; cam.clip_end = 600
     return co
 
-def ink(pct=100, fade=(14, 40, 0.5), thick=3.4, color=(0.018, 0.009, 0.020), rng=(3, 30)):   # linear plum #241726
+def ink(pct=100, fade=(14, 40, 0.5), thick=3.4, color=(0.018, 0.009, 0.020), rng=(3, 30), border=False, far_k=0.45):   # linear plum #241726
     s = sc(); s.render.use_freestyle = True; s.render.line_thickness_mode = 'ABSOLUTE'
     vl = s.view_layers[0]; vl.use_freestyle = True
     fs = vl.freestyle_settings; fs.crease_angle = math.radians(140)
     ls = fs.linesets[0] if len(fs.linesets) else fs.linesets.new('ink')
     ls.select_by_visibility = True; ls.select_by_edge_types = True
-    ls.select_silhouette = True; ls.select_border = False; ls.select_crease = True; ls.select_external_contour = True
+    ls.select_silhouette = True; ls.select_border = border; ls.select_crease = True; ls.select_external_contour = True
     ls.select_by_collection = True; ls.collection = bpy.data.collections['noink']; ls.collection_negation = 'EXCLUSIVE'
     lst = ls.linestyle or bpy.data.linestyles.new('ink'); ls.linestyle = lst
     for m in list(lst.thickness_modifiers): lst.thickness_modifiers.remove(m)
     for m in list(lst.alpha_modifiers): lst.alpha_modifiers.remove(m)
     lst.color = color; lst.alpha = 1.0; lst.thickness = thick * (W * pct / 100) / 1080
     md = lst.thickness_modifiers.new('dist', 'DISTANCE_FROM_CAMERA')
-    md.range_min, md.range_max = rng; md.value_min = 1.0; md.value_max = 0.45; md.blend = 'MULTIPLY'
+    md.range_min, md.range_max = rng; md.value_min = 1.0; md.value_max = far_k; md.blend = 'MULTIPLY'
     am = lst.alpha_modifiers.new('fade', 'DISTANCE_FROM_CAMERA')
     am.range_min, am.range_max, am.influence = fade; am.mapping = 'LINEAR'; am.invert = True; am.blend = 'MULTIPLY'
 
@@ -397,7 +397,7 @@ def _depth_pass(path, near, far):
 
 def srgb_to_lin(c): return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
 
-def post(src, out, depth=None, haze=(0.7, 0.8, 1.0), haze_k=0.5, haze_gamma=1.6, sat=1.0, gain=1.0):
+def post(src, out, depth=None, haze=(0.7, 0.8, 1.0), haze_k=0.5, haze_gamma=1.6, sat=1.0, gain=1.0, warm=None):
     """Depth haze toward the preset's haze colour, then warm-only bloom (white faces never glow)."""
     im = Image.open(src).convert('RGB'); a = np.asarray(im).astype(np.float32) / 255
     if depth is not None and haze_k > 0:
@@ -409,6 +409,7 @@ def post(src, out, depth=None, haze=(0.7, 0.8, 1.0), haze_k=0.5, haze_gamma=1.6,
     if sat != 1.0 or gain != 1.0:   # per-set grade: saturation around luminance, then a gain
         l0 = (a @ np.array([0.2126, 0.7152, 0.0722], np.float32))[..., None]
         a = np.clip((l0 + (a - l0) * sat) * gain, 0, 1)
+    if warm: a = np.clip(a * np.array(warm, np.float32), 0, 1)   # colour-balance multiply, e.g. warmer golden
     lum = a @ np.array([0.2126, 0.7152, 0.0722], np.float32)
     warm = np.clip((a[..., 0] - a[..., 2] - 0.12) / 0.2, 0, 1)
     mask = (np.clip((lum - 0.6) / 0.25, 0, 1) * warm)[..., None]
@@ -439,9 +440,21 @@ def measure(cam_obj, stand, sun_obj, preset, top=False):
             'light_dir': ld, 'tint': preset['tint'], 'stand_x': round(pf.x, 3),
             'ground_x': round(pf.x * W, 1)}
 
-INK_FADE, INK_RANGE = (14, 40, 0.5), (3, 30)   # a set with big distances raises these
+INK_FADE, INK_RANGE, INK_BORDER, INK_FAR_K, INK_THICK = (14, 40, 0.5), (3, 30), False, 0.45, 3.4   # a set with big distances raises these
 
-def main(set_name, CAMS, LIGHTS, haze_range=(4, 90)):
+def project_targets(cam_obj, targets):
+    """Screen px of named 3D points (sign centres etc.) that are inside the frame and not hidden behind geometry."""
+    s = sc(); bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get(); out = {}
+    for name, pt in (targets or {}).items():
+        pt = Vector(pt); v = world_to_camera_view(s, cam_obj, pt)
+        if v.z <= 0 or not (0.02 < v.x < 0.98 and 0.02 < v.y < 0.98): continue
+        o = cam_obj.matrix_world.translation; d = pt - o
+        hit, loc, *_ = s.ray_cast(dg, o, d.normalized(), distance=d.length)
+        if hit and (loc - pt).length > 0.35: continue          # something in front of it
+        out[name] = [round(v.x * W, 1), round((1 - v.y) * H, 1)]
+    return out
+
+def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
     """CAMS: name -> dict(loc, target, lens, stand, fstop, roll, ink_fade, light_overrides, setup=callable)
        LIGHTS: name -> dict of preset overrides (az, elev, ...)."""
     ap = argparse.ArgumentParser()
@@ -461,7 +474,7 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90)):
         cam = co.data; cam.dof.use_dof = bool(c.get('fstop'))
         cam.dof.focus_distance = (co.location - (Vector(c['stand']) + Vector((0, 0, 1.2)))).length
         cam.dof.aperture_fstop = c.get('fstop') or 2.0
-        ink(a.pct, c.get('ink_fade', INK_FADE), c.get('ink_thick', 3.4), rng=c.get('ink_range', INK_RANGE))
+        ink(a.pct, c.get('ink_fade', INK_FADE), c.get('ink_thick', INK_THICK), rng=c.get('ink_range', INK_RANGE), border=INK_BORDER, far_k=INK_FAR_K)
         dpath = os.path.join(tmp, f'{cn}_depth.png')
         if not (a.repost and os.path.exists(dpath)): _depth_pass(dpath, *c.get('haze_range', haze_range))
         for ln in lights:
@@ -473,9 +486,11 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90)):
             t = time.time()
             if not (a.repost and os.path.exists(raw)): bpy.ops.render.render(write_still=True)
             post(raw, os.path.join(out, base + '.png'), dpath, p['haze'], p['haze_k'] * c.get('haze_k', 1.0),
-                 sat=p.get('grade_sat', 1.0), gain=p.get('grade_gain', 1.0))
+                 sat=p.get('grade_sat', 1.0), gain=p.get('grade_gain', 1.0), warm=p.get('grade_warm'))
             js = measure(co, c['stand'], sun, p, c.get('top', False)); js.update(set=set_name, cam=cn, light=ln)
             if c.get('top'): js['view'] = 'top'
+            tg = project_targets(co, targets)
+            if tg: js['targets'] = tg
             if c.get('note'): js['note'] = c['note']
             with open(os.path.join(out, base + '.json'), 'w') as f: json.dump(js, f, indent=1)
             print(f'PLATE {base} {time.time() - t:.0f}s {js}', flush=True)

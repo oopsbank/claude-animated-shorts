@@ -1,13 +1,13 @@
 {
- "ground_y": 1736.3,
- "px_per_m": 479.29,
- "horizon_y": 969.3,
+ "ground_y": 1715.0,
+ "px_per_m": 466.3,
+ "horizon_y": 968.8,
  "light_dir": "left",
  "tint": "#ffbf86",
- "stand_x": 0.122,
+ "stand_x": 0.54,
+ "ground_x": 583.4,
  "set": "track",
  "cam": "pit_ots",
  "light": "golden",
- "note": "over the shoulder: stand = the facing character; the near character is composited large at the frame edge",
- "ground_x": 131.8
+ "note": "over the shoulder: stand = the facing character; the near character is composited large at the frame edge"
 }

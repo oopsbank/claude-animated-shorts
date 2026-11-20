@@ -28,6 +28,7 @@ for i, y in enumerate((-12.0, -20.0, -28.0, -36.0)):
     q(('House_1', 'House_2', 'House_3', 'House_2')[i], (-5.9, y, 0), 90 + (i % 2) * 6, HZ)
     q(('House_2', 'House_3', 'House_1', 'House_1')[i], (5.9, y, 0), -90 - (i % 2) * 6, HZ)
 q('Barrel', (-3.6, -27.0, 0), 10, 4.6); q('Barrel', (-3.9, -26.2, 0), 40, 4.6)
+q('House_3', (-8.6, 4.2, 0), 60, HZ)                 # fills the sky gap behind the barrels in street_low
 q('Well', (-2.3, 5.0, 0.45), 15, 1.9)
 q('MarketStand_1', (2.9, 6.0, 0), -20, 2.3)
 q('Cart', (0.9, 9.0, 0), 60, 1.9)
@@ -42,7 +43,7 @@ kk('crate_A_small', (4.4, -3.5, 0), 30, 3.4)
 
 C.stylise(emissive_prefixes=('Windows',))
 # a sample story sign on the market stand (scripts request their own via C.sign)
-C.sign('FRESH\nBREAD', 'plank', loc=(2.75, 5.35, 2.55), rz=-20, w=1.5, h=0.62)
+C.sign('FRESH\nBREAD', 'plank', loc=(2.2, 5.6, 2.55), rz=-20, w=1.3, h=0.56)
 C.sign('TOWN\nNOTICES', 'poster', loc=(-5.0, 9.6, 1.9), rz=10, w=1.1, h=1.3)
 
 # ---------- ground + hill ----------

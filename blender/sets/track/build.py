@@ -55,7 +55,7 @@ def asphalt_mat():
     P = n['Principled BSDF']; P.inputs['Roughness'].default_value = 0.85
     tc = n.new('ShaderNodeTexCoord'); nz = n.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 0.35
     l.new(tc.outputs['Object'], nz.inputs['Vector'])
-    r = n.new('ShaderNodeValToRGB'); r.color_ramp.elements[0].color = (0.09, 0.09, 0.13, 1); r.color_ramp.elements[1].color = (0.15, 0.14, 0.21, 1)
+    r = n.new('ShaderNodeValToRGB'); r.color_ramp.elements[0].color = (0.12, 0.12, 0.16, 1); r.color_ramp.elements[1].color = (0.19, 0.18, 0.25, 1)
     l.new(nz.outputs['Fac'], r.inputs['Fac']); l.new(r.outputs['Color'], P.inputs['Base Color']); return m
 
 def grass_mat(name='grass', c0=(0.07, 0.20, 0.03), c1=(0.11, 0.27, 0.04), mow=True):
@@ -72,16 +72,16 @@ def grass_mat(name='grass', c0=(0.07, 0.20, 0.03), c1=(0.11, 0.27, 0.04), mow=Tr
 # ---------- ground, track, kerbs, lines ----------
 C.plane(700, (0, 0, -0.01), grass_mat())
 CL = centreline()
-strip('track', CL, -TW / 2, TW / 2, 0.0, asphalt_mat()); C.no_ink(bpy.data.objects['track'])
+strip('track', CL, -TW / 2, TW / 2, 0.0, asphalt_mat())   # inked: its border edges are the track edges
 white = C.mat('white_line', (0.92, 0.92, 0.88), rough=0.6)
 for k, (a, b) in enumerate(((-TW / 2, -TW / 2 + 0.3), (TW / 2 - 0.3, TW / 2))):
-    C.no_ink(strip(f'edge{k}', CL, a, b, 0.012, white))
+    strip(f'edge{k}', CL, a, b, 0.012, white)          # inked: outlines both sides of the white line
 kerb = stripes_mat('kerb', (0.85, 0.10, 0.08), (0.95, 0.95, 0.92), period=1.6)
 for side in (1, -1):   # kerbs on the inside and outside of both corners (+ a little of the straights)
     cx = side * L / 2
     arc = [(cx + side * R * math.cos(-math.pi / 2 + math.pi * i / 40), CY + R + R * math.sin(-math.pi / 2 + math.pi * i / 40)) for i in range(41)]
     arc = [(cx - 6 * side, CY)] + arc + [(cx - 6 * side, CY + 2 * R)]
-    o = strip(f'kerb_in{side}', arc, TW / 2 * side, (TW / 2 + 1.1) * side, 0.03, kerb, closed=False, uv_len=1.0); C.no_ink(o)
+    o = strip(f'kerb_in{side}', arc, TW / 2 * side, (TW / 2 + 1.1) * side, 0.03, kerb, closed=False, uv_len=1.0)
     o = strip(f'kerb_out{side}', arc, -TW / 2 * side, -(TW / 2 + 1.1) * side, 0.03, kerb, closed=False, uv_len=1.0); C.no_ink(o)
 # start / finish chequer across the near straight
 chq = C.mat('chq', (0.95, 0.95, 0.92)); blk = C.mat('chq_b', (0.05, 0.05, 0.06))
@@ -97,7 +97,7 @@ pw = C.box((62, 0.35, 0.95), (-4.0, -2.4, 0.47), wall)
 pw.data.uv_layers.new(name='UVMap')
 for l in pw.data.loops: pw.data.uv_layers['UVMap'].data[l.index].uv = (pw.data.vertices[l.vertex_index].co.x * 62, 0)
 gw = C.mat('garage_wall', (0.70, 0.66, 0.58), rough=0.9); groof = C.mat('garage_roof', (0.20, 0.35, 0.70), rough=0.7)
-dark = C.mat('garage_dark', (0.06, 0.06, 0.08), rough=0.9); stripe = C.mat('garage_stripe', (0.85, 0.15, 0.10))
+dark = C.mat('garage_dark', (0.22, 0.24, 0.30), rough=0.9); stripe = C.mat('garage_stripe', (0.85, 0.15, 0.10))
 C.box((44, 7, 4.2), (0, -16.5, 2.1), gw)
 C.box((45, 8, 0.35), (0, -16.3, 4.35), groof)
 C.box((44.05, 7.05, 0.4), (0, -16.5, 3.4), stripe)
@@ -123,10 +123,10 @@ def push_left(d, box, fg):
     d.line([(ax, ay + h * 0.3), (ax, ay - h * 0.05)], fill=fg, width=lw * 2)
     d.arc([ax - w * 0.24, ay - h * 0.28, ax, ay + h * 0.14], 270, 360, fill=fg, width=lw * 2)
     d.polygon([(ax - w * 0.12, ay - h * 0.36), (ax - w * 0.12, ay - h * 0.20), (ax - w * 0.21, ay - h * 0.28)], fill=fg)
-cb = C.sign('PUSH LEFT → GO LEFT', 'chalk', loc=(-0.55, -11.8, 1.7), rz=190, w=1.5, h=1.3, draw=push_left, text_frac=0.34)
+cb = C.sign('PUSH LEFT → GO LEFT', 'chalk', loc=(-0.8, -11.8, 1.75), rz=190, w=1.9, h=1.6, draw=push_left, text_frac=0.34)
 legs = C.mat('easel', (0.45, 0.28, 0.14))
-for dx in (-0.6, 0.6): C.cyl(0.035, 2.0, (-0.6 + dx * 0.9, -12.1, 0.95), legs, rot=(6, 0, 0), verts=6)
-C.sign('CORNERS MADE: 0', 'board', loc=(0.85, -12.7, 2.7), rz=180, w=2.2, h=0.66)
+for dx in (-0.85, 0.85): C.cyl(0.04, 2.0, (-0.8 + dx * 0.9, -12.1, 0.95), legs, rot=(6, 0, 0), verts=6)
+C.sign('CORNERS MADE: 0', 'board', loc=(1.45, -12.7, 3.0), rz=180, w=2.2, h=0.66)
 # tyre stacks, cones, a toolbox trolley
 tyre = C.mat('tyre', (0.05, 0.05, 0.06), rough=0.9)
 def tyres(x, y, n):
@@ -145,7 +145,7 @@ C.box((0.9, 0.5, 0.8), (6.0, -12.0, 0.45), C.mat('toolbox', (0.80, 0.10, 0.10), 
 
 # ---------- banner gantry over the near straight ----------
 GX = 10.0
-steel = C.mat('steel', (0.75, 0.76, 0.80), rough=0.4, metal=0.6)
+steel = C.mat('steel', (0.42, 0.44, 0.50), rough=0.5, metal=0.3)
 for y in (-1.2, TW + 1.2): C.cyl(0.14, 6.0, (GX, y, 3.0), steel, verts=10)
 C.cyl(0.11, TW + 2.6, (GX, CY, 5.85), steel, rot=(90, 0, 0), verts=10)
 C.sign('BODY-STEERING\nCHALLENGE', 'banner', loc=(GX - 0.1, CY, 4.85), rz=-90, w=TW - 0.6, h=1.8, depth=0.04)
@@ -166,7 +166,7 @@ for x, y in ((-6, 20), (2, 26), (-12, 30), (8, 18)):                          # 
 hillm = C.mat('far_hill', (0.20, 0.38, 0.16), rough=0.95)
 for x, y, sx, sz in ((-60, 150, 90, 28), (70, 160, 110, 34), (0, 190, 140, 45)):
     bpy.ops.mesh.primitive_uv_sphere_add(radius=1, location=(x, y, -sz * 0.35)); h = bpy.context.object
-    h.scale = (sx, 40, sz); C.assign(h, hillm); C.no_ink(h)
+    h.scale = (sx, 40, sz); C.assign(h, hillm)
 seat = stripes_mat('stand_seats', (0.20, 0.45, 0.85), (0.95, 0.80, 0.15), period=6.0)
 for k in range(5):   # grandstand steps along the far straight's outside
     o = C.box((40, 1.2, 0.6 + k * 0.6), (0, CY + 2 * R + TW / 2 + 5 + k * 1.2, 0.3 + k * 0.3), seat)
@@ -175,33 +175,39 @@ for k in range(5):   # grandstand steps along the far straight's outside
 C.box((42, 0.3, 6), (0, CY + 2 * R + TW / 2 + 11.2, 3), groof)
 
 C.stylise(emissive_prefixes=('__none__',))
-C.point((-6.0, -10.5, 3.0), power=120, radius=1.5)          # warm garage spill (golden only)
+C.point((-6.0, -10.5, 3.0), power=120, radius=1.5)
+lampm = C.emissive(C.mat('pitlamp', (1.0, 0.45, 0.12), 0.3), (1.0, 0.45, 0.12), 0.5)
+for x in (-18, -9.5, -0.5, 8.5, 17.5):                    # warm lamps over the garage doors
+    C.box((0.6, 0.25, 0.18), (x, -12.85, 3.25), lampm); C.point((x, -11.6, 2.6), power=70, radius=0.5)
+for y in (-0.6, TW + 0.6): C.point((GX - 1.2, y, 5.6), power=220, radius=0.3)   # floodlights on the banner          # warm garage spill (golden only)
 
 # ---------- cameras ----------
 TOP_X = L / 2 + R / 2 + 2
 CAMS = {
-    'track_wide': dict(loc=(-6.0, -5.5, 4.2), target=(16.0, 14.0, 0.8), lens=22, roll=0, stand=(0.5, 2.6, 0), fstop=None,
+    'track_wide': dict(loc=(-6.0, -5.5, 4.2), target=(16.0, 14.0, 0.8), lens=22, roll=0, stand=(1.6, 2.0, 0), fstop=None,
                        haze_range=(5, 200)),
     'track_med': dict(loc=(-0.6, -0.6, 1.3), target=(9.0, 5.0, 2.5), lens=24, roll=0, stand=(1.7, 1.0, 0), fstop=2.4,
                       ink_fade=(6, 40, 0.5), haze_range=(4, 200)),
-    'track_top': dict(loc=(TOP_X + 1.0, CY + R - 6.0, 46.0), target=None, lens=35, roll=0, stand=(L / 2 + R * 0.707, CY + R - R * 0.707, 0), fstop=None, top=True,
+    'track_top': dict(loc=(L / 2 + R * 0.707 + 0.5, CY + R - R * 0.707 + 4.0, 24.0), target=None, lens=35, roll=0, stand=(L / 2 + R * 0.707, CY + R - R * 0.707, 0), fstop=None, top=True,
                       haze_range=(40, 120), haze_k=0.3, light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.05), 'golden': dict(grade_sat=0.95, grade_gain=1.15)}, note='top-down view: px_per_m measured along the ground'),
     'pit_med': dict(loc=(0.75, -7.2, 1.35), target=(0.15, -16.0, 1.9), lens=26, roll=0, stand=(0.8, -9.75, 0), fstop=2.8,
                     ink_fade=(4, 30, 0.5), haze_range=(3, 120),
                     light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.18), 'golden': dict(grade_sat=1.0, grade_gain=1.15)}),
-    'pit_ots': dict(loc=(1.3, -12.4, 1.6), target=(0.0, 6.0, 1.7), lens=32, roll=0, stand=(0.2, -8.9, 0), fstop=2.4,
+    'pit_ots': dict(loc=(1.3, -12.4, 1.6), target=(-5.0, 6.0, 1.7), lens=32, roll=0, stand=(0.2, -8.9, 0), fstop=2.4,
                     ink_fade=(4, 40, 0.5), haze_range=(3, 200),
                     note='over the shoulder: stand = the facing character; the near character is composited large at the frame edge'),
     'bike_close': dict(loc=(-6.0, 0.9, 0.75), target=(-2.8, 4.2, 0.65), lens=32, roll=0, stand=(-3.2, 3.6, 0), fstop=2.0,
                        ink_fade=(3, 20, 0.6), haze_range=(3, 150)),
     'bike_chase': dict(loc=(-15.0, 4.0, 1.4), target=(20.0, 6.5, 1.2), lens=26, roll=0, stand=(-10.0, 4.4, 0), fstop=2.8,
                        haze_range=(4, 200)),
-    'grips_close': dict(loc=(5.1, 3.2, 1.2), target=(6.8, 4.9, 1.05), lens=45, roll=-3, stand=(6.7, 4.8, 0), fstop=1.8,
+    'grips_close': dict(loc=(-7.7, 3.2, 1.2), target=(-6.0, 4.9, 1.05), lens=45, roll=-3, stand=(-6.1, 4.8, 0), fstop=1.8,
                         ink_fade=(3, 15, 0.7), haze_range=(2, 120)),
     'rider_close': dict(loc=(-1.0, 1.95, 1.5), target=(0.6, 4.6, 1.45), lens=40, roll=0, stand=(0.2, 3.6, 0), fstop=1.8,
                         ink_fade=(3, 15, 0.7), haze_range=(2, 150)),
 }
-C.INK_FADE, C.INK_RANGE = (35, 120, 0.4), (6, 80)   # an open track: keep outlines on the far trees and gantry
+C.INK_FADE, C.INK_RANGE, C.INK_BORDER, C.INK_FAR_K, C.INK_THICK = (35, 120, 0.4), (6, 80), True, 0.6, 4.8   # an open track: keep outlines on the far trees and gantry
 LIGHTS = {'day': dict(az=-30, elev=50, exposure=-0.25, haze_k=0.2, grade_sat=1.3, grade_gain=1.0),
-          'golden': dict(az=-35, elev=16, sun_e=8.0, amb=(0.42, 0.50, 0.95), haze=(1.0, 0.70, 0.40), exposure=0.0, haze_k=0.2, grade_sat=1.25, grade_gain=1.0)}
-C.main('track', CAMS, LIGHTS)
+          'golden': dict(az=-35, elev=16, sun_e=12.0, sun=(1.0, 0.50, 0.18), amb=(0.40, 0.50, 1.0), amb_e=0.32, grade_warm=(1.04, 1.0, 0.9), haze=(1.0, 0.72, 0.42), clouds=(1.0, 0.72, 0.45),
+                     sky=[(0.0, (1.0, 0.70, 0.32)), (0.10, (1.0, 0.58, 0.30)), (0.30, (0.50, 0.58, 0.88)), (0.60, (0.24, 0.40, 0.82))], exposure=0.0, haze_k=0.2, grade_sat=1.25, grade_gain=1.0)}
+TARGETS = {'chalkboard': (-0.8, -11.8, 1.75), 'lapboard': (1.45, -12.7, 3.0), 'banner': (GX, CY, 4.85)}   # sign centres
+C.main('track', CAMS, LIGHTS, targets=TARGETS)

@@ -5,8 +5,14 @@
  "light_dir": "right",
  "tint": "#fff4e4",
  "stand_x": 0.489,
+ "ground_x": 528.2,
  "set": "track",
  "cam": "bike_chase",
  "light": "day",
- "ground_x": 528.1
+ "targets": {
+  "banner": [
+   611.3,
+   760.4
+  ]
+ }
 }

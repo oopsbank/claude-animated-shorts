@@ -2,11 +2,11 @@
  "ground_y": 2481.6,
  "px_per_m": 1039.46,
  "horizon_y": 925.5,
- "light_dir": "left",
+ "light_dir": "top",
  "tint": "#ffbf86",
  "stand_x": 0.668,
+ "ground_x": 720.9,
  "set": "track",
  "cam": "rider_close",
- "light": "golden",
- "ground_x": 721.4
+ "light": "golden"
 }
