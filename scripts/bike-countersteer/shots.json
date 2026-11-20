@@ -64,24 +64,28 @@
    "id": "s02",
    "text": "Meet Dale. Twenty years on motorcycles, and he swears he steers by leaning.",
    "set": "track",
-   "cam": "pit_med",
+   "cam": "rider_close",
    "light": "day",
-   "size": "medium",
+   "size": "close",
    "camera": {
-    "move": "hold"
+    "move": "glide",
+    "at_word": 8,
+    "to": {
+     "zoom": 1.1
+    },
+    "dur": 8
    },
    "characters": [
     {
      "id": "dale",
-     "x": 0.48,
+     "x": 0.5,
      "beats": [
       {
        "expr": "smug",
-       "prop": "helmet",
        "at_word": 0,
        "arm_pose": [
         "hip",
-        "hold"
+        "hang"
        ]
       },
       {
@@ -90,11 +94,11 @@
        "at_word": 12
       }
      ],
-     "hat": null,
      "build": "stout",
      "skin": "#ffe2c2",
      "shirt": "#d9452f",
      "pants": "#30343f",
+     "hat": "helmet",
      "hat_col": "#f4f1e8",
      "moustache": "#6b4426",
      "outfit": [
@@ -120,18 +124,18 @@
    "id": "s03",
    "text": "So a riding school hands him a strange bike.",
    "set": "track",
-   "cam": "track_wide",
+   "cam": "track_med",
    "light": "day",
-   "size": "wide",
+   "size": "medium",
    "camera": {
     "move": "glide",
     "direction": "right",
-    "amount": 0.08
+    "amount": 0.06
    },
    "characters": [
     {
      "id": "instructor",
-     "x": 0.4,
+     "x": 0.3,
      "beats": [
       {
        "expr": "neutral",
@@ -157,7 +161,7 @@
     },
     {
      "id": "dale",
-     "x": 0.62,
+     "x": 0.7,
      "beats": [
       {
        "expr": "nervous",
@@ -231,16 +235,17 @@
    "id": "s05",
    "text": "\"Hold the fixed bars,\" says the instructor, \"and take that corner.\"",
    "set": "track",
-   "cam": "pit_med",
+   "cam": "pit_ots",
    "light": "day",
    "size": "medium",
    "camera": {
-    "move": "hold"
+    "move": "push_in",
+    "amount": 0.04
    },
    "characters": [
     {
      "id": "instructor",
-     "x": 0.36,
+     "x": 0.64,
      "beats": [
       {
        "expr": "stern",
@@ -259,6 +264,7 @@
        ]
       }
      ],
+     "talk": true,
      "build": "adult",
      "skin": "#c98e63",
      "shirt": "#2f6fb3",
@@ -274,10 +280,9 @@
     },
     {
      "id": "dale",
-     "x": 0.66,
+     "x": 0.15,
      "beats": [
       {
-       "expr": "smug",
        "at_word": 0,
        "arm_pose": [
         "hip",
@@ -285,6 +290,7 @@
        ]
       }
      ],
+     "view": "rear",
      "build": "stout",
      "skin": "#ffe2c2",
      "shirt": "#d9452f",
@@ -371,9 +377,14 @@
    "set": "track",
    "cam": "bike_chase",
    "light": "day",
-   "size": "close",
+   "size": "medium",
    "camera": {
-    "move": "hold"
+    "move": "glide",
+    "at_word": 0,
+    "to": {
+     "zoom": 1.35
+    },
+    "dur": 10
    },
    "characters": [
     {
@@ -551,22 +562,30 @@
    "id": "s10",
    "text": "Twenty years of riding, and he can't make the corner.",
    "set": "track",
-   "cam": "pit_med",
+   "cam": "rider_close",
    "light": "day",
-   "size": "medium",
+   "size": "close",
    "camera": {
-    "move": "push_in",
-    "amount": 0.04
+    "move": "glide",
+    "at_word": 9,
+    "to": {
+     "zoom": 1.12
+    },
+    "dur": 8
    },
    "characters": [
     {
      "id": "dale",
-     "x": 0.38,
+     "x": 0.5,
      "beats": [
       {
        "expr": "pained",
        "at_word": 0,
        "arm_pose": "hang"
+      },
+      {
+       "expr": "nervous",
+       "at_word": 9
       }
      ],
      "build": "stout",
@@ -580,53 +599,25 @@
       "stripes"
      ],
      "seed": 4
-    },
-    {
-     "id": "instructor",
-     "x": 0.68,
-     "beats": [
-      {
-       "expr": "neutral",
-       "at_word": 9,
-       "arm_pose": [
-        "hold",
-        "point"
-       ]
-      }
-     ],
-     "build": "adult",
-     "skin": "#c98e63",
-     "shirt": "#2f6fb3",
-     "pants": "#e8e2d0",
-     "hat": "cap",
-     "hat_col": "#2b2f3a",
-     "glasses": true,
-     "outfit": [
-      "collar"
-     ],
-     "prop": "clipboard",
-     "seed": 9
     }
    ],
    "fx": [
     {
      "name": "sweat_drop",
-     "x": 0.42,
-     "y": 0.32,
+     "x": 0.62,
+     "y": 0.3,
      "at_word": 9
     }
    ],
-   "props": [
-    "lap_board:CORNERS MADE: 0"
-   ]
+   "props": []
   },
   {
    "id": "s11",
    "text": "Wait, if leaning your body doesn't turn the bike, what does?",
    "set": "track",
-   "cam": "rider_close",
+   "cam": "track_med",
    "light": "day",
-   "size": "close",
+   "size": "medium",
    "camera": {
     "move": "push_in",
     "amount": 0.06
@@ -737,7 +728,7 @@
      "y": 0.5,
      "planned": "tight_left",
      "actual": "kink_right_then_left",
-     "at_word": 13
+     "at_word": 15
     }
    ],
    "props": []
@@ -750,10 +741,24 @@
    "light": "golden",
    "size": "close",
    "camera": {
-    "move": "pan",
-    "direction": "left",
-    "at_word": 15,
-    "amount": 0.12
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 2,
+      "to": {
+       "zoom": 1.35
+      },
+      "dur": 10
+     },
+     {
+      "at_word": 15,
+      "to": {
+       "zoom": 1.15,
+       "x": 0.42
+      },
+      "dur": 14
+     }
+    ]
    },
    "characters": [
     {
@@ -815,70 +820,44 @@
    "id": "s14",
    "text": "It's like balancing a broom on your palm: to tip it left, flick your hand right first.",
    "set": "track",
-   "cam": "pit_ots",
+   "cam": "rider_close",
    "light": "golden",
-   "size": "medium",
+   "size": "close",
    "camera": {
     "move": "hold"
    },
    "characters": [
     {
-     "id": "instructor",
-     "x": 0.42,
+     "id": "dale",
+     "x": 0.5,
      "beats": [
       {
-       "prop": "broom_upright",
+       "expr": "neutral",
        "at_word": 0,
        "arm_pose": [
         "hang",
-        "hold"
-       ]
-      },
-      {
-       "broom_flick": "right",
-       "at_word": 12
-      },
-      {
-       "broom_tip": "left",
-       "at_word": 16
-      }
-     ],
-     "prop": null,
-     "view": "rear",
-     "build": "adult",
-     "skin": "#c98e63",
-     "shirt": "#2f6fb3",
-     "pants": "#e8e2d0",
-     "hat": "cap",
-     "hat_col": "#2b2f3a",
-     "glasses": true,
-     "outfit": [
-      "collar"
-     ],
-     "seed": 9
-    },
-    {
-     "id": "dale",
-     "x": 0.7,
-     "beats": [
-      {
-       "expr": "nervous",
-       "at_word": 0,
-       "arm_pose": [
-        "chin",
         "hang"
        ]
       },
       {
-       "expr": "shock",
-       "at_word": 16
+       "broom_tip_left": true,
+       "at_word": 9
+      },
+      {
+       "broom_flick_right": true,
+       "at_word": 12
       }
      ],
-     "hat": null,
+     "insert": {
+      "at_word": 4,
+      "rig": "broom_insert",
+      "cam": "grips_close"
+     },
      "build": "stout",
      "skin": "#ffe2c2",
      "shirt": "#d9452f",
      "pants": "#30343f",
+     "hat": "helmet",
      "hat_col": "#f4f1e8",
      "moustache": "#6b4426",
      "outfit": [
@@ -909,12 +888,12 @@
    "id": "s15",
    "text": "Riders do it without noticing, but the fixed bars stopped Dale's hands from doing it.",
    "set": "track",
-   "cam": "track_med",
+   "cam": "track_wide",
    "light": "golden",
-   "size": "medium",
+   "size": "wide",
    "camera": {
     "move": "push_in",
-    "amount": 0.07
+    "amount": 0.1
    },
    "characters": [
     {
@@ -993,7 +972,7 @@
    "characters": [
     {
      "id": "instructor",
-     "x": 0.62,
+     "x": 0.52,
      "beats": [
       {
        "expr": "stern",
@@ -1028,7 +1007,7 @@
     },
     {
      "id": "dale",
-     "x": 0.3,
+     "x": 0.2,
      "beats": [
       {
        "expr": "nervous",
@@ -1136,12 +1115,16 @@
    "id": "s18",
    "text": "So Dale's been steering the wrong way for twenty years, and it's the only way he ever turned.",
    "set": "track",
-   "cam": "pit_med",
+   "cam": "pit_ots",
    "light": "golden",
    "size": "medium",
    "camera": {
-    "move": "push_in",
-    "amount": 0.05
+    "move": "glide",
+    "at_word": 13,
+    "to": {
+     "zoom": 1.1
+    },
+    "dur": 8
    },
    "characters": [
     {
@@ -1180,21 +1163,17 @@
     },
     {
      "id": "instructor",
-     "x": 0.7,
+     "x": 0.84,
      "beats": [
       {
-       "expr": "neutral",
        "at_word": 0,
        "arm_pose": [
         "hold",
         "hang"
        ]
-      },
-      {
-       "expr": "smug",
-       "at_word": 17
       }
      ],
+     "view": "rear",
      "build": "adult",
      "skin": "#c98e63",
      "shirt": "#2f6fb3",
@@ -1211,8 +1190,7 @@
    ],
    "fx": [],
    "props": [
-    "helmet_sticker:I STEER WITH MY HIPS",
-    "lap_board:CORNERS MADE: 0"
+    "helmet_sticker:I STEER WITH MY HIPS"
    ]
   }
  ]
