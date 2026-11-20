@@ -126,7 +126,7 @@ def push_left(d, box, fg):
 cb = C.sign('PUSH LEFT → GO LEFT', 'chalk', loc=(-0.8, -11.8, 1.75), rz=190, w=1.9, h=1.6, draw=push_left, text_frac=0.34)
 legs = C.mat('easel', (0.45, 0.28, 0.14))
 for dx in (-0.85, 0.85): C.cyl(0.04, 2.0, (-0.8 + dx * 0.9, -12.1, 0.95), legs, rot=(6, 0, 0), verts=6)
-C.sign('CORNERS MADE: 0', 'board', loc=(1.45, -12.7, 3.0), rz=180, w=2.2, h=0.66)
+C.sign('CORNERS MADE: 0', 'board', loc=(1.05, -12.7, 3.0), rz=180, w=2.2, h=0.66)
 # tyre stacks, cones, a toolbox trolley
 tyre = C.mat('tyre', (0.05, 0.05, 0.06), rough=0.9)
 def tyres(x, y, n):
@@ -190,7 +190,7 @@ CAMS = {
                       ink_fade=(6, 40, 0.5), haze_range=(4, 200)),
     'track_top': dict(loc=(L / 2 + R * 0.707 + 0.5, CY + R - R * 0.707 + 4.0, 24.0), target=None, lens=35, roll=0, stand=(L / 2 + R * 0.707, CY + R - R * 0.707, 0), fstop=None, top=True,
                       haze_range=(40, 120), haze_k=0.3, light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.05), 'golden': dict(grade_sat=0.95, grade_gain=1.15)}, note='top-down view: px_per_m measured along the ground'),
-    'pit_med': dict(loc=(0.75, -7.2, 1.35), target=(0.15, -16.0, 1.9), lens=26, roll=0, stand=(0.8, -9.75, 0), fstop=2.8,
+    'pit_med': dict(loc=(0.4, -7.2, 1.35), target=(-0.35, -16.0, 1.9), lens=26, roll=0, stand=(0.3, -9.75, 0), fstop=2.8,
                     ink_fade=(4, 30, 0.5), haze_range=(3, 120),
                     light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.18), 'golden': dict(grade_sat=1.0, grade_gain=1.15)}),
     'pit_ots': dict(loc=(1.3, -12.4, 1.6), target=(-5.0, 6.0, 1.7), lens=32, roll=0, stand=(0.2, -8.9, 0), fstop=2.4,
@@ -209,5 +209,5 @@ C.INK_FADE, C.INK_RANGE, C.INK_BORDER, C.INK_FAR_K, C.INK_THICK = (35, 120, 0.4)
 LIGHTS = {'day': dict(az=-30, elev=50, exposure=-0.25, haze_k=0.2, grade_sat=1.3, grade_gain=1.0),
           'golden': dict(az=-35, elev=16, sun_e=12.0, sun=(1.0, 0.50, 0.18), amb=(0.40, 0.50, 1.0), amb_e=0.32, grade_warm=(1.04, 1.0, 0.9), haze=(1.0, 0.72, 0.42), clouds=(1.0, 0.72, 0.45),
                      sky=[(0.0, (1.0, 0.70, 0.32)), (0.10, (1.0, 0.58, 0.30)), (0.30, (0.50, 0.58, 0.88)), (0.60, (0.24, 0.40, 0.82))], exposure=0.0, haze_k=0.2, grade_sat=1.25, grade_gain=1.0)}
-TARGETS = {'chalkboard': (-0.8, -11.8, 1.75), 'lapboard': (1.45, -12.7, 3.0), 'banner': (GX, CY, 4.85)}   # sign centres
+TARGETS = {'chalkboard': (-0.8, -11.8, 1.75), 'lapboard': (1.05, -12.7, 3.0), 'banner': (GX, CY, 4.85)}   # sign centres
 C.main('track', CAMS, LIGHTS, targets=TARGETS)
