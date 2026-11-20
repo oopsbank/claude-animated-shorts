@@ -64,3 +64,4 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Don't let the mystery line and the "You see," line contradict each other in wording ("leaning doesn't turn it" vs "it only turns when it leans"). Name the exact thing ("leaning your body" vs "leaning the whole bike").
 - Generate `shots.json` from a script that names anchor words instead of hand-typed word indexes, and that checks every voice-over line has a shot with identical text, plus word counts and the shot mix.
 - Keep the script at or under about 232 words (≤ 63 s), so the voice has headroom under the 240-word / 65 s cap.
+- Never `git stash drop` after a `git stash pop` that hit a conflict: the pop did not apply. Check `git stash list` and `git diff` first. (A dropped stash can be recovered with `git fsck --no-reflog | grep 'dangling commit'`.)

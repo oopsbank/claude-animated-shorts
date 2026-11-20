@@ -22,14 +22,24 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P1 (for `bike-countersteer`) A NEW `track` set: a riding-school track with a pit lane and a grass run-off. Cams: `track_wide`, `track_med`, `track_top` (top-down), `pit_med`, `pit_ots` (over the shoulder), `bike_close`, `bike_chase` (behind the rider), `grips_close`, `rider_close`. Lights: `day` and `golden`. Signs: "BODY-STEERING CHALLENGE" banner, "CORNERS MADE: 0" lap board, and a chalkboard "PUSH LEFT → GO LEFT" with a top-view bar/wheel drawing.
 - [ ] P1 (for `bike-countersteer`) `village`: a `street_med` cam (`day`, `golden`) on a street a bicycle can ride down.
 
-## characters (`characters/`): main cast, bean-head style (Producer prototype done, waiting for user approval)
-- [ ] P1 After approval: a wardrobe brief for the bean cast (more hats, outfits, props, side and 3/4 views, mouth shapes for lip sync, walk cycle following the stickman animation rules 20-29).
+## characters (`characters/`): main cast, bean-head style (owner: wardrobe session, from 2026-11-19)
+- [x] P1 Side view (`view='side'`, facing left/right, spec §2.7) and a 3/4 view. (`turned()` rig; `previews/views_v1.png`; reviewer PASS 8/7/7/8/8)
+- [x] P1 Riding pose on a bicycle and a motorbike (side and 3/4), with 2D bike props: steer angle on the front wheel and bars, and a lean angle for the whole bike. (`bikes.py`: bicycle, motorbike, nobs_bike; side/3q/rear/front/top; steer, lean, bike_lean + body_lean, knee_out, hold='fixed'; rear/front bean views; `helmet` hat with sticker; `previews/ride_v1.png`; reviewer PASS 7/8/7/8/8)
+- [ ] P2 Riding: the near leg in side view still makes a small S-bend near the seat tube; the 3/4 motorbike steer could read stronger; rear-view far hand hides behind a hard-leaning torso. Each `ride()` takes ~3 s (full-size masks in `turned`), so crop the layers if the engine needs speed.
+- [x] P1 Mouth shapes for lip sync (`mouth=` closed, small, open, wide, O, smile_talk) overriding any expression. (all views incl. legacy front; `closed` follows the expression; side = profile shapes; `previews/mouths_v1.png`; reviewer PASS 7/7/8/8/8)
+- [x] P1 Animatable joints (arm/leg angles, head tilt, body lean, blink) and a foot-locked walk cycle (DRAWING_RULES 20-29). (`turned(pose=...)`, `walk.py` walk_pose/walk_track/blink_at, planted foot slides 0 px; `previews/walk_v1.png`; reviewer PASS 8/7/7/7/8)
+- [ ] P2 Walk: hip highest just after passing (the up pose) rather than at passing; arms could lag a little more at passing.
+- [ ] P2 Speed: `turned()` takes ~3 s per frame (full-size S=4 layers and rotations). Crop layers to the figure bbox before the engine renders long shots.
+- [ ] P2 More hats, outfits and props as the script needs them: `broom` balanced on the palm (`broom_flick`, `broom_tip`), held `helmet` prop with the sticker, clipboard reading "CORNERS MADE: 0" (the `helmet` hat with sticker is done).
 - [ ] P1 (for `bike-countersteer`) A `ride` arm pose plus a seated lower body; a `helmet` hat (open-face, eyes visible) and a `helmet` held prop; a `broom` balanced on the palm (`broom_flick`, `broom_tip`); bike rigs `bicycle`, `motorbike` and `nobs_bike` (a second handlebar fixed to the frame) in `side`/`front`/`rear`/`top` views; `lean` (rider and bike together), plus `body_lean`/`bike_lean` (separate) and `knee_out`; `view: rear` for the bean body. Cast specs are in `scripts/bike-countersteer/build.py` (`CAST`).
 
 - [ ] P1 (requested by engine) In `bean.py character()`: `mouth=` (closed, small, open, wide, O, smile) and `lid=` (0..1, with 0.5 = half-shut) so the engine can drop its overlays; arm in-betweens (`arm_pose` accepting a blend, e.g. `('hang', 'point', 0.4)`, or explicit elbow/hand offsets) so gestures can ease and overshoot; optional `res=` (output scale) instead of the engine grabbing the 4x canvas.
 
 ## wardrobe (`stickman/`): ON HOLD by user decision (stickman reserved for later)
-- [ ] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES.
+- [x] P1 Outfits as a `draw()` argument: `shirt` (colour band on the torso), `coat`, `uniform` with buttons, `apron`. They must follow DRAWING_RULES. (+ `pants`, `outfit=` presets; sheet `stick_outfits.png`, 66ded12)
+- [ ] P2 Think pose: a tiny dark ink sliver under the right elbow (already in the original pose). In the think pose with a coat, the left sleeve merges with the coat body.
+- [ ] P3 Side-on back sleeve in a light colour merges with a same-colour torso at the shoulder.
+> State at the pause: hats, held props (`prop=`, `hand_anchors()`, `hold` pose) and lip-sync mouths exist in `stickman.py` but are NOT reviewed. The hat check fails for the `cap` and `captain` visors (they touch hy-49) and for the worried sweat drop over hats. Hat/prop/mouth sheets are not built.
 - [ ] P1 Hats: cap, top hat, captain, cowboy, chef, hard hat, crown, in addition to helmet and sailor.
 - [ ] P1 Held props: a hand anchor point, plus prop sprites (bag, rock, phone, lantern, sword, paper, cup).
 - [ ] P1 Mouth shapes for lip sync (closed, small, open, wide, O, smile-talk) selectable on top of any expression.
