@@ -143,12 +143,15 @@ def layout_shot(shot, meta):
     if len(stand) >= 2:
         stand.sort(key=lambda c: float(c.get('x', 0.5)))
         hw = [175 * s * float(c.get('scale', 1.0)) / W for c in stand]        # half body+arm width, frame fractions
+        def points(c): return any('point' in json.dumps(b.get('arm_pose', '')) or b.get('pose') == 'point' for b in [c] + c.get('beats', []))
+        reach = [(260 if points(c) else 175) * s * float(c.get('scale', 1.0)) / W for c in stand]   # a pointing arm reaches out
         need = [hw[i] + hw[i + 1] + 0.02 for i in range(len(stand) - 1)]
         xs = [float(c.get('x', 0.5)) for c in stand]
         for i, d in enumerate(need):
             if xs[i + 1] - xs[i] < d:
                 mid = (xs[i] + xs[i + 1]) / 2; xs[i], xs[i + 1] = mid - d / 2, mid + d / 2
-        shift = max(0.0, hw[0] + 0.01 - xs[0]) - max(0.0, xs[-1] + hw[-1] + 0.01 - 1.0)
+        m_ = 0.05                                                           # room for the push-in zoom
+        shift = max(0.0, reach[0] + m_ - xs[0]) - max(0.0, xs[-1] + reach[-1] + m_ - 1.0)
         xs = [x + shift for x in xs]
         for c, x in zip(stand, xs):
             if abs(x - float(c.get('x', 0.5))) > 1e-3:
@@ -360,8 +363,8 @@ def camera_xform(img, c):
 
 def render_shot(k, f):
     shot = G['shots'][k]; pkey = shot['_plate']
-    ins = shot.get('_insert')
-    if ins and ins[0] <= f < ins[1]: pkey = ins[2]
+    ins = shot.get('_insert'); crop_any = False
+    if ins and ins[0] <= f < ins[1]: pkey = ins[2]; crop_any = 'close' in os.path.basename(pkey)   # close cut-ins crop freely
     plate, meta = G['plates'][pkey]
     base = plate.convert('RGBA')
     if shot.get('_bike_prop'):
@@ -377,7 +380,7 @@ def render_shot(k, f):
             x0, y0, x1, y1 = c['bbox']; pts = [to_screen(x, y) for x in (x0, x1) for y in (y0, y1)]
             c['screen_bbox'] = [round(min(p[0] for p in pts), 1), round(min(p[1] for p in pts), 1),
                                 round(max(p[0] for p in pts), 1), round(max(p[1] for p in pts), 1)]
-    return img, {'shot': shot.get('id', k), 'chars': chars, 'fx': fxs, 'cam': cam}
+    return img, {'shot': shot.get('id', k), 'chars': chars, 'fx': fxs, 'cam': cam, 'crop_any': crop_any}
 
 
 def motion_blur_x(img, length):

@@ -342,7 +342,7 @@ class Camera:
         mv = c.get('move', 'push_in')
         amt = float(c.get('amount', min(0.06, 0.0012 * n)))   # default: slow push ~0.12 %/f, capped at 6 % per shot
         # 'hold' still breathes: the reference camera is almost never dead still (0.14 %/f median push in quiet frames)
-        self.push = {'push_in': amt, 'pull_out': -amt, 'hold': min(0.04, 0.001 * n)}.get(mv, 0.0)
+        self.push = {'push_in': amt, 'pull_out': -amt, 'hold': min(0.06, 0.0015 * n)}.get(mv, 0.0)
         # directional moves from shots.json: glide / follow / pan (x) and tilt_up / tilt_down (y), "amount" = frame fraction
         self.travel = None
         if mv in ('glide', 'follow', 'pan', 'tilt_up', 'tilt_down') and 'to' not in c and 'glides' not in c:
@@ -355,7 +355,7 @@ class Camera:
                 land, _ = beat_frame(sw, words, c.get('at_word', 0)); f_a, f_b = land - 6, land + 22
             else: f_a, f_b = self.f0, self.f1
             self.travel = (axis, -sg * m, sg * m, f_a, f_b, 'smoother' if mv != 'follow' else 'linear')
-            if mv == 'pan': self.push = min(0.04, 0.001 * n)     # alive before the pan starts
+            self.push = min(0.05, 0.0012 * n)                     # alive before a pan starts and while a tilt eases in
         if mv == 'shake':                                           # nervous handheld beat: small kicks every ~8 f
             self.push = 0.02; self.shake = float(c.get('amount', 0.01)) / 0.01 * 0.5
         else: self.shake = 0.0
