@@ -102,6 +102,7 @@ def setup(shots_path, words_path, plate_dirs):
                 a0 = anim.beat_frame((sp['w0'], sp['w1']), words, ins.get('at_word', 0))[1]
                 a1 = anim.beat_frame((sp['w0'], sp['w1']), words, ins['until_word'])[1] if 'until_word' in ins else sp['f1']
                 s['_insert'] = (a0 - anim.LEAD, a1 - anim.LEAD, q)
+        resolve_points_at(s, G['plates'][p][1])
         # two-shots: characters with no facing turn a little toward each other
         cs = s.get('characters', [])
         if len(cs) >= 2:
@@ -125,6 +126,30 @@ def setup(shots_path, words_path, plate_dirs):
     n = spans[-1]['f1'] if spans else 0
     G['n'] = n
     return G
+
+
+def resolve_points_at(shot, meta):
+    """Beats with "points_at": <target> turn toward the target and point with the arm on its side. Targets: the plate
+    JSON's "targets": {name: [x, y]} (fractions), another character's id, or, if unknown, off-screen past the nearer
+    edge (the thing is out of shot)."""
+    chars = shot.get('characters', [])
+    for c in chars:
+        for b in c.get('beats', []):
+            tgt = b.get('points_at')
+            if not tgt: continue
+            cx = float(c.get('x', 0.5))
+            if tgt in meta.get('targets', {}): tx = float(meta['targets'][tgt][0])
+            elif any(o.get('id') == tgt for o in chars): tx = float(next(o for o in chars if o.get('id') == tgt).get('x', 0.5))
+            else:
+                tx = 1.2 if cx >= 0.5 else -0.2
+                if os.environ.get('ENGINE_QUIET') != '1':
+                    print(f"  [points_at] {shot.get('id')}/{c.get('id')}: target {tgt!r} not in plate JSON 'targets' -> off-screen {'right' if tx > 1 else 'left'}")
+            right = tx > cx; b.setdefault('facing', 0.4 if right else -0.4)
+            ap = b.get('arm_pose') or c.get('arm_pose') or ['hang', 'hang']
+            if isinstance(ap, str): ap = [ap, ap]
+            other = next((a for a in ap if a != 'point'), 'hang')
+            front = anim.screen_side(c.get('view', 'front')) < 0    # facing us: rider-left = screen right
+            b['arm_pose'] = (['point', other] if right == front else [other, 'point'])
 
 
 def init_worker(*a):
@@ -165,6 +190,8 @@ def place_characters(base, k, f, meta):
     order = sorted(range(len(G['tracks'][k])), key=lambda i: shot['characters'][i].get('z', 0))
     for i in order:
         tr = G['tracks'][k][i]; spec = shot['characters'][i]
+        if spec.get('path') and spec.get('view') == 'top' and any(e['name'] == 'path_line' for e in shot.get('fx', [])) and G['fx']:
+            continue                                   # drawn by path_riders() on the track diagram
         st = tr.state_at(f)
         if spec.get('enter_at_word') is not None:
             wf = anim.beat_frame((G['spans'][k]['w0'], G['spans'][k]['w1']), G['words'], spec['enter_at_word'])[0]
@@ -189,6 +216,12 @@ def place_characters(base, k, f, meta):
         im = tint_card(im, meta.get('tint', '#fff8f0'))
         fig_h = 777 * s
         gx = st['x'] * W; gy = meta['ground_y'] - st['lift'] * fig_h
+        if st.get('rig'):
+            sg = anim.screen_side(spec.get('view', 'rear'))     # rider-side -> screen: rear view keeps the side
+            r = st['rig']; tot = r['lean'] if r.get('lean') is not None else (r.get('bike_lean') or 0) + 0.6 * (r.get('body_lean') or 0)
+            if spec.get('view', 'rear') in ('rear', 'front'):  # chase cam: keep the rider's hips where the shot puts them,
+                gx -= sg * 0.45 * fig_h * math.sin(math.radians(tot))   # so the wheels swing out under a lean
+            gx += (r.get('contact_dx') or 0) * fig_h * sg
         ox, oy = int(round(gx - sx)), int(round(gy - sy))
         ft = feet_of(im.getchannel('A'), sx)
         if ft and (abs(st['lean']) > 0.05 or st.get('rig')): oy += int(round(sy - ft['y'])) - 1   # re-plant: lean drops a foot; bike cards' wheels sit above 975
@@ -206,6 +239,7 @@ def place_characters(base, k, f, meta):
         base.alpha_composite(im, (ox, oy))
         bb = im.getchannel('A').point(lambda v: 255 if v > 40 else 0).getbbox()
         out.append({'id': spec.get('id', f'c{i}'), 'grounded': st['grounded'] and not st['moving'], 'moving': st['moving'],
+                    'planted': st['grounded'] and not st['moving'] and not st.get('rig'),   # a riding bike rolls: no foot lock
                     'foot_y': ft['y'] + oy if ft else None, 'foot_l': ft['l'] + ox if ft and ft['l'] is not None else None,
                     'foot_r': ft['r'] + ox if ft and ft['r'] is not None else None, 'ground_y': meta['ground_y'],
                     'bbox': [bb[0] + ox, bb[1] + oy, bb[2] + ox, bb[3] + oy] if bb else None,
@@ -217,12 +251,15 @@ def place_fx(base, k, f, chars):
     shot = G['shots'][k]; sp = G['spans'][k]; mod = G['fx']; out = []
     for e in shot.get('fx', []):
         land, wf = anim.beat_frame((sp['w0'], sp['w1']), G['words'], e.get('at_word', 0))
-        dur = max(4, int(round(float(e.get('dur', 0.8)) * FPS)))
-        peak = float(e.get('peak', 0.3))
-        start = wf - int(round(peak * dur))         # the effect peaks on the word onset
+        if e['name'] == 'path_line' and 'dur' not in e:     # a track diagram plays across the rest of the shot
+            start = land; dur = max(8, sp['f1'] - land + 6)
+        else:
+            dur = max(4, int(round(float(e.get('dur', 0.8)) * FPS)))
+            peak = float(e.get('peak', 0.3))
+            start = wf - int(round(peak * dur))         # the effect peaks on the word onset
         if not start <= f < start + dur: continue
         t = (f - start + 0.5) / dur
-        size = int(float(e.get('size', 0.35)) * W)
+        size = int(float(e.get('size', 0.9 if e['name'] == 'path_line' else 0.35)) * W)
         kw = {kk: v for kk, v in e.items() if kk not in ('name', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor')}
         if mod and 'line' not in kw and chars: kw['line'] = 10 * chars[0].get('scale', 0.5)   # fx area: line = 10 x card scale
         try:
@@ -238,7 +275,31 @@ def place_fx(base, k, f, chars):
         cy = {'dust_puff': 0.72, 'splash': 0.72, 'lean_arc': 1.0}.get(e['name'], 0.5)             # ground-anchored effects
         base.alpha_composite(im.convert('RGBA'), (int(x - size / 2), int(y - size * cy)))
         out.append({'name': e['name'], 't': round(t, 3)})
+        if e['name'] == 'path_line' and mod: path_riders(base, k, f, e, t, size, x - size / 2, y - size * cy, kw)
     return out
+
+
+def path_riders(base, k, f, e, t, size, ox, oy, kw):
+    """Top-view riders with "path" ride the fx path_line's actual track, in step with its drawn-on head
+    (fx.fx_path_line: af = smooth(seg(t, 0.28, 0.78)), chaikin(PATHS[...]), sub_path), nose along the heading."""
+    mod = G['fx']; shot = G['shots'][k]
+    for i, spec in enumerate(shot.get('characters', [])):
+        if not spec.get('path') or spec.get('view') != 'top' or not spec.get('rig'): continue
+        spec_path = spec['path'] if spec['path'] in getattr(mod, 'PATHS', {}) else kw.get('actual', 'wide_arc')
+        n = size; u = n / 2 * 0.9 * float(kw.get('scale', 1.0)); c = n / 2
+        pts = [(c + px * u, c + py * u, 1.0) for px, py in mod.chaikin(mod.PATHS[spec_path])]
+        af = max(0.004, mod.smooth(mod.seg(t, 0.28, 0.78)))
+        head = mod.sub_path(pts, 0, af); hx, hy = head[-1][0], head[-1][1]
+        px, py = (head[-2][0], head[-2][1]) if len(head) > 1 else (hx, hy + 1)
+        ang = math.degrees(math.atan2(hx - px, -(hy - py))) if (hx, hy) != (px, py) else 0.0
+        st = G['tracks'][k][i].state_at(f)
+        sc = 0.17 * W / 1000 / 0.35                         # the bike is ~17 % of the frame width long
+        im = G['rig'].ride_card(spec, sc, st['rig'] or {}, st['expr'], None, st['lid'])
+        bb = im.getchannel('A').getbbox() or (0, 0, im.width, im.height)
+        im = im.crop(bb); pad = int(max(im.size) * 0.75)                    # pivot = the drawing's centre
+        sq = Image.new('RGBA', (2 * pad, 2 * pad), (0, 0, 0, 0)); sq.paste(im, (pad - im.width // 2, pad - im.height // 2))
+        sq = sq.rotate(-ang, resample=Image.BICUBIC)
+        base.alpha_composite(sq, (int(ox + hx - pad), int(oy + hy - pad)))
 
 
 def camera_xform(img, c):
