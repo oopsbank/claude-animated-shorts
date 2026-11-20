@@ -38,13 +38,25 @@ except Exception as e:                   # noqa: BLE001
 
 
 def _hires(fn, kw, size, scale):
-    """Run a card function and downsample its 4x supersampled main canvas (the first one of the right size) to `scale`."""
-    _last.clear()
-    lo = fn(**kw)
+    """Run a card function and downsample its final 4x supersampled image to `scale`: the image is caught at the
+    card function's own last resize (4x -> design size), so layered views (rear, side, riders) come out whole."""
+    _final.clear()
+    Image.Image.resize = _spy
+    try: lo = fn(**kw)
+    finally: Image.Image.resize = _resize
     out = (max(1, int(size[0] * scale)), max(1, int(size[1] * scale)))
-    big = next((c.im for c in _last if getattr(c, 'im', None) is not None and c.im.size == (size[0] * bean.S, size[1] * bean.S)), None)
+    big = next((im for im in reversed(_final) if im.size == (size[0] * bean.S, size[1] * bean.S)), None)
     if scale <= 1.0 or big is None: return lo.resize(out, Image.LANCZOS)
     return big.resize(out, Image.LANCZOS)
+
+
+_final = []
+_resize = Image.Image.resize
+
+
+def _spy(self, size, *a, **k):
+    if self.mode == 'RGBA' and tuple(size) in ((600, 1000), (1000, 1000)) and self.size == (size[0] * bean.S, size[1] * bean.S): _final.append(self)
+    return _resize(self, size, *a, **k)
 
 
 def _render(kw, scale):
@@ -250,3 +262,14 @@ def ride_card(spec, scale, rp, expr, mouth=None, lid=0.0, crank=30.0):
         if len(_rcache) > 120: _rcache.clear()
         im = _rcache[key] = _hires(bikes.ride, kw, (1000, 1000), scale)
     return im
+
+
+_bcache = {}
+
+
+def bike_card(kind, scale, view='3q', steer=0.0):
+    """A bike alone as a prop (bikes.draw_bike): 1000x1000 card, ground at 975."""
+    key = (kind, view, round(steer), round(scale, 3))
+    if key not in _bcache:
+        _bcache[key] = _hires(bikes.draw_bike, dict(kind=kind, view=view, steer=round(steer)), (1000, 1000), scale)
+    return _bcache[key]
