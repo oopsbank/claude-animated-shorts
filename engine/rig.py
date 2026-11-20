@@ -292,3 +292,23 @@ def bike_card(kind, scale, view='3q', steer=0.0):
     im = _bcache.get(key)
     if im is None: im = _bcache.put(key, _hires(bikes.draw_bike, dict(kind=kind, view=view, steer=round(steer)), (1000, 1000), scale))
     return im
+
+
+try:
+    import inserts                        # full-frame insert cards (wardrobe), e.g. broom_insert
+except Exception as e:                    # noqa: BLE001
+    inserts = None
+_icache = {}
+INSERT_RIGS = ('broom_insert',)
+
+
+def insert_card(kind, pose, spec, W, H):
+    """Full-frame transparent insert card (hands + prop), cached per pose."""
+    key = (kind, pose, spec.get('shirt'), spec.get('skin'))
+    if key not in _icache:
+        fn = getattr(inserts, kind) if inserts else None
+        if fn is None: return None
+        poses = getattr(inserts, 'POSES', {})
+        _icache[key] = fn(pose if pose in poses else 'broom_upright', w=W, h=H,
+                          sleeve=spec.get('shirt', '#2f6fb3'), skin=spec.get('skin', '#c98e63'))
+    return _icache[key]

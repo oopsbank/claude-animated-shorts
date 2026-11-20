@@ -249,6 +249,21 @@ def place_characters(base, k, f, meta):
         ins = spec.get('insert')
         if ins and shot.get('_insert') and shot['_insert'][0] <= f < shot['_insert'][1]:
             spec = dict(spec, **{kk: ins[kk] for kk in ('rig', 'view') if kk in ins})
+        if spec.get('rig') in rig.INSERT_RIGS:         # a full-frame insert card (e.g. the broom on the palm) over a soft plate
+            pose = 'broom_upright'; sw = (G['spans'][k]['w0'], G['spans'][k]['w1'])
+            for b in sorted(spec.get('beats', []), key=lambda b: b.get('at_word', 0)):
+                key_ = next((kk for kk in b if kk.startswith('broom_')), None)
+                if key_ and anim.beat_frame(sw, G['words'], b.get('at_word', 0))[0] <= f:
+                    pose = key_ if b[key_] is True else f"broom_{b[key_]}" if key_ in ('broom_tip', 'broom_flick') else key_
+                    if key_ in ('broom_tip', 'broom_flick'): pose = f"{key_}_{b[key_]}"
+            card_ = rig.insert_card(spec['rig'], pose, spec, W, H)
+            if card_ is not None:
+                soft = base.filter(ImageFilter.GaussianBlur(14)); base.paste(soft); base.alpha_composite(card_)
+                out.append({'id': spec.get('id', f'c{i}'), 'grounded': False, 'moving': False, 'planted': False, 'near': True,
+                            'foot_y': None, 'foot_l': None, 'foot_r': None, 'ground_y': meta['ground_y'], 'bbox': None,
+                            'face': None, 'head': [W / 2, 0], 'scale': 1.0, 'rig': None, 'pose': [pose], 'facing': 0,
+                            'expr': None, 'mouth': None, 'lid': 0})
+            continue
         if spec.get('path') and spec.get('view') == 'top' and any(e['name'] == 'path_line' for e in shot.get('fx', [])) and G['fx']:
             continue                                   # drawn by path_riders() on the track diagram
         st = tr.state_at(f)
@@ -315,8 +330,11 @@ def place_fx(base, k, f, chars):
     shot = G['shots'][k]; sp = G['spans'][k]; mod = G['fx']; out = []
     for e in shot.get('fx', []):
         land, wf = anim.beat_frame((sp['w0'], sp['w1']), G['words'], e.get('at_word', 0))
-        if e['name'] == 'path_line' and 'dur' not in e:     # a track diagram plays across the rest of the shot
-            start = land; dur = max(8, sp['f1'] - land + 6)
+        if e['name'] == 'path_line' and 'dur' not in e:     # a track diagram plays across the rest of the shot (or cut-in)
+            end = sp['f1']
+            ins_ = shot.get('_insert')
+            if ins_ and ins_[0] <= land < ins_[1]: end = ins_[1]
+            start = land; dur = max(8, end - land + 6)
         else:
             dur = max(4, int(round(float(e.get('dur', 0.8)) * FPS)))
             peak = float(e.get('peak', 0.3))
