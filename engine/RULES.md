@@ -10,3 +10,6 @@
 - Report stand-ins (missing plates, hats, arm poses) once, from the main process. Workers repeat every warning 4x.
 - At zoom 1.0 the anti-border clamp cancels every camera shake and kick. Any shot with kicks or `shake` needs a base zoom of at least 1.02.
 - Bike cards (`bikes.ride`) don't touch y=975 in rear view, because the tyre sits about 17 card px higher. Always re-plant a rig card on its lowest opaque row.
+- Bound card caches by bytes, not by count. A close-up rider card is about 4000 px square (64 MB), so a 120-entry cache per worker got workers OOM-killed. `multiprocessing.Pool.imap` then **hangs forever**, so use `ProcessPoolExecutor`, which raises `BrokenProcessPool`.
+- Hand workers contiguous frame chunks (`chunksize=12`). A sampled render (`--frames A:B:20`) misses the cache on every frame and is the worst case for timing, so don't use it to estimate a full render.
+- Capture hi-res cards at the card function's own final 4x->design-size resize. Picking "the first canvas of the right size" grabbed a single layer of turned/rear views (arms only).
