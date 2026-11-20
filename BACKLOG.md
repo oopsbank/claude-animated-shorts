@@ -25,9 +25,11 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [x] P1 Side view (`view='side'`, facing left/right, spec §2.7) and a 3/4 view. (`turned()` rig; `previews/views_v1.png`; reviewer PASS 8/7/7/8/8)
 - [x] P1 Riding pose on a bicycle and a motorbike (side and 3/4), with 2D bike props: steer angle on the front wheel and bars, and a lean angle for the whole bike. (`bikes.py`: bicycle, motorbike, nobs_bike; side/3q/rear/front/top; steer, lean, bike_lean + body_lean, knee_out, hold='fixed'; rear/front bean views; `helmet` hat with sticker; `previews/ride_v1.png`; reviewer PASS 7/8/7/8/8)
 - [ ] P2 Riding: the near leg in side view still makes a small S-bend near the seat tube; the 3/4 motorbike steer could read stronger; rear-view far hand hides behind a hard-leaning torso. Each `ride()` takes ~3 s (full-size masks in `turned`), so crop the layers if the engine needs speed.
-- [ ] P1 Mouth shapes for lip sync (`mouth=` closed, small, open, wide, O, smile_talk) overriding any expression.
-- [ ] P1 Animatable joints (arm/leg angles, head tilt, body lean, blink) and a foot-locked walk cycle (DRAWING_RULES 20-29).
-- [ ] P2 More hats, outfits and props as the script needs them (see `claude/area-scripts` BACKLOG, e.g. a broom).
+- [x] P1 Mouth shapes for lip sync (`mouth=` closed, small, open, wide, O, smile_talk) overriding any expression. (all views incl. legacy front; `closed` follows the expression; side = profile shapes; `previews/mouths_v1.png`; reviewer PASS 7/7/8/8/8)
+- [x] P1 Animatable joints (arm/leg angles, head tilt, body lean, blink) and a foot-locked walk cycle (DRAWING_RULES 20-29). (`turned(pose=...)`, `walk.py` walk_pose/walk_track/blink_at, planted foot slides 0 px; `previews/walk_v1.png`; reviewer PASS 8/7/7/7/8)
+- [ ] P2 Walk: hip highest just after passing (the up pose) rather than at passing; arms could lag a little more at passing.
+- [ ] P2 Speed: `turned()` takes ~3 s per frame (full-size S=4 layers and rotations). Crop layers to the figure bbox before the engine renders long shots.
+- [ ] P2 More hats, outfits and props as the script needs them: `broom` balanced on the palm (`broom_flick`, `broom_tip`), held `helmet` prop with the sticker, clipboard reading "CORNERS MADE: 0" (the `helmet` hat with sticker is done).
 - [ ] P1 (for `bike-countersteer`) A `ride` arm pose plus a seated lower body; a `helmet` hat (open-face, eyes visible) and a `helmet` held prop; a `broom` balanced on the palm (`broom_flick`, `broom_tip`); bike rigs `bicycle`, `motorbike` and `nobs_bike` (a second handlebar fixed to the frame) in `side`/`front`/`rear`/`top` views; `lean` (rider and bike together), plus `body_lean`/`bike_lean` (separate) and `knee_out`; `view: rear` for the bean body. Cast specs are in `scripts/bike-countersteer/build.py` (`CAST`).
 
 ## wardrobe (`stickman/`): ON HOLD by user decision (stickman reserved for later)

@@ -442,7 +442,7 @@ def profile_mouth(d, kind, hx, my, u, s):
     elif kind == 'wave': L([(bx + (fx - bx) * k / 10, my + math.sin(k * 1.3) * 1.5 * u) for k in range(11)], 3.5)
     elif kind == 'small': poly([(bx + s * 1 * u, my), (fx, my - 3.4 * u), (fx, my + 4.4 * u)], MOUTH)
     elif kind == 'open':
-        poly([(bx, my), (fx, my - 4.5 * u), (fx, my + 7 * u)], MOUTH)
+        poly([(bx, my), (fx, my - 4.5 * u), (fx, my + 9 * u)], MOUTH)
         d.polygon([(x * S, y * S) for x, y in [(fx - s * 4.5 * u, my + 4 * u), (fx - s * 0.8 * u, my + 3 * u), (fx - s * 0.8 * u, my + 6 * u)]], fill=TONGUE)
     elif kind == 'wide':
         poly([(bx - s * 1 * u, my - 0.5 * u), (fx, my - 6 * u), (fx, my + 8.5 * u)], MOUTH)
@@ -450,7 +450,7 @@ def profile_mouth(d, kind, hx, my, u, s):
         d.polygon([(x * S, y * S) for x, y in [(fx - s * 6 * u, my + 5 * u), (fx - s * 0.9 * u, my + 3.5 * u), (fx - s * 0.9 * u, my + 7.5 * u)]], fill=TONGUE)
     elif kind == 'O':                                     # a pucker: lips pushed out to (and a little past) the face edge
         cx_ = hx + s * 41 * u
-        d.ellipse(((cx_ - 4.2 * u) * S, (my - 4.6 * u) * S, (cx_ + 4.2 * u) * S, (my + 5.4 * u) * S), fill=mix(MOUTH, TONGUE, 0.25), outline=K, width=int(2.6 * u * S))
+        d.ellipse(((cx_ - 5.4 * u) * S, (my - 6 * u) * S, (cx_ + 5.4 * u) * S, (my + 7 * u) * S), fill=mix(MOUTH, TONGUE, 0.25), outline=K, width=int(3.2 * u * S))
         d.ellipse(((cx_ + s * 1 * u - 1.6 * u) * S, (my - 1.6 * u) * S, (cx_ + s * 1 * u + 1.6 * u) * S, (my + 2.4 * u) * S), fill=MOUTH)
     elif kind == 'smile_talk':                            # upturned back corner + an upper-lip line: unlike 'small'
         poly([(bx - s * 1 * u, my - 4.5 * u), (fx, my - 1.5 * u), (fx - s * 1 * u, my + 6.5 * u)], MOUTH)
