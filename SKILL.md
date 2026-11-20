@@ -18,7 +18,7 @@ The style reference is a channel studied privately (`references/`: STYLE_BIBLE.m
 - Never say the channel's name in a voice-over or description.
 
 User rules that apply:
-- No captions or labels in the video.
+- **Dynamic word-by-word captions ON** (user decision, 2026-11-20): see PIPELINE.md › Captions. No other labels.
 - English only.
 - Voice: one steady tone.
 - Jokes are researched real facts.

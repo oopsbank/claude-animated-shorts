@@ -5,7 +5,7 @@ This repo is worked on by **several Claude sessions in parallel**, each owning o
 ## The video we make
 - A vertical 1080x1920, 30 fps, 45-65 s explainer short: "Why / How + a surprising real phenomenon".
 - Our own **2D bean-head cartoon characters** (`characters/`, the main cast) act over **3D background plates** rendered in Blender (`blender/`). The stickman (`stickman/`) is **on hold**, reserved for later.
-- There is a voice-over, SFX and music, and no captions unless the user asks.
+- There is a voice-over, SFX and music, and **dynamic word-by-word captions** (the user asked for them on 2026-11-20; see Captions below).
 - The script formula and visual targets are in [`references/STYLE_BIBLE.md`](references/STYLE_BIBLE.md). The reference channel is study material only: never copy its scripts, characters, shots or titles, and never name it in our videos.
 - Every character and story is ours. Facts must be real and sourced.
 
@@ -78,6 +78,14 @@ Coordination roles:
 - `render(name, t, size, **kw)`: `t` runs 0..1 over the effect's life and the result is an RGBA image.
 - Use flat 2D cartoon sprites in the same style as the cast: plum ink #241726 with a thick/thin line weight and soft crescent shading.
 - `fx/CATALOG.md` lists every name with a preview PNG.
+
+## Captions (engine renders them from words.json)
+- **One word at a time** (2-3 only for very short words like "a", "of the"), with a hard swap on each word's start time.
+- **Style:** white bold sans, about 7% of the frame height, a thick black outline (about 10% of the font size) and a soft drop shadow.
+- **Placement:** horizontally centred, baseline at about 66% of the frame height. Nudge it up if a face or key prop would sit behind it.
+- **Dynamic:** each word pops in, scaling 1.25 to 1.0 over 4 frames with an ease-out and a slight overshoot. **Keywords** (numbers, "left", "right", the punchline, key nouns) are yellow #ffd23f and pop bigger.
+- Captions sit above FX and below nothing. They must never cover the face of the character speaking.
+- Must pass: readable at phone size, in sync with the voice (each word appears 0-2 frames before it is spoken), and no caption on screen during silences longer than 0.4 s.
 
 ## Branches
 - Each session works on **its own branch** (given in its first message) and pushes there. Never push to another session's branch.
