@@ -58,22 +58,28 @@ C.lamp_post(-1.55, 1.6)
 C.point((-0.6, 12.0, 2.2), power=500, radius=1.0)    # inn doorway spill
 C.point((5.6, 10.5, 2.0), power=250, radius=1.0)
 
-def per_light(ln):   # hill reads green by day, deep blue at night
+COB = bpy.data.materials['cobble'].node_tree.nodes['tint'].color_ramp.elements
+def per_light(ln):   # hill reads green by day, deep blue at night; cobbles cool at night so only lamp pools are warm
+    cool = ln == 'night'
+    COB[0].color = (0.14, 0.14, 0.22, 1) if cool else (0.20, 0.15, 0.13, 1)
+    COB[1].color = (0.22, 0.22, 0.32, 1) if cool else (0.34, 0.24, 0.18, 1)
     HILL.inputs['Base Color'].default_value = {'day': (0.16, 0.36, 0.14, 1), 'golden': (0.20, 0.22, 0.10, 1),
                                                'night': (0.05, 0.07, 0.14, 1)}[ln]
 
 CAMS = {
-    'wide': dict(loc=(0.7, -5.4, 1.35), target=(0.0, 6.0, 2.0), lens=27, roll=3, stand=(0.35, -0.2, 0), fstop=2.0,
+    'wide': dict(loc=(0.7, -5.4, 1.35), target=(0.0, 6.0, 2.0), lens=27, roll=3, stand=(0.35, -0.2, 0), fstop=2.0, haze_range=(4, 45),
                  per_light=per_light),
-    'well_close': dict(loc=(-0.15, 1.15, 1.45), target=(-1.75, 4.9, 1.25), lens=38, roll=-4, stand=(-1.15, 4.1, 0),
+    'well_close': dict(loc=(-0.15, 1.15, 1.45), target=(-1.4, 4.9, 1.25), lens=38, roll=-4, stand=(-1.15, 4.1, 0),
                        fstop=2.4, ink_fade=(4.5, 9.0, 0.85), haze_range=(3, 60), per_light=per_light),
     'square_med': dict(loc=(0.75, -3.4, 1.3), target=(0.1, 6.0, 1.75), lens=30, roll=2, stand=(0.35, -0.2, 0), fstop=2.4,
                        ink_fade=(6, 25, 0.5), per_light=per_light),
-    'street_med': dict(loc=(0.45, -32.5, 1.3), target=(-0.1, 0.0, 2.4), lens=30, roll=0, stand=(0.1, -29.6, 0), fstop=2.4,
+    'street_med': dict(loc=(0.45, -32.5, 1.3), target=(-0.1, 0.0, 2.4), lens=30, roll=0, stand=(0.25, -29.6, 0), fstop=2.4, haze_range=(4, 45),
                        ink_fade=(6, 30, 0.5), per_light=per_light),
-    'street_low': dict(loc=(3.2, -5.8, 0.45), target=(0.8, 8.0, 2.8), lens=21, roll=-3, stand=(3.15, -3.1, 0), fstop=2.8,
+    'street_low': dict(loc=(3.2, -5.8, 0.45), target=(0.8, 8.0, 2.8), lens=21, roll=-3, stand=(2.45, -0.7, 0), fstop=2.8,
                        per_light=per_light),
 }
-LIGHTS = {'day': dict(az=25, elev=48, grade_sat=1.12, grade_gain=0.97), 'golden': dict(az=-20, elev=14),
-          'night': dict(az=210, grade_sat=0.92, grade_gain=1.12)}
+LIGHTS = {'day': dict(az=25, elev=48, grade_sat=1.12, grade_gain=0.97),
+          'golden': dict(az=-20, elev=14, sun_e=11.0, sun=(1.0, 0.50, 0.18), amb=(0.40, 0.50, 1.0), amb_e=0.32, grade_warm=(1.04, 1.0, 0.9),
+                         clouds=(1.0, 0.72, 0.45), sky=[(0.0, (1.0, 0.70, 0.32)), (0.10, (1.0, 0.58, 0.30)), (0.30, (0.50, 0.58, 0.88)), (0.60, (0.24, 0.40, 0.82))]),
+          'night': dict(az=210, fill_e=60, sun_e=0.6, grade_sat=0.95, grade_gain=1.08)}
 C.main('village', CAMS, LIGHTS)

@@ -34,6 +34,11 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - `color_ramp.elements` are re-sorted by position after `elements.new()`. Index the elements by position, not by creation order.
 - Frame for medium shots: a 1.75 m character should fill about 55-65% of the frame height, as most reference frames do. Wide shots with tiny characters are the exception.
 
+- Ink that is 2-3 px at 1080 wide vanishes at phone and contact-sheet size. On open sets with big distances, use about 4.8 px, keep far lines at 0.6 thickness, and widen the distance fade.
+- Flat planes (road, kerbs) only get outlines from Freestyle *border* edges, and anything lying on top (painted line strips) hides those borders. Ink the top strips too.
+- Golden hour needs a strong orange sun (energy ~12) with a weak blue ambient, plus a warm grade. A pink-lavender sky and haze alone reads as "pastel dusk", not warm-against-cool.
+- Lamp glass must stay amber: keep its emission low (≤ 0.3 × the night multiplier), or it clips to white under Khronos PBR Neutral.
+
 ## Audio
 - ElevenLabs free tier: always dry-run `tts.py` first and read the extracted text. The voice-over parser once grabbed "Facts and sources (… the voice-over)" instead of "## Voice-over". Prefer a heading that *starts* with "Voice-over", and take only the list items.
 - Cache the raw TTS response (`_tts_response.json`) and re-process from it. Trimming, pause tightening and word refinement must never cost characters.
@@ -74,3 +79,5 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Generate `shots.json` from a script that names anchor words instead of hand-typed word indexes, and that checks every voice-over line has a shot with identical text, plus word counts and the shot mix.
 - Keep the script at or under about 232 words (≤ 63 s), so the voice has headroom under the 240-word / 65 s cap.
 - Never `git stash drop` after a `git stash pop` that hit a conflict: the pop did not apply. Check `git stash list` and `git diff` first. (A dropped stash can be recovered with `git fsck --no-reflog | grep 'dangling commit'`.)
+- Keep raw renders (`plates/_tmp/*_raw.png`) and the depth pass, so grade and haze fixes are a `--repost` (Python only) instead of a full re-render.
+- Never `git stash` while background renders are queued: a later process in the queue starts from the stashed (old) files.
