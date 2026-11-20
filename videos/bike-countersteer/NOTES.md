@@ -27,3 +27,34 @@
 4. **s14 (`pit_ots`):** the near instructor is seen from behind at 1.7x. Check that the broom on the palm reads clearly.
 5. **Not reviewed:** no independent reviewer has watched this full draft yet. The engine's earlier test clip scored motion 7, acting 6, readability 7, pacing 7 and look 6.
 6. **Blinks:** half-closed blink frames still use an engine overlay; bean.py has no half-lid option.
+
+---
+
+# Draft v2 (2026-11-20)
+
+`draft_v2.mp4` is 1080x1920, 30 fps, exactly 1921 frames, with `mix.wav` muxed in. **It is a draft. Not for publishing.**
+
+- **Inputs:** shots v2 (f3acd3e), wardrobe's rear-view motorbike and `broom_insert` card, and the final plates.
+- **New since v1:**
+  - word-by-word captions;
+  - a per-shot grade;
+  - shots v2 (pit shot/reverse-shot, rider close-up punch-ins, the s14 broom insert);
+  - countersteer cue arrows at handlebar height.
+- **Engine:** `claude/area-engine` at commit f8d6868. After the review, the changed shots (s01, s02, s06, s07, s12-s15, s17, s18) were re-rendered with the same per-shot grade (`grade.json`) and spliced into the full render.
+- **Automatic QA** (`qa/engine_qa_draft_v2.md`): all hard checks pass. That includes caption sync (0-2 f), no captions in silences and no caption over a face. Frame stats (a warning): 43 of 65 sampled frames pass (v1: 6 of 65). The rest are plate content (edge density, sky-blue share).
+- **Contact sheet:** `qa/contact_every_2s_draft_v2.jpg`.
+
+## Independent review (one pass, before the fixes)
+- **Scores:** motion 7, acting 7, readability 6, pacing 8, look 8, clarity 5.
+- **Blockers, both fixed (not re-reviewed):**
+  1. **s13:** the countersteer flick was hidden behind Dale's body. Fixes:
+     - an arrow now appears at handlebar height with every automatic flick;
+     - the flick is stronger;
+     - the `contact_shift` "nudge" flicks the bars.
+  2. **s14:** the broom tipped before the hand flicked. The tip now plays 10 f after the flick, as its result.
+- **Nice-to-haves, not done:**
+  - Dale is small behind the near instructor in s18 (60-64 s); scripts could swap the shot/reverse-shot or move Dale forward;
+  - the "?" at 36 s is small;
+  - the s10 close-up has a static mouth (Dale doesn't talk; it's voice-over);
+  - the riders are specks in s15 (50-51 s, on `track_wide`);
+  - the broom card's ghost hand is faint (wardrobe).
