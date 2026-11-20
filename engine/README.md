@@ -53,7 +53,7 @@ The output folder gets `frames/f_NNNNN.jpg`, `video.mp4`, and `track.json`. The 
 
 ## Stand-ins (until other areas ship)
 - **Plates:** missing plates fall back to `engine/test/plates/village__{M,A}__day` by shot size. The stand-ins are on with `ENGINE_STANDIN=1`, the default; set it to 0 to fail hard instead.
-- **Arm poses:** `ride` -> `hold`.
-- **Hats:** `helmet` -> `hardhat`.
+- **Riders:** a character with `rig` uses `bikes.ride()`. Its beats drive `lean` / `body_lean` / `bike_lean`, `knee_out`, and an optional `steer`. With no explicit `steer`, the engine adds an **automatic countersteer**: before each lean change of more than 5°, the bars flick the other way (up to 10°, peaking 5 f before the lean lands), and a held lean steers gently into the turn. Cards are cached per 1° bucket. The sticker comes from a `helmet_sticker:` entry in `props`.
+- **Bean faces:** `mouth=` and `blink=` come from bean.py. Only half-lid blink frames still use the engine overlay.
 - **Outfits:** an outfit given as a bare string gets a default colour.
-- **Not drawn yet:** `rig`, `view: rear`/`top`, `bike_lean`, `knee_out`, `contact_shift`, `points_at`, `broom_*`, `path`. The character is drawn standing and front-facing, and a lean rotates the whole body.
+- **Not drawn yet:** `contact_shift`, `points_at`, `broom_*`, `path` and `view: rear` on a standing (non-riding) character.

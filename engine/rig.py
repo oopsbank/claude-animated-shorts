@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.join(ROOT, 'characters', 'scripts'))
 import bean  # noqa: E402
 
 PARAMS = set(inspect.signature(bean.character).parameters)
-HAS_MOUTH, HAS_LID = 'mouth' in PARAMS, 'lid' in PARAMS
+HAS_MOUTH, HAS_LID, HAS_BLINK = 'mouth' in PARAMS, 'lid' in PARAMS, 'blink' in PARAMS
 ADULT_H = 975 - (975 - 3.5 * 2 * 111)       # adult figure height in card units (crown -> soles) = 777
 SOLE_Y = 975
 INK = bean.INK
@@ -26,20 +26,30 @@ _last = []
 
 
 class _Grab(bean.Canvas):
-    def __init__(self):
-        super().__init__(); _last.append(self)
+    def __new__(cls, *a, **k):          # bikes.py builds its canvas with Canvas.__new__(Canvas): record those too
+        o = super().__new__(cls); _last.append(o); return o
 
 
 bean.Canvas = _Grab
+try:
+    import bikes                         # rider rigs (wardrobe); imported after the patch so it sees _Grab
+except Exception as e:                   # noqa: BLE001
+    bikes = None; print('  [rig] bikes.py unavailable:', e)
+
+
+def _hires(fn, kw, size, scale):
+    """Run a card function and downsample its 4x supersampled main canvas (the first one of the right size) to `scale`."""
+    _last.clear()
+    lo = fn(**kw)
+    out = (max(1, int(size[0] * scale)), max(1, int(size[1] * scale)))
+    big = next((c.im for c in _last if getattr(c, 'im', None) is not None and c.im.size == (size[0] * bean.S, size[1] * bean.S)), None)
+    if scale <= 1.0 or big is None: return lo.resize(out, Image.LANCZOS)
+    return big.resize(out, Image.LANCZOS)
 
 
 def _render(kw, scale):
     """bean card at `scale` x the 600x1000 design size, downsampled from the 4x canvas."""
-    _last.clear()
-    lo = bean.character(**kw)
-    if scale <= 1.0 or not _last: return lo.resize((max(1, int(600 * scale)), max(1, int(1000 * scale))), Image.LANCZOS)
-    big = _last[-1].im
-    return big.resize((int(600 * scale), int(1000 * scale)), Image.LANCZOS)
+    return _hires(bean.character, kw, (600, 1000), scale)
 
 
 # ---------------------------------------------------------------- spec -> bean kwargs
@@ -198,8 +208,9 @@ _cache = {}
 def card(spec, pose, expr, facing, scale, lid=0.0, mouth=None, prop='keep'):
     kw = bean_kwargs(dict(spec, prop=spec.get('prop') if prop == 'keep' else prop))
     kw.update(arm_pose=tuple(arm_ok(p) for p in pose), expr=expr, facing=float(facing))
-    if mouth and HAS_MOUTH: kw['mouth'] = mouth
+    if mouth and HAS_MOUTH: kw['mouth'] = BEAN_MOUTH.get(mouth, mouth)
     if lid and HAS_LID: kw['lid'] = lid
+    elif lid >= 1 and HAS_BLINK: kw['blink'] = True
     key = (repr(sorted(kw.items())), round(scale, 3))
     im = _cache.get(key)
     if im is None:
@@ -208,5 +219,34 @@ def card(spec, pose, expr, facing, scale, lid=0.0, mouth=None, prop='keep'):
     g = face_geom(kw, scale)
     if mouth and not HAS_MOUTH:
         im = draw_mouth(im, g, 'smile' if expr in HAPPY and mouth in ('open', 'wide') else mouth, expr, bool(kw.get('moustache')))
-    if lid and not HAS_LID: im = draw_lid(im, g, lid, expr)
+    if lid and not HAS_LID and not (lid >= 1 and HAS_BLINK): im = draw_lid(im, g, lid, expr)    # half-lid frames
     return im, g
+
+
+BEAN_MOUTH = {'smile': 'smile_talk'}
+RIDE_PARAMS = set(inspect.signature(bikes.ride).parameters) if bikes else set()
+_rcache = {}
+
+
+def ride_card(spec, scale, rp, expr, mouth=None, lid=0.0, crank=30.0):
+    """A rider on a bike (characters/scripts/bikes.py). rp: dict(lean, body_lean, bike_lean, steer, knee_out), rider-side
+    degrees. Cached per (expr, mouth, blink, 1-degree buckets) so a held lean costs one render. 1000x1000 card, ground 975."""
+    char = bean_kwargs(spec); char.pop('arm_pose', None)
+    if char.get('hat') == 'hardhat' and spec.get('hat') == 'helmet': char['hat'] = 'helmet'
+    b = lambda v: round(float(v or 0.0))
+    kw = dict(char=char, bike=spec['rig'], view=spec.get('view', 'rear'), steer=b(rp.get('steer')), expr=expr,
+              hold=spec.get('hold', 'fixed' if spec['rig'] == 'nobs_bike' else 'steer'), knee_out=bool(rp.get('knee_out')))
+    if rp.get('bike_lean') is not None or rp.get('body_lean'):
+        kw['bike_lean'] = b(rp.get('bike_lean', rp.get('lean', 0))); kw['body_lean'] = b(rp.get('body_lean'))
+    else: kw['lean'] = b(rp.get('lean'))
+    if spec.get('sticker'): kw['sticker'] = spec['sticker']
+    if spec['rig'] == 'bicycle': kw['crank'] = round(crank / 30) * 30 % 360
+    if mouth: kw['mouth'] = BEAN_MOUTH.get(mouth, mouth)
+    if lid >= 1: kw['blink'] = True
+    kw = {k: v for k, v in kw.items() if k in RIDE_PARAMS}
+    key = (repr(sorted((k, v if k != 'char' else repr(sorted(v.items()))) for k, v in kw.items())), round(scale, 3))
+    im = _rcache.get(key)
+    if im is None:
+        if len(_rcache) > 120: _rcache.clear()
+        im = _rcache[key] = _hires(bikes.ride, kw, (1000, 1000), scale)
+    return im

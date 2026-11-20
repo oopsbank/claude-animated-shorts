@@ -84,7 +84,7 @@ G = {}
 
 def setup(shots_path, words_path, plate_dirs):
     import rig
-    anim.RIG_OK = 'rig' in rig.PARAMS
+    anim.RIG_OK = rig.bikes is not None
     doc = json.load(open(shots_path)); words = json.load(open(words_path))
     if isinstance(words, dict): words = words.get('words', [])
     shots = doc['shots']; spans = anim.shot_spans(shots, words)
@@ -171,11 +171,19 @@ def place_characters(base, k, f, meta):
             if f < wf: continue
         s = meta['px_per_m'] * float(spec.get('height_m', 1.75)) / (3.5 * 2 * 111) * float(spec.get('scale', 1.0))
         mouth = G['mouths'][k][i].get(f, 'closed') if spec.get('talk') else None
-        im, g = rig.card(spec, st['pose'], st['expr'], st['facing'], s, st['lid'], mouth, prop=st.get('prop'))
-        breath = 1 + 0.004 * math.sin(2 * math.pi * (f / FPS) / 2.8 + i)            # rule 28, anchored at the soles
-        if abs(breath - 1) > 1e-4:
-            im = im.resize((im.width, int(round(im.height * breath))), Image.BICUBIC)
-        sx, sy = 300 * s, 975 * s * breath
+        if st.get('rig'):            # rider on a bike (bikes.ride): 1000x1000 card, ground at 975, no breathing (it's riding)
+            rs = dict(spec)
+            sticker = next((p.split(':', 1)[1] for p in shot.get('props', []) if p.startswith('helmet_sticker:')), None)
+            if sticker and spec.get('hat') == 'helmet': rs.setdefault('sticker', sticker)
+            im = rig.ride_card(rs, s, st['rig'], st['expr'], mouth, st['lid'], crank=f * 14.0)
+            g = {'crown': 0}; breath = 1.0; sx, sy = 500 * s, 975 * s
+            bb0 = im.getchannel('A').getbbox(); g['crown'] = bb0[1] if bb0 else 0
+        else:
+            im, g = rig.card(spec, st['pose'], st['expr'], st['facing'], s, st['lid'], mouth, prop=st.get('prop'))
+            breath = 1 + 0.004 * math.sin(2 * math.pi * (f / FPS) / 2.8 + i)            # rule 28, anchored at the soles
+            if abs(breath - 1) > 1e-4:
+                im = im.resize((im.width, int(round(im.height * breath))), Image.BICUBIC)
+            sx, sy = 300 * s, 975 * s * breath
         ft0 = feet_of(im.getchannel('A'), sx)                 # feet measured before the lean rotation (stable stroke band)
         if abs(st['lean']) > 0.05: im = im.rotate(-st['lean'], resample=Image.BICUBIC, center=(sx, sy))
         im = tint_card(im, meta.get('tint', '#fff8f0'))
@@ -183,7 +191,7 @@ def place_characters(base, k, f, meta):
         gx = st['x'] * W; gy = meta['ground_y'] - st['lift'] * fig_h
         ox, oy = int(round(gx - sx)), int(round(gy - sy))
         ft = feet_of(im.getchannel('A'), sx)
-        if ft and abs(st['lean']) > 0.05: oy += int(round(sy - ft['y'])) - 1   # rotating about the soles drops one foot: re-plant it
+        if ft and (abs(st['lean']) > 0.05 or st.get('rig')): oy += int(round(sy - ft['y'])) - 1   # re-plant: lean drops a foot; bike cards' wheels sit above 975
         if ft0 and ft:     # report the foot strokes' x after the rotation, from the unrotated band (rotation about the soles)
             th = math.radians(st['lean'])
             rx = lambda x: None if x is None else sx + (x - sx) * math.cos(th)
@@ -201,7 +209,7 @@ def place_characters(base, k, f, meta):
                     'foot_y': ft['y'] + oy if ft else None, 'foot_l': ft['l'] + ox if ft and ft['l'] is not None else None,
                     'foot_r': ft['r'] + ox if ft and ft['r'] is not None else None, 'ground_y': meta['ground_y'],
                     'bbox': [bb[0] + ox, bb[1] + oy, bb[2] + ox, bb[3] + oy] if bb else None,
-                    'head': [gx, oy + g['crown']], 'scale': s, 'pose': list(st['pose']), 'facing': st['facing'], 'expr': st['expr'], 'mouth': mouth, 'lid': st['lid']})
+                    'head': [gx, oy + g['crown']], 'scale': s, 'rig': {k: (round(v, 1) if isinstance(v, float) else v) for k, v in st['rig'].items()} if st.get('rig') else None, 'pose': list(st['pose']), 'facing': st['facing'], 'expr': st['expr'], 'mouth': mouth, 'lid': st['lid']})
     return out
 
 

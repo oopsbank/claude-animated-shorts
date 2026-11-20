@@ -161,7 +161,11 @@ class Track:
                 self.blinks.append(land - 1)        # shut frames (land, land+1) hide the expression swap
         self.blinks.sort()
         # no bike rig in bean.py yet: a 20-34 deg bike lean on a standing figure tips it over, so scale it down
-        self.lean_k, self.lean_max = (0.3, 8.0) if spec.get('rig') and not RIG_OK else (1.0, 90.0)
+        self.rig = bool(spec.get('rig')) and RIG_OK
+        # without a bike rig a 20-34 deg bike lean on a standing figure tips it over: scale it down; with a rig the
+        # lean goes to bikes.ride() instead and the card itself is not rotated
+        self.lean_k, self.lean_max = (0.0, 0.0) if self.rig else (0.3, 8.0) if spec.get('rig') else (1.0, 90.0)
+        self._rig_track(spec, shot_span, words)
         self.start = {'pose': self.spec.get('pose', 'idle'), 'expr': self.spec.get('expr', 'neutral'), 'facing': self.facing0,
                       'prop': self.spec.get('prop'), 'hold_lean': float(self.spec.get('hold_lean', 0.0))}
         self._moves()
@@ -232,8 +236,43 @@ class Track:
         x, hop_lift, moving = self.x_at(f)
         if moving: lift += 0.04 * hop_lift; grounded = hop_lift < 1e-6; lean += 2.0 * (1 if self._dir(f) > 0 else -1)
         lid = lid_at(f, self.blinks)
-        return {'pose': pose, 'expr': st['expr'], 'prop': st.get('prop'), 'facing': round(float(st['facing']), 2), 'lean': lean,
+        return {'rig': self.rig_at(f) if self.rig else None, 'pose': pose, 'expr': st['expr'], 'prop': st.get('prop'), 'facing': round(float(st['facing']), 2), 'lean': lean,
                 'lift': lift, 'grounded': grounded, 'lid': lid, 'x': x, 'moving': moving}
+
+    RIG_KEYS = ('lean', 'body_lean', 'bike_lean', 'steer')
+
+    def _rig_track(self, spec, span, words):
+        """Rider-side rig values per beat (raw shots.json signs; bikes.ride() handles the view)."""
+        sw = (span['w0'], span['w1']); cur = {k: None for k in self.RIG_KEYS}; cur['knee_out'] = False
+        self.rig_keys = []                                   # (land, before, after)
+        for b in sorted(spec.get('beats', []), key=lambda b: b.get('at_word', 0)):
+            land, _ = beat_frame(sw, words, b.get('at_word', 0)); prev = dict(cur)
+            for k in self.RIG_KEYS + ('knee_out',):
+                if k in b: cur[k] = b[k]
+            if land <= self.f0 + 1: self.rig0 = dict(cur); continue
+            if cur != prev: self.rig_keys.append((land, prev, dict(cur)))
+        if not hasattr(self, 'rig0'): self.rig0 = {k: None for k in self.RIG_KEYS}; self.rig0['knee_out'] = False
+
+    def rig_at(self, f):
+        """Eased rig values: 2 f lean-back anticipation, out_back overshoot over SETTLE frames, and an automatic
+        countersteer: before every lean change the bars flick the OTHER way (the video's whole point), peaking 5 f
+        before the lean lands; held leans steer gently into the turn."""
+        v = {k: (float(self.rig0[k]) if self.rig0[k] is not None else None) for k in self.RIG_KEYS}
+        v['knee_out'] = self.rig0['knee_out']; flick = 0.0
+        for land, a, b in self.rig_keys:
+            n = f - land
+            if n < -12: break
+            for k in self.RIG_KEYS:
+                if b[k] is None or a[k] == b[k]: continue
+                va = float(a[k] or 0.0); vb = float(b[k])
+                if n < 0: v[k] = va - 0.08 * (vb - va) * smooth((n + 3) / 3) if n >= -2 else va
+                else: v[k] = vb if n >= SETTLE else lerp(va, vb, out_back(n / SETTLE, 1.3))
+                if k in ('lean', 'bike_lean') and abs(vb - va) > 5 and b.get('steer') is None:
+                    flick += -math.copysign(min(10.0, 0.4 * abs(vb - va)), vb - va) * math.sin(math.pi * clamp((n + 12) / 14))
+            if n >= 0: v['knee_out'] = b['knee_out']
+        tot = v['lean'] if v['lean'] is not None else (v['bike_lean'] or 0.0)
+        if v['steer'] is None: v['steer'] = flick + max(-5.0, min(5.0, 0.15 * tot))
+        return v
 
     def hold_lean_at(self, f):
         v = self._hold_lean_at(f) * self.lean_k
@@ -294,13 +333,14 @@ class Camera:
             else: f_a, f_b = self.f0, self.f1
             self.travel = (axis, -sg * m, sg * m, f_a, f_b, 'smoother' if mv != 'follow' else 'linear')
         if mv == 'shake':                                           # nervous handheld beat: small kicks every ~8 f
-            self.push = 0.0; self.shake = float(c.get('amount', 0.01)) / 0.01 * 0.5
+            self.push = 0.02; self.shake = float(c.get('amount', 0.01)) / 0.01 * 0.5
         else: self.shake = 0.0
         self.glides = []
         for g in c.get('glides', [c] if mv == 'glide' and 'to' in c else []):
             land, wf = beat_frame(sw, words, g.get('at_word', 0))
             self.glides.append((land, int(g.get('dur', 10)), g.get('to', {}), g.get('ease', 'out')))
         self.kicks = sorted(set(kicks) | {beat_frame(sw, words, k)[1] for k in c.get('kick', [])})
+        if self.kicks or self.shake: self.base['zoom'] = max(self.base['zoom'], 1.02)   # at zoom 1 the border clamp eats any shake
 
     def at(self, f):
         n = f - self.f0; L = max(1, self.f1 - self.f0)

@@ -8,3 +8,5 @@
 - Every directional camera move (glide, pan, tilt) needs a base zoom of `1 + amount`, or the plate's border shows. `camera_xform` also clamps the view centre and raises the zoom for roll.
 - `shots.json` left/right are the **rider's**. A character facing the viewer has their left on screen right: swap `arm_pose` and negate `lean` unless `view` is `rear`.
 - Report stand-ins (missing plates, hats, arm poses) once, from the main process. Workers repeat every warning 4x.
+- At zoom 1.0 the anti-border clamp cancels every camera shake and kick. Any shot with kicks or `shake` needs a base zoom of at least 1.02.
+- Bike cards (`bikes.ride`) don't touch y=975 in rear view, because the tyre sits about 17 card px higher. Always re-plant a rig card on its lowest opaque row.
