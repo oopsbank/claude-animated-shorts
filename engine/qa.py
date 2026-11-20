@@ -74,8 +74,9 @@ def main():
         for c in m['chars']:
             sb = c.get('screen_bbox')
             if sb:
-                edges = [e for e, v in (('left', sb[0] < 1), ('right', sb[2] > W - 1), ('top', sb[1] < 1),
-                                         ('bottom', sb[3] > H - 1 and not crop.get(m['shot']))) if v]
+                cl = crop.get(m['shot'])       # close shots may crop at the bottom and the sides, never the top
+                edges = [e for e, v in (('left', sb[0] < 1 and not cl), ('right', sb[2] > W - 1 and not cl), ('top', sb[1] < 1),
+                                         ('bottom', sb[3] > H - 1 and not cl)) if v]
                 if edges and not m.get('transition') and not c.get('near') and not m.get('crop_any'): clip.append((f, c['id'], edges))
             if c['grounded'] and c['foot_y'] is not None and c['ground_y'] < H and abs(c['foot_y'] - c['ground_y']) > 4:   # off-frame ground: n/a
                 ground.append((f, c['id'], round(c['foot_y'] - c['ground_y'], 1)))

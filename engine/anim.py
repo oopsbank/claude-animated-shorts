@@ -261,6 +261,18 @@ class Track:
             if cur != prev: self.rig_keys.append((land, prev, dict(cur)))
         if not hasattr(self, 'rig0'): self.rig0 = {k: None for k in self.RIG_KEYS}; self.rig0.update(knee_out=False, contact_shift=None)
 
+    def flick_cues(self):
+        """(peak frame, +1 = bars flick to the rider's right / -1 = left) for every automatic countersteer."""
+        out = []
+        for land, a, b in self.rig_keys:
+            if b.get('contact_shift') and b['contact_shift'] != a.get('contact_shift'):   # "that nudge": the flick itself
+                out.append((land, 1 if b['contact_shift'] == 'right' else -1)); continue
+            for k in ('lean', 'bike_lean'):
+                if b[k] is None or a[k] == b[k] or b.get('steer') is not None: continue
+                d = float(b[k]) - float(a[k] or 0.0)
+                if abs(d) > 5: out.append((land - 5, 1 if d < 0 else -1)); break
+        return out
+
     def rig_at(self, f):
         """Eased rig values: 2 f lean-back anticipation, out_back overshoot over SETTLE frames, and an automatic
         countersteer: before every lean change the bars flick the OTHER way (the video's whole point), peaking 5 f
@@ -276,7 +288,7 @@ class Track:
                 if n < 0: v[k] = va - 0.08 * (vb - va) * smooth((n + 3) / 3) if n >= -2 else va
                 else: v[k] = vb if n >= SETTLE else lerp(va, vb, out_back(n / SETTLE, 1.3))
                 if k in ('lean', 'bike_lean') and abs(vb - va) > 5 and b.get('steer') is None:
-                    flick += -math.copysign(min(10.0, 0.4 * abs(vb - va)), vb - va) * math.sin(math.pi * clamp((n + 12) / 14))
+                    flick += -math.copysign(min(14.0, 0.6 * abs(vb - va)), vb - va) * math.sin(math.pi * clamp((n + 12) / 14))
             if n >= 0: v['knee_out'] = b['knee_out']
         # contact_shift: the tyres slide out sideways under the rider (rider side). The contact patch moves out by
         # ~16 % of the figure height and the bike tips the other way about the rider's head; it hands over to the next
@@ -291,6 +303,7 @@ class Track:
                 k_in = out_back(n / 6, 1.4); k_out = 1 - smooth((f - nxt + 3) / SETTLE) if nxt is not None and f >= nxt - 3 else 1.0
                 amt = k_in * max(0.0, k_out)
                 v['contact_dx'] += 0.16 * sg * amt
+                flick += sg * 14.0 * math.sin(math.pi * clamp((n + 2) / 14))   # the bars flick toward the slide side
                 key = 'lean' if v['lean'] is not None or v['bike_lean'] is None else 'bike_lean'
                 v[key] = (v[key] or 0.0) - sg * 10.0 * amt
         tot = v['lean'] if v['lean'] is not None else (v['bike_lean'] or 0.0)
@@ -359,6 +372,7 @@ class Camera:
         if mv == 'shake':                                           # nervous handheld beat: small kicks every ~8 f
             self.push = 0.02; self.shake = float(c.get('amount', 0.01)) / 0.01 * 0.5
         else: self.shake = 0.0
+        if mv == 'glide' and ('to' in c or 'glides' in c): self.push = min(0.04, 0.0012 * n)   # keeps moving after the glide
         self.glides = []
         for g in c.get('glides', [c] if mv == 'glide' and 'to' in c else []):
             land, wf = beat_frame(sw, words, g.get('at_word', 0))

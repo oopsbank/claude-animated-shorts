@@ -114,6 +114,15 @@ def setup(shots_path, words_path, plate_dirs):
                     others = [o.get('x', 0.5) for o in cs if o is not c]
                     c['facing'] = 0.35 if sum(others) / len(others) > c.get('x', 0.5) else -0.35
         G['tracks'][k] = [anim.Track(c, sp, words, seed=zlib.crc32(f"{c.get('id', '')}/{k}".encode())) for c in s.get('characters', [])]
+        # the countersteer must read even when the rider's body hides the bars: an arrow at handlebar height, peaking
+        # with each automatic flick (direction in the rider's sense, as fx steer_arrow expects)
+        s['_auto_fx'] = []
+        for c, tr in zip(s.get('characters', []), G['tracks'][k]):
+            if not tr.rig: continue
+            for fr, d in tr.flick_cues():
+                if sp['f0'] <= fr < sp['f1']:
+                    s['_auto_fx'].append({'name': 'steer_arrow', 'direction': 'right' if d > 0 else 'left', '_frame': fr,
+                                          'on': c.get('id'), 'anchor': 'bars', 'size': 0.3, 'dur': 0.8})
         kicks = []
         for e in s.get('fx', []):
             if e.get('kick'): kicks.append(anim.beat_frame((sp['w0'], sp['w1']), words, e.get('at_word', 0))[1])
@@ -251,9 +260,18 @@ def place_characters(base, k, f, meta):
             spec = dict(spec, **{kk: ins[kk] for kk in ('rig', 'view') if kk in ins})
         if spec.get('rig') in rig.INSERT_RIGS:         # a full-frame insert card (e.g. the broom on the palm) over a soft plate
             pose = 'broom_upright'; sw = (G['spans'][k]['w0'], G['spans'][k]['w1'])
+            seq = []
             for b in sorted(spec.get('beats', []), key=lambda b: b.get('at_word', 0)):
                 key_ = next((kk for kk in b if kk.startswith('broom_')), None)
-                if key_ and anim.beat_frame(sw, G['words'], b.get('at_word', 0))[0] <= f:
+                if key_: seq.append([anim.beat_frame(sw, G['words'], b.get('at_word', 0))[0], key_, b])
+            # physics order: the hand flicks first, the broom tips as the result. A tip announced before an opposite
+            # flick ("to tip it left, flick your hand right first") plays 10 f after the flick.
+            for t_ in seq:
+                if 'tip' in t_[1]:
+                    fl = next((x for x in seq if 'flick' in x[1] and x[0] > t_[0]), None)
+                    if fl: t_[0] = fl[0] + 10
+            for t0_, key_, b in sorted(seq, key=lambda x: x[0]):
+                if t0_ <= f:
                     pose = key_ if b[key_] is True else f"broom_{b[key_]}" if key_ in ('broom_tip', 'broom_flick') else key_
                     if key_ in ('broom_tip', 'broom_flick'): pose = f"{key_}_{b[key_]}"
             card_ = rig.insert_card(spec['rig'], pose, spec, W, H)
@@ -292,6 +310,8 @@ def place_characters(base, k, f, meta):
         ground = meta['horizon_y'] + dk * (meta['ground_y'] - meta['horizon_y']) if dk != 1.0 else meta['ground_y']
         gx = st['x'] * W; gy = ground - st['lift'] * fig_h
         if spec.get('_near'): gy = H + 0.28 * fig_h                    # near OTS character: feet below the frame
+        if st.get('rig') and (shot.get('camera') or {}).get('move') == 'follow':   # follow cam: the rider stays put
+            gx += (G['cams'][k].at(f)['x'] - 0.5) * W                                 # while the plate scrolls past
         if st.get('rig'):
             sg = anim.screen_side(spec.get('view', 'rear'))     # rider-side -> screen: rear view keeps the side
             r = st['rig']; tot = r['lean'] if r.get('lean') is not None else (r.get('bike_lean') or 0) + 0.6 * (r.get('body_lean') or 0)
@@ -328,8 +348,9 @@ def place_characters(base, k, f, meta):
 
 def place_fx(base, k, f, chars):
     shot = G['shots'][k]; sp = G['spans'][k]; mod = G['fx']; out = []
-    for e in shot.get('fx', []):
+    for e in shot.get('fx', []) + shot.get('_auto_fx', []):
         land, wf = anim.beat_frame((sp['w0'], sp['w1']), G['words'], e.get('at_word', 0))
+        if '_frame' in e: land = wf = e['_frame']
         if e['name'] == 'path_line' and 'dur' not in e:     # a track diagram plays across the rest of the shot (or cut-in)
             end = sp['f1']
             ins_ = shot.get('_insert')
@@ -342,7 +363,7 @@ def place_fx(base, k, f, chars):
         if not start <= f < start + dur: continue
         t = (f - start + 0.5) / dur
         size = int(float(e.get('size', 0.9 if e['name'] == 'path_line' else 0.35)) * W)
-        kw = {kk: v for kk, v in e.items() if kk not in ('name', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor')}
+        kw = {kk: v for kk, v in e.items() if kk not in ('name', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor', 'dx') and not kk.startswith('_')}
         if mod and 'line' not in kw and chars: kw['line'] = 10 * chars[0].get('scale', 0.5)   # fx area: line = 10 x card scale
         try:
             im = (mod.render if mod else stub_fx)(e['name'], t, size, **kw)
@@ -353,6 +374,7 @@ def place_fx(base, k, f, chars):
             c = next((c for c in chars if c['id'] == e['on']), None)
             if c and c['bbox']:
                 if e.get('anchor', 'head') == 'head': x, y = c['head'][0] + float(e.get('dx', 0)) * W, c['head'][1] - size * 0.15
+                elif e['anchor'] == 'bars': x, y = (c['bbox'][0] + c['bbox'][2]) / 2, c['bbox'][1] + 0.42 * (c['bbox'][3] - c['bbox'][1])
                 else: x, y = (c['bbox'][0] + c['bbox'][2]) / 2, c['ground_y']
         cy = {'dust_puff': 0.72, 'splash': 0.72, 'lean_arc': 1.0}.get(e['name'], 0.5)             # ground-anchored effects
         base.alpha_composite(im.convert('RGBA'), (int(x - size / 2), int(y - size * cy)))
