@@ -127,6 +127,11 @@ def normalize_beat(b, view):
         else: b['pose'] = (ap, ap)
     for k in ('body_lean', 'lean'):
         if k in b and b[k] is not None: b['hold_lean'] = float(b.pop(k)) * sg
+    # broom on the palm (wardrobe props): flick the hand one way -> the broom tips the other way a little; then tip
+    if 'broom_flick' in b:
+        d = b.pop('broom_flick'); b['prop'] = 'broom:%d' % (-8 if d == 'right' else 8); b.setdefault('action', 'jolt')
+    if 'broom_tip' in b:
+        b['prop'] = 'broom_tip_%s' % b.pop('broom_tip')
     return b
 
 
@@ -236,6 +241,9 @@ class Track:
         x, hop_lift, moving = self.x_at(f)
         if moving: lift += 0.04 * hop_lift; grounded = hop_lift < 1e-6; lean += 2.0 * (1 if self._dir(f) > 0 else -1)
         lid = lid_at(f, self.blinks)
+        if str(st.get('prop') or '').startswith('broom'):      # a balanced broom sits on a palm at shoulder height
+            pose = tuple('palm' if p_ == 'hold' else p_ for p_ in pose)
+            if 'palm' not in pose: pose = (pose[0], 'palm')
         return {'rig': self.rig_at(f) if self.rig else None, 'pose': pose, 'expr': st['expr'], 'prop': st.get('prop'), 'facing': round(float(st['facing']), 2), 'lean': lean,
                 'lift': lift, 'grounded': grounded, 'lid': lid, 'x': x, 'moving': moving}
 

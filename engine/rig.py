@@ -218,7 +218,9 @@ _cache = {}
 
 
 def card(spec, pose, expr, facing, scale, lid=0.0, mouth=None, prop='keep'):
-    kw = bean_kwargs(dict(spec, prop=spec.get('prop') if prop == 'keep' else prop))
+    pr = spec.get('prop') if prop == 'keep' else prop
+    if pr == 'helmet' and spec.get('_sticker'): pr = 'helmet:' + spec['_sticker']      # the held helmet shows the joke
+    kw = bean_kwargs(dict(spec, prop=pr))
     kw.update(arm_pose=tuple(arm_ok(p) for p in pose), expr=expr, facing=float(facing))
     if mouth and HAS_MOUTH: kw['mouth'] = BEAN_MOUTH.get(mouth, mouth)
     if lid and HAS_LID: kw['lid'] = lid

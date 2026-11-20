@@ -60,4 +60,9 @@ The output folder gets `frames/f_NNNNN.jpg`, `video.mp4`, and `track.json`. The 
 - **Chase cam:** for riders in `rear`/`front` view, the hips stay at `x` and the wheels swing out under a lean. Riders are exempt from the planted-feet check because the bike rolls.
 - **`path`** (top view): the rider card rides the fx `path_line` actual track, in step with its drawn-on head and nose-first along the heading. A `path_line` with no `dur` lasts the rest of the shot and defaults to `size` 0.9.
 - **`points_at`**: the character turns toward the target and points with the arm on its side. Targets come from the plate JSON `"targets": {name: [x, y]}` or another character's id; an unknown target is treated as off-screen past the nearer edge, with a warning.
-- **Not drawn yet:** `broom_*` (wardrobe is drawing it), and `view: rear` on a standing, non-riding character.
+- **Broom** (wardrobe props): `broom_flick: right|left` tips the broom 8° the other way with a jolt; `broom_tip: left|right` -> `broom_tip_<side>`. While a broom is held, `hold` arms become `palm`.
+- **Helmet sticker:** a `helmet_sticker:<text>` prop goes on a worn helmet (riders) and on a held `helmet` prop.
+- **Over the shoulder** (`*ots*` cams): a standing `view: rear` character is the near one, drawn at 1.7x with feet below the frame.
+- **Two-shots:** standing characters closer than their body widths are spread apart symmetrically (logged as `[layout]`).
+- **Bike-only shots:** a shot with no characters and a bike in `props` shows `bikes.draw_bike()` at the plate's `stand_x`.
+- Plate `targets` may be px or fractions.

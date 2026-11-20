@@ -154,6 +154,9 @@ def layout_shot(shot, meta):
             if abs(x - float(c.get('x', 0.5))) > 1e-3:
                 if os.environ.get('ENGINE_QUIET') != '1': print(f"  [layout] {shot.get('id')}/{c.get('id')}: x {c.get('x')} -> {x:.3f} (bodies overlapped)")
                 c['x'] = round(x, 3)
+    sticker = next((p.split(':', 1)[1] for p in shot.get('props', []) if p.startswith('helmet_sticker:')), None)
+    for c in cs:
+        if sticker: c['_sticker'] = sticker
     if not cs:
         kind = next((p for p in shot.get('props', []) if p in BIKES), None)
         if kind: shot['_bike_prop'] = (kind, float(meta.get('stand_x', 0.5)))
@@ -169,7 +172,8 @@ def resolve_points_at(shot, meta):
             tgt = b.get('points_at')
             if not tgt: continue
             cx = float(c.get('x', 0.5))
-            if tgt in meta.get('targets', {}): tx = float(meta['targets'][tgt][0])
+            if tgt in meta.get('targets', {}):
+                tx = float(meta['targets'][tgt][0]); tx = tx / W if tx > 1.5 else tx     # sets writes px; fractions also work
             elif any(o.get('id') == tgt for o in chars): tx = float(next(o for o in chars if o.get('id') == tgt).get('x', 0.5))
             else:
                 tx = 1.2 if cx >= 0.5 else -0.2
@@ -234,8 +238,7 @@ def place_characters(base, k, f, meta):
         mouth = G['mouths'][k][i].get(f, 'closed') if spec.get('talk') else None
         if st.get('rig'):            # rider on a bike (bikes.ride): 1000x1000 card, ground at 975, no breathing (it's riding)
             rs = dict(spec)
-            sticker = next((p.split(':', 1)[1] for p in shot.get('props', []) if p.startswith('helmet_sticker:')), None)
-            if sticker and spec.get('hat') == 'helmet': rs.setdefault('sticker', sticker)
+            if spec.get('_sticker') and spec.get('hat') == 'helmet': rs.setdefault('sticker', spec['_sticker'])
             im = rig.ride_card(rs, s, st['rig'], st['expr'], mouth, st['lid'], crank=f * 14.0)
             g = {'crown': 0}; breath = 1.0; sx, sy = 500 * s, 975 * s
             bb0 = im.getchannel('A').getbbox(); g['crown'] = bb0[1] if bb0 else 0
@@ -460,6 +463,7 @@ def main():
     for sh in G['shots']:                       # report rig stand-ins once, in the main process
         for c in sh.get('characters', []):
             G['rig'].bean_kwargs(c)
+            if c.get('rig') and G['rig'].bikes: continue          # riders' arms come from bikes.ride()
             for b in [c] + c.get('beats', []):
                 ap = b.get('arm_pose')
                 for p in (ap if isinstance(ap, list) else [ap] if ap else []): G['rig'].arm_ok(p)
