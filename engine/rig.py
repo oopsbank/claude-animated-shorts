@@ -22,15 +22,8 @@ INK = bean.INK
 MOUTH_C, TONGUE_C = bean.MOUTH, bean.TONGUE
 
 # ---------------------------------------------------------------- hi-res capture of bean's supersampled canvas
-_last = []
 
 
-class _Grab(bean.Canvas):
-    def __new__(cls, *a, **k):          # bikes.py builds its canvas with Canvas.__new__(Canvas): record those too
-        o = super().__new__(cls); _last.append(o); return o
-
-
-bean.Canvas = _Grab
 try:
     import bikes                         # rider rigs (wardrobe); imported after the patch so it sees _Grab
 except Exception as e:                   # noqa: BLE001
