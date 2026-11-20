@@ -103,6 +103,7 @@ def setup(shots_path, words_path, plate_dirs):
                 a1 = anim.beat_frame((sp['w0'], sp['w1']), words, ins['until_word'])[1] if 'until_word' in ins else sp['f1']
                 s['_insert'] = (a0 - anim.LEAD, a1 - anim.LEAD, q)
         resolve_points_at(s, G['plates'][p][1])
+        layout_shot(s, G['plates'][p][1])
         # two-shots: characters with no facing turn a little toward each other
         cs = s.get('characters', [])
         if len(cs) >= 2:
@@ -126,6 +127,36 @@ def setup(shots_path, words_path, plate_dirs):
     n = spans[-1]['f1'] if spans else 0
     G['n'] = n
     return G
+
+
+BIKES = ('bicycle', 'motorbike', 'nobs_bike')
+
+
+def layout_shot(shot, meta):
+    """Staging fixes that need the plate: over-the-shoulder near characters, and two-shots spread so bodies never
+    overlap. A shot with no characters but a bike in "props" shows the bike alone."""
+    cs = shot.get('characters', []); s = meta['px_per_m'] * 1.75 / 777
+    for c in cs:     # over the shoulder: the rear-view character is the near one, large and cut by the frame edge
+        if 'ots' in shot.get('cam', '') and c.get('view') == 'rear' and not c.get('rig'):
+            c.setdefault('scale', 1.7); c['_near'] = True
+    stand = [c for c in cs if not c.get('rig') and not c.get('_near')]
+    if len(stand) >= 2:
+        stand.sort(key=lambda c: float(c.get('x', 0.5)))
+        hw = [175 * s * float(c.get('scale', 1.0)) / W for c in stand]        # half body+arm width, frame fractions
+        need = [hw[i] + hw[i + 1] + 0.02 for i in range(len(stand) - 1)]
+        xs = [float(c.get('x', 0.5)) for c in stand]
+        for i, d in enumerate(need):
+            if xs[i + 1] - xs[i] < d:
+                mid = (xs[i] + xs[i + 1]) / 2; xs[i], xs[i + 1] = mid - d / 2, mid + d / 2
+        shift = max(0.0, hw[0] + 0.01 - xs[0]) - max(0.0, xs[-1] + hw[-1] + 0.01 - 1.0)
+        xs = [x + shift for x in xs]
+        for c, x in zip(stand, xs):
+            if abs(x - float(c.get('x', 0.5))) > 1e-3:
+                if os.environ.get('ENGINE_QUIET') != '1': print(f"  [layout] {shot.get('id')}/{c.get('id')}: x {c.get('x')} -> {x:.3f} (bodies overlapped)")
+                c['x'] = round(x, 3)
+    if not cs:
+        kind = next((p for p in shot.get('props', []) if p in BIKES), None)
+        if kind: shot['_bike_prop'] = (kind, float(meta.get('stand_x', 0.5)))
 
 
 def resolve_points_at(shot, meta):
@@ -190,6 +221,9 @@ def place_characters(base, k, f, meta):
     order = sorted(range(len(G['tracks'][k])), key=lambda i: shot['characters'][i].get('z', 0))
     for i in order:
         tr = G['tracks'][k][i]; spec = shot['characters'][i]
+        ins = spec.get('insert')
+        if ins and shot.get('_insert') and shot['_insert'][0] <= f < shot['_insert'][1]:
+            spec = dict(spec, **{kk: ins[kk] for kk in ('rig', 'view') if kk in ins})
         if spec.get('path') and spec.get('view') == 'top' and any(e['name'] == 'path_line' for e in shot.get('fx', [])) and G['fx']:
             continue                                   # drawn by path_riders() on the track diagram
         st = tr.state_at(f)
@@ -216,6 +250,7 @@ def place_characters(base, k, f, meta):
         im = tint_card(im, meta.get('tint', '#fff8f0'))
         fig_h = 777 * s
         gx = st['x'] * W; gy = meta['ground_y'] - st['lift'] * fig_h
+        if spec.get('_near'): gy = H + 0.28 * fig_h                    # near OTS character: feet below the frame
         if st.get('rig'):
             sg = anim.screen_side(spec.get('view', 'rear'))     # rider-side -> screen: rear view keeps the side
             r = st['rig']; tot = r['lean'] if r.get('lean') is not None else (r.get('bike_lean') or 0) + 0.6 * (r.get('body_lean') or 0)
@@ -238,8 +273,9 @@ def place_characters(base, k, f, meta):
         base.paste(col, (int(gx - 2 * r), int(meta['ground_y'] - sh.height / 2)), sh)
         base.alpha_composite(im, (ox, oy))
         bb = im.getchannel('A').point(lambda v: 255 if v > 40 else 0).getbbox()
-        out.append({'id': spec.get('id', f'c{i}'), 'grounded': st['grounded'] and not st['moving'], 'moving': st['moving'],
-                    'planted': st['grounded'] and not st['moving'] and not st.get('rig'),   # a riding bike rolls: no foot lock
+        out.append({'id': spec.get('id', f'c{i}'), 'grounded': st['grounded'] and not st['moving'] and not spec.get('_near'), 'moving': st['moving'],
+                    'planted': st['grounded'] and not st['moving'] and not st.get('rig') and not spec.get('_near'),   # a riding bike rolls: no foot lock
+                    'near': bool(spec.get('_near')),
                     'foot_y': ft['y'] + oy if ft else None, 'foot_l': ft['l'] + ox if ft and ft['l'] is not None else None,
                     'foot_r': ft['r'] + ox if ft and ft['r'] is not None else None, 'ground_y': meta['ground_y'],
                     'bbox': [bb[0] + ox, bb[1] + oy, bb[2] + ox, bb[3] + oy] if bb else None,
@@ -325,6 +361,11 @@ def render_shot(k, f):
     if ins and ins[0] <= f < ins[1]: pkey = ins[2]
     plate, meta = G['plates'][pkey]
     base = plate.convert('RGBA')
+    if shot.get('_bike_prop'):
+        kind, sx_ = shot['_bike_prop']; s = meta['px_per_m'] * 1.75 / 777
+        im = G['rig'].bike_card(kind, s, view=shot.get('bike_view', '3q'))
+        bb = im.getchannel('A').getbbox()
+        if bb: base.alpha_composite(im, (int(sx_ * W - 500 * s), int(meta['ground_y'] - bb[3])))
     chars = place_characters(base, k, f, meta)
     fxs = place_fx(base, k, f, chars)
     img, to_screen, cam = camera_xform(base.convert('RGB'), G['cams'][k].at(f))

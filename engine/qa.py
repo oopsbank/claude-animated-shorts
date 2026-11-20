@@ -76,7 +76,7 @@ def main():
             if sb:
                 edges = [e for e, v in (('left', sb[0] < 1), ('right', sb[2] > W - 1), ('top', sb[1] < 1),
                                          ('bottom', sb[3] > H - 1 and not crop.get(m['shot']))) if v]
-                if edges and not m.get('transition'): clip.append((f, c['id'], edges))
+                if edges and not m.get('transition') and not c.get('near'): clip.append((f, c['id'], edges))
             if c['grounded'] and c['foot_y'] is not None and abs(c['foot_y'] - c['ground_y']) > 4:
                 ground.append((f, c['id'], round(c['foot_y'] - c['ground_y'], 1)))
             key = (m['shot'], c['id']); p = prev.get(key)
