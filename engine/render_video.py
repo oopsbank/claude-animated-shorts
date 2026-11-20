@@ -142,15 +142,27 @@ def layout_shot(shot, meta):
     stand = [c for c in cs if not c.get('rig') and not c.get('_near')]
     if len(stand) >= 2:
         stand.sort(key=lambda c: float(c.get('x', 0.5)))
-        hw = [175 * s * float(c.get('scale', 1.0)) / W for c in stand]        # half body+arm width, frame fractions
         def points(c): return any('point' in json.dumps(b.get('arm_pose', '')) or b.get('pose') == 'point' for b in [c] + c.get('beats', []))
-        reach = [(260 if points(c) else 175) * s * float(c.get('scale', 1.0)) / W for c in stand]   # a pointing arm reaches out
-        need = [hw[i] + hw[i + 1] + 0.02 for i in range(len(stand) - 1)]
+        m_ = 0.05                                                            # room for the push-in zoom
+        def widths(k):
+            hw = [200 * s * k * float(c.get('scale', 1.0)) / W for c in stand]     # half body width, frame fractions
+            reach = [(275 if points(c) else 200) * s * k * float(c.get('scale', 1.0)) / W for c in stand]   # pointing arm
+            need = [hw[i] + hw[i + 1] + 0.02 for i in range(len(stand) - 1)]
+            return hw, reach, need
+        # too tight for the plate: step both characters back in depth (smaller, standing higher toward the horizon)
+        k = 1.0
+        while k > 0.7:
+            hw, reach, need = widths(k)
+            if reach[0] + sum(need) + reach[-1] + 2 * m_ <= 1.0: break
+            k -= 0.02
+        hw, reach, need = widths(k)
+        if k < 1.0:
+            for c in stand: c['_depth'] = round(k, 3)
+            if os.environ.get('ENGINE_QUIET') != '1': print(f"  [layout] {shot.get('id')}: two-shot too wide for the plate -> characters stepped back to {k:.2f}x")
         xs = [float(c.get('x', 0.5)) for c in stand]
         for i, d in enumerate(need):
             if xs[i + 1] - xs[i] < d:
                 mid = (xs[i] + xs[i + 1]) / 2; xs[i], xs[i + 1] = mid - d / 2, mid + d / 2
-        m_ = 0.05                                                           # room for the push-in zoom
         shift = max(0.0, reach[0] + m_ - xs[0]) - max(0.0, xs[-1] + reach[-1] + m_ - 1.0)
         xs = [x + shift for x in xs]
         for c, x in zip(stand, xs):
@@ -237,7 +249,8 @@ def place_characters(base, k, f, meta):
         if spec.get('enter_at_word') is not None:
             wf = anim.beat_frame((G['spans'][k]['w0'], G['spans'][k]['w1']), G['words'], spec['enter_at_word'])[0]
             if f < wf: continue
-        s = meta['px_per_m'] * float(spec.get('height_m', 1.75)) / (3.5 * 2 * 111) * float(spec.get('scale', 1.0))
+        dk = float(spec.get('_depth', 1.0))                     # stepped back in depth: smaller, ground nearer the horizon
+        s = meta['px_per_m'] * float(spec.get('height_m', 1.75)) / (3.5 * 2 * 111) * float(spec.get('scale', 1.0)) * dk
         mouth = G['mouths'][k][i].get(f, 'closed') if spec.get('talk') else None
         if st.get('rig'):            # rider on a bike (bikes.ride): 1000x1000 card, ground at 975, no breathing (it's riding)
             rs = dict(spec)
@@ -255,7 +268,8 @@ def place_characters(base, k, f, meta):
         if abs(st['lean']) > 0.05: im = im.rotate(-st['lean'], resample=Image.BICUBIC, center=(sx, sy))
         im = tint_card(im, meta.get('tint', '#fff8f0'))
         fig_h = 777 * s
-        gx = st['x'] * W; gy = meta['ground_y'] - st['lift'] * fig_h
+        ground = meta['horizon_y'] + dk * (meta['ground_y'] - meta['horizon_y']) if dk != 1.0 else meta['ground_y']
+        gx = st['x'] * W; gy = ground - st['lift'] * fig_h
         if spec.get('_near'): gy = H + 0.28 * fig_h                    # near OTS character: feet below the frame
         if st.get('rig'):
             sg = anim.screen_side(spec.get('view', 'rear'))     # rider-side -> screen: rear view keeps the side
@@ -276,14 +290,14 @@ def place_characters(base, k, f, meta):
         ImageDraw.Draw(sh).ellipse((r, sh.height / 2 - 0.16 * r, 3 * r, sh.height / 2 + 0.16 * r), fill=int(105 * (1 - 0.5 * kk)))
         sh = sh.filter(ImageFilter.GaussianBlur(max(1, r * 0.08)))
         col = Image.new('RGBA', sh.size, (52, 50, 78, 255))
-        base.paste(col, (int(gx - 2 * r), int(meta['ground_y'] - sh.height / 2)), sh)
+        base.paste(col, (int(gx - 2 * r), int(ground - sh.height / 2)), sh)
         base.alpha_composite(im, (ox, oy))
         bb = im.getchannel('A').point(lambda v: 255 if v > 40 else 0).getbbox()
         out.append({'id': spec.get('id', f'c{i}'), 'grounded': st['grounded'] and not st['moving'] and not spec.get('_near'), 'moving': st['moving'],
                     'planted': st['grounded'] and not st['moving'] and not st.get('rig') and not spec.get('_near'),   # a riding bike rolls: no foot lock
                     'near': bool(spec.get('_near')),
                     'foot_y': ft['y'] + oy if ft else None, 'foot_l': ft['l'] + ox if ft and ft['l'] is not None else None,
-                    'foot_r': ft['r'] + ox if ft and ft['r'] is not None else None, 'ground_y': meta['ground_y'],
+                    'foot_r': ft['r'] + ox if ft and ft['r'] is not None else None, 'ground_y': ground,
                     'bbox': [bb[0] + ox, bb[1] + oy, bb[2] + ox, bb[3] + oy] if bb else None,
                     'head': [gx, oy + g['crown']], 'scale': s, 'rig': {k: (round(v, 1) if isinstance(v, float) else v) for k, v in st['rig'].items()} if st.get('rig') else None, 'pose': list(st['pose']), 'facing': st['facing'], 'expr': st['expr'], 'mouth': mouth, 'lid': st['lid']})
     return out

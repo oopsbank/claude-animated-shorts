@@ -355,7 +355,7 @@ class Camera:
                 land, _ = beat_frame(sw, words, c.get('at_word', 0)); f_a, f_b = land - 6, land + 22
             else: f_a, f_b = self.f0, self.f1
             self.travel = (axis, -sg * m, sg * m, f_a, f_b, 'smoother' if mv != 'follow' else 'linear')
-            self.push = min(0.05, 0.0012 * n)                     # alive before a pan starts and while a tilt eases in
+            self.push = min(0.12, 0.004 * n)                      # alive before a pan starts and while a tilt eases in
         if mv == 'shake':                                           # nervous handheld beat: small kicks every ~8 f
             self.push = 0.02; self.shake = float(c.get('amount', 0.01)) / 0.01 * 0.5
         else: self.shake = 0.0
