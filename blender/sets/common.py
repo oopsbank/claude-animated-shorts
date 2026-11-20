@@ -397,7 +397,7 @@ def _depth_pass(path, near, far):
 
 def srgb_to_lin(c): return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
 
-def post(src, out, depth=None, haze=(0.7, 0.8, 1.0), haze_k=0.5, haze_gamma=1.6, sat=1.0, gain=1.0):
+def post(src, out, depth=None, haze=(0.7, 0.8, 1.0), haze_k=0.5, haze_gamma=1.6, sat=1.0, gain=1.0, warm=None):
     """Depth haze toward the preset's haze colour, then warm-only bloom (white faces never glow)."""
     im = Image.open(src).convert('RGB'); a = np.asarray(im).astype(np.float32) / 255
     if depth is not None and haze_k > 0:
@@ -409,6 +409,7 @@ def post(src, out, depth=None, haze=(0.7, 0.8, 1.0), haze_k=0.5, haze_gamma=1.6,
     if sat != 1.0 or gain != 1.0:   # per-set grade: saturation around luminance, then a gain
         l0 = (a @ np.array([0.2126, 0.7152, 0.0722], np.float32))[..., None]
         a = np.clip((l0 + (a - l0) * sat) * gain, 0, 1)
+    if warm: a = np.clip(a * np.array(warm, np.float32), 0, 1)   # colour-balance multiply, e.g. warmer golden
     lum = a @ np.array([0.2126, 0.7152, 0.0722], np.float32)
     warm = np.clip((a[..., 0] - a[..., 2] - 0.12) / 0.2, 0, 1)
     mask = (np.clip((lum - 0.6) / 0.25, 0, 1) * warm)[..., None]
@@ -439,7 +440,7 @@ def measure(cam_obj, stand, sun_obj, preset, top=False):
             'light_dir': ld, 'tint': preset['tint'], 'stand_x': round(pf.x, 3),
             'ground_x': round(pf.x * W, 1)}
 
-INK_FADE, INK_RANGE, INK_BORDER, INK_FAR_K = (14, 40, 0.5), (3, 30), False, 0.45   # a set with big distances raises these
+INK_FADE, INK_RANGE, INK_BORDER, INK_FAR_K, INK_THICK = (14, 40, 0.5), (3, 30), False, 0.45, 3.4   # a set with big distances raises these
 
 def project_targets(cam_obj, targets):
     """Screen px of named 3D points (sign centres etc.) that are inside the frame and not hidden behind geometry."""
@@ -473,7 +474,7 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
         cam = co.data; cam.dof.use_dof = bool(c.get('fstop'))
         cam.dof.focus_distance = (co.location - (Vector(c['stand']) + Vector((0, 0, 1.2)))).length
         cam.dof.aperture_fstop = c.get('fstop') or 2.0
-        ink(a.pct, c.get('ink_fade', INK_FADE), c.get('ink_thick', 3.4), rng=c.get('ink_range', INK_RANGE), border=INK_BORDER, far_k=INK_FAR_K)
+        ink(a.pct, c.get('ink_fade', INK_FADE), c.get('ink_thick', INK_THICK), rng=c.get('ink_range', INK_RANGE), border=INK_BORDER, far_k=INK_FAR_K)
         dpath = os.path.join(tmp, f'{cn}_depth.png')
         if not (a.repost and os.path.exists(dpath)): _depth_pass(dpath, *c.get('haze_range', haze_range))
         for ln in lights:
@@ -485,7 +486,7 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
             t = time.time()
             if not (a.repost and os.path.exists(raw)): bpy.ops.render.render(write_still=True)
             post(raw, os.path.join(out, base + '.png'), dpath, p['haze'], p['haze_k'] * c.get('haze_k', 1.0),
-                 sat=p.get('grade_sat', 1.0), gain=p.get('grade_gain', 1.0))
+                 sat=p.get('grade_sat', 1.0), gain=p.get('grade_gain', 1.0), warm=p.get('grade_warm'))
             js = measure(co, c['stand'], sun, p, c.get('top', False)); js.update(set=set_name, cam=cn, light=ln)
             if c.get('top'): js['view'] = 'top'
             tg = project_targets(co, targets)

@@ -55,7 +55,7 @@ def asphalt_mat():
     P = n['Principled BSDF']; P.inputs['Roughness'].default_value = 0.85
     tc = n.new('ShaderNodeTexCoord'); nz = n.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 0.35
     l.new(tc.outputs['Object'], nz.inputs['Vector'])
-    r = n.new('ShaderNodeValToRGB'); r.color_ramp.elements[0].color = (0.09, 0.09, 0.13, 1); r.color_ramp.elements[1].color = (0.15, 0.14, 0.21, 1)
+    r = n.new('ShaderNodeValToRGB'); r.color_ramp.elements[0].color = (0.12, 0.12, 0.16, 1); r.color_ramp.elements[1].color = (0.19, 0.18, 0.25, 1)
     l.new(nz.outputs['Fac'], r.inputs['Fac']); l.new(r.outputs['Color'], P.inputs['Base Color']); return m
 
 def grass_mat(name='grass', c0=(0.07, 0.20, 0.03), c1=(0.11, 0.27, 0.04), mow=True):
@@ -75,7 +75,7 @@ CL = centreline()
 strip('track', CL, -TW / 2, TW / 2, 0.0, asphalt_mat())   # inked: its border edges are the track edges
 white = C.mat('white_line', (0.92, 0.92, 0.88), rough=0.6)
 for k, (a, b) in enumerate(((-TW / 2, -TW / 2 + 0.3), (TW / 2 - 0.3, TW / 2))):
-    C.no_ink(strip(f'edge{k}', CL, a, b, 0.012, white))
+    strip(f'edge{k}', CL, a, b, 0.012, white)          # inked: outlines both sides of the white line
 kerb = stripes_mat('kerb', (0.85, 0.10, 0.08), (0.95, 0.95, 0.92), period=1.6)
 for side in (1, -1):   # kerbs on the inside and outside of both corners (+ a little of the straights)
     cx = side * L / 2
@@ -97,7 +97,7 @@ pw = C.box((62, 0.35, 0.95), (-4.0, -2.4, 0.47), wall)
 pw.data.uv_layers.new(name='UVMap')
 for l in pw.data.loops: pw.data.uv_layers['UVMap'].data[l.index].uv = (pw.data.vertices[l.vertex_index].co.x * 62, 0)
 gw = C.mat('garage_wall', (0.70, 0.66, 0.58), rough=0.9); groof = C.mat('garage_roof', (0.20, 0.35, 0.70), rough=0.7)
-dark = C.mat('garage_dark', (0.06, 0.06, 0.08), rough=0.9); stripe = C.mat('garage_stripe', (0.85, 0.15, 0.10))
+dark = C.mat('garage_dark', (0.22, 0.24, 0.30), rough=0.9); stripe = C.mat('garage_stripe', (0.85, 0.15, 0.10))
 C.box((44, 7, 4.2), (0, -16.5, 2.1), gw)
 C.box((45, 8, 0.35), (0, -16.3, 4.35), groof)
 C.box((44.05, 7.05, 0.4), (0, -16.5, 3.4), stripe)
@@ -123,10 +123,10 @@ def push_left(d, box, fg):
     d.line([(ax, ay + h * 0.3), (ax, ay - h * 0.05)], fill=fg, width=lw * 2)
     d.arc([ax - w * 0.24, ay - h * 0.28, ax, ay + h * 0.14], 270, 360, fill=fg, width=lw * 2)
     d.polygon([(ax - w * 0.12, ay - h * 0.36), (ax - w * 0.12, ay - h * 0.20), (ax - w * 0.21, ay - h * 0.28)], fill=fg)
-cb = C.sign('PUSH LEFT → GO LEFT', 'chalk', loc=(-0.55, -11.8, 1.7), rz=190, w=1.5, h=1.3, draw=push_left, text_frac=0.34)
+cb = C.sign('PUSH LEFT → GO LEFT', 'chalk', loc=(-0.8, -11.8, 1.75), rz=190, w=1.9, h=1.6, draw=push_left, text_frac=0.34)
 legs = C.mat('easel', (0.45, 0.28, 0.14))
-for dx in (-0.6, 0.6): C.cyl(0.035, 2.0, (-0.6 + dx * 0.9, -12.1, 0.95), legs, rot=(6, 0, 0), verts=6)
-C.sign('CORNERS MADE: 0', 'board', loc=(0.85, -12.7, 2.7), rz=180, w=2.2, h=0.66)
+for dx in (-0.85, 0.85): C.cyl(0.04, 2.0, (-0.8 + dx * 0.9, -12.1, 0.95), legs, rot=(6, 0, 0), verts=6)
+C.sign('CORNERS MADE: 0', 'board', loc=(1.45, -12.7, 3.0), rz=180, w=2.2, h=0.66)
 # tyre stacks, cones, a toolbox trolley
 tyre = C.mat('tyre', (0.05, 0.05, 0.06), rough=0.9)
 def tyres(x, y, n):
@@ -176,15 +176,15 @@ C.box((42, 0.3, 6), (0, CY + 2 * R + TW / 2 + 11.2, 3), groof)
 
 C.stylise(emissive_prefixes=('__none__',))
 C.point((-6.0, -10.5, 3.0), power=120, radius=1.5)
-lampm = C.emissive(C.mat('pitlamp', (1.0, 0.55, 0.2), 0.5), (1.0, 0.55, 0.2), 1.2)
+lampm = C.emissive(C.mat('pitlamp', (1.0, 0.45, 0.12), 0.3), (1.0, 0.45, 0.12), 0.5)
 for x in (-18, -9.5, -0.5, 8.5, 17.5):                    # warm lamps over the garage doors
-    C.box((0.6, 0.25, 0.18), (x, -12.85, 3.25), lampm); C.point((x, -12.3, 3.0), power=90, radius=0.3)
+    C.box((0.6, 0.25, 0.18), (x, -12.85, 3.25), lampm); C.point((x, -11.6, 2.6), power=70, radius=0.5)
 for y in (-0.6, TW + 0.6): C.point((GX - 1.2, y, 5.6), power=220, radius=0.3)   # floodlights on the banner          # warm garage spill (golden only)
 
 # ---------- cameras ----------
 TOP_X = L / 2 + R / 2 + 2
 CAMS = {
-    'track_wide': dict(loc=(-6.0, -5.5, 4.2), target=(16.0, 14.0, 0.8), lens=22, roll=0, stand=(0.5, 2.6, 0), fstop=None,
+    'track_wide': dict(loc=(-6.0, -5.5, 4.2), target=(16.0, 14.0, 0.8), lens=22, roll=0, stand=(1.6, 2.0, 0), fstop=None,
                        haze_range=(5, 200)),
     'track_med': dict(loc=(-0.6, -0.6, 1.3), target=(9.0, 5.0, 2.5), lens=24, roll=0, stand=(1.7, 1.0, 0), fstop=2.4,
                       ink_fade=(6, 40, 0.5), haze_range=(4, 200)),
@@ -200,14 +200,14 @@ CAMS = {
                        ink_fade=(3, 20, 0.6), haze_range=(3, 150)),
     'bike_chase': dict(loc=(-15.0, 4.0, 1.4), target=(20.0, 6.5, 1.2), lens=26, roll=0, stand=(-10.0, 4.4, 0), fstop=2.8,
                        haze_range=(4, 200)),
-    'grips_close': dict(loc=(5.1, 3.2, 1.2), target=(6.8, 4.9, 1.05), lens=45, roll=-3, stand=(6.7, 4.8, 0), fstop=1.8,
+    'grips_close': dict(loc=(-7.7, 3.2, 1.2), target=(-6.0, 4.9, 1.05), lens=45, roll=-3, stand=(-6.1, 4.8, 0), fstop=1.8,
                         ink_fade=(3, 15, 0.7), haze_range=(2, 120)),
     'rider_close': dict(loc=(-1.0, 1.95, 1.5), target=(0.6, 4.6, 1.45), lens=40, roll=0, stand=(0.2, 3.6, 0), fstop=1.8,
                         ink_fade=(3, 15, 0.7), haze_range=(2, 150)),
 }
-C.INK_FADE, C.INK_RANGE, C.INK_BORDER, C.INK_FAR_K = (35, 120, 0.4), (6, 80), True, 0.6   # an open track: keep outlines on the far trees and gantry
+C.INK_FADE, C.INK_RANGE, C.INK_BORDER, C.INK_FAR_K, C.INK_THICK = (35, 120, 0.4), (6, 80), True, 0.6, 4.8   # an open track: keep outlines on the far trees and gantry
 LIGHTS = {'day': dict(az=-30, elev=50, exposure=-0.25, haze_k=0.2, grade_sat=1.3, grade_gain=1.0),
-          'golden': dict(az=-35, elev=16, sun_e=8.0, amb=(0.40, 0.50, 1.0), haze=(1.0, 0.72, 0.42), clouds=(1.0, 0.72, 0.45),
+          'golden': dict(az=-35, elev=16, sun_e=12.0, sun=(1.0, 0.50, 0.18), amb=(0.40, 0.50, 1.0), amb_e=0.32, grade_warm=(1.04, 1.0, 0.9), haze=(1.0, 0.72, 0.42), clouds=(1.0, 0.72, 0.45),
                      sky=[(0.0, (1.0, 0.70, 0.32)), (0.10, (1.0, 0.58, 0.30)), (0.30, (0.50, 0.58, 0.88)), (0.60, (0.24, 0.40, 0.82))], exposure=0.0, haze_k=0.2, grade_sat=1.25, grade_gain=1.0)}
-TARGETS = {'chalkboard': (-0.55, -11.8, 1.7), 'lapboard': (0.85, -12.7, 2.7), 'banner': (GX, CY, 4.85)}   # sign centres
+TARGETS = {'chalkboard': (-0.8, -11.8, 1.75), 'lapboard': (1.45, -12.7, 3.0), 'banner': (GX, CY, 4.85)}   # sign centres
 C.main('track', CAMS, LIGHTS, targets=TARGETS)
