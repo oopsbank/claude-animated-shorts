@@ -1,0 +1,206 @@
+{
+ "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+ "model_id": "eleven_multilingual_v2",
+ "settings": {
+  "stability": 0.5,
+  "similarity_boost": 0.75,
+  "style": 0.2,
+  "use_speaker_boost": true,
+  "speed": 1.1
+ },
+ "duration_s": 63.183,
+ "pacing_api_raw": {
+  "words": 231,
+  "speech_span_s": 73.652,
+  "words_per_s": 3.136,
+  "gaps_over_0.25_s": 22,
+  "gaps_over_0.25_total_s": 11.946,
+  "max_gap_s": 1.01,
+  "mean_gap_s": 0.102
+ },
+ "pacing_refined": {
+  "words": 231,
+  "speech_span_s": 73.371,
+  "words_per_s": 3.148,
+  "gaps_over_0.25_s": 24,
+  "gaps_over_0.25_total_s": 14.206,
+  "max_gap_s": 1.083,
+  "mean_gap_s": 0.1
+ },
+ "pacing_final": {
+  "words": 231,
+  "speech_span_s": 63.167,
+  "words_per_s": 3.657,
+  "gaps_over_0.25_s": 3,
+  "gaps_over_0.25_total_s": 0.96,
+  "max_gap_s": 0.32,
+  "mean_gap_s": 0.056
+ },
+ "pause_cuts": [
+  [
+   3.002,
+   0.021,
+   "first,"
+  ],
+  [
+   3.999,
+   0.469,
+   "it."
+  ],
+  [
+   5.384,
+   0.363,
+   "Dale."
+  ],
+  [
+   9.35,
+   0.343,
+   "leaning."
+  ],
+  [
+   12.072,
+   0.424,
+   "bike."
+  ],
+  [
+   13.82,
+   0.089,
+   "handlebars:"
+  ],
+  [
+   14.881,
+   0.173,
+   "one,"
+  ],
+  [
+   17.181,
+   0.566,
+   "steer."
+  ],
+  [
+   19.978,
+   0.184,
+   "instructor,"
+  ],
+  [
+   21.252,
+   0.763,
+   "corner.\""
+  ],
+  [
+   23.069,
+   0.091,
+   "laughs,"
+  ],
+  [
+   25.518,
+   0.553,
+   "left."
+  ],
+  [
+   27.493,
+   0.142,
+   "happens."
+  ],
+  [
+   28.57,
+   0.082,
+   "harder,"
+  ],
+  [
+   29.703,
+   0.046,
+   "out,"
+  ],
+  [
+   31.878,
+   0.472,
+   "wedding."
+  ],
+  [
+   35.131,
+   0.166,
+   "track."
+  ],
+  [
+   37.894,
+   0.344,
+   "corner."
+  ],
+  [
+   38.802,
+   0.288,
+   "Wait,"
+  ],
+  [
+   40.911,
+   0.222,
+   "bike,"
+  ],
+  [
+   41.935,
+   0.217,
+   "does?"
+  ],
+  [
+   44.395,
+   0.129,
+   "bike,"
+  ],
+  [
+   47.207,
+   0.459,
+   "second."
+  ],
+  [
+   49.83,
+   0.12,
+   "you,"
+  ],
+  [
+   51.195,
+   0.113,
+   "left,"
+  ],
+  [
+   52.361,
+   0.56,
+   "left."
+  ],
+  [
+   54.775,
+   0.258,
+   "palm:"
+  ],
+  [
+   55.938,
+   0.28,
+   "left,"
+  ],
+  [
+   57.673,
+   0.82,
+   "first."
+  ],
+  [
+   62.561,
+   0.554,
+   "it."
+  ],
+  [
+   65.076,
+   0.279,
+   "purpose:"
+  ],
+  [
+   67.364,
+   0.565,
+   "left."
+  ],
+  [
+   69.519,
+   0.049,
+   "too."
+  ]
+ ]
+}

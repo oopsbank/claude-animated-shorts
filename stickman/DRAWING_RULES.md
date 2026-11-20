@@ -48,3 +48,12 @@ These rules come from the user's corrections in review. Follow them for every ne
 27. **Front-view crouch:** the knees go out and the feet stay apart. Never let the shins meet, which reads as a loop.
 28. **Moving holds:** subtle breathing (about 0.6% scale) and blinks every 2 to 4 s. Never fully freeze.
 29. Start the walk-in just off-screen so the first frames are never empty.
+
+## Wardrobe (outfits, hats, props, mouths)
+30. **Garments recolour the merged silhouette; they never redraw it.** A sleeve, trouser leg or torso band is stamped at exactly the fill width (never over the outline). A garment that widens the body (coat skirt, apron skirt) joins the outline pass and the fill pass like a limb, so it merges with no seam.
+31. **Sleeve, trouser and shirt-hem ends are straight cuts** perpendicular to the limb, not round stamps.
+32. **Garment details (buttons, collar, belt) are drawn after the front-view arm fills.** Otherwise the arm roots hide them and leave half-buttons or slivers (a collar once showed only as a dark triangle).
+33. **A skirt's top stays inside the torso tube** (half-width 26 or less). Wider tops make a visible step at the waist.
+34. **Side-on garments follow the stride.** A coat skirt tracks the outer edges of both thighs. An apron hangs from the waist on the leading side and drapes over the front thigh, with one strap. Never paste a front-view panel onto a side-on body.
+35. **In side-on poses, draw the front arm before the head,** so its root (and a coloured sleeve root) hides under the head. Drawing it after the head broke the head outline at the chin and left a sleeve "knot".
+36. **Two garments of similar colour need a tint plus a dark edge.** A white apron on a white shirt vanished. Give the upper garment a tinted fill and a thin ink edge.
