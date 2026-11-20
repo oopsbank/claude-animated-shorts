@@ -9,12 +9,14 @@ Original characters in the channel's target style: bean heads, a bean torso, thi
   - hats: cap, beanie, hardhat, tophat
   - hair: short, side, bun
   - outfits: buttons, tie, belt, apron, overalls, coat_open, stripes, collar
-  - arm poses (left, right): hang, wave, point, hold, hip, chin
-  - props: mug, clipboard, wrench
+  - arm poses (left, right): hang, wave, point, hold, hip, chin, palm
+  - props: mug, clipboard, wrench, plus `clipboard:<text>`, `helmet:<sticker>`, `broom_upright` / `broom_tip_left` / `broom_tip_right` / `broom:<deg>` (with arm pose `palm`)
 - **Views:** `view='side'` or `'3q'` (facing < 0 faces left) goes through `turned()`, a rig with joint angles (`pose=dict(legN=(thigh, shin), legF, armN=(upper, fore), armF, lean, tilt)`, + = forward), IK targets (`handN`/`handF`/`footN`/`footF`, plus `hip` for a fixed hip), `mouth=`, `blink=` and `rig={}` to read back the solved joints. Rules: `RULES.md`.
 - `turned()` also does `view='rear'` (no face, hair and hat from behind) and a jointed `view='front'`, `pad=` for a wider card, and `layers={}` to get the far / legs / upper / near layers separately.
 - Hats: `helmet` (open-face; `sticker='I STEER WITH MY HIPS'` puts a label on the shell, large on the back).
 - `scripts/bikes.py`: `draw_bike(kind, view, steer, lean, crank)` and `ride(char, bike, view, steer, lean | bike_lean + body_lean, hold='steer'|'fixed', knee_out, crank, expr, mouth, sticker)` return a 1000x1000 card (ground y=975). Bikes: `bicycle`, `motorbike`, `nobs_bike` (a second handlebar bolted to the frame; `hold='fixed'` grips it). Views: side, 3q, rear, front, top. `steer` + = front wheel to the bike's right; `lean` + = to the bike's right.
+- `walk.py`: `walk_pose(t)`, `walk_track(seconds)` (foot-locked hip x per frame), `blink_at(t)`; `previews/walk_v1.png`.
+- Lip sync: `mouth=` closed, small, open, wide, O, smile_talk in every view; `previews/mouths_v1.png` (`mouths_sheet.py`). Props: `previews/props_v1.png` (`props_sheet.py`).
 - `scripts/ride_sheet.py out.png` renders `previews/ride_v1.png`.
 - `scripts/views_sheet.py out.png` renders `previews/views_v1.png` (front, side and 3/4 for the whole cast).
 - `scripts/cast_sheet.py out.png` renders the prototype cast (`previews/cast_v2.png`). `previews/in_scene_v1.jpg` shows two of them composited on the village night plate.

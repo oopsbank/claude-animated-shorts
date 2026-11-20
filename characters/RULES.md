@@ -31,3 +31,10 @@ The spec is `references/reports/characters.md` §2. The anatomy and animation ru
 20. Bend the swinging knee hard at passing (shin trailing about 45°) and keep the stance leg almost straight. A weak bend left the legs straight and crossed at passing.
 21. **Arms in side view hang over the torso, so swing them wider** (about ±40°) with the forearm trailing, or the swing disappears. Lean about 7°: 4° did not read against the bean's own belly bulge.
 22. Exaggerate the feet (`foot_k` 1.35): toe up at heel strike, toe down at push-off.
+
+## Props
+23. **One prop, one hand.** The legacy front view gave a hanging right arm a prop too when the left arm held one, which drew it twice.
+24. **A prop raised beside the head draws after the head and hat** (`late_prop`), or the hat brim covers it.
+25. **A balanced broom stands on a flat palm held at shoulder height** (arm pose `palm`), beside the head, never across the face, and sized (about 1.6 head-heights) to stay inside the card. A short broom with a small head read as a torch or paintbrush.
+26. **A held helmet hangs below the hand,** off the chin, with its dark face opening and peak showing. A plain white dome read as a ball.
+27. **Joke text is set as large as the prop allows** (the clipboard sheet, a helmet sticker that covers most of the shell). Small labels are decoration only.
