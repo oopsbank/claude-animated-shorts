@@ -1,11 +1,11 @@
 {
- "ground_y": 1357.4,
- "px_per_m": 411.07,
+ "ground_y": 1251.4,
+ "px_per_m": 217.39,
  "horizon_y": 1147.4,
  "light_dir": "top",
  "tint": "#fff4e4",
- "stand_x": 0.658,
- "ground_x": 710.7,
+ "stand_x": 0.523,
+ "ground_x": 564.9,
  "set": "village",
  "cam": "street_low",
  "light": "day"

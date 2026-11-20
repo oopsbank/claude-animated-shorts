@@ -12,7 +12,7 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P2 When `audio/` produces `words.json`, check that the beat `at_word` indexes still match the spoken words (the punctuation-split rule is in the `shots.json` note).
 
 ## sets (`blender/sets/`)
-- [ ] P1 Refactor `blender/scripts/scene2.py` into `blender/sets/village/build.py`: cams `wide`, `well_close`, `street_low`, and lights `day`, `golden`, `night`, with plates and JSON.
+- [x] P1 Refactor `blender/scripts/scene2.py` into `blender/sets/village/build.py`: cams `wide`, `well_close`, `street_low`, and lights `day`, `golden`, `night`, with plates and JSON. (Plus `square_med` and `street_med`. Review round 3: colour 7, lighting 5, ink 7, depth 6, composition 6, reads 7. Round-4 fixes were rendered, but the round-4 review did not run because of the usage limit. **Next: review the round-4 plates.**)
 - [ ] P1 New set `harbour` (Quaternius ships pack + water + pier): cams `pier_wide`, `deck`, and lights `day`, `storm`, `night`.
 - [ ] P1 New set `road` (a modern street or highway, Quaternius street pack): cams `roadside`, `in_car`, and lights `day`, `golden`.
 - [ ] P2 New set `interior` (a room, Quaternius house interior): cams `room_wide`, `table_close`.
@@ -23,7 +23,7 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P2 Ink density (`frame_stats` edge) stays at 0.01-0.03 in close-ups with DOF; the reference is about 0.05. Consider a second, thicker near-silhouette lineset, or less DOF in close cams.
 - [ ] P3 Parallax plates: a separate foreground layer PNG, so the engine can move it against the background.
 - [x] P1 (for `bike-countersteer`) A NEW `track` set (8ea7e8c; review round 4: colour 7, lighting 6, ink 7, depth 8, composition 6, reads 8): a riding-school track with a pit lane and a grass run-off. Cams: `track_wide`, `track_med`, `track_top` (top-down), `pit_med`, `pit_ots` (over the shoulder), `bike_close`, `bike_chase` (behind the rider), `grips_close`, `rider_close`. Lights: `day` and `golden`. Signs: "BODY-STEERING CHALLENGE" banner, "CORNERS MADE: 0" lap board, and a chalkboard "PUSH LEFT → GO LEFT" with a top-view bar/wheel drawing.
-- [ ] P1 (for `bike-countersteer`) `village`: a `street_med` cam (`day`, `golden`) on a street a bicycle can ride down.
+- [x] P1 (for `bike-countersteer`) `village`: a `street_med` cam (`day`, `golden`) on a street a bicycle can ride down.
 
 ## characters (`characters/`): main cast, bean-head style (owner: wardrobe session, from 2026-11-19)
 - [x] P1 Side view (`view='side'`, facing left/right, spec §2.7) and a 3/4 view. (`turned()` rig; `previews/views_v1.png`; reviewer PASS 8/7/7/8/8)
