@@ -136,17 +136,19 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
             el = (cx + sgn * (1.1 * Ta + 4 * u), sh_y + 0.42 * HH); hd = (cx + sgn * 0.45 * Ta, sh_y + 0.62 * HH)
         elif pose == 'hip':      # hand on hip
             el = (cx + sgn * (1.45 * Ta + 10 * u), sh_y + 0.28 * HH); hd = (cx + sgn * 0.95 * Ta, sh_y + 0.55 * HH)
+        elif pose == 'palm':     # hand out at shoulder height, palm up (balancing a broom beside the head)
+            el = (cx + sgn * (1.3 * Ta + 12 * u), sh_y + 0.22 * HH); hd = (el[0] + sgn * 16 * u, sh_y - 0.02 * HH)
         elif pose == 'chin':     # hand to chin
             el = (cx + sgn * (0.9 * Ta), sh_y + 0.55 * HH); hd = (cx + sgn * 0.12 * Ta + facing * 6 * u, chin - 2 * u)
         return [s0, el, hd]
     poses = arm_pose if isinstance(arm_pose, tuple) else (arm_pose, arm_pose)
-    front = []
+    front = []; late_prop = []
     for sgn, ps in zip((-1, 1), poses):
         pts = arm(sgn, ps)
         if ps in ('hold', 'chin'): front.append((pts, ps)); continue      # hands in front of the body: draw after the torso
         C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], -sgn * 1.0 * u, 8)[1:], 5.2 * u, arm_c)
         C.dot(*pts[2], 5.5 * u)
-        if prop and ps in ('wave', 'point', 'hang') and sgn == 1: draw_prop(C, prop, pts[2], u)
+        if prop and ps in ('wave', 'point', 'hang', 'palm') and (sgn == 1 or ps == 'palm') and 'hold' not in poses: late_prop.append(pts[2])   # one prop, one hand; drawn after the head
     # ---- torso: shaded fill -> clothing (clipped) -> ink
     C.fill_shaded(torso, shirt_c, SH_CLOTH, 0.55 * Ta, 0.18 * Ta, cx, tcy, rim=True)
     def clothes(dd):
@@ -204,6 +206,7 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     if hat: draw_hat(C, hat, hexrgb(hat_col), cx + facing * 4 * u, hy, a, b, u, w0, facing, hrot)
     # ---- face
     draw_face(C, expr, cx + facing * 4 * u, hy, u, facing, glasses, moustache, hat is not None, mouth, blink)
+    for hp_ in late_prop: draw_prop(C, prop, hp_, u)       # a raised prop (a broom) must sit over the head and hat
     # ---- arms in front of the body
     for pts, ps in front:
         sgn = 1 if pts[0][0] > cx else -1
@@ -317,7 +320,25 @@ def draw_face(C, expr, cx, cy, u, facing, glasses, moustache, has_hat, mouth=Non
                 d.ellipse(((px - w / 2) * S, (py - w / 2) * S, (px + w / 2) * S, (py + w / 2) * S), fill=col)
 
 def draw_prop(C, kind, hand, u):
+    """Held props, gripped by the dot hand. Parameterised names:
+       'broom_upright' / 'broom_tip_left' / 'broom_tip_right' / 'broom:<deg>' - a broom balanced handle-down on the palm
+           (+ deg tips it to screen right);  'clipboard:<text>' - a clipboard whose sheet carries readable text;
+       'helmet' or 'helmet:<sticker text>' - an open-face helmet held by its edge, sticker large enough to read."""
     x, y = hand
+    if kind.startswith('broom'):
+        tilt = {'broom_upright': 0, 'broom_tip_left': -24, 'broom_tip_right': 24}.get(kind)
+        if tilt is None: tilt = float(kind.split(':', 1)[1]) if ':' in kind else 0.0
+        return _broom(C, x, y, u, tilt)
+    if kind.startswith('helmet'):
+        return _held_helmet(C, x, y, u, kind.split(':', 1)[1] if ':' in kind else None)
+    if kind.startswith('clipboard:'):
+        uu = u * 4.4; txt = kind.split(':', 1)[1]; x = x + 5 * uu   # the hand grips the board's left edge
+        y = y + 6 * uu
+        C.d.rectangle(((x - 6 * uu) * S, (y - 22 * uu) * S, (x + 14 * uu) * S, (y + 4 * uu) * S), fill=(176, 122, 70), outline=INK, width=int(0.9 * uu * S))
+        C.d.rectangle(((x - 3.5 * uu) * S, (y - 19 * uu) * S, (x + 11.5 * uu) * S, (y + 1.5 * uu) * S), fill=(250, 248, 240))
+        C.d.rectangle(((x + 0.5 * uu) * S, (y - 23.5 * uu) * S, (x + 7.5 * uu) * S, (y - 20 * uu) * S), fill=(200, 204, 212), outline=INK, width=int(0.6 * uu * S))
+        _text_block(C, x + 4 * uu, y - 9 * uu, 13.5 * uu, 17 * uu, txt)
+        C.dot(x - 5 * uu, y - 6 * uu, 5.5 * u); return
     u = u * 1.7            # props read big and clear, like the reference
     if kind == 'mug':
         C.d.rounded_rectangle(((x - 2 * u) * S, (y - 9 * u) * S, (x + 12 * u) * S, (y + 6 * u) * S), radius=int(2 * u * S), fill=(240, 240, 235), outline=INK, width=int(2.4 * u * S))
@@ -518,7 +539,7 @@ FRONT_STAND = dict(legN=(3, 1), legF=(3, 1), armN=(20, 9), armF=(20, 9), lean=0.
 def turned(view='side', build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', expr='neutral', facing=1.0,
            hat=None, hat_col='#e2453c', hair=None, hair_col='#5a3b2a', outfit=(), glasses=False, prop=None, seed=1,
            white_head=False, moustache=None, pose=None, mouth=None, blink=False, tilt=0.0, lean=0.0, ground=True,
-           rig=None, layers=None, sticker=None, pad=0):
+           rig=None, layers=None, sticker=None, pad=0, prop_hand='N'):
     """Rig views: 'side', '3q', 'rear', and 'front' (a jointed front body; character(view='front') keeps the legacy one).
        pose keys (all optional):
          legN, legF, armN, armF: (upper, lower[, upper-length factor]) angles in degrees from straight down.
@@ -732,7 +753,7 @@ def turned(view='side', build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#
 
     # ---- the near arm in front of the body, with the held prop
     if not flat: draw_arm(LY['near'], 'N')
-    hand_p = arms['N'][2]
+    hand_p = arms[prop_hand][2]
     if prop: draw_prop(LY['near'], prop, hand_p, u)
     if rig is not None:
         rig.update(hip=hip, neck=up(neck), head=up((hx, hy)), u=u, s=s, HH=HH,
@@ -811,3 +832,57 @@ def draw_helmet(C, col, hx, hy, a, b, u, w0, facing, rear=False, sticker=None):
         elif view == 'side': _sticker(C, hx - s * 0.35 * a, hy - 0.05 * b, 0.62 * a, 0.3 * b, sticker, rot=-s * 8)
         elif view == '3q': _sticker(C, hx - s * 0.62 * a, hy - 0.2 * b, 0.42 * a, 0.24 * b, sticker, rot=-s * 18)
         else: _sticker(C, hx - 0.86 * a, hy - 0.05 * b, 0.26 * a, 0.36 * b, sticker, rot=-70)
+
+
+def _text_block(C, cx, cy, w, h, text, col=(36, 23, 38)):
+    """Bold text wrapped into a box (design units), as large as fits: words on separate lines when needed."""
+    from PIL import ImageFont
+    words = text.split(); lines_opts = [[text]] + ([_wrap2(text)] if len(words) > 1 else []) + ([words] if len(words) > 2 else [])
+    best = None
+    for lines in lines_opts:
+        for fs in range(int(h * S), 6, -2):
+            F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', fs)
+            tw = max(C.d.textlength(l, font=F) for l in lines); th = len(lines) * fs * 1.12
+            if tw <= w * S and th <= h * S: break
+        if best is None or fs > best[0]: best = (fs, lines)
+    fs, lines = best; F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', fs)
+    y0 = cy * S - len(lines) * fs * 1.12 / 2
+    for i, l in enumerate(lines):
+        tw = C.d.textlength(l, font=F); C.d.text((cx * S - tw / 2, y0 + i * fs * 1.12), l, font=F, fill=col)
+
+def _broom(C, x, y, u, tilt):
+    """Handle-down on a flat open palm: the handle rises from the palm, a big bristle head on top; tilt rotates it about
+    the palm. About 1.6 head-heights tall: hold it from a hand at shoulder height (arm pose 'palm') so it fits the card."""
+    L, HL, HW = 250, 105, 52
+    t = math.radians(tilt)
+    def P(a, b): return (x + math.sin(t) * a + math.cos(t) * b, y - math.cos(t) * a + math.sin(t) * b)   # a: up the handle, b: across
+    top = P(L, 0)
+    C.stroke([(x, y - 4 * u), top], 5.2 * u + 2 * 3.5, INK); C.stroke([(x, y - 4 * u), top], 5.2 * u, (176, 122, 70))
+    head = [P(L + 6, -22), P(L + HL - 6, -HW), P(L + HL, -HW * 0.3), P(L + HL, HW * 0.3), P(L + HL - 6, HW), P(L + 6, 22)]
+    C.d.polygon([(px * S, py * S) for px, py in head], fill=(232, 196, 92))
+    for k in (-0.65, -0.3, 0.05, 0.4, 0.75):  # straw lines
+        a0, a1 = P(L + 24, k * 22), P(L + HL - 6, k * HW * 1.25)
+        C.d.line([(a0[0] * S, a0[1] * S), (a1[0] * S, a1[1] * S)], fill=(176, 140, 60), width=int(2.4 * S))
+    C.d.line([(px * S, py * S) for px, py in head + head[:1]], fill=INK, width=int(3.6 * S), joint='curve')
+    for a0 in (L - 2, L + 16):                # two binding bands
+        band = [P(a0, -18 - (a0 - L) * 0.3), P(a0 + 10, -20 - (a0 - L) * 0.3), P(a0 + 10, 20 + (a0 - L) * 0.3), P(a0, 18 + (a0 - L) * 0.3)]
+        C.d.polygon([(px * S, py * S) for px, py in band], fill=(192, 53, 58)); C.d.line([(px * S, py * S) for px, py in band + band[:1]], fill=INK, width=int(3 * S), joint='curve')
+    # a flat open palm under the handle tip (the dot hand flattened)
+    C.d.ellipse(((x - 8 * u) * S, (y - 3.4 * u) * S, (x + 8 * u) * S, (y + 2.6 * u) * S), fill=INK)
+
+def _held_helmet(C, x, y, u, sticker):
+    """An open-face helmet held by its edge and hanging below the hand (off the chin), with the dark face opening
+    visible and a sticker that covers most of the shell, so its text reads at video size."""
+    a = 50 * u * 1.05; cx, cy = x, y + 0.88 * a
+    circ = [(cx + a * math.cos(k * math.pi / 60), cy + a * math.sin(k * math.pi / 60)) for k in range(120)]
+    m = Image.new('L', C.im.size, 0); ImageDraw.Draw(m).polygon([(px * S, py * S) for px, py in circ], fill=255)
+    _mask_outline(C, m, 5 * u * 0.85, hexrgb('#f4f1e8'), cx=cx, cy=cy)
+    def opening(dd):                                       # the padded inside, seen through the face opening
+        box = ((cx - 1.3 * a) * S, (cy - 0.25 * a) * S, (cx - 0.12 * a) * S, (cy + 1.4 * a) * S)
+        dd.rounded_rectangle(box, radius=int(0.3 * a * S), fill=(62, 56, 70)); dd.rounded_rectangle(box, radius=int(0.3 * a * S), outline=INK, width=int(3.4 * S))
+        dd.rounded_rectangle(((cx - 1.3 * a) * S, (cy - 0.36 * a) * S, (cx - 0.02 * a) * S, (cy - 0.2 * a) * S), radius=int(0.06 * a * S), fill=(176, 174, 186), outline=INK, width=int(3 * S))   # peak over the opening
+    C.clip_layer(opening, circ)
+    C.d.line([(px * S, py * S) for px, py in circ + circ[:1]], fill=INK, width=int(4 * S), joint='curve')
+    C.d.line([((cx - 0.05 * a) * S, (cy - a + 4 * u) * S), ((cx + 0.6 * a) * S, (cy - 0.55 * a) * S)], fill=(176, 174, 186), width=int(6 * u * S))
+    if sticker: _sticker(C, cx + 0.32 * a, cy + 0.12 * a, 1.25 * a, 0.7 * a, sticker, rot=-4)
+    C.dot(x, y, 5.5 * u)
