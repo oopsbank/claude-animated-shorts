@@ -56,4 +56,8 @@ The output folder gets `frames/f_NNNNN.jpg`, `video.mp4`, and `track.json`. The 
 - **Riders:** a character with `rig` uses `bikes.ride()`. Its beats drive `lean` / `body_lean` / `bike_lean`, `knee_out`, and an optional `steer`. With no explicit `steer`, the engine adds an **automatic countersteer**: before each lean change of more than 5°, the bars flick the other way (up to 10°, peaking 5 f before the lean lands), and a held lean steers gently into the turn. Cards are cached per 1° bucket. The sticker comes from a `helmet_sticker:` entry in `props`.
 - **Bean faces:** `mouth=` and `blink=` come from bean.py. Only half-lid blink frames still use the engine overlay.
 - **Outfits:** an outfit given as a bare string gets a default colour.
-- **Not drawn yet:** `contact_shift`, `points_at`, `broom_*`, `path` and `view: rear` on a standing (non-riding) character.
+- **`contact_shift`** (rider side): the tyres slide out sideways (16 % of the figure height) while the bike tips the other way. The next lean beat takes over from it.
+- **Chase cam:** for riders in `rear`/`front` view, the hips stay at `x` and the wheels swing out under a lean. Riders are exempt from the planted-feet check because the bike rolls.
+- **`path`** (top view): the rider card rides the fx `path_line` actual track, in step with its drawn-on head and nose-first along the heading. A `path_line` with no `dur` lasts the rest of the shot and defaults to `size` 0.9.
+- **`points_at`**: the character turns toward the target and points with the arm on its side. Targets come from the plate JSON `"targets": {name: [x, y]}` or another character's id; an unknown target is treated as off-screen past the nearer edge, with a warning.
+- **Not drawn yet:** `broom_*` (wardrobe is drawing it), and `view: rear` on a standing, non-riding character.

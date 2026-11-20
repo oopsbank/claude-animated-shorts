@@ -80,7 +80,7 @@ def main():
             if c['grounded'] and c['foot_y'] is not None and abs(c['foot_y'] - c['ground_y']) > 4:
                 ground.append((f, c['id'], round(c['foot_y'] - c['ground_y'], 1)))
             key = (m['shot'], c['id']); p = prev.get(key)
-            if p and p['f'] == f - 1 and p['grounded'] and c['grounded'] and p.get('facing') == c.get('facing'):
+            if p and p['f'] == f - 1 and p.get('planted', p['grounded']) and c.get('planted', c['grounded']) and p.get('facing') == c.get('facing'):
                 for side in ('foot_l', 'foot_r'):
                     if p[side] is not None and c[side] is not None and abs(p[side] - c[side]) > 2:
                         planted.append((f, c['id'], side, round(c[side] - p[side], 1)))

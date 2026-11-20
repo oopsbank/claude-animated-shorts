@@ -243,15 +243,15 @@ class Track:
 
     def _rig_track(self, spec, span, words):
         """Rider-side rig values per beat (raw shots.json signs; bikes.ride() handles the view)."""
-        sw = (span['w0'], span['w1']); cur = {k: None for k in self.RIG_KEYS}; cur['knee_out'] = False
+        sw = (span['w0'], span['w1']); cur = {k: None for k in self.RIG_KEYS}; cur['knee_out'] = False; cur['contact_shift'] = None
         self.rig_keys = []                                   # (land, before, after)
         for b in sorted(spec.get('beats', []), key=lambda b: b.get('at_word', 0)):
             land, _ = beat_frame(sw, words, b.get('at_word', 0)); prev = dict(cur)
-            for k in self.RIG_KEYS + ('knee_out',):
+            for k in self.RIG_KEYS + ('knee_out', 'contact_shift'):
                 if k in b: cur[k] = b[k]
             if land <= self.f0 + 1: self.rig0 = dict(cur); continue
             if cur != prev: self.rig_keys.append((land, prev, dict(cur)))
-        if not hasattr(self, 'rig0'): self.rig0 = {k: None for k in self.RIG_KEYS}; self.rig0['knee_out'] = False
+        if not hasattr(self, 'rig0'): self.rig0 = {k: None for k in self.RIG_KEYS}; self.rig0.update(knee_out=False, contact_shift=None)
 
     def rig_at(self, f):
         """Eased rig values: 2 f lean-back anticipation, out_back overshoot over SETTLE frames, and an automatic
@@ -270,6 +270,21 @@ class Track:
                 if k in ('lean', 'bike_lean') and abs(vb - va) > 5 and b.get('steer') is None:
                     flick += -math.copysign(min(10.0, 0.4 * abs(vb - va)), vb - va) * math.sin(math.pi * clamp((n + 12) / 14))
             if n >= 0: v['knee_out'] = b['knee_out']
+        # contact_shift: the tyres slide out sideways under the rider (rider side). The contact patch moves out by
+        # ~16 % of the figure height and the bike tips the other way about the rider's head; it hands over to the next
+        # lean beat, which takes the bike the rest of the way.
+        v['contact_dx'] = 0.0
+        for j, (land, a, b) in enumerate(self.rig_keys):
+            if b.get('contact_shift') and b['contact_shift'] != a.get('contact_shift'):
+                n = f - land
+                if n < 0: break
+                sg = 1.0 if b['contact_shift'] == 'right' else -1.0
+                nxt = next((l2 for l2, a2, b2 in self.rig_keys[j + 1:] if b2['lean'] != a2['lean'] or b2['bike_lean'] != a2['bike_lean']), None)
+                k_in = out_back(n / 6, 1.4); k_out = 1 - smooth((f - nxt + 3) / SETTLE) if nxt is not None and f >= nxt - 3 else 1.0
+                amt = k_in * max(0.0, k_out)
+                v['contact_dx'] += 0.16 * sg * amt
+                key = 'lean' if v['lean'] is not None or v['bike_lean'] is None else 'bike_lean'
+                v[key] = (v[key] or 0.0) - sg * 10.0 * amt
         tot = v['lean'] if v['lean'] is not None else (v['bike_lean'] or 0.0)
         if v['steer'] is None: v['steer'] = flick + max(-5.0, min(5.0, 0.15 * tot))
         return v
@@ -332,6 +347,7 @@ class Camera:
                 land, _ = beat_frame(sw, words, c.get('at_word', 0)); f_a, f_b = land - 6, land + 22
             else: f_a, f_b = self.f0, self.f1
             self.travel = (axis, -sg * m, sg * m, f_a, f_b, 'smoother' if mv != 'follow' else 'linear')
+            if mv == 'pan': self.push = min(0.04, 0.001 * n)     # alive before the pan starts
         if mv == 'shake':                                           # nervous handheld beat: small kicks every ~8 f
             self.push = 0.02; self.shake = float(c.get('amount', 0.01)) / 0.01 * 0.5
         else: self.shake = 0.0
