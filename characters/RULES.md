@@ -38,3 +38,8 @@ The spec is `references/reports/characters.md` §2. The anatomy and animation ru
 25. **A balanced broom stands on a flat palm held at shoulder height** (arm pose `palm`), beside the head, never across the face, and sized (about 1.6 head-heights) to stay inside the card. A short broom with a small head read as a torch or paintbrush.
 26. **A held helmet hangs below the hand,** off the chin, with its dark face opening and peak showing. A plain white dome read as a ball.
 27. **Joke text is set as large as the prop allows** (the clipboard sheet, a helmet sticker that covers most of the shell). Small labels are decoration only.
+
+## Draft v1 feedback
+28. **From behind, a motorbike must never read as a bicycle.** Give it fat tyres (rear ≈ 6× the bicycle's), a wide engine block visible between the legs, wide pegs with the feet on them, a big tail light, a number plate, an exhaust can with a dark end, and tank and seat bulk. Check it in rear view, not only in side view.
+29. **The key analogy gets an insert card.** A prop that carries the explanation (the broom on the palm) gets a full-frame close-up (`inserts.py`) with the object at 70% or more of the frame height. A 1.6-head broom in a medium shot was barely visible.
+30. **Close-up inserts may show a skin hand** (palm, thumb, finger bumps). At that size the cast's dark dot hand read as a plate or a puck.

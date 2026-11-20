@@ -44,6 +44,7 @@ def model(kind='bicycle', color='#2f8fd8', fixed_color='#f2c230', leg=330):
     def wheel(c, R, tw, grp, spokes): P.append(dict(kind='wheel', c=c, R=R, tw=tw, grp=grp, lat=0, spokes=spokes))
     def prism(poly, y0, y1, c, grp='frame', shade=True): P.append(dict(kind='prism', poly=poly, y0=y0, y1=y1, col=c, grp=grp, lat=(y0 + y1) / 2, shade=shade))
     def disc(c, n, r, cl, grp='frame', glow=False): P.append(dict(kind='disc', c=c, n=n, r=r, col=cl, grp=grp, lat=c[1], glow=glow))
+    def quad(corners, cl, grp='frame', marks=False): P.append(dict(kind='quad', pts=corners, col=cl, grp=grp, lat=sum(q[1] for q in corners) / 4, marks=marks))
     if kind == 'bicycle':
         R = 140; ra, fa = (-220, 0, R), (220, 0, R); bb = (-25, 0, 118)
         sz = bb[2] + 0.86 * leg                                    # saddle fitted to the rider: the low leg is nearly straight
@@ -72,15 +73,22 @@ def model(kind='bicycle', color='#2f8fd8', fixed_color='#f2c230', leg=330):
     else:
         R = 148; ra, fa = (-262, 0, R), (268, 0, R)
         head_t, head_b = (178, 0, 372), (205, 0, 300)
-        wheel(ra, R, 34, 'frame', 0); wheel(fa, R, 34, 'steer', 0)
+        # fat tyres: from behind a motorbike must never read as a bicycle (a bicycle tyre is 15)
+        wheel(ra, R, 92, 'frame', 0); wheel(fa, R, 72, 'steer', 0)
         tube((-40, 0, 205), ra, 24, mul(col, (0.55, 0.55, 0.6)))                                        # swing arm
         tube(head_b, (-60, 0, 292), 26, mul(col, (0.55, 0.55, 0.6)))                                    # frame spine
-        prism([(-62, 268), (100, 280), (128, 192), (78, 138), (-52, 148)], -44, 44, (122, 126, 136))    # engine
-        tube((80, -54, 150), (-250, -54, 210), 24, CHROME); tube((-200, -54, 202), (-282, -54, 222), 32, CHROME)   # exhaust (right side)
-        prism([(-305, 334), (-200, 340), (-55, 322), (-48, 262), (-190, 266), (-296, 298)], -36, 36, col)   # tail / side cover
-        prism([(-215, 344), (25, 356), (32, 330), (-205, 322)], -38, 38, SEAT)                          # seat
-        prism([(18, 356), (150, 368), (188, 326), (132, 282), (16, 292)], -46, 46, col)                 # tank
-        disc((-306, 0, 318), (-1, 0, 0), 14, (226, 50, 60))                                              # tail light
+        prism([(-62, 268), (100, 280), (128, 192), (78, 138), (-52, 148)], -112, 112, (122, 126, 136))   # engine: wide, shows between the legs
+        prism([(-20, 250), (60, 255), (70, 170), (-10, 165)], -128, 128, (98, 102, 112))                  # cylinder heads jutting out each side
+        tube((80, -96, 150), (-230, -96, 220), 26, CHROME)                                                # exhaust pipe (right side)
+        prism([(-180, 236), (-300, 250), (-306, 210), (-186, 200)], -128, -66, CHROME)                   # exhaust can, set wide
+        disc((-307, -97, 230), (-1, 0, 0), 17, (52, 50, 60))                                              # the can's dark end, seen from behind
+        prism([(-305, 334), (-200, 340), (-55, 322), (-48, 262), (-190, 266), (-296, 298)], -62, 62, col)   # tail / side covers: bulky
+        prism([(-215, 350), (25, 360), (32, 330), (-205, 322)], -64, 64, SEAT)                          # seat
+        prism([(18, 362), (150, 372), (188, 326), (132, 282), (16, 292)], -82, 82, col)                 # tank bulk
+        prism([(-330, 300), (-240, 306), (-215, 262), (-322, 236)], -40, 40, mul(col, (0.85, 0.85, 0.85)))   # rear mudguard
+        disc((-308, 0, 318), (-1, 0, 0), 22, (226, 50, 60))                                              # tail light, big
+        tube((-318, 0, 300), (-334, 0, 262), 10, DARK)                                                   # plate bracket
+        quad([(-336, -52, 262), (-336, 52, 262), (-340, 52, 216), (-340, -52, 216)], (246, 210, 64), marks=True)   # number plate
         A['seat'] = (-85, 0, 352)
         for y in (-38, 38): tube((head_b[0] - 5, y, head_b[2] + 30), (fa[0], y, fa[2]), 18, CHROME, 'steer')   # fork legs
         prism([(fa[0] - 92, R + 18), (fa[0] + 70, R + 30), (fa[0] + 74, R + 18), (fa[0] - 88, R + 6)], -24, 24, col, 'steer')  # front fender
@@ -92,18 +100,18 @@ def model(kind='bicycle', color='#2f8fd8', fixed_color='#f2c230', leg=330):
         tube((168, -142, 398), (168, 142, 398), 12, CHROME, 'steer', tag='bar')                         # bar
         for y in (-1, 1): tube((166, y * 112, 398), (162, y * 150, 398), 19, DARK, 'steer', tag='grip')
         A['grips'] = {'R': (164, -132, 398), 'L': (164, 132, 398)}
-        for y in (-1, 1): tube((-25, y * 46, 178), (-25, y * 82, 178), 12, CHROME)                     # foot pegs
-        A['pegs'] = {'R': (-25, -74, 184), 'L': (-25, 74, 184)}
+        for y in (-1, 1): tube((-25, y * 112, 178), (-25, y * 160, 178), 16, CHROME)                    # foot pegs, outside the engine
+        A['pegs'] = {'R': (-25, -146, 184), 'L': (-25, 146, 184)}
         A['axis'] = (head_t, head_b)
         A['tilt_fwd'] = 14; A['kind'] = 'motorbike'
         if kind == 'nobs_bike':          # a second handlebar bolted to the frame: it cannot steer
             fc = hexrgb(fixed_color)
-            for y in (-1, 1): tube((150, y * 34, 350), (128, y * 92, 438), 20, fc)                      # thick posts bolted to the tank
-            prism([(108, 426), (150, 426), (150, 452), (108, 452)], -112, 112, mul(fc, (0.8, 0.8, 0.8)))   # wide clamp block
-            tube((126, -215, 440), (126, 215, 440), 20, fc, tag='bar')                                    # the fixed bar: wider, thicker
-            for y in (-1, 1): tube((124, y * 178, 440), (120, y * 222, 440), 22, DARK, tag='grip')
-            for y in (-1, 1): disc((152, y * 92, 440), (1, 0, 0), 9, (90, 92, 104))                    # bolt heads
-            A['fixed_grips'] = {'R': (122, -202, 440), 'L': (122, 202, 440)}
+            for y in (-1, 1): tube((150, y * 40, 360), (128, y * 110, 478), 22, fc)                     # thick posts bolted to the tank
+            prism([(108, 466), (150, 466), (150, 494), (108, 494)], -128, 128, mul(fc, (0.8, 0.8, 0.8)))   # wide clamp block
+            tube((126, -265, 480), (126, 265, 480), 22, fc, tag='bar')                                    # the fixed bar: high and wide,
+            for y in (-1, 1): tube((124, y * 222, 480), (120, y * 272, 480), 24, DARK, tag='grip')      # its ends clear the rider's back
+            for y in (-1, 1): disc((152, y * 110, 480), (1, 0, 0), 10, (90, 92, 104))                  # bolt heads
+            A['fixed_grips'] = {'R': (122, -250, 480), 'L': (122, 250, 480)}
             A['kind'] = 'nobs_bike'
     return P, A
 
@@ -209,6 +217,18 @@ def build_drawables(P, A, pr, steer, lean):
                     C.d.line([(x * S, y * S) for x, y in face + face[:1]], fill=mix(col, INK, 0.55), width=int(1.8 * S), joint='curve')
                 C.outline(hull, cx, cy, 4.2)
             out.append(((d0 + d1) / 2, part['lat'], f, None))
+        elif part['kind'] == 'quad':
+            q3 = [T(p) for p in part['pts']]; poly = [pr(p) for p in q3]; col = part['col']; marks = part['marks']
+            def f(C, poly=poly, col=col, marks=marks):
+                if _area(poly) < 40: C.d.line([(x * S, y * S) for x, y in poly + poly[:1]], fill=INK, width=int(4 * S)); return
+                C.d.polygon([(x * S, y * S) for x, y in poly], fill=col); C.d.line([(x * S, y * S) for x, y in poly + poly[:1]], fill=INK, width=int(3.4 * S), joint='curve')
+                if marks:                                  # plate lettering as chunky dashes
+                    (x0, y0), (x1, y1), (x2, y2), (x3, y3) = poly
+                    for k in range(4):
+                        t0, t1 = 0.14 + k * 0.19, 0.27 + k * 0.19
+                        a = (x0 + (x1 - x0) * t0, (y0 + y3) / 2 + (y1 - y0) * t0); b = (x0 + (x1 - x0) * t1, (y0 + y3) / 2 + (y1 - y0) * t1)
+                        C.d.line([(a[0] * S, a[1] * S), (b[0] * S, b[1] * S)], fill=INK, width=int(7 * S))
+            out.append((sum(pr.depth(p) for p in q3) / 4, part['lat'], f, None))
         elif part['kind'] == 'disc':
             c = T(part['c']); n = norm(sub(T(add(part['c'], part['n'])), c))
             e1 = norm(cross(n, (0, 0, 1))) if abs(n[2]) < 0.9 else (1, 0, 0); e2 = cross(n, e1)

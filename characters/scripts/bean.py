@@ -850,25 +850,26 @@ def _text_block(C, cx, cy, w, h, text, col=(36, 23, 38)):
     for i, l in enumerate(lines):
         tw = C.d.textlength(l, font=F); C.d.text((cx * S - tw / 2, y0 + i * fs * 1.12), l, font=F, fill=col)
 
-def _broom(C, x, y, u, tilt):
+def _broom(C, x, y, u, tilt, k=1.0, palm=True, wide=1.0):
     """Handle-down on a flat open palm: the handle rises from the palm, a big bristle head on top; tilt rotates it about
     the palm. About 1.6 head-heights tall: hold it from a hand at shoulder height (arm pose 'palm') so it fits the card."""
-    L, HL, HW = 250, 105, 52
+    L, HL, HW = 250 * k, 105 * k, 52 * k * wide
     t = math.radians(tilt)
     def P(a, b): return (x + math.sin(t) * a + math.cos(t) * b, y - math.cos(t) * a + math.sin(t) * b)   # a: up the handle, b: across
     top = P(L, 0)
-    C.stroke([(x, y - 4 * u), top], 5.2 * u + 2 * 3.5, INK); C.stroke([(x, y - 4 * u), top], 5.2 * u, (176, 122, 70))
-    head = [P(L + 6, -22), P(L + HL - 6, -HW), P(L + HL, -HW * 0.3), P(L + HL, HW * 0.3), P(L + HL - 6, HW), P(L + 6, 22)]
+    C.stroke([(x, y - 4 * u), top], 5.2 * u * k + 2 * 3.5 * k, INK); C.stroke([(x, y - 4 * u), top], 5.2 * u * k, (176, 122, 70))
+    head = [P(L + 6 * k, -22 * k), P(L + HL - 6 * k, -HW), P(L + HL, -HW * 0.3), P(L + HL, HW * 0.3), P(L + HL - 6 * k, HW), P(L + 6 * k, 22 * k)]
     C.d.polygon([(px * S, py * S) for px, py in head], fill=(232, 196, 92))
-    for k in (-0.65, -0.3, 0.05, 0.4, 0.75):  # straw lines
-        a0, a1 = P(L + 24, k * 22), P(L + HL - 6, k * HW * 1.25)
-        C.d.line([(a0[0] * S, a0[1] * S), (a1[0] * S, a1[1] * S)], fill=(176, 140, 60), width=int(2.4 * S))
-    C.d.line([(px * S, py * S) for px, py in head + head[:1]], fill=INK, width=int(3.6 * S), joint='curve')
-    for a0 in (L - 2, L + 16):                # two binding bands
-        band = [P(a0, -18 - (a0 - L) * 0.3), P(a0 + 10, -20 - (a0 - L) * 0.3), P(a0 + 10, 20 + (a0 - L) * 0.3), P(a0, 18 + (a0 - L) * 0.3)]
-        C.d.polygon([(px * S, py * S) for px, py in band], fill=(192, 53, 58)); C.d.line([(px * S, py * S) for px, py in band + band[:1]], fill=INK, width=int(3 * S), joint='curve')
-    # a flat open palm under the handle tip (the dot hand flattened)
-    C.d.ellipse(((x - 8 * u) * S, (y - 3.4 * u) * S, (x + 8 * u) * S, (y + 2.6 * u) * S), fill=INK)
+    for kk in (-0.65, -0.3, 0.05, 0.4, 0.75):  # straw lines
+        a0, a1 = P(L + 24 * k, kk * 22 * k), P(L + HL - 6 * k, kk * HW * 1.25)
+        C.d.line([(a0[0] * S, a0[1] * S), (a1[0] * S, a1[1] * S)], fill=(176, 140, 60), width=int(2.4 * k * S))
+    C.d.line([(px * S, py * S) for px, py in head + head[:1]], fill=INK, width=int(3.6 * k * S), joint='curve')
+    for a0 in (L - 2 * k, L + 16 * k):        # two binding bands
+        g = (a0 - L) * 0.3
+        band = [P(a0, -18 * k - g), P(a0 + 10 * k, -20 * k - g), P(a0 + 10 * k, 20 * k + g), P(a0, 18 * k + g)]
+        C.d.polygon([(px * S, py * S) for px, py in band], fill=(192, 53, 58)); C.d.line([(px * S, py * S) for px, py in band + band[:1]], fill=INK, width=int(3 * k * S), joint='curve')
+    if palm:                                  # a flat open palm under the handle tip (the dot hand flattened)
+        C.d.ellipse(((x - 8 * u) * S, (y - 3.4 * u) * S, (x + 8 * u) * S, (y + 2.6 * u) * S), fill=INK)
 
 def _held_helmet(C, x, y, u, sticker):
     """An open-face helmet held by its edge and hanging below the hand (off the chin), with the dark face opening
