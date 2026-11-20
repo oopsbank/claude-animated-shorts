@@ -441,7 +441,19 @@ def measure(cam_obj, stand, sun_obj, preset, top=False):
 
 INK_FADE, INK_RANGE = (14, 40, 0.5), (3, 30)   # a set with big distances raises these
 
-def main(set_name, CAMS, LIGHTS, haze_range=(4, 90)):
+def project_targets(cam_obj, targets):
+    """Screen px of named 3D points (sign centres etc.) that are inside the frame and not hidden behind geometry."""
+    s = sc(); bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get(); out = {}
+    for name, pt in (targets or {}).items():
+        pt = Vector(pt); v = world_to_camera_view(s, cam_obj, pt)
+        if v.z <= 0 or not (0.02 < v.x < 0.98 and 0.02 < v.y < 0.98): continue
+        o = cam_obj.matrix_world.translation; d = pt - o
+        hit, loc, *_ = s.ray_cast(dg, o, d.normalized(), distance=d.length)
+        if hit and (loc - pt).length > 0.35: continue          # something in front of it
+        out[name] = [round(v.x * W, 1), round((1 - v.y) * H, 1)]
+    return out
+
+def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
     """CAMS: name -> dict(loc, target, lens, stand, fstop, roll, ink_fade, light_overrides, setup=callable)
        LIGHTS: name -> dict of preset overrides (az, elev, ...)."""
     ap = argparse.ArgumentParser()
@@ -476,6 +488,8 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90)):
                  sat=p.get('grade_sat', 1.0), gain=p.get('grade_gain', 1.0))
             js = measure(co, c['stand'], sun, p, c.get('top', False)); js.update(set=set_name, cam=cn, light=ln)
             if c.get('top'): js['view'] = 'top'
+            tg = project_targets(co, targets)
+            if tg: js['targets'] = tg
             if c.get('note'): js['note'] = c['note']
             with open(os.path.join(out, base + '.json'), 'w') as f: json.dump(js, f, indent=1)
             print(f'PLATE {base} {time.time() - t:.0f}s {js}', flush=True)

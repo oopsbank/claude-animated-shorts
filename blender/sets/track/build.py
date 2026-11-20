@@ -204,4 +204,5 @@ CAMS = {
 C.INK_FADE, C.INK_RANGE = (35, 120, 0.4), (6, 80)   # an open track: keep outlines on the far trees and gantry
 LIGHTS = {'day': dict(az=-30, elev=50, exposure=-0.25, haze_k=0.2, grade_sat=1.3, grade_gain=1.0),
           'golden': dict(az=-35, elev=16, sun_e=8.0, amb=(0.42, 0.50, 0.95), haze=(1.0, 0.70, 0.40), exposure=0.0, haze_k=0.2, grade_sat=1.25, grade_gain=1.0)}
-C.main('track', CAMS, LIGHTS)
+TARGETS = {'chalkboard': (-0.55, -11.8, 1.7), 'lapboard': (0.85, -12.7, 2.7), 'banner': (GX, CY, 4.85)}   # sign centres
+C.main('track', CAMS, LIGHTS, targets=TARGETS)
