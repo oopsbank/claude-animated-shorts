@@ -1,5 +1,7 @@
 # Production pipeline: multi-session contract
 
+> New Producer? Start with [`HANDOFF.md`](HANDOFF.md).
+
 This repo is worked on by **several Claude sessions in parallel**, each owning one area. This file is the contract between them. Read it fully before you start, then read [`QA.md`](QA.md) (how to check your work), [`LESSONS.md`](LESSONS.md) (mistakes not to repeat) and [`BACKLOG.md`](BACKLOG.md) (what to do).
 
 ## The video we make
