@@ -1,3 +1,28 @@
+# Topics v6: story-engine shortlist (Producer, 2026-11-21)
+
+Built for the leaders' story engine (`references/reports/retention_2026-11.md` §8): a person doing something that looks wrong, a mocking rival who wins first, 3 stages, a late mechanism with one analogy, then a spectacular reversal and a gag or loop. Checked against `references/titles.md` (no overlap). **Every fact must be verified against a primary source by the Screenwriter before G1**; the sources below are where to start. The v1-v5 list further down is kept as reserves (household mechanisms, weaker as stories).
+
+| # | Working title | Line 1 (hook) | Rival and stages | Mechanism / analogy | Reversal and gag | Visual | Sets |
+|---|---|---|---|---|---|---|---|
+| A | **The Tower They Saved by Digging Under It** | "To stop a leaning tower from falling, he dug a hole under it." | Officials want to prop and pile the low side ("You'll knock it over!"). Stages: steel weights → frozen soil (it lurches) → slow drilling. | Take soil from under the **high** side so that side settles and the tower rights itself. Analogy: a wobbly table fixed by shortening the long leg, not padding the short one. | After a decade the tower is about 45 cm straighter, and still leaning enough to sell postcards. Gag: tourists keep "holding it up" in photos. | 9 | piazza + tower, drill rig under the ground (X-ray) |
+| B | **The Skyscraper With a Giant Ball Inside** | "They hung a 660-ton steel ball inside the top of a skyscraper, on purpose." | The rival architect: "Who adds weight to the TOP?" Stages: windy day → storm → typhoon. | A tuned mass damper swings opposite the sway and soaks it up. Analogy: holding a full cup steady while you walk by letting your wrist move the other way. | In the typhoon the ball swings about a metre and the tower barely moves. Gag: the ball gets its own cute mascot and a gift shop. | 9 | city at night, the giant ball atrium (cutaway) |
+| C | **The Men Who Sweep the Ice** | "In the middle of a match, two grown men start furiously sweeping the ice." | The rival team laughs, then their stone stops short. Stages: practice end → semi-final → last stone. | Brushing warms the ice a little, so friction drops and the stone slides further and curls less. Analogy: a hockey puck on fresh ice vs. on scratched ice. | The last stone slides into the house just as the rival's sweeper falls over. Gag: the brush. | 8 | ice rink, a stone POV cam |
+| D | **The Country That Flooded Itself** | "To stop an invading army, he flooded his own country's farmland." | The generals: "You're drowning our own fields!" Stages: the first sluice gate → the enemy arrives → the water is "knee-deep". | The water was kept knee-deep: too shallow for boats, too deep to march through, and it hid the ditches. Analogy: a puddle that hides a pothole. | The army stalls at the edge of a field you could wade, but nobody dares. Gag: a soldier sinks to his hat in a hidden ditch. | 8 | farmland + dikes, sluice gate, soldiers |
+| E | **The Builder Who Left Lumps in His Concrete** | "A Roman builder left white lumps all through his concrete, and it outlasted the empire." | The rival: "Sloppy mixing!" Stages: harbour wall → storms → centuries. | Hot-mixed quicklime leaves lime lumps; a crack lets water in, the lumps dissolve and refill it with new crystals. Analogy: a scab that grows back over a scratch. | The smooth modern sea wall crumbles; the lumpy Roman one stands. Gag: tourists picnic on it. | 7 | Roman harbour, a crack close-up (X-ray), the sea |
+| F | **The Boat That Outran the Wind** | "He built a boat that sails faster than the wind that pushes it." | The downwind sailor: "Nothing outruns the wind!" Stages: the frozen lake race → crosswind → full speed. | On ice, a sail sideways to its motion keeps making lift as speed builds, because friction is tiny (an iceboat). Analogy: a watermelon seed squeezed between your fingers shoots faster than your fingers move. | The downwind boat is stuck at wind speed while the iceboat laps it. Gag: the rival's hat blows off and the iceboat overtakes it. | 7 | frozen lake, iceboats, fly-through |
+
+**Ranking (story + visuals + originality):** A, B, C, D, E, F.
+
+**Sources to verify:**
+- A: John Burland's papers on the Pisa stabilisation (1999-2001 soil extraction) and the Opera della Primaziale reports.
+- B: Taipei 101 damper specs (660 t; the 2015 Typhoon Soudelor swing) from the building's operator and the engineering papers.
+- C: World Curling sweeping studies (Univ. of Edinburgh / Mark Shegelski).
+- D: the Dutch Water Line (Hollandse Waterlinie), UNESCO listing and history.
+- E: Seymour et al. 2023, *Science Advances* (MIT), on hot mixing and lime clasts.
+- F: iceboat speed records and the physics of sailing faster than the wind (DN class).
+
+---
+
 # Topic shortlist v5 (final for the user checkpoint) (2026-11-19)
 
 Ten original "Why/How" topics for the first video. Each one is an everyday physical or psychological phenomenon with a mechanism we can *show*. **The user picks one** (a human checkpoint in `PIPELINE.md`). The full `SCRIPT.md` + `shots.json` is written only after that.
