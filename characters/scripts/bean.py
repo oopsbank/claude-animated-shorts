@@ -124,7 +124,7 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     leg_c = mix(pants_c, INK, 0.55)
     hip_y = torso_bot - 0.12 * HH
     if seated:
-        if seated == 'cooler': draw_cooler(C, cx, seat_top(build), 975, Ta * 2.5, u)
+        if seated == 'cooler': draw_cooler(C, cx, seat_top(build), 975, Ta * 2.15, u)
         seat_legs(C, cx, hip_y, torso_bot, u, leg_c, facing)
     else:
       for sgn in (-1, 1):
@@ -142,8 +142,8 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
         if pose == 'hold' and hp:      # new held props: shown off the belly, the dot hand visibly on the grip
             if both_hold and hp in held.TWO_HANDED:     # hands just inside the prop's two edges, at chest height
                 if hp == 'frying_pan':                   # a paddle: top hand high, bottom hand low, blade out to the side
-                    hd = (cx - 0.25 * Ta, sh_y + 0.22 * HH) if sgn < 0 else (cx + 0.75 * Ta, sh_y + 0.56 * HH)
-                    el = (cx + sgn * (1.1 * Ta + 6 * u), sh_y + (0.42 if sgn < 0 else 0.5) * HH)
+                    hd = (cx + 0.3 * Ta, sh_y + 0.26 * HH) if sgn < 0 else (cx + 1.12 * Ta, sh_y + 0.6 * HH)
+                    el = (cx - 0.95 * Ta, sh_y + 0.42 * HH) if sgn < 0 else (cx + 1.25 * Ta + 8 * u, sh_y + 0.36 * HH)
                     return [s0, el, hd]
                 hd = (cx + sgn * held.two_halfwidth(hp) * u, sh_y + 0.40 * HH)
                 el = (cx + sgn * max(1.12 * Ta + 4 * u, abs(hd[0] - cx) + 10 * u), sh_y + 0.50 * HH)
@@ -215,9 +215,6 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
                 for sg in (-1, 1): dd.polygon([P(cx, chin + 6 * u), P(cx + sg * 0.5 * Ta, chin - 4 * u), P(cx + sg * 0.35 * Ta, chin + 12 * u)], fill=col)
     C.clip_layer(clothes, torso)
     C.outline(torso, cx, tcy, w0)
-    if seated:   # knees poking forward over the seat edge, in front of the belly: reads as sitting, not stacking
-        from ink import stamp as _stamp
-        _stamp(C, [('e', cx + sg * 30 * u, torso_bot + 1 * u, 7.5 * u, 6 * u, leg_c) for sg in (-1, 1)], 0.55 * w0)
     # ---- head
     head_col = hexrgb('#fbf8f4') if white_head else skin_c
     C.fill_shaded(head, head_col, head_sh, 0.30 * a, 0.09 * a, cx, hy)
@@ -411,17 +408,17 @@ def draw_prop(C, kind, hand, u, side=1, two=None):
 def seat_top(build='adult'):
     """Card y of the seat top for seated= (the lid of the cooler); soles stay at y=975."""
     B = BUILDS[build]; HH = 2 * B['b']
-    return 975 - 0.55 * B['legs'] * HH
+    return 975 - 0.44 * B['legs'] * HH
 
 def seat_drop(build='adult'):
     B = BUILDS[build]; HH = 2 * B['b']
-    return (seat_top(build) + 0.04 * HH) - (975 - B['legs'] * HH)
+    return (seat_top(build) - 0.01 * HH) - (975 - B['legs'] * HH)
 
 def seat_legs(C, cx, hip_y, torso_bot, u, leg_c, facing=0.0):
     """Front-view sitting: thighs point at the camera (foreshortened under the torso), knees out, shins straight down."""
-    for sgn in (-1, 1):
-        hip = (cx + sgn * 15 * u, hip_y); kn = (cx + sgn * 30 * u, torso_bot); ft = (cx + sgn * 30 * u, 975 - 3.5 * u)
-        path = bow(hip, kn, sgn * 1 * u, 8) + bow(kn, ft, -sgn * 1.5 * u, 12)[1:]
+    for sgn in (-1, 1):   # thighs angle out from under the belly to knees on the seat's front edge, shins hang down it
+        hip = (cx + sgn * 14 * u, hip_y); kn = (cx + sgn * 33 * u, torso_bot + 18 * u); ft = (cx + sgn * 35 * u, 975 - 3.5 * u)
+        path = bow(hip, kn, -sgn * 2 * u, 10) + bow(kn, ft, sgn * 1.5 * u, 12)[1:]
         C.stroke(path, 5.8 * u, leg_c)
         C.stroke([ft, (ft[0] + sgn * 12 * u + facing * 8 * u, ft[1] + 0.5 * u)], 7.5 * u, INK)
 
@@ -453,7 +450,7 @@ def draw_antennae(C, col, cx, hy, a, b, u, w0, facing, rot, rear, antennae='up',
     from ink import stamp
     droop = {'up': 0.0, 'droop': 1.0, None: 0.0}.get(antennae, antennae)
     droop = max(0.0, min(1.0, float(droop)))
-    dk = mul(col, (0.62, 0.62, 0.7)); stalk = mix(col, INK, 0.6)
+    dk = (74, 58, 88); stalk = mix(col, INK, 0.6)     # a dark plum band: the green balls pop, and it never matches a green cap
     base_y = hy - 0.48 * b; f = facing if abs(facing) >= 1 else facing * 0.5
     def hw(y):   # half-width of the skull at height y (crown exponent 1.75)
         t = min(1.0, abs((y - hy) / b)); return a * (1 - t ** 1.75) ** (1 / 1.75)
@@ -483,14 +480,14 @@ def draw_antennae(C, col, cx, hy, a, b, u, w0, facing, rot, rear, antennae='up',
             L = math.hypot(dx, dy) or 1
             amp = 4.2 * u * math.sin(math.pi * min(1, t * 1.25)) * (1 - 0.6 * droop)     # the spring coil, slacker when drooping
             wob = amp * math.sin(t * 2 * math.pi * 4.5)
-            pts.append((x - dy / L * wob, y + dx / L * wob, 3.4 * u))
-        rb = 0.17 * a
+            pts.append((x - dy / L * wob, y + dx / L * wob, 4.2 * u))
+        rb = 0.2 * a
         parts.append((pts, tip, rb))
     for pts, tip, rb in parts:
         stamp(C, [('s', pts, stalk), ('e', tip[0], tip[1], rb, rb * (1 - 0.1 * droop), col)], 0.7 * w0,
               details=[('c', tip[0] - rb * 0.38, tip[1] - rb * 0.4, rb * 0.22, mix(col, (255, 255, 255), 0.55))])
-    stamp(C, [('p', band, dk)] + [('e', p_[0][0], p_[0][1] + 1 * u, 0.09 * a, 0.07 * a, dk) for p_, _t, _r in parts], 0.8 * w0,
-          details=[('s', [(x, y + 2.2 * u, 1.6 * u) for x, y in top[2:-2]], mix(col, (255, 255, 255), 0.25))])   # band + spring sockets, a lit top rim
+    stamp(C, [('p', band, dk)] + [('e', p_[0][0], p_[0][1] + 1 * u, 0.1 * a, 0.08 * a, mul(col, (0.7, 0.7, 0.75))) for p_, _t, _r in parts], 0.8 * w0,
+          details=[('s', [(x, y + 2.2 * u, 1.6 * u) for x, y in top[2:-2]], (128, 108, 146))])   # band + spring sockets, a lit top rim
 
 if __name__ == '__main__':
     import sys

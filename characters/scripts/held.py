@@ -44,8 +44,8 @@ def screwdriver(C, x, y, u, d, two, e):
 
 def googly_eyes(C, x, y, u, d, two, e):
     r = 13 * u
-    s1, d1 = googly(x - d * 6 * u, y - 12 * u, r, look=(-0.6, 0.6))
-    s2, d2 = googly(x + d * 20 * u, y - 22 * u, r, look=(0.7, -0.5))
+    s1, d1 = googly(x - d * 4 * u, y - 19 * u, r, look=(-0.6, 0.6))
+    s2, d2 = googly(x + d * 22 * u, y - 30 * u, r, look=(0.7, -0.5))
     stamp(C, [s1, s2], e * 0.8, details=[d1, d2], shade=True)
 
 
@@ -93,8 +93,6 @@ def cash_fan(C, x, y, u, d, two, e):
         r = math.radians(a); cx, cy = x + math.cos(r) * 24 * u, y + math.sin(r) * 24 * u
         stamp(C, [('p', rpoly(cx, cy, 44 * u, 20 * u, 1.5 * u, ang=a), GREEN)], e * 0.7,
               details=[('p', rpoly(cx, cy, 34 * u, 12 * u, 1 * u, ang=a), (88, 160, 84)), ('c', *fx.rot(cx + 9 * u, cy, cx, cy, a), 4.5 * u, (170, 225, 160))])
-        tx, ty = fx.rot(cx + 9 * u, cy, cx, cy, a)
-        text(C, tx, ty, '$', 6 * u, (40, 100, 44), rot=-a)
     C.dot(x, y, 5.5 * u)
 
 
@@ -154,10 +152,10 @@ def megaphone(C, x, y, u, d, two, e):
 def flag(C, x, y, u, d, two, e, label=''):
     dd = d or 1
     top = (x + dd * 4 * u, y - 150 * u)
-    fl = [(top[0], top[1] + 2 * u), (top[0] + dd * 62 * u, top[1] + 20 * u), (top[0], top[1] + 40 * u)]   # the pennant flies over the head side
+    fl = [(top[0], top[1] + 2 * u), (top[0] + dd * 40 * u, top[1] + 15 * u), (top[0], top[1] + 30 * u)]   # the pennant flies over the head side
     stamp(C, [('s', [(x - dd * 1 * u, y + 12 * u, 5 * u), (top[0], top[1], 5 * u)], (122, 84, 50)),
               ('p', fl, (60, 190, 210)), ('c', top[0], top[1] - 2 * u, 4.5 * u, YEL)], e * 0.85)
-    if label: text(C, top[0] + dd * 24 * u, top[1] + 18 * u, label, 8 * u, (255, 255, 255), maxw=38 * u, rot=-dd * 13)
+    if label: text(C, top[0] + dd * 15 * u, top[1] + 15 * u, label, 6 * u, (255, 255, 255), maxw=24 * u, rot=-dd * 18)
 
 
 def air_hockey_mallet(C, x, y, u, d, two, e):
@@ -168,8 +166,8 @@ def air_hockey_mallet(C, x, y, u, d, two, e):
 
 
 def gary_rock(C, x, y, u, d, two, e, askew=False):
-    cx, cy = (x, y - 4 * u) if two else (x + d * 14 * u, y - 24 * u)
     rx, ry = 40 * u, 29 * u
+    cx, cy = (x, y - ry * 0.55) if two else (x + d * 14 * u, y - 24 * u)   # two hands under its lower flanks
     s1, d1 = googly(cx - 11 * u, cy - 8 * u, 9 * u, look=(0.2, 0.5))
     s2, d2 = googly(cx + 13 * u, cy - (14 if askew else 8) * u, (8 if askew else 9) * u, look=((0.8, -0.6) if askew else (0.2, 0.5)))
     stamp(C, [('p', rock_pts(cx, cy, rx, ry, seed=7, flat=0.2), ROCK)], e,
@@ -183,7 +181,7 @@ NAMES = {'mug': mug, 'gps_box': gps_box, 'screwdriver': screwdriver, 'googly_eye
          'air_hockey_mallet': air_hockey_mallet, 'gary_rock': gary_rock}
 TWO_HANDED = {'gps_box', 'laptop', 'frying_pan', 'camera', 'phone', 'gary_rock'}   # centred between the hands
 K = 1.25                                    # props read big (video size), like the reference
-TWO_W = dict(gps_box=30, laptop=38, frying_pan=20, camera=23, phone=22, gary_rock=37)   # the hands clamp the side edges   # hands sit on the fill, inside the edge   # half-width at the grip (u)
+TWO_W = dict(gps_box=30, laptop=38, frying_pan=20, camera=23, phone=22, gary_rock=33)   # the hands clamp the side edges   # hands sit on the fill, inside the edge   # half-width at the grip (u)
 
 
 def two_halfwidth(base): return TWO_W.get(base, 26) * K

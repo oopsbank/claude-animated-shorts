@@ -135,7 +135,8 @@ def tent_floating(t=0.0, k=1.0, color='#f28c34', **kw):
     _tent_card(C, 210, 260 + dy, a, bean.hexrgb(color))
     wl = 268                                     # muddy water hiding the tent's foot, with a wave and spray
     wave = [(210 - 200 + 400 * i / 30, wl + 8 * math.sin(i * 0.9 + t * 20)) for i in range(31)]
-    stamp(C, [('p', wave + [(410, 318), (10, 318)], (138, 104, 66))], E,
+    wave = [(x, y - 14) for x, y in wave]
+    stamp(C, [('p', wave + [(410, 318), (10, 318)], (112, 84, 54))], E,
           details=[('s', [(x, y + 10, 5) for x, y in wave[2:-2]], (246, 240, 226))])
     for i, dx in enumerate((-150, 150)):
         g = 0.5 + 0.5 * math.sin(t * 2 * math.pi * 3 + i * 2)
@@ -210,9 +211,12 @@ def tour_sign_free(t=0.0, k=1.0, text_='ALIEN ROCK TOURS|NIGHT ONLY', **kw):
         edge = Image.new('RGBA', full.size, (0, 0, 0, 0)); ImageDraw.Draw(edge).line([(x * S, y * S) for x, y in crack], fill=INK + (255,), width=int(9 * S))
         edge.putalpha(ImageChops.multiply(edge.getchannel('A'), ImageChops.multiply(full.getchannel('A'), mask)))
         h.alpha_composite(edge); halves.append((side, h))
-    f = seg(t, 0.3, 0.78)
-    ang = 86 * f * f                                     # gravity: accelerates, lands at 86 deg
-    if t > 0.78: ang = 86 - 7 * bump(seg(t, 0.78, 0.9)) - 2 * bump(seg(t, 0.9, 0.97))   # bounce on landing
+    def fall(side):        # the right half goes first and lands flatter; the left one lags and lands steeper
+        d0, land = (0.3, 86) if side > 0 else (0.36, 74)
+        f = seg(t, d0, d0 + 0.44); a = land * f * f
+        if t > d0 + 0.44: a = land - 7 * bump(seg(t, d0 + 0.44, d0 + 0.54)) - 2 * bump(seg(t, d0 + 0.54, d0 + 0.6))
+        return a
+    ang = fall(1)
     if t > 0.76:     # a dust puff where each half lands (behind the boards)
         g = bump(seg(t, 0.76, 1.0))
         for side in (-1, 1):
@@ -221,7 +225,8 @@ def tour_sign_free(t=0.0, k=1.0, text_='ALIEN ROCK TOURS|NIGHT ONLY', **kw):
     lift = 98 * math.sin(math.radians(ang))     # a falling half ends up resting on its board edge, not in the ground
     for side, h in halves:
         px, py = cx + side * 0.3 * 440, gy
-        r = h.rotate(-side * ang, resample=Image.BICUBIC, center=(px * S, py * S), translate=(0, -lift * S))
+        a_ = fall(side); lift = 98 * math.sin(math.radians(a_))
+        r = h.rotate(-side * a_, resample=Image.BICUBIC, center=(px * S, py * S), translate=(0, -lift * S))
         out.im.alpha_composite(r)
     return out.out(k, (cx, gy))
 

@@ -48,5 +48,5 @@ if __name__ == '__main__':
     if len(sys.argv) > 2:   # 2x-ish crops of the upper bodies (heads, hands, props) for the joint review
         cs = Image.new("RGBA", (600 * 8, 640 * 4), (240, 237, 230, 255))
         for k, im in enumerate(full):
-            cs.alpha_composite(im.crop((0, 120, 600, 760)), ((k % 8) * 600, (k // 8) * 640))
+            cs.alpha_composite(im.crop((0, 40, 600, 680)), ((k % 8) * 600, (k // 8) * 640))
         cs.save(sys.argv[2])
