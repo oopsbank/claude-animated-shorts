@@ -13,6 +13,11 @@ FONT_PATHS = [os.environ.get('ENGINE_CAPTION_FONT', ''), '/usr/share/fonts/opent
 WHITE, YELLOW, BLACK = (255, 255, 255), (255, 210, 63), (0, 0, 0)
 LEAD = 1                   # frames before the word is spoken (spec 0-2)
 SILENCE = 0.4              # s: longer gaps clear the caption
+# Styles (shots.json "captions": {"style": ...}):
+#   'pop' (default): one word, UPPER case, yellow + bigger keywords, strong pop.
+#   'sentence': like both leading channels (references/reports/channels_2026-11.md): 1-2 words as written
+#   (sentence case, punctuation kept), white only, thinner outline, a small pop, baseline ~70 %.
+STYLE = {'name': 'pop'}
 NUM_WORDS = set('zero one two three four five six seven eight nine ten eleven twelve twenty thirty forty fifty hundred '
                 'thousand million first second third half double'.split())
 STOP = set('the a an and or but of to in on at for with by from is are was were be been it its it\'s that this these those '
@@ -49,6 +54,8 @@ def is_key(w, kw):
 
 
 def schedule(words, doc, n_frames, case='upper'):
+    STYLE['name'] = doc.get('captions', {}).get('style', 'pop'); _cache.clear()
+    if STYLE['name'] == 'sentence': return _schedule_sentence(words, n_frames)
     """List of caption events: (f_on, f_off, text, key). Short function words (<= 2 letters, said quickly) ride along
     with the next word."""
     kw = keywords(doc, words); ev = []; i = 0
@@ -70,6 +77,27 @@ def schedule(words, doc, n_frames, case='upper'):
     return ev
 
 
+def _schedule_sentence(words, n_frames):
+    """1-2 words per caption as written: a word joins the next when both are short, said together (gap < 0.12 s)
+    and the first doesn't end a phrase."""
+    ev = []; i = 0
+    while i < len(words):
+        w = words[i]; text = w['word'].strip(); j = i
+        if (j + 1 < len(words) and text[-1:] not in '.,!?;:' and words[j + 1]['start'] - words[j]['end'] < 0.12
+                and len(text) + len(words[j + 1]['word']) <= 12):
+            j += 1; text = text + ' ' + words[j]['word'].strip()
+        f_on = max(0, int(round(w['start'] * FPS)) - LEAD)
+        if j + 1 < len(words):
+            gap = words[j + 1]['start'] - words[j]['end']
+            f_next = int(round(words[j + 1]['start'] * FPS)) - LEAD
+            f_off = int(round(words[j]['end'] * FPS)) + 2 if gap > SILENCE else f_next
+        else: f_off = int(round(words[j]['end'] * FPS)) + 6
+        f_off = min(max(f_off, f_on + 2), n_frames)
+        if text: ev.append((f_on, f_off, text, False))
+        i = j + 1
+    return ev
+
+
 def at(events, f):
     for e in events:
         if e[0] <= f < e[1]: return e
@@ -83,9 +111,10 @@ def _card(text, key, H):
     """Rendered caption at its resting size (RGBA, tight box) with outline and shadow; cached."""
     k = (text, key, H)
     if k in _cache: return _cache[k]
-    size = int(H * (0.078 if key else 0.068))
+    sent = STYLE['name'] == 'sentence'
+    size = int(H * (0.058 if sent else 0.078 if key else 0.068))
     font = ImageFont.truetype(font_path(), size)
-    stroke = max(3, int(size * 0.11))
+    stroke = max(3, int(size * (0.085 if sent else 0.11)))
     d0 = ImageDraw.Draw(Image.new('L', (1, 1)))
     l, t, r, b = d0.textbbox((0, 0), text, font=font, stroke_width=stroke)
     pad = int(size * 0.3); w, h = r - l + 2 * pad, b - t + 2 * pad
@@ -103,7 +132,7 @@ def _card(text, key, H):
 
 def pop(n, key):
     """Scale over the first frames: 1.25 (keywords 1.4) -> 1.0 in 4 f, ease-out with a small overshoot below 1."""
-    s0 = 1.4 if key else 1.25
+    s0 = 1.08 if STYLE['name'] == 'sentence' else 1.4 if key else 1.25
     if n >= 6: return 1.0
     u = min(1.0, n / 4.0)
     o = 1 + 2.2 * (u - 1) ** 3 + 1.2 * (u - 1) ** 2                         # out_back: overshoots past 1, settles
@@ -123,9 +152,9 @@ def draw(img, events, f, faces=(), W=1080, H=1920):
     max_w = W * 0.92
     if bw > max_w:                                                          # long words fit the width
         k = max_w / bw; im = im.resize((int(bw * k), int(bh * k)), Image.BICUBIC); bw, bh = im.size; base_s *= k
-    y_base = 0.66 * H
+    y_base = (0.70 if STYLE['name'] == 'sentence' else 0.66) * H
     # clearance is tested at the largest pop size, so the word never grazes a face mid-pop and never jumps
-    r0, _ = _card(text, key, H); smax = 1.4 if key else 1.25
+    r0, _ = _card(text, key, H); smax = 1.08 if STYLE['name'] == 'sentence' else 1.4 if key else 1.25
     pw, ph, pb = r0.width * smax, r0.height * smax, base * smax
     def box(yb): return (W / 2 - pw / 2, yb - pb, W / 2 + pw / 2, yb - pb + ph)
     def hits(b, m=6): return any(not (b[2] < fx0 - m or b[0] > fx1 + m or b[3] < fy0 - m or b[1] > fy1 + m) for fx0, fy0, fx1, fy1 in faces)

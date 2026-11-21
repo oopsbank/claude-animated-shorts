@@ -83,6 +83,7 @@ Coordination roles:
 - **Placement:** horizontally centred, baseline at about 66% of the frame height. Nudge it up if a face or key prop would sit behind it.
 - **Dynamic:** each word pops in, scaling 1.25 to 1.0 over 4 frames with an ease-out and a slight overshoot. **Keywords** (numbers, "left", "right", the punchline, key nouns) are yellow #ffd23f and pop bigger.
 - Captions sit above FX and below nothing. They must never cover the face of the character speaking.
+- **Alternative style `"captions": {"style": "sentence"}`** in shots.json, like both leading channels: 1-2 words as written (sentence case, punctuation kept), white only, a thinner outline, a small pop, baseline at about 70%. An A/B test is in `videos/bike-countersteer/qa/caption_style_AB.mp4`; the Director picks.
 - Must pass: readable at phone size, in sync with the voice (each word appears 0-2 frames before it is spoken), and no caption on screen during silences longer than 0.4 s.
 
 ## Stage gates (catch defects where they are born)
