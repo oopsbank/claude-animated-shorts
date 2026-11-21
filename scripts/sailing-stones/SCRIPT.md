@@ -1,11 +1,11 @@
-# The Rocks That Walk Across the Desert (script v9, 2026-11-21)
+# The Rocks That Walk Across the Desert (script v10, 2026-11-21)
 
 - **Slug:** `sailing-stones`
 - **Topic:** M4 in `scripts/TOPICS.md` v7, picked by the Director on 2026-11-21.
 - **Approval:** waiting for the Director. Do not voice before approval.
-- **Format (v5, structural rewrite asked by the Director):** the cousins are on screen all the way through. All the history is one mocking rant by the rival ("Sixty years of scientists! Whirlwinds! Fences! Zero witnesses!"). The 3 stages are the cousins' own wait (month one → year one → year two), each with a setback and a taunt with a price rise ($20 → $30 → $40). The mechanism is ≤ 10 s with one analogy. Ending: the sign is flattened, the guide spits his coffee, then a loop: he now sells ice tours "and starts every one the same way:" → line 1.
+- **Format (v10):** line 1 is the cousins' odd act; line 2 the stakes (no "You see,": the Director's call). The rival's rant holds all the history. 3 stages of the cousins' wait, each a setback plus a taunt with a price rise: month one (a dust storm buries the camera, $30), year one (a flash flood carries off their tent with them in it, $40), year two (the ice). The mechanism is a reaction beat ("It's the ice!") plus one analogy. The rival's way collapses actively: his busload of night-tour fans watch rocks "drive themselves in broad daylight", film it and demand refunds, then an ice pane shoves a rock through his NIGHT ONLY sign; the cousins score it to his face; he pivots to $5 ice tours and his pitch loops into line 1.
 - **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2: 7/10, swipe at ~30 s (repeats), FAIL. v3: 7/10, swipe at ~25-30 s (history stages without the cousins, the alien joke three times), FAIL. v4 applies round 3's fixes (the cousins return at ~30 s, a new alien jab, a shorter 1948 stage) and merges the pond/ice lines (mechanism ~13 s); not re-reviewed.
-- **Length:** 233 words, no years said aloud. Calibrated on video 1 (231 words = 63.2 s real voice): about 64 s.
+- **Length:** 237 words, no numbers said aloud except "sixty". Calibrated on video 1 (231 words = 63.2 s): about 64 s.
 
 ## Facts and sources (everything said in the voice-over)
 
@@ -32,41 +32,37 @@ Sources:
 | F9 | The sun cracks the ice, thinner than a phone, into huge panes; a breeze pushes the panes; the panes push the rocks. | S1 abstract (3-6 mm "windowpane" ice; breaks up in the late-morning sun under light winds of ~4-5 m/s; panels tens of metres across push rocks at 2-5 m/min); S3 (ice < 5 mm) | solid. "Phone-thin": 3-6 mm vs a phone's ~7-9 mm. Speed shown on the GPS insert (3 m/min), not said. |
 | F10 | (Not said: the GPS rocks moved up to 224 m over Dec 2013-Jan 2014; it is rare.) | S1 | for the shot list only |
 
-Fiction, made up for the story: the cousins' setbacks (dust storm, summer heat, the fried egg) the fried egg; the "alien rock tours" guide, his tourists, his prices, his postcards, his van, his sign (and the rock that flattens it) and every line he says; the cousins' looks and the camp. The two cousins and the geologists are drawn as our own generic bean-heads, never as the real people, and none of them are named. No brands.
+Fiction, made up for the story: the cousins' setbacks (the dust storm, the flash flood that carries off their tent, paddling home on a cooler); the "alien rock tours" guide, his tourists, his prices, his busload of early fans who film the rocks and demand refunds, his van, his sign (and the rock that flattens it) and every line he says; the cousins' looks and the camp. The two cousins and the geologists are drawn as our own generic bean-heads, never as the real people, and none of them are named. No brands.
 
 **Analogy check:** "a glass tabletop sliding across wet tiles, shoving your fridge" (v9; the earlier "kitchen floor" echoed a leading channel's line, so it was replaced): the pane is big and thin (it catches the wind like a sail), the wet mud is slippery, the rock is heavy. Physically fair.
 
 ## Voice-over (one line = one shot in `shots.json`)
 
 1. Two cousins hid GPS trackers inside fifteen rocks, then waited for the rocks to run away.
-2. You see, on a Death Valley lake bed,
-3. some rocks heavier than a fridge leave long trails,
-4. and nobody had ever seen one move.
-5. Nearby, an antenna-wearing guide mocks the cousins.
-6. "Scientists blamed the wind!" he laughs.
-7. "They fenced rocks in! One escaped! Sixty years, zero witnesses!
-8. It's aliens, pal. Twenty bucks."
-9. And his tours sell out.
-10. Month one: they stare at the rocks.
-11. Nothing moves except a dust storm,
-12. which buries their camera.
-13. "Rocks one, nerds zero," says the guide. "Thirty bucks."
-14. Year one: summer bakes the lake bed.
-15. They fry an egg on a tracker rock.
-16. Only the yolk runs.
-17. "Aliens only drive at night," snorts the guide. "Forty bucks."
-18. Year two: winter rain floods the lake bed ankle-deep,
-19. and cold nights freeze it over.
-20. One sunny morning, the ice crackles.
-21. Dozens of rocks start sliding in broad daylight, tracker rocks among them.
-22. The sun breaks the phone-thin ice into huge panes,
-23. and a light breeze pushes them into the rocks.
-24. Picture a glass tabletop sliding across wet tiles, shoving your fridge.
-25. And the guide? Snoring in his van,
-26. while daylight ice shoves a rock through his NIGHT ONLY sign.
-27. "Nerds one, aliens zero," say the cousins.
-28. He wakes, spits out his coffee,
-29. and now sells ice tours. Five bucks. And he starts every one the same way:
+2. On a Death Valley lake bed, some rocks heavier than a fridge
+3. leave long trails. Nobody had ever seen one move.
+4. Nearby, an antenna-wearing guide mocks the cousins.
+5. "Scientists blamed the wind! They fenced rocks in!
+6. One escaped! Sixty years, zero witnesses!
+7. It's aliens, pal. Twenty bucks."
+8. And his night tours sell out.
+9. Month one: a dust storm buries their camera.
+10. "Rocks one, nerds zero," says the guide. "Thirty bucks."
+11. Year one: a flash flood carries off their tent, cousins included.
+12. They paddle home on a cooler.
+13. "Aliens only drive at night," snorts the guide. "Forty bucks."
+14. Year two: winter rain floods the lake bed ankle-deep, and cold nights freeze it over.
+15. One sunny morning, the ice crackles.
+16. Dozens of rocks start sliding, tracker rocks among them.
+17. The cousins crouch down. "It's the ice!"
+18. Sun cracked the phone-thin ice into huge panes,
+19. and a light breeze pushes them into the rocks.
+20. Like a glass tabletop sliding across wet tiles, shoving your fridge.
+21. Then the guide rolls up with a busload of early alien-tour fans.
+22. They watch rocks drive themselves in broad daylight, film it, and demand refunds.
+23. And an ice pane shoves a rock right through his NIGHT ONLY sign.
+24. "Nerds one, aliens zero," say the cousins.
+25. Now he sells ice tours, five bucks, and starts every one the same way:
 
 ## Notes for voicing (after approval)
 - Breaths after the guide's closing quotes (shots 6-8, 13, 17) and before "Month one", "Year one", "Year two".
