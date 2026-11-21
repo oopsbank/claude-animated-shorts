@@ -113,3 +113,11 @@
   - the "I STEER WITH MY HIPS" sticker is unreadable at phone size;
   - the ending two-shot is static for about 4 s;
   - the 0-4 s hook doesn't show "steers right first".
+
+---
+
+# Draft v5 = the final (2026-11-21)
+
+- This is draft v4 with the Director's caption pick, the **"sentence" style**: Poppins Bold at 3.7% of the height, 1-2 words as written, white, baseline at 70%. Nothing else changed.
+- QA: all hard checks pass (130 captions in sync, none in silences, none over a face). Frame stats pass 43/65 (a warning).
+- `bike-countersteer_captions_cover_1080x1920.mp4` is now v5 with the cover (1924 frames). The posting text above is unchanged.

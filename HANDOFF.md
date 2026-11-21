@@ -12,7 +12,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 
 ## Status
 - **Video 1, "Why Your Bike Steers Backwards First": final, not yet posted.**
-  - File to post: `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4` (draft v4 with the thumbnail as the first 3 frames, 64.14 s).
+  - File to post: `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4` (draft v5, sentence captions, with the thumbnail as the first 3 frames, 64.14 s).
   - Also: `thumbnail.png`. The proposed title and captions are in `videos/bike-countersteer/NOTES.md`.
   - The draft history and open nice-to-haves are in the same NOTES file.
 - **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session.
