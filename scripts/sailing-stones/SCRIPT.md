@@ -1,9 +1,9 @@
-# The Rocks That Walk Across the Desert (script v14, 2026-11-21)
+# The Rocks That Walk Across the Desert (script v15, 2026-11-21)
 
 - **Slug:** `sailing-stones`
 - **Topic:** M4 in `scripts/TOPICS.md` v7, picked by the Director on 2026-11-21.
 - **Approval:** waiting for the Director. Do not voice before approval.
-- **Format (v14):** line 1 is the cousins' odd act; line 3 a short "You see," stake. The rival's rant holds the history. 3 stages of the cousins' wait, and the rival escalates in KIND: month one he mocks (holds up their buried camera, $30); year one he profits (ringside seats to the flood that carries their tent off, $40); year two he puts on a show (a vanload of fans to livestream their "final failure"). The reveal is something the cousins see ("It's the ice!") plus one analogy (air hockey). The show backfires: his livestream shows rocks sliding in broad daylight, an ice pane drives a rock through his NIGHT ONLY sign, his refund cash blows away on the same breeze; the cousins score it; he pivots to $5 ice tours and his pitch loops into line 1. (Writers' room: two gag-writer agents before v14.)
+- **Format (v15, ABSURD comedy per the Director):** line 1 is the cousins' odd act; a googly-eyed rock, Gary, is the runner (buried by the dust storm, steers their cooler, slides, goes through the sign). No "You see," (optional; cut because it read as a lecture). The rival escalates in KIND and his alien theory escalates into ever more ridiculous FANTASY CUTAWAYS shown in his head (thought bubble + "ALIEN CAM" filter, clearly fantasy): leaf-blowing aliens ($30) → an alien rock-racing league ($40) → an alien air-hockey final with a referee ($50). The real reveal is a smash cut to the SAME framing, real: sun-cracked phone-thin ice panes shoved by a light breeze; the one analogy lands as a deadpan "Same air hockey. No aliens." His livestream shows the world; a pane shoves Gary through his NIGHT ONLY sign; his refund cash blows away on the same breeze; his antennae droop: "Fine. It's ice." He pivots to $5 ice tours and his pitch loops into line 1.
 - **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2: 7/10, swipe at ~30 s (repeats), FAIL. v3: 7/10, swipe at ~25-30 s (history stages without the cousins, the alien joke three times), FAIL. v4 applies round 3's fixes (the cousins return at ~30 s, a new alien jab, a shorter 1948 stage) and merges the pond/ice lines (mechanism ~13 s); not re-reviewed.
 - **Length:** 234 words, no numbers said aloud. Calibrated on video 1 (231 words = 63.2 s): about 64 s.
 
@@ -32,34 +32,34 @@ Sources:
 | F9 | The sun cracks the ice, thinner than a phone, into huge panes; a breeze pushes the panes; the panes push the rocks. | S1 abstract (3-6 mm "windowpane" ice; breaks up in the late-morning sun under light winds of ~4-5 m/s; panels tens of metres across push rocks at 2-5 m/min); S3 (ice < 5 mm) | solid. "Phone-thin": 3-6 mm vs a phone's ~7-9 mm. Speed shown on the GPS insert (3 m/min), not said. |
 | F10 | (Not said: the GPS rocks moved up to 224 m over Dec 2013-Jan 2014; it is rare.) | S1 | for the shot list only |
 
-Fiction, made up for the story: the cousins' setbacks (the dust storm, the flash flood that carries off their tent, paddling home on a cooler); the "alien rock tours" guide, his tourists, his prices, his vanload of early fans (the real Racetrack is reached on a rough dirt road) who film the rocks and demand refunds, his van, his sign (and the rock that flattens it) and every line he says; the cousins' looks and the camp. The two cousins and the geologists are drawn as our own generic bean-heads, never as the real people, and none of them are named. No brands.
+Fiction, made up for the story: Gary the googly-eyed rock; the guide's alien fantasies (always shown as cutaways in his head); the cousins' setbacks (the dust storm, the flash flood that carries off their tent, paddling home on a cooler); the "alien rock tours" guide, his tourists, his prices, his vanload of early fans (the real Racetrack is reached on a rough dirt road) who film the rocks and demand refunds, his van, his sign (and the rock that flattens it) and every line he says; the cousins' looks and the camp. The two cousins and the geologists are drawn as our own generic bean-heads, never as the real people, and none of them are named. No brands.
 
-**Analogy check:** "Air hockey for boulders: a steady shove, and even a fridge glides." (v14: "steady shove" because wide panes pushed steadily; v13: low friction on the wet mud + a big pushed pane; earlier v12 "glass tabletop"; earlier: v9 the earlier "kitchen floor" echoed a leading channel's line, so it was replaced): the pane is big and thin (it catches the wind like a sail), the wet mud is slippery, the rock is heavy. Physically fair.
+**Analogy check:** v15 "Same air hockey. No aliens." after the true mechanism line (wide panes shoved steadily by a light breeze over wet, slippery mud); v14: "steady shove" because wide panes pushed steadily; v13: low friction on the wet mud + a big pushed pane; earlier v12 "glass tabletop"; earlier: v9 the earlier "kitchen floor" echoed a leading channel's line, so it was replaced): the pane is big and thin (it catches the wind like a sail), the wet mud is slippery, the rock is heavy. Physically fair.
 
 ## Voice-over (one line = one shot in `shots.json`)
 
 1. Two cousins hid GPS trackers inside fifteen rocks, then waited for the rocks to run away.
-2. On a Death Valley lake bed, some rocks heavier than a fridge leave long trails.
-3. You see, nobody had ever seen one move.
-4. A guide in alien antennae laughs at the cousins.
-5. "Scientists blamed wind, then ice. A fenced-in rock escaped anyway!
-6. It's aliens, pal. Twenty bucks a ticket."
-7. And his night tours sell out.
-8. Month one: a dust storm buries their camera.
-9. "Rocks one, nerds zero," says the guide.
+2. They even named one Gary.
+3. On a Death Valley lake bed, some rocks heavier than a fridge leave long trails,
+4. and nobody had ever caught one moving.
+5. A guide in alien antennae laughs at them.
+6. "Scientists blamed wind, then ice. A fenced-in rock escaped anyway!
+7. It's aliens, pal. Twenty bucks." His night-only tours sell out.
+8. Month one: a dust storm buries their camera, and Gary.
+9. "Leaf-blowing aliens," says the guide. "Thirty bucks."
 10. Year one: a flash flood carries off their tent, cousins included.
-11. He sells ringside seats: "Watch nerds float! Forty bucks."
-12. They paddle home on a cooler.
-13. Year two, last try: he brings a vanload of fans to film their final failure, live.
-14. Rain floods the lake bed; cold nights freeze it.
-15. One sunny morning, the ice crackles. Dozens of rocks start sliding, trackers included.
-16. "It's the ice!" yell the cousins.
-17. Sun cracks the phone-thin ice into huge panes; a light breeze shoves them into rocks.
-18. Air hockey for boulders: a steady shove, and even a fridge glides.
-19. His livestream shows the world rocks sliding in broad daylight.
-20. An ice pane drives one through his NIGHT ONLY sign,
-21. and his refund cash blows away on the same breeze.
-22. "Nerds one, aliens zero," say the cousins.
+11. They paddle home on a cooler. Gary steers.
+12. "Alien rock-racing league!" he yells. "Forty bucks."
+13. Year two, last try: he livestreams their failure to a vanload of fans.
+14. Rain floods the lake bed; cold nights freeze it; the fans start leaving.
+15. One sunny morning, the ice crackles, and dozens of rocks start sliding. Gary too.
+16. "Alien air-hockey final!" cries the guide. "Referee included! Fifty bucks!"
+17. The real thing: sun cracks the phone-thin ice into huge panes; a light breeze shoves them into rocks.
+18. Same air hockey. No aliens.
+19. His livestream shows rocks sliding in broad daylight.
+20. A pane shoves Gary straight through his NIGHT ONLY sign.
+21. His refund cash blows away on the same breeze.
+22. His antennae droop. "Fine. It's ice."
 23. Now he sells ice tours, five bucks, and opens every one the same way:
 
 ## Notes for voicing (after approval)
