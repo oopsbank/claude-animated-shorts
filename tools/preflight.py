@@ -143,6 +143,20 @@ def main():
             ls = [float(b['lean']) for b in sorted(c.get('beats', []), key=lambda b: b.get('at_word', 0)) if 'lean' in b]
             flips = sum(1 for a_, b_ in zip(ls, ls[1:]) if a_ != b_)
             if flips >= 3: add('WARN', sid, f"{c.get('id')} lean changes {flips} times ({ls}): show one continuous move per idea")
+        # riding in front of a still plate looks like riding on the spot (Director, v3)
+        if any(c.get('rig') and c.get('view') == 'rear' for c in cs) and s.get('ride') is not False and 'depth' not in meta:
+            add('WARN', sid, f"rider on {s['cam']} has no depth map: the background will not move; run the set's build.py --depth --cams {s['cam']}")
+        # a top-down path must follow the drawn road (Director, v3)
+        for e in s.get('fx', []):
+            if e['name'] == 'path_line':
+                ins_cam = next((c['insert'].get('cam') for c in cs if c.get('insert')), None)
+                pm = meta
+                if ins_cam and ins_cam != s['cam']:
+                    try: pm = json.load(open(os.path.splitext(RV.find_plate(dict(s, cam=ins_cam), plate_dirs))[0] + '.json'))
+                    except Exception: pm = {}
+                for kk in ('planned', 'actual'):
+                    if isinstance(e.get(kk), str) and e[kk] not in pm.get('paths', {}):
+                        add('WARN', sid, f"path_line {kk}='{e[kk]}' is a generic shape, not a racing line of the plate: it won't follow the road (add it to the set's paths.py)")
         views = {c.get('view', 'front') for c in cs}
         for e in s.get('fx', []):
             if e['name'] in DIRECTIONAL and e.get('direction') in ('left', 'right') and cs and views <= {'front'}:
