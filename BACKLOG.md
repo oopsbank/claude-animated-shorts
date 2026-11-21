@@ -8,6 +8,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P2 `scripts/TOPICS.md`: re-review topics 6-7 (fixed after round 4) or replace 8-10 from the reserves before the next pick.
 
 ## sets (`blender/sets/`)
+- [ ] P1 **Look test before the playa set:** one hero prop, e.g. the tour van or a rock with a GPS box, in the playbook §3b recipe (stylised PBR, bevel highlights, gold trim, AO, soft key, little or no ink). Render it next to a reference crop and have the panel score it (≥ 9). Then bake the recipe into `common.py` materials.
 - [ ] P1 Camera fly-through clips: `build.py --fly <cam_a> <cam_b> --frames 15-45` renders a short Blender camera move at low res and low samples, without ink. The engine adds heavy motion blur and uses it as a transition or a follow-the-object shot. This is the leaders' main pacing device (retention study).
 - [ ] P2 `harbour` and `road` have first-draft `build.py` files (ship deck raycast, pier, water per light; KayKit street, primitive car interior). They need low-res iteration, plates, `--depth`, and review.
 - [ ] P2 New set `interior` (Quaternius house interior): cams `room_wide`, `table_close`.
