@@ -475,7 +475,8 @@ def render_shot(k, f):
     if ins and ins[0] <= f < ins[1]: pkey = ins[2]; crop_any = 'close' in os.path.basename(pkey)   # close cut-ins crop freely
     plate, meta = G['plates'][pkey]
     d_ride = ride_distance(k, f, meta) if pkey == shot['_plate'] else 0.0
-    if d_ride > 1e-3: base = Image.fromarray(ride_warper(pkey, plate, meta).warp(d_ride)).convert('RGBA')
+    if d_ride > 1e-3:      # resampling softens the ink lines: a light unsharp mask puts the plate's edge density back
+        base = Image.fromarray(ride_warper(pkey, plate, meta).warp(d_ride)).filter(ImageFilter.UnsharpMask(1.5, 90, 2)).convert('RGBA')
     else: base = plate.convert('RGBA')
     if shot.get('_bike_prop'):
         kind, sx_ = shot['_bike_prop']; s = meta['px_per_m'] * 1.75 / 777
