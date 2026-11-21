@@ -16,14 +16,22 @@ def _scr(x, y, w, h, col, r=2.0): return ('p', rpoly(x, y, w, h, r), col)
 def gps_box(C, x, y, u, d, two, e):
     w, h = (62 * u, 40 * u) if two else (46 * u, 32 * u)
     cx, cy = (x, y) if two else (x - d * 2 * u, y - 14 * u)
-    ax, ay = cx + (d if not two else 1) * w * 0.32, cy - h / 2
-    stamp(C, [('s', [(ax, ay + 2 * u, 3.2 * u), (ax + 4 * u, ay - 26 * u, 3.2 * u)], DARK),
-              ('c', ax + 4 * u, ay - 28 * u, 4.6 * u, RED),
+    ax, ay = cx + (d if not two else 1) * w * (0.32 if not two else 0.4), cy - h / 2
+    tx = ax + (14 if two else 4) * u; ty = ay - (20 if two else 26) * u
+    stamp(C, [('s', [(ax, ay + 2 * u, 3.2 * u), (tx, ty, 3.2 * u)], DARK),
+              ('c', tx, ty - 2 * u, 4.6 * u, RED),
               ('p', rpoly(cx, cy, w, h, 6 * u), GREY)], e,
           details=[_scr(cx - w * 0.12, cy - h * 0.05, w * 0.52, h * 0.5, (40, 70, 52), 2.5 * u),
                    ('c', cx + w * 0.33, cy - h * 0.18, 3 * u, (120, 230, 110)),
                    ('p', rpoly(cx + w * 0.33, cy + h * 0.2, 7 * u, 4 * u, 1.5 * u), DARK)])
-    text(C, cx - w * 0.12, cy - h * 0.05, 'GPS', h * 0.24, (150, 240, 140))
+    text(C, cx - w * 0.12, cy - h * 0.05, 'GPS', h * 0.3, (150, 240, 140))
+
+
+def mug(C, x, y, u, d, two, e):
+    cx, cy = x + d * 6 * u, y - 4 * u
+    stamp(C, [('s', [(cx + d * 10 * u, cy - 6 * u, 3.2 * u), (cx + d * 16 * u, cy - 1 * u, 3.2 * u), (cx + d * 10 * u, cy + 5 * u, 3.2 * u)], (236, 236, 230)),
+              ('p', rpoly(cx, cy, 20 * u, 22 * u, 3 * u), (236, 236, 230))], e * 0.85,
+          details=[('p', rpoly(cx, cy - 9 * u, 15 * u, 3 * u, 1.5 * u), (120, 70, 40)), ('p', rpoly(cx - d * 3 * u, cy + 2 * u, 7 * u, 7 * u, 2 * u), (232, 90, 80))])
 
 
 def screwdriver(C, x, y, u, d, two, e):
@@ -59,8 +67,9 @@ def laptop(C, x, y, u, d, two, e):
 def frying_pan(C, x, y, u, d, two, e):
     if two:   # a paddle: handle across both hands, pan dipping on the right
         (lx, ly), (rx, ry) = two
-        h0 = (lx - 10 * u, ly + 4 * u); h1 = (rx + 18 * u, ry + 12 * u)
-        pc = (h1[0] + 20 * u, h1[1] + 16 * u)
+        L = math.hypot(rx - lx, ry - ly) or 1; ux, uy = (rx - lx) / L, (ry - ly) / L
+        h0 = (lx - ux * 12 * u, ly - uy * 12 * u); h1 = (rx + ux * 14 * u, ry + uy * 14 * u)
+        pc = (h1[0] + ux * 20 * u, h1[1] + uy * 20 * u)
         stamp(C, [('s', [(h0[0], h0[1], 7 * u), (h1[0], h1[1], 7 * u)], (58, 50, 46)),
                   ('p', [fx.rot(pc[0] + 13 * u * math.cos(t), pc[1] + 22 * u * math.sin(t), pc[0], pc[1], -35) for t in (i * math.pi / 14 for i in range(28))], DARK)], e,
               details=[('p', [fx.rot(pc[0] + 8 * u * math.cos(t), pc[1] + 16 * u * math.sin(t), pc[0], pc[1], -35) for t in (i * math.pi / 14 for i in range(28))], (82, 86, 100))])
@@ -73,9 +82,9 @@ def frying_pan(C, x, y, u, d, two, e):
 
 def ticket(C, x, y, u, d, two, e):
     cx, cy = x + d * 4 * u, y - 14 * u
-    stamp(C, [('p', rpoly(cx, cy, 44 * u, 22 * u, 2 * u, ang=-12 * d), (247, 180, 196))], e * 0.8,
-          details=[('c', *fx.rot(cx - 22 * u, cy, cx, cy, -12 * d), 4 * u, INK), ('c', *fx.rot(cx + 22 * u, cy, cx, cy, -12 * d), 4 * u, INK)])
-    text(C, cx, cy, 'ADMIT 1', 6.5 * u, (150, 40, 70), rot=12 * d)
+    stamp(C, [('p', rpoly(cx, cy, 52 * u, 25 * u, 2 * u, ang=-12 * d), (247, 180, 196))], e * 0.8,
+          details=[('c', *fx.rot(cx - 26 * u, cy, cx, cy, -12 * d), 4 * u, INK), ('c', *fx.rot(cx + 26 * u, cy, cx, cy, -12 * d), 4 * u, INK)])
+    text(C, cx, cy, 'ADMIT 1', 8.5 * u, (150, 40, 70), rot=12 * d, maxw=42 * u)
 
 
 def cash_fan(C, x, y, u, d, two, e):
@@ -119,14 +128,14 @@ def phone(C, x, y, u, d, two, e, badge='LIVE'):
     stamp(C, [('p', rpoly(cx, cy, w, h, 4 * u), DARK)], e * 0.85,
           details=[_scr(cx, cy, w - 6 * u, h - 6 * u, (120, 190, 235), 2 * u),
                    ('p', rock_pts(cx, cy + h * 0.16, w * 0.2, h * 0.12 if not two else h * 0.16, seed=5), ROCK),
-                   ('p', rpoly(cx - w * 0.14, cy - h * 0.3, 15 * u, 6.5 * u, 3 * u), RED)])
-    text(C, cx - w * 0.14, cy - h * 0.3, badge, 4.2 * u, (255, 255, 255))
+                   ('p', rpoly(cx - w * 0.1, cy - h * 0.28, 19 * u, 8.5 * u, 4 * u), RED)])
+    text(C, cx - w * 0.1, cy - h * 0.28, badge, 5.5 * u, (255, 255, 255))
 
 
 def selfie_stick(C, x, y, u, d, two, e):
     dd = d or -1
     top = (x + dd * 22 * u, y - 150 * u)
-    stamp(C, [('s', [(x, y, 4 * u), (top[0], top[1] + 14 * u, 3.2 * u)], (110, 114, 126)),
+    stamp(C, [('s', [(x - dd * 2 * u, y + 10 * u, 4.5 * u), (top[0], top[1] + 14 * u, 3.2 * u)], (110, 114, 126)),
               ('p', rpoly(top[0], top[1], 24 * u, 40 * u, 4 * u, ang=dd * 10), DARK)], e * 0.85,
           details=[('c', *fx.rot(top[0] - 5 * u, top[1] - 12 * u, top[0], top[1], dd * 10), 3.4 * u, (120, 124, 140)),
                    ('c', *fx.rot(top[0] + 5 * u, top[1] - 12 * u, top[0], top[1], dd * 10), 1.6 * u, RED)])
@@ -168,13 +177,13 @@ def gary_rock(C, x, y, u, d, two, e, askew=False):
     stamp(C, [s1, s2], e * 0.6, details=[d1, d2])
 
 
-NAMES = {'gps_box': gps_box, 'screwdriver': screwdriver, 'googly_eyes': googly_eyes, 'laptop': laptop,
+NAMES = {'mug': mug, 'gps_box': gps_box, 'screwdriver': screwdriver, 'googly_eyes': googly_eyes, 'laptop': laptop,
          'frying_pan': frying_pan, 'ticket': ticket, 'cash_fan': cash_fan, 'camera': camera, 'flashlight': flashlight,
          'phone': phone, 'selfie_stick': selfie_stick, 'megaphone': megaphone, 'flag': flag,
          'air_hockey_mallet': air_hockey_mallet, 'gary_rock': gary_rock}
 TWO_HANDED = {'gps_box', 'laptop', 'frying_pan', 'camera', 'phone', 'gary_rock'}   # centred between the hands
 K = 1.25                                    # props read big (video size), like the reference
-TWO_W = dict(gps_box=31, laptop=40, frying_pan=20, camera=24, phone=23, gary_rock=38)   # half-width at the grip (u)
+TWO_W = dict(gps_box=26, laptop=33, frying_pan=20, camera=19, phone=18, gary_rock=31)   # hands sit on the fill, inside the edge   # half-width at the grip (u)
 
 
 def two_halfwidth(base): return TWO_W.get(base, 26) * K
@@ -194,5 +203,4 @@ def draw(C, kind, hand, u, side=1, two=None):
     if base == 'gary_rock': kw['askew'] = arg == 'askew'
     if base == 'phone' and arg: kw['badge'] = arg
     fn(C, x, y, u, d, two, e, **kw)
-    for h in (two or (hand,)):     # the dot hand grips in front of the prop
-        C.dot(h[0], h[1], 5.5 * u / K)
+    # the caller draws the arm and dot hand over the prop afterwards, so the grip reads

@@ -7,9 +7,9 @@ from PIL import Image, ImageDraw, ImageFont
 F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 18)
 STAT = ['gary_rock', 'gary_rock:askew', 'gary_buried', 'rock', 'gps_box', 'cooler', 'cooler_trophy', 'tent', 'tent_floating',
         'timelapse_cam', 'tour_sign:ALIEN ROCK TOURS · NIGHT ONLY · $20', 'tour_sign:ICE TOURS $5 (ALIEN crossed out)',
-        'banner:FINAL FAIL · LIVE', 'livestream_counter:3', 'price_card:$40', 'fridge_silhouette', 'phone_silhouette', 'gary_rock']
+        'banner:FINAL FAIL · LIVE', 'livestream_counter:3', 'price_card:$40', 'fridge_silhouette', 'phone_silhouette']
 ANIM = [('tour_sign_free:ALIEN ROCK TOURS · NIGHT ONLY', (0, 0.1, 0.25, 0.4, 0.55, 0.7, 0.85, 1.0)),
-        ('flying_bills', (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.85))]
+        ('flying_bills', (0.08, 0.16, 0.26, 0.36, 0.46, 0.58, 0.7, 0.82))]
 cw, ch = 300, 300
 cols = 6; rows = (len(STAT) + cols - 1) // cols
 sw = 8 * 250
@@ -28,5 +28,5 @@ for j, (nm, ts) in enumerate(ANIM):
         im = sprite(nm, t, k=0.195 if 'sign' in nm else 0.24)
         x, y = i * 250, y0 + j * 250
         sheet.alpha_composite(im, (x + (250 - im.width) // 2, y + 230 - im.height))
-        d.text((x + 6, y + 2), (f'{nm.split(":")[0]}  ' if i == 0 else '') + f't={t:g}', font=F, fill=(30, 20, 30))
+        d.text((x + 6, y + 2), (f'{nm.split(":")[0]}  ' if i == 0 else '') + ('(gone by 0.9) ' if i == 7 and 'bills' in nm else '') + f't={t:g}', font=F, fill=(30, 20, 30))
 sheet.save(sys.argv[1])

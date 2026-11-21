@@ -140,7 +140,11 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     def arm(sgn, pose):
         s0 = (cx + sgn * 0.85 * Ta, sh_y)
         if pose == 'hold' and hp:      # new held props: shown off the belly, the dot hand visibly on the grip
-            if both_hold and hp in held.TWO_HANDED:     # hands on the prop's two edges, at chest height
+            if both_hold and hp in held.TWO_HANDED:     # hands just inside the prop's two edges, at chest height
+                if hp == 'frying_pan':                   # a paddle: top hand high, bottom hand low, blade out to the side
+                    hd = (cx - 0.25 * Ta, sh_y + 0.22 * HH) if sgn < 0 else (cx + 0.75 * Ta, sh_y + 0.56 * HH)
+                    el = (cx + sgn * (1.1 * Ta + 6 * u), sh_y + (0.42 if sgn < 0 else 0.5) * HH)
+                    return [s0, el, hd]
                 hd = (cx + sgn * held.two_halfwidth(hp) * u, sh_y + 0.40 * HH)
                 el = (cx + sgn * max(1.12 * Ta + 4 * u, abs(hd[0] - cx) + 10 * u), sh_y + 0.50 * HH)
             else:                       # forearm raised outward: the prop is held out beside the body
@@ -233,13 +237,16 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     draw_face(C, expr, cx + facing * 4 * u, hy, u, facing, glasses, moustache, hat is not None, mouth, blink)
     for hp_ in late_prop: draw_prop(C, prop, hp_, u, side=1)      # a raised prop (a broom) must sit over the head and hat
     # ---- arms in front of the body
-    for pts, ps in front:
-        sgn = 1 if pts[0][0] > cx else -1
-        C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], sgn * 1.0 * u, 8)[1:], 5.2 * u, arm_c)
-        C.dot(*pts[2], 5.5 * u)
-        if prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)
     if prop and both_hold:          # one prop, two hands (DRAWING rule 23): drawn once between the hands
         hands = sorted((p[0][2] for p in front), key=lambda q: q[0])
+        if hp: draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))      # new props: under the forearms
+    for pts, ps in front:
+        sgn = 1 if pts[0][0] > cx else -1
+        if hp and prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)   # the hand grips over it
+        C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], sgn * 1.0 * u, 8)[1:], 5.2 * u, arm_c)
+        C.dot(*pts[2], 5.5 * u)
+        if not hp and prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)
+    if prop and both_hold and not hp:
         draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))
     return C.im.resize((W, H), Image.LANCZOS)
 
@@ -404,7 +411,7 @@ def seat_legs(C, cx, hip_y, torso_bot, u, leg_c, facing=0.0):
         C.stroke(path, 5.8 * u, leg_c)
         C.stroke([ft, (ft[0] + sgn * 12 * u + facing * 8 * u, ft[1] + 0.5 * u)], 7.5 * u, INK)
 
-COOLER = dict(body='#f1ece0', lid='#2fa89a', trim='#1f6f66')   # a cream tub: dark seated legs read in front of it
+COOLER = dict(body='#e4eef2', lid='#2fa89a', trim='#1f6f66')   # a cream tub: dark seated legs read in front of it
 
 def draw_cooler(C, cx, top, bot, w, u, body=None, lid=None, label=None):
     """A picnic cooler box seen from the front: white lid, coloured tub, side handle, drain plug."""

@@ -64,8 +64,8 @@ def gary_buried(t=0.0, k=1.0, **kw):
     C = Card(320, 170); gy = 155; cx = 160
     mound = [(cx - 150 + 300 * i / 30, gy - 70 * math.sin(math.pi * i / 30) ** 1.4 * (1 + 0.08 * math.sin(i * 1.7))) for i in range(31)]
     a = t * 2 * math.pi
-    s1, d1 = googly(cx + 18, gy - 72, 26, look=(math.cos(a) * 0.8, math.sin(a) * 0.8 if t else 0.6))
-    stamp(C, [('p', rock_pts(cx + 18, gy - 62, 52, 22, seed=7), ROCK)], E)      # a sliver of rock under the eye
+    s1, d1 = googly(cx + 18, gy - 78, 34, look=(math.cos(a) * 0.8, math.sin(a) * 0.8 if t else 0.6))
+    stamp(C, [('p', rock_pts(cx + 18, gy - 66, 60, 26, seed=7), ROCK)], E)      # a sliver of rock under the eye
     stamp(C, [s1], E * 0.6, details=[d1])
     stamp(C, [('p', mound + [(cx + 150, gy), (cx - 150, gy)], DUST)], E,
           details=[('p', rock_pts(cx - 60, gy - 24, 26, 6, seed=3), DUST_DK), ('p', rock_pts(cx + 70, gy - 14, 20, 5, seed=5), DUST_DK)])
@@ -132,7 +132,15 @@ def tent(t=0.0, k=1.0, color='#f28c34', **kw):
 def tent_floating(t=0.0, k=1.0, color='#f28c34', **kw):
     """The tent carried off by the flash flood: tilted, bobbing and rocking with t. Anchor = the waterline centre."""
     C = Card(420, 320); a = 14 * math.sin(t * 2 * math.pi * 1.5) - 8; dy = 10 * math.sin(t * 2 * math.pi * 3)
-    _tent_card(C, 210, 260 + dy, a, bean.hexrgb(color)); return C.out(k, (210, 270))
+    _tent_card(C, 210, 260 + dy, a, bean.hexrgb(color))
+    wl = 268                                     # muddy water hiding the tent's foot, with a wave and spray
+    wave = [(210 - 200 + 400 * i / 30, wl + 8 * math.sin(i * 0.9 + t * 20)) for i in range(31)]
+    stamp(C, [('p', wave + [(410, 318), (10, 318)], (138, 104, 66))], E,
+          details=[('s', [(x, y + 10, 5) for x, y in wave[2:-2]], (246, 240, 226))])
+    for i, dx in enumerate((-150, 150)):
+        g = 0.5 + 0.5 * math.sin(t * 2 * math.pi * 3 + i * 2)
+        stamp(C, [('c', 210 + dx, wl - 18 - 10 * g, 9 * g + 3, (120, 190, 230))], 4, shade=False)
+    return C.out(k, (210, 270))
 
 
 def timelapse_cam(t=0.0, k=1.0, **kw):
@@ -224,8 +232,8 @@ def flying_bills(t=0.0, k=1.0, count=7, direction='right', seed=3, **kw):
     C = Card(W_, H_); rnd = random.Random(seed)
     ox, oy = (W_ / 2 - sgn * 380), H_ - 120
     for i in range(count):
-        d0 = 0.05 + 0.07 * i
-        p = seg(t, d0, d0 + 0.55)
+        d0 = 0.04 + 0.05 * i
+        p = seg(t, d0, d0 + 0.5)
         if p <= 0 or p >= 1: continue
         g = smooth(seg(p, 0, 0.12)) * (1 - smooth(seg(p, 0.85, 1.0)))
         x = ox + sgn * (820 * p ** 1.2 + 40 * math.sin(p * 9 + i))

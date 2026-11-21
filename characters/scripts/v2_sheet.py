@@ -15,7 +15,7 @@ CAST = {   # mirrors scripts/sailing-stones/build.py CAST
 def C(cid, **kw): d = dict(CAST[cid]); d.update(kw); return d
 ROWS = [
     [('antennae up', C('guide', expr='smug', arm_pose=('hip', 'point'))), ('droop 0.5', C('guide', expr='neutral', antennae=0.5)),
-     ('antennae droop', C('guide', expr='pained', antennae='droop')), ('sway +14', C('tour2', expr='grin', arm_pose=('wave', 'wave'), antennae_sway=14)),
+     ('antennae droop', C('guide', expr='neutral', antennae='droop')), ('sway +14', C('tour2', expr='grin', arm_pose=('wave', 'wave'), antennae_sway=14)),
      ('side', C('tour1', view='side', expr='smile')), ('rear', C('guide', view='rear')),
      ('seated cooler', C('kip', seated='cooler', arm_pose=('hold', 'hold'), prop='frying_pan', expr='stern')),
      ('seated cooler', C('lou', seated='cooler', arm_pose=('hold', 'hold'), prop='gps_box', expr='pained'))],
@@ -46,7 +46,7 @@ if __name__ == '__main__':
             w = d.textlength(name, font=F); d.text((i * cw + (cw - w) / 2, r * (ch + 34) + 6), name, font=F, fill=(230, 230, 240) if (r == NIGHT and i < 4) else (30, 30, 40))
     sheet.save(sys.argv[1])
     if len(sys.argv) > 2:   # 2x-ish crops of the upper bodies (heads, hands, props) for the joint review
-        cs = Image.new("RGBA", (400 * 8, 640 * 4), (240, 237, 230, 255))
+        cs = Image.new("RGBA", (600 * 8, 640 * 4), (240, 237, 230, 255))
         for k, im in enumerate(full):
-            cs.alpha_composite(im.crop((100, 120, 500, 760)), ((k % 8) * 400, (k // 8) * 640))
+            cs.alpha_composite(im.crop((0, 120, 600, 760)), ((k % 8) * 600, (k // 8) * 640))
         cs.save(sys.argv[2])
