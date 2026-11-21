@@ -13,6 +13,9 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Never commit `__pycache__`, `.venv`, `packs/` or renders over 50 MB.
 - Never `git stash` while renders run: workers re-read `shots.json` and later queued jobs start from the stashed files. Never `git stash drop` after a conflicting `pop` (it did not apply). Recover with `git fsck --no-reflog | grep 'dangling commit'`.
 
+- HuggingFace is blocked, so Whisper and other model downloads fail. To get a competitor's script, read the burned-in captions with `rapidocr-onnxruntime` (pip, models bundled) in a separate venv, at 10 fps on the caption band, then de-duplicate. Measure pacing with `references/scripts/video_cuts.py` and sound with `video_audio.py`.
+- The Director can upload competitor MP4s into the session (YouTube blocks downloads here). Keep them out of the repo; keep only measurements and structure notes.
+
 ## Sets (Blender look)
 - Photo-scanned models clash with 2D characters. Use stylised flat-colour packs (Quaternius, KayKit), scaled to real metres (a Quaternius barrel is 0.2 units).
 - Use "Khronos PBR Neutral" (AgX washes emissives to white) and add glow in post. Glow and bloom are **warm-only**, or they blow out white faces. Keep lamp glass emission ≤ 0.3 × the night multiplier, or it clips to white.

@@ -15,7 +15,15 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
   - File to post: `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4` (draft v5, sentence captions, with the thumbnail as the first 3 frames, 64.14 s).
   - Also: `thumbnail.png`. The proposed title and captions are in `videos/bike-countersteer/NOTES.md`.
   - The draft history and open nice-to-haves are in the same NOTES file.
-- **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session.
+  - **The Director decided (2026-11-21) not to remake it.** It has the pacing and story weaknesses found in the retention study, so the lessons go into the next video. Posting it is the Director's call.
+- **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session. It must apply, from the start:
+  - the leaders' story engine (`QA.md` › scripts; `references/reports/retention_2026-11.md` §8);
+  - a picture change every ≤ 1.5 s and a mid-action hook (preflight warns);
+  - the shot grammar (`replication_playbook_2026-11.md` §3E);
+  - "sentence" captions;
+  - an ending on a gag or a loop.
+  - Before its render, the P1 engine items should be in: the grade vignette and split tone, depth-tested characters, and fly-through clips.
+- **Known channel problem:** posted shorts keep at most about 50% of their length (the Director's analytics). The causes and fixes are in `references/reports/retention_2026-11.md`.
 
 ## Accounts and limits
 - **ElevenLabs** (proxy-injected, `api.elevenlabs.io`): free tier, 10,000 characters a month; 1,251 were used in November. One video is about 1,250 characters. Voice each script **once**.
