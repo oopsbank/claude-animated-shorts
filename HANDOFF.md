@@ -33,6 +33,11 @@ This is the state of the project, written by the first Producer session before i
   - There is no GPU; plates are CPU stills, which is fine.
 
 ## How to run the crew (lessons from the first video)
+- **Director's rule (2026-11-21): lean, nothing extra and nothing missing.**
+  - The Producer does small fixes in any area itself: shot-list edits, parameters, one-line engine/asset tweaks. It records each one in the commit and the area's notes.
+  - A specialist session is opened only for a full area job: a new script, a new set, a new character/rig/asset, a new voice-over, or a full render plus review. It is closed (archived) as soon as its job is merged.
+  - Never more than 3 sessions at once, counting the Producer.
+  - No scheduled tasks unless the Director asks.
 - **A new video gets a fresh set of sessions.** Long sessions re-read their whole history on every turn, so they get expensive. Everything a fresh session needs is in the repo.
 - **Run 2-3 sessions at a time, not 6.** A suggested order:
   1. Screenwriter (topic + script + shots.json; the user picks the topic).
