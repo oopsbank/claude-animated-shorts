@@ -59,7 +59,7 @@ Fiction, made up for the story: the cousins' setbacks (dust storm, summer heat, 
 19. and one night it freezes over.
 20. Next morning, the ice starts crackling.
 21. Dozens of rocks across the lake start sliding, in broad daylight.
-22. The sun breaks the phone-thin ice into giant panes,
+22. The sun breaks the phone-thin ice into huge panes,
 23. a light breeze shoves them, and they shove the rocks.
 24. Like a giant window sliding across a wet kitchen floor and shoving the fridge.
 25. And the guide? Snoring in his van,

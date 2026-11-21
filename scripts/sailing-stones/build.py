@@ -135,8 +135,8 @@ SHOTS = [
                   C('lou', 0.70, [B('Dozens', arm=('hang', 'hang'), expr='shock'), B('broad', arm=('wave', 'wave'), expr='grin')])],
       fx=[F('sliding_rock', 'Dozens', 0.5, 0.62, count=5, path='away', dur=2.4), F('exclaim', 'sliding,', 0.5, 0.2, size=0.45)], props=['ice_sheet']),
  # --- THE MECHANISM (≤ 10 s, visual-metaphor set piece in top view)
- dict(text="The sun breaks the phone-thin ice into giant panes,",
-      set='playa', cam='playa_top', light='frost', size='medium', grammar=['metaphor'], camera=glide(G('phone-thin', 8, zoom=1.4), G('giant', 8, zoom=0.9)),
+ dict(text="The sun breaks the phone-thin ice into huge panes,",
+      set='playa', cam='playa_top', light='frost', size='medium', grammar=['metaphor'], camera=glide(G('phone-thin', 8, zoom=1.4), G('huge', 8, zoom=0.9)),
       note='Top view: crack lines race across the sheet; at "phone-thin" a punch-in on a pane edge with a phone silhouette beside it for scale; pull back to the panes.',
       characters=[], fx=[F('ice_crack', 'breaks', 0.5, 0.5), F('ice_pane', 'panes,', 0.5, 0.5, stage='panes')], props=['ice_sheet', 'phone_silhouette']),
  dict(text="a light breeze shoves them, and they shove the rocks.",
