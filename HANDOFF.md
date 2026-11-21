@@ -17,6 +17,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
   - Also: `thumbnail.png`. The proposed title and captions are in `videos/bike-countersteer/NOTES.md`.
   - The draft history and open nice-to-haves are in the same NOTES file.
   - **The Director decided (2026-11-21) not to remake it.** It has the pacing and story weaknesses found in the retention study, so the lessons go into the next video. Posting it is the Director's call.
+- **Video 2: "sailing-stones"** (topic M4 in `scripts/TOPICS.md`, picked 2026-11-21). A Screenwriter session writes the script on `claude/area-scripts`; the Director approves the script before voicing.
 - **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session. It must apply, from the start:
   - the leaders' story engine (`QA.md` › scripts; `references/reports/retention_2026-11.md` §8);
   - a picture change every ≤ 1.5 s and a mid-action hook (preflight warns);

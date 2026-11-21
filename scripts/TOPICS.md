@@ -20,6 +20,8 @@ Checked against `references/titles.md` (no overlap). **The Screenwriter verifies
 
 **Ranking (mystery pull + visuals + a clean, verifiable answer):** M1, M3, M2, M4, M5, M6.
 
+**The Director picked M4 (The Rocks That Walk Across the Desert) on 2026-11-21.** Slug: `sailing-stones`.
+
 **Caveats:**
 - M5's vulture answer is "the leading explanation", not proven: say "most likely".
 - M6: "most of the lights".
