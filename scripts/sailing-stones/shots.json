@@ -266,7 +266,7 @@
   },
   {
    "id": "s04",
-   "text": "and nobody's ever seen one move.",
+   "text": "and nobody had ever seen one move.",
    "set": "playa",
    "cam": "rock_low",
    "light": "golden",
@@ -278,7 +278,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 3,
+      "at_word": 4,
       "to": {
        "zoom": 1.6
       },
@@ -294,7 +294,7 @@
      "x": 0.62,
      "y": 0.32,
      "size": 0.45,
-     "at_word": 5
+     "at_word": 6
     }
    ],
    "props": [
@@ -464,7 +464,7 @@
   },
   {
    "id": "s07",
-   "text": "\"They fenced rocks in! Sixty years, zero witnesses!",
+   "text": "\"They fenced rocks in! One escaped! Sixty years, zero witnesses!",
    "set": "inserts",
    "cam": "logbook",
    "light": "day",
@@ -473,8 +473,24 @@
     "insert"
    ],
    "camera": {
-    "move": "push_in",
-    "amount": 0.08
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 4,
+      "to": {
+       "zoom": 1.25,
+       "x": 0.4
+      },
+      "dur": 6
+     },
+     {
+      "at_word": 6,
+      "to": {
+       "zoom": 1.0
+      },
+      "dur": 6
+     }
+    ]
    },
    "note": "Three quick flashback cards on the logbook page, (sepia): a stake fence around named rocks, then \"60 YEARS\" and a big \"0\" in the witnesses column. (The whirlwind is on shot 6, behind the guide.)",
    "characters": [],
@@ -486,18 +502,35 @@
      "at_word": 1
     },
     {
+     "name": "sliding_rock",
+     "x": 0.4,
+     "y": 0.55,
+     "path": [
+      [
+       0.4,
+       0.55
+      ],
+      [
+       0.55,
+       0.45
+      ]
+     ],
+     "dur": 0.8,
+     "at_word": 5
+    },
+    {
      "name": "year_badge",
      "x": 0.5,
      "y": 0.14,
      "label": "60 YEARS",
-     "at_word": 4
+     "at_word": 6
     },
     {
      "name": "exclaim",
      "x": 0.5,
      "y": 0.4,
      "size": 0.45,
-     "at_word": 6
+     "at_word": 8
     }
    ],
    "props": [
@@ -1551,7 +1584,7 @@
   },
   {
    "id": "s23",
-   "text": "a light breeze shoves them, and they shove the rocks.",
+   "text": "and a light breeze pushes them into the rocks.",
    "set": "playa",
    "cam": "playa_top",
    "light": "frost",
@@ -1563,7 +1596,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 9,
+      "at_word": 8,
       "to": {
        "zoom": 1.3,
        "x": 0.6
@@ -1580,7 +1613,7 @@
      "x": 0.3,
      "y": 0.5,
      "angle": 0,
-     "at_word": 2
+     "at_word": 3
     },
     {
      "name": "ice_pane",
@@ -1588,7 +1621,7 @@
      "y": 0.5,
      "stage": "drift",
      "direction": "right",
-     "at_word": 3
+     "at_word": 4
     },
     {
      "name": "sliding_rock",
@@ -1606,14 +1639,14 @@
      ],
      "dur": 1.5,
      "trail": true,
-     "at_word": 9
+     "at_word": 8
     }
    ],
    "props": []
   },
   {
    "id": "s24",
-   "text": "Picture a giant window skating across a wet kitchen floor, pushing your fridge.",
+   "text": "Picture a glass tabletop sliding across wet tiles, shoving your fridge.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1625,7 +1658,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 10,
+      "at_word": 8,
       "to": {
        "zoom": 1.25,
        "x": 0.4
@@ -1634,7 +1667,7 @@
      }
     ]
    },
-   "note": "The analogy staged as a gag on the playa: a giant house window slides across the wet mud and shoves a fridge; Lou watches deadpan, Kip films it.",
+   "note": "The analogy staged as a gag on the playa: a big glass tabletop slides across wet tiles laid on the mud and shoves a fridge (original image: avoid the leaders' kitchen-floor/socks line); Lou watches deadpan, Kip films it.",
    "characters": [
     {
      "id": "lou",
@@ -1650,7 +1683,7 @@
       },
       {
        "expr": "smug",
-       "at_word": 12,
+       "at_word": 10,
        "arm_pose": [
         "chin",
         "hang"
@@ -1714,13 +1747,13 @@
      ],
      "dur": 1.2,
      "trail": true,
-     "at_word": 10
+     "at_word": 8
     },
     {
      "name": "splash",
      "x": 0.45,
      "y": 0.85,
-     "at_word": 10
+     "at_word": 8
     }
    ],
    "props": [
@@ -1817,7 +1850,7 @@
      }
     ]
    },
-   "note": "Spectacle: low angle, an ice pane drives the hero rock into the sign standing on the playa; at \"through\" the sign splits and falls flat with a splash, the alien cut-out face-down in the water. The rock moves away from camera (no left/right claim). Draw the push slow (real rocks crept at 2-5 m/min); the sign is our fiction.",
+   "note": "Spectacle: low angle, an ice pane drives a MID-SIZE rock (the researchers never saw the biggest ones move) into the sign standing on the playa; at \"through\" the sign splits and falls flat with a splash, the alien cut-out face-down in the water. The rock moves away from camera (no left/right claim). Draw the push slow (real rocks crept at 2-5 m/min); the sign is our fiction.",
    "characters": [],
    "fx": [
     {
@@ -1857,17 +1890,100 @@
   },
   {
    "id": "s27",
-   "text": "Nerds one, aliens zero.",
+   "text": "\"Nerds one, aliens zero,\" say the cousins.",
    "set": "playa",
-   "cam": "playa_top",
-   "light": "frost",
+   "cam": "overlook_med",
+   "light": "day",
    "size": "medium",
    "camera": {
-    "move": "push_in",
-    "amount": 0.1
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 6,
+      "to": {
+       "zoom": 1.2,
+       "x": 0.55
+      },
+      "dur": 6
+     }
+    ]
    },
-   "note": "Callback to his own taunt: top view of the flattened sign lying under the rock, the alien cut-out face-down in the water, a scoreboard badge NERDS 1 · ALIENS 0 (flips his own \"Rocks one, nerds zero\").",
-   "characters": [],
+   "note": "The cousins deliver the callback to his face: they lean in at the van window holding the flattened sign; a scoreboard badge NERDS 1 · ALIENS 0 (flips his own \"Rocks one, nerds zero\"). He is still asleep until the next shot.",
+   "characters": [
+    {
+     "id": "kip",
+     "x": 0.3,
+     "beats": [
+      {
+       "prop": "sign_piece",
+       "expr": "smug",
+       "at_word": 0,
+       "arm_pose": [
+        "hold",
+        "hold"
+       ]
+      }
+     ],
+     "talk": true,
+     "build": "adult",
+     "skin": "#f1c9a5",
+     "shirt": "#3a8fd1",
+     "pants": "#3b3b4f",
+     "hat": "beanie",
+     "hat_col": "#e8613c",
+     "seed": 21
+    },
+    {
+     "id": "lou",
+     "x": 0.52,
+     "beats": [
+      {
+       "expr": "grin",
+       "at_word": 2,
+       "arm_pose": [
+        "point",
+        "hang"
+       ]
+      }
+     ],
+     "talk": true,
+     "build": "stout",
+     "skin": "#8d5a3b",
+     "shirt": "#f2b134",
+     "pants": "#2f4b3a",
+     "hat": "cap",
+     "hat_col": "#2f6b4f",
+     "glasses": true,
+     "seed": 22
+    },
+    {
+     "id": "guide",
+     "x": 0.78,
+     "beats": [
+      {
+       "expr": "neutral",
+       "at_word": 0,
+       "arm_pose": [
+        "sleep",
+        "sleep"
+       ]
+      }
+     ],
+     "seated": "van",
+     "view": "turned",
+     "build": "stout",
+     "skin": "#ffd9b8",
+     "shirt": "#7a3fb0",
+     "pants": "#2b2f3a",
+     "hat": "antennae",
+     "hat_col": "#6fd16a",
+     "moustache": "#5a3a22",
+     "outfit": [
+      "collar"
+     ],
+     "seed": 23
+    }
+   ],
    "fx": [
     {
      "name": "year_badge",
@@ -1877,15 +1993,16 @@
      "at_word": 0
     },
     {
-     "name": "sparkle",
-     "x": 0.5,
-     "y": 0.5,
-     "at_word": 3
+     "name": "zzz",
+     "x": 0.82,
+     "y": 0.3,
+     "size": 0.45,
+     "at_word": 0
     }
    ],
    "props": [
-    "tour_sign_flat",
-    "alien_cutout"
+    "tour_van",
+    "tour_sign_flat"
    ]
   },
   {
@@ -1989,7 +2106,7 @@
      }
     ]
    },
-   "note": "Loop: the guide, in a new ICE TOURS cap-with-antennae, leads tourists to the rock row; at \"starts\" the camera pushes to the same XCU as shot 1 (a hand pushing a GPS box into a rock) so the last frame matches the first.",
+   "note": "Loop: the guide, in a new ICE TOURS cap-with-antennae, leads tourists along the shore (they watch from the edge: visitors must stay off the wet playa); at \"starts\" the camera pushes to the same XCU as shot 1 (a hand pushing a GPS box into a rock) so the last frame matches the first.",
    "characters": [
     {
      "id": "guide",
