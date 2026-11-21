@@ -20,6 +20,12 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P1 **Video 2 insert set `inserts`** (one light, `day`; 2D in PIL is fine; our palette, plum ink, no brands): `ticket` (unused in v17 final, skip), `alien_cam` (FANTASY panels in a thought-bubble frame with a cheesy green ALIEN CAM filter, clearly fantasy: `leaf_blower_aliens`, `rock_racing_league` (rocks in tiny helmets and numbered bibs, a cheering alien stadium), `alien_air_hockey_final` (neon rink, a boulder puck, a referee that is itself a rock in a striped shirt with a whistle, a scoreboard); `price_card` overlays $30/$40/$50), `gps_screen` reused as `livestream_screen` (LIVE · 1.2M, comments "ICE??" "REFUND", rocks sliding in sunshine).
 - [ ] P1 Video 2 props on the plates or as engine props (v17 final): `gps_box` (small grey box with an antenna), `gary_rock` (a MID-SIZE rock with googly eyes; also `gary_buried`: one eye poking out of dust), `rock_row_15`, `rock_trail_hero`, `tent`, `tent_floating`, `timelapse_cam`, `cooler` (+ `cooler_trophy` on a plinth), `flood_water`, `pond_water`, `ice_sheet` (the frost light), `fridge_silhouette` and `phone_silhouette` (scale cues), `air_hockey_overlay` (rink lines/goal flickering over the real ice), `tour_van`, `tour_sign` variants (ALIEN ROCK TOURS · NIGHT ONLY · $20 / SOLD OUT; ICE TOURS $5 with ALIEN crossed out), `tour_sign_free` (the NIGHT ONLY sign as a separate sprite that splits and topples), `banner` (FINAL FAIL · LIVE), `livestream_counter`, `flying_bills`. Keep the van and fans at the road edge, never on the playa.
 - [ ] P1 **Look test before the playa set:** one hero prop, e.g. the tour van or a rock with a GPS box, in the playbook §3b recipe (stylised PBR, bevel highlights, gold trim, AO, soft key, little or no ink). Render it next to a reference crop and have the panel score it (≥ 9). Then bake the recipe into `common.py` materials.
+- [ ] P2 Look test (`blender/sets/playa/looktest.py`) stopped at a plateau of about 7/10 (19 rounds, best 7.1; the recipe is in `common.py`: `pbr`, `gold`, `glass`, `soften`/`rbox`/`rcyl`, `rock(facet=)`, `contact_blob`, `softbox`, presets `sky_refl` and `sun_from`). The reviewers' recurring blockers:
+  - Contact shadows and AO read weak under vehicles. Try Cycles AO or a baked AO multiply in `pbr`.
+  - Rocks and the tracker read matte or plasticky. Try roughness variation and edge wear.
+  - The low-angle groove trail is hard to read. The flat painted strip (`ground.trail`) works best so far.
+  - The cracked ground is busy behind characters.
+  - The warm key / cool fill split is not strong enough at midday.
 - [ ] P1 Camera fly-through clips: `build.py --fly <cam_a> <cam_b> --frames 15-45` renders a short Blender camera move at low res and low samples, without ink. The engine adds heavy motion blur and uses it as a transition or a follow-the-object shot. This is the leaders' main pacing device (retention study).
 - [ ] P2 `harbour` and `road` have first-draft `build.py` files (ship deck raycast, pier, water per light; KayKit street, primitive car interior). They need low-res iteration, plates, `--depth`, and review.
 - [ ] P2 New set `interior` (Quaternius house interior): cams `room_wide`, `table_close`.
@@ -44,6 +50,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
   - Prop text (ADMIT 1, LIVE, ICE TOURS) is small at phone size.
   - Night legs sink into navy: the engine rim light should fix this.
   - The antenna droop has no spring compression.
+- [ ] P1 Video 2 (`sailing-stones`): hat `antennae` (a headband with two springy green antenna balls, for the guide and his tourists) with an `antennae="droop"` state; a `seated="cooler"` pose; held props `gps_box`, `screwdriver`, `googly_eyes`, `mug`, `laptop`, `frying_pan`, `ticket`, `cash_fan`, `camera`, `flashlight`, `phone`, `selfie_stick`, `megaphone`, `flag`, `air_hockey_mallet`, `gary_rock`. Cast ids and colours are in `scripts/sailing-stones/build.py` (CAST).
 - [ ] P1 (for the engine) In `character()`:
   - `lid=` (0..1, with 0.5 = half-shut) so the engine can drop its blink overlay;
   - arm in-betweens (`arm_pose=('hang', 'point', 0.4)` or elbow/hand offsets) so gestures ease and overshoot;
@@ -66,6 +73,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
   - **`dust_storm` / `flash_flood`:** the full cover holds ~40% of the life; cut it to ~15%. The flood body is a flat slab: add moving foam and debris, and a camp item bobbing for the gag.
   - **Stage chaining:** `ice_pane` water, freeze and panes end on a full sheet before their 8% fade, by design. The engine should chain the stages in one framing (fade only the last).
   - **Style:** thin lines (rain, crack edges, rink lines) want plum ink weight.
+- [ ] P1 Video 2 (`sailing-stones`) new effects, same flat style: `ice_pane` (kw `stage`=water|freeze|panes|drift, `direction`, `view`=top|side: a pale cyan translucent sheet with white edge glints), `ice_crack` (white crack lines racing across the sheet), `sliding_rock` (a rock sprite sliding along `path` with a groove trail; `count`, `sprite`=rock|fridge, `path`='away' shrinks toward the horizon), `gps_ping` (expanding radar rings + a dot), `year_badge` (a UI tag in the top third: white Poppins Bold on a plum pill, kw `label`), `dust_storm` (a brown wall of dust rolling across, then settling), `flash_flood` (a brown wall of water, kw direction), `rain` (slanted streaks).
 - [ ] P2 Polish from the cast review and review round 4:
   - glow_eyes: scale in from a slit, about 70% smaller, below the brows;
   - anger_vein and question_mark: ease the exit over 2-3 more frames;
@@ -99,6 +107,10 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P1 Video 2 (`sailing-stones`): a per-shot `grade: "sepia"` for flashbacks (shots s10-s11), and the `seated` character placement (s29).
 - [ ] P1 Play fly-through clips (image sequences) as shots or transitions, with directional motion blur, plus fast punch-ins and whip pans with blur, so the picture changes every ≤ 1.5 s.
 - [~] P1 Depth-tested compositing: DONE in the engine (`occlude()` in render_video.py: plate pixels nearer than the character's ground point are drawn back over it; off on riding shots and with `"no_occlusion": true`). Verify it on the playa plates (rocks and the sign in front of characters).
+- [ ] P1 Video 2 (`sailing-stones`): a per-shot `grade: "sepia"` for flashbacks (shots s10-s11), and the `seated` character placement (s29).
+- [ ] P1 Play fly-through clips (image sequences) as shots or transitions, with directional motion blur, plus fast punch-ins and whip pans with blur, so the picture changes every ≤ 1.5 s.
+- [ ] P1 Grade: a vignette to a corner/centre ratio of about 0.80, plus split toning (warm highlights R-B ≈ +0.08, neutral or cool shadows). Today ours has no vignette and an inverted split (`references/reports/replication_playbook_2026-11.md` §3A).
+- [ ] P1 Depth-tested compositing (the biggest gap in the channel study): give each character a depth (its ground point in the plate's depth map) and draw nearer plate pixels over it, so characters stand behind posts, sit inside cabs and sink into snow (Segment Zero study).
 - [ ] P2 Depth of field for far characters, from the plate depth.
 - [ ] P2 Arm in-betweens with anticipation and overshoot once `character()` has them. Today arm poses are 1-frame swaps, so a held point reads stiff (acting 6).
 - [ ] P2 Crossfades between very different character sizes ghost a giant head: prefer a cut or a matched position there.
