@@ -201,7 +201,7 @@
   },
   {
    "id": "s03",
-   "text": "On a Death Valley lake bed, some rocks heavier than a fridge leave long trails,",
+   "text": "You see, on a Death Valley lake bed, some rocks heavier than a fridge leave long trails,",
    "set": "playa",
    "cam": "playa_wide",
    "light": "day",
@@ -213,7 +213,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 8,
+      "at_word": 10,
       "to": {
        "zoom": 1.2,
        "x": 0.45
@@ -1002,7 +1002,7 @@
   },
   {
    "id": "s13",
-   "text": "Year two, last try: he livestreams their failure to a vanload of fans.",
+   "text": "Year two, last try: he livestreams their failure to his fans.",
    "set": "playa",
    "cam": "overlook_med",
    "light": "frost",
@@ -1021,7 +1021,7 @@
       "dur": 6
      },
      {
-      "at_word": 12,
+      "at_word": 10,
       "to": {
        "zoom": 1.35,
        "x": 0.4
@@ -1048,7 +1048,7 @@
       {
        "expr": "smug",
        "lean": -6,
-       "at_word": 12,
+       "at_word": 10,
        "arm_pose": [
         "hold",
         "wave"
@@ -1131,7 +1131,7 @@
   },
   {
    "id": "s14",
-   "text": "Rain floods the lake bed; cold nights freeze it; the fans start leaving.",
+   "text": "Rain floods the lake bed; cold nights freeze it. Even his imaginary aliens doze off.",
    "set": "playa",
    "cam": "playa_top",
    "light": "night",
@@ -1150,7 +1150,7 @@
       "dur": 6
      },
      {
-      "at_word": 10,
+      "at_word": 9,
       "to": {
        "zoom": 1.0
       },
@@ -1158,7 +1158,7 @@
      }
     ]
    },
-   "note": "Top view: rain rings on an ankle-deep pond, frost creeps over it at \"freeze\"; at \"fans\" a corner inset of his livestream counter dropping \"LIVE · 3 watching\".",
+   "note": "Top view: rain rings on an ankle-deep pond, frost creeps over it at \"freeze\"; at \"Even\" a thought-bubble inset (ALIEN CAM filter) of his three aliens asleep in deck chairs, and his livestream counter \"LIVE · 3 watching\".",
    "characters": [],
    "fx": [
     {
@@ -1183,7 +1183,7 @@
   },
   {
    "id": "s15",
-   "text": "One sunny morning, the ice crackles, and dozens of rocks start sliding. Gary too.",
+   "text": "One sunny morning, the ice crackles, and dozens of rocks start sliding. Gary too, tracker blinking.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1372,7 +1372,7 @@
   },
   {
    "id": "s17",
-   "text": "The real thing: sun cracks the phone-thin ice into huge panes; a light breeze shoves them into rocks.",
+   "text": "The sun breaks the phone-thin ice into huge panes; a light breeze shoves them into rocks.",
    "set": "playa",
    "cam": "playa_top",
    "light": "frost",
@@ -1384,21 +1384,21 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 6,
+      "at_word": 4,
       "to": {
        "zoom": 1.4
       },
       "dur": 6
      },
      {
-      "at_word": 9,
+      "at_word": 7,
       "to": {
        "zoom": 0.9
       },
       "dur": 6
      },
      {
-      "at_word": 17,
+      "at_word": 15,
       "to": {
        "zoom": 1.3,
        "x": 0.6
@@ -1414,21 +1414,21 @@
      "name": "ice_crack",
      "x": 0.5,
      "y": 0.5,
-     "at_word": 3
+     "at_word": 2
     },
     {
      "name": "ice_pane",
      "x": 0.5,
      "y": 0.5,
      "stage": "panes",
-     "at_word": 10
+     "at_word": 8
     },
     {
      "name": "whoosh",
      "x": 0.3,
      "y": 0.5,
      "angle": 0,
-     "at_word": 13
+     "at_word": 11
     },
     {
      "name": "ice_pane",
@@ -1436,7 +1436,7 @@
      "y": 0.5,
      "stage": "drift",
      "direction": "right",
-     "at_word": 14
+     "at_word": 12
     },
     {
      "name": "sliding_rock",
@@ -1454,7 +1454,7 @@
      ],
      "dur": 1.5,
      "trail": true,
-     "at_word": 17
+     "at_word": 15
     }
    ],
    "props": [
@@ -1464,7 +1464,7 @@
   },
   {
    "id": "s18",
-   "text": "Same air hockey. No aliens.",
+   "text": "Same game. No aliens.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1493,7 +1493,7 @@
       },
       {
        "expr": "smug",
-       "at_word": 4,
+       "at_word": 3,
        "arm_pose": [
         "hold",
         "hip"
@@ -1515,7 +1515,7 @@
      "name": "sparkle",
      "x": 0.4,
      "y": 0.4,
-     "at_word": 4
+     "at_word": 3
     }
    ],
    "props": [
