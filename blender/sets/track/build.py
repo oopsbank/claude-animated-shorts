@@ -6,6 +6,7 @@ import sys, os, math, bpy, bmesh
 from mathutils import Vector
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import common as C
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 C.reset()
 NAT = f'{C.QUAT}/nature_pack'
@@ -189,7 +190,8 @@ CAMS = {
     'track_med': dict(loc=(-0.6, -0.6, 1.3), target=(9.0, 5.0, 2.5), lens=24, roll=0, stand=(1.7, 1.0, 0), fstop=2.4,
                       ink_fade=(6, 40, 0.5), haze_range=(4, 200)),
     'track_top': dict(loc=(L / 2 + R * 0.707 + 0.5, CY + R - R * 0.707 + 4.0, 24.0), target=None, lens=35, roll=0, stand=(L / 2 + R * 0.707, CY + R - R * 0.707, 0), fstop=None, top=True,
-                      haze_range=(40, 120), haze_k=0.3, light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.05), 'golden': dict(grade_sat=0.95, grade_gain=1.15)}, note='top-down view: px_per_m measured along the ground'),
+                      haze_range=(40, 120), haze_k=0.3, light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.05), 'golden': dict(grade_sat=0.95, grade_gain=1.15)}, note='top-down view: px_per_m measured along the ground',
+                      json_extra=lambda: {'paths': __import__('paths').project()}),   # racing lines on the real road (paths.py)
     'pit_med': dict(loc=(0.4, -7.2, 1.35), target=(-0.35, -16.0, 1.9), lens=26, roll=0, stand=(0.3, -9.75, 0), fstop=2.8,
                     ink_fade=(4, 30, 0.5), haze_range=(3, 120),
                     light_overrides={'day': dict(grade_sat=1.0, grade_gain=1.18), 'golden': dict(grade_sat=1.0, grade_gain=1.15)}),

@@ -492,5 +492,6 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
             tg = project_targets(co, targets)
             if tg: js['targets'] = tg
             if c.get('note'): js['note'] = c['note']
+            if c.get('json_extra'): js.update(c['json_extra']() if callable(c['json_extra']) else c['json_extra'])
             with open(os.path.join(out, base + '.json'), 'w') as f: json.dump(js, f, indent=1)
             print(f'PLATE {base} {time.time() - t:.0f}s {js}', flush=True)

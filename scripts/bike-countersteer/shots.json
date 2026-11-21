@@ -555,12 +555,13 @@
      "y": 0.5,
      "planned": "tight_left",
      "actual": "wide_arc",
+     "planned_color": "#ffd23f",
      "at_word": 0
     },
     {
      "name": "dust_puff",
-     "x": 0.82,
-     "y": 0.3,
+     "x": 0.9,
+     "y": 0.63,
      "at_word": 7
     }
    ],
@@ -720,7 +721,8 @@
       "at_word": 15,
       "until_word": 19,
       "cam": "track_top",
-      "view": "top"
+      "view": "top",
+      "path": "kink_right_then_left"
      },
      "build": "stout",
      "skin": "#ffe2c2",
@@ -749,6 +751,7 @@
      "y": 0.5,
      "planned": "tight_left",
      "actual": "kink_right_then_left",
+     "planned_color": "#ffd23f",
      "at_word": 15
     }
    ],

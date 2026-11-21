@@ -257,7 +257,7 @@ def place_characters(base, k, f, meta):
         tr = G['tracks'][k][i]; spec = shot['characters'][i]
         ins = spec.get('insert')
         if ins and shot.get('_insert') and shot['_insert'][0] <= f < shot['_insert'][1]:
-            spec = dict(spec, **{kk: ins[kk] for kk in ('rig', 'view') if kk in ins})
+            spec = dict(spec, **{kk: ins[kk] for kk in ('rig', 'view', 'path') if kk in ins})
         if spec.get('rig') in rig.INSERT_RIGS:         # a full-frame insert card (e.g. the broom on the palm) over a soft plate
             pose = 'broom_upright'; sw = (G['spans'][k]['w0'], G['spans'][k]['w1'])
             seq = []
@@ -361,9 +361,20 @@ def place_fx(base, k, f, chars):
             peak = float(e.get('peak', 0.3))
             start = wf - int(round(peak * dur))         # the effect peaks on the word onset
         if not start <= f < start + dur: continue
+        ins_ = shot.get('_insert')
+        if e['name'] == 'path_line' and ins_ and ins_[0] <= land < ins_[1] and f >= ins_[1]: continue   # the diagram ends with its cut-in
         t = (f - start + 0.5) / dur
         size = int(float(e.get('size', 0.9 if e['name'] == 'path_line' else 0.35)) * W)
         kw = {kk: v for kk, v in e.items() if kk not in ('name', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor', 'dx') and not kk.startswith('_')}
+        if e['name'] == 'path_line':          # racing lines named in the plate JSON follow the real road (sets: paths.py)
+            ins_ = shot.get('_insert'); pl = ins_[2] if (ins_ and ins_[0] <= f < ins_[1]) else shot['_plate']
+            ppaths = G['plates'][pl][1].get('paths', {})
+            if any(isinstance(kw.get(kk), str) and kw[kk] in ppaths for kk in ('planned', 'actual')):
+                size = H; e = dict(e, x=0.5, y=0.5); kw.setdefault('scale', 0.5)
+                u_ = size / 2 * 0.9 * float(kw['scale']); o_x = W / 2 - size / 2
+                for kk in ('planned', 'actual'):
+                    if isinstance(kw.get(kk), str) and kw[kk] in ppaths:
+                        kw[kk] = [((px * W - o_x - size / 2) / u_, (py * H - size / 2) / u_) for px, py in ppaths[kw[kk]]]
         if mod and 'line' not in kw and chars: kw['line'] = 10 * chars[0].get('scale', 0.5)   # fx area: line = 10 x card scale
         try:
             im = (mod.render if mod else stub_fx)(e['name'], t, size, **kw)
@@ -378,7 +389,10 @@ def place_fx(base, k, f, chars):
                 elif e['anchor'] == 'bars': x, y = (c['bbox'][0] + c['bbox'][2]) / 2, c['bbox'][1] + 0.42 * (c['bbox'][3] - c['bbox'][1])
                 else: x, y = (c['bbox'][0] + c['bbox'][2]) / 2, c['ground_y']
         cy = {'dust_puff': 0.72, 'splash': 0.72, 'lean_arc': 1.0}.get(e['name'], 0.5)             # ground-anchored effects
-        base.alpha_composite(im.convert('RGBA'), (int(x - size / 2), int(y - size * cy)))
+        dx_, dy_ = int(x - size / 2), int(y - size * cy); im = im.convert('RGBA')
+        if dx_ < 0 or dy_ < 0:                # a canvas bigger than the frame (plate-sized path_line): crop the overhang
+            im = im.crop((max(0, -dx_), max(0, -dy_), im.width, im.height)); dx_, dy_ = max(0, dx_), max(0, dy_)
+        base.alpha_composite(im, (dx_, dy_))
         out.append({'name': e['name'], 't': round(t, 3)})
         if e['name'] == 'path_line' and mod: path_riders(base, k, f, e, t, size, x - size / 2, y - size * cy, kw)
     return out
@@ -389,10 +403,13 @@ def path_riders(base, k, f, e, t, size, ox, oy, kw):
     (fx.fx_path_line: af = smooth(seg(t, 0.28, 0.78)), chaikin(PATHS[...]), sub_path), nose along the heading."""
     mod = G['fx']; shot = G['shots'][k]
     for i, spec in enumerate(shot.get('characters', [])):
+        ins = spec.get('insert'); ii = shot.get('_insert')
+        if ins and ii and ii[0] <= f < ii[1]: spec = dict(spec, **{kk: ins[kk] for kk in ('rig', 'view', 'path') if kk in ins})
         if not spec.get('path') or spec.get('view') != 'top' or not spec.get('rig'): continue
-        spec_path = spec['path'] if spec['path'] in getattr(mod, 'PATHS', {}) else kw.get('actual', 'wide_arc')
+        act = kw.get('actual', 'wide_arc')
+        src = act if isinstance(act, list) else mod.PATHS[spec['path'] if spec['path'] in getattr(mod, 'PATHS', {}) else act]
         n = size; u = n / 2 * 0.9 * float(kw.get('scale', 1.0)); c = n / 2
-        pts = [(c + px * u, c + py * u, 1.0) for px, py in mod.chaikin(mod.PATHS[spec_path])]
+        pts = [(c + px * u, c + py * u, 1.0) for px, py in mod.chaikin(src)]
         af = max(0.004, mod.smooth(mod.seg(t, 0.28, 0.78)))
         head = mod.sub_path(pts, 0, af); hx, hy = head[-1][0], head[-1][1]
         px, py = (head[-2][0], head[-2][1]) if len(head) > 1 else (hx, hy + 1)
@@ -404,7 +421,10 @@ def path_riders(base, k, f, e, t, size, ox, oy, kw):
         im = im.crop(bb); pad = int(max(im.size) * 0.75)                    # pivot = the drawing's centre
         sq = Image.new('RGBA', (2 * pad, 2 * pad), (0, 0, 0, 0)); sq.paste(im, (pad - im.width // 2, pad - im.height // 2))
         sq = sq.rotate(-ang, resample=Image.BICUBIC)
-        base.alpha_composite(sq, (int(ox + hx - pad), int(oy + hy - pad)))
+        px_, py_ = int(ox + hx - pad), int(oy + hy - pad)
+        if px_ <= -sq.width or py_ <= -sq.height or px_ >= W or py_ >= H: continue     # rider off the frame
+        if px_ < 0 or py_ < 0: sq = sq.crop((max(0, -px_), max(0, -py_), sq.width, sq.height)); px_, py_ = max(0, px_), max(0, py_)
+        base.alpha_composite(sq, (px_, py_))
 
 
 def camera_xform(img, c):
