@@ -58,3 +58,31 @@
   - the s10 close-up has a static mouth (Dale doesn't talk; it's voice-over);
   - the riders are specks in s15 (50-51 s, on `track_wide`);
   - the broom card's ghost hand is faint (wardrobe).
+
+---
+
+# Draft v3 (2026-11-21)
+
+`draft_v3.mp4` is 1080x1920, 30 fps, exactly 1921 frames, with `mix.wav` muxed in. **It is a draft. Not for publishing until the Director says so.** The voice-over is unchanged.
+
+- **Process:** the first video run through the new stage gates (`PIPELINE.md` › Stage gates). `tools/preflight.py` reports 0 errors and 3 noted warnings (s16). A storyboard was reviewed before the render.
+- **Fixed since v2:**
+  - s03/s16: the two-shot `x` values are set by the script, so the engine no longer moves anyone.
+  - s06: no face beats on the rear view.
+  - s03, s10, s16, s18: body changes on every beat.
+  - Symbol FX are 0.45-0.5 W and anchored to Dale (s16's "!" sits above the head).
+  - s15: on `track_med`, so the rider is readable.
+  - s05/s18: the far actor is scaled up in the OTS.
+  - The ghost hand on the broom card is stronger.
+- **Mechanism section, after two independent review rounds:**
+  - s12 is a closer chase that stays upright until the steer.
+  - s13 keeps the same framing across the cut, with a big yellow "nudge" arrow at the bars, then one continuous tip left and the turn.
+  - s12 was re-rendered with s13 and spliced in, because a static end of s12 failed the frozen-span check.
+- **Automatic QA** (`qa/engine_qa_draft_v3.md`): all hard checks pass. Frame stats pass 43 of 65 (a warning).
+- **Review:** round 1 FAIL (clarity 6, s12-s13 blocker). Round 2 FAIL (clarity 6: the lean rocked before the steer, and the arrow was small and red on red). Both blockers are fixed. There was no third review (QA caps it at 2 rounds).
+- **Open, NICE only:**
+  - the bars/front tyre never visibly turn: a new rig view is needed (BACKLOG wardrobe P2);
+  - the path_line kink is thin;
+  - the "I STEER WITH MY HIPS" sticker is unreadable at phone size;
+  - the ending two-shot is static for about 4 s;
+  - nothing on screen shows "steers right first" in the 0-4 s hook.

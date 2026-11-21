@@ -686,11 +686,22 @@
    "size": "medium",
    "camera": {
     "move": "glide",
-    "at_word": 0,
-    "to": {
-     "zoom": 1.35
-    },
-    "dur": 12
+    "glides": [
+     {
+      "at_word": 0,
+      "to": {
+       "zoom": 1.3
+      },
+      "dur": 12
+     },
+     {
+      "at_word": 19,
+      "to": {
+       "zoom": 1.45
+      },
+      "dur": 28
+     }
+    ]
    },
    "characters": [
     {
@@ -752,12 +763,12 @@
    "size": "close",
    "camera": {
     "move": "glide",
-    "zoom": 1.35,
+    "zoom": 1.45,
     "glides": [
      {
       "at_word": 15,
       "to": {
-       "zoom": 1.2,
+       "zoom": 1.25,
        "x": 0.45
       },
       "dur": 14
