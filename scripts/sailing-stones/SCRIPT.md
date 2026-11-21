@@ -1,11 +1,11 @@
-# The Rocks That Walk Across the Desert (script v1, 2026-11-21)
+# The Rocks That Walk Across the Desert (script v5, 2026-11-21)
 
 - **Slug:** `sailing-stones`
 - **Topic:** M4 in `scripts/TOPICS.md` v7, picked by the Director on 2026-11-21.
 - **Approval:** waiting for the Director. Do not voice before approval.
-- **Format:** story engine (`QA.md` › scripts). Line 1: two people doing something that looks wrong (hiding trackers in rocks and waiting for them to run away). The mocking rival is an original "alien rock tours" guide whose way wins at every stage in his own voice (sold out → "Aliens with leaf blowers." → doubled prices, "Aliens jump fences, genius." → "See you in ten years, nerds!"). 3 stages, each with a visual surprise: 1948 (a whirlwind passes over the rock and it doesn't budge) → the sixties (the fenced rock escapes) → 2011 (the trackers). The mechanism comes late (shots 22-28) with one analogy (a window shoving a fridge across a wet kitchen floor). The rival fails on screen: while he snores, an ice pane shoves a rock over his alien sign, and the last line is his shameless pivot: ICE TOURS, forty bucks.
+- **Format (v5, structural rewrite asked by the Director):** the cousins are on screen all the way through. All the history is one mocking rant by the rival ("Sixty years of scientists! Whirlwinds! Fences! Zero witnesses!"). The 3 stages are the cousins' own wait (month one → year one → year two), each with a setback and a taunt with a price rise ($20 → $30 → $40). The mechanism is ≤ 10 s with one analogy. Ending: the sign is flattened, the guide spits his coffee, then a loop: he now sells ice tours "and starts every one the same way:" → line 1.
 - **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2: 7/10, swipe at ~30 s (repeats), FAIL. v3: 7/10, swipe at ~25-30 s (history stages without the cousins, the alien joke three times), FAIL. v4 applies round 3's fixes (the cousins return at ~30 s, a new alien jab, a shorter 1948 stage) and merges the pond/ice lines (mechanism ~13 s); not re-reviewed.
-- **Length:** 231 words (+3 spoken in "nineteen forty-eight" and "twenty eleven"). Calibrated on video 1 (231 words gave 63.2 s of real voice), that is about 64-65 s.
+- **Length:** 233 words, no years said aloud. Calibrated on video 1 (231 words = 63.2 s real voice): about 63-64 s.
 
 ## Facts and sources (everything said in the voice-over)
 
@@ -26,14 +26,13 @@ Sources:
 | F1 | On a dry lake bed (Racetrack Playa) in Death Valley, rocks leave long trails across the surface. | S3, S1 | solid |
 | F2 | Some of the rocks are heavier than a man. | S8 (Karen ≈ 700-800 lb ≈ 320-360 kg); S3 ("hundreds of pounds") | solid. Said as "heavier than a man", no number. |
 | F3 | Before December 2013 nobody had ever seen one move. | S1 (title: "First Observation of Rocks in Motion"), S2, S3 | solid |
-| F4 | In 1948, geologists blamed whirlwinds; they never caught one pushing a rock. | S6 (USGS geologists McAllister and Agnew, 1948, proposed dust devils, perhaps with flooding); S1 (no one saw a rock move before 2013) | solid (secondary for the 1948 detail; names not used) |
-| F6 | In the sixties a geologist named thirty rocks and fenced some in; one escaped anyway; seven years of watching, zero witnesses. | S4 via S6, S7 (monitoring from May 1968, 30 stones named, stake corrals, positions recorded over 7 years; despite frequent visits the pair never saw one move) | solid. "One escaped" matches the narrowest account (one corralled stone left its corral). The geologist is unnamed and not drawn as the real person. |
-| F7 | In 2011 two cousins put GPS trackers in fifteen rocks and set up cameras (also a weather station, shown on screen), and expected to wait years (Richard Norris: "five or ten years"). | S1, S2 (winter 2011: 15 rocks with motion-activated GPS units built by Jim Norris; a weather station; several time-lapse cameras) | solid. "Hid GPS trackers inside fifteen rocks": the GPS rocks were rocks of the local type fitted with the units, placed on the playa with NPS permission. "Ten years" is from the quote. |
-| F8 | Two years later (December 2013) dozens of rocks started sliding right in front of them, in daylight. | S1 (the largest event involved >60 rocks on 20 Dec 2013), S2 ("we just happened to be there at the right time to see it happen in person"; ice breakup around noon on 21 Dec) | solid. ⚠ The paper dates the big event 20 Dec; Norris's account dates the breakup he saw 21 Dec. The VO gives no date. |
-| F9 | Rain made a shallow pond; overnight it froze into ice millimetres thick; the late-morning sun broke it into floating panes; a light breeze pushed the panes, which pushed the rocks, a few metres a minute. | S1 abstract (thin 3-6 mm "windowpane" ice on the playa pool, which melts in the late-morning sun and breaks up under light winds of ~4-5 m/s; floating panels tens of metres across push rocks at 2-5 m/min); S3 (winds about 3-5 m/s, ice < 5 mm); S2 | solid. "Huge" = panels tens of metres across. "A few metres a minute" = 2-5 m/min. |
+| F4 | "Sixty years of scientists! Whirlwinds! Fences! Zero witnesses!": 1948 whirlwind (dust devil) theory; late-1960s stake fences around named rocks; nobody saw a rock move until December 2013 (≈ 65 years after 1948). | S6, S7 (McAllister & Agnew 1948; Sharp & Carey from 1968); S1, S2, S3 (first observation 2013) | solid ("sixty years" counts 1948 to 2011, when the cousins start) |
+| F7 | Two cousins put GPS trackers in fifteen rocks and waited (it took two years). | S1, S2 (winter 2011: 15 rocks with motion-activated GPS units built by Jim Norris, a weather station, time-lapse cameras; "we expected to wait five or ten years") | solid. The stage setbacks (dust storm, baking summer, the fried egg) are generic comic beats, not claims about the real team, and are drawn as our own cousins. |
+| F8 | Year two, December: rain made an ankle-deep pond, it froze over one night, next morning their trackers registered motion and dozens of rocks slid in daylight. | S1 (pond from winter storms, up to ~7 cm deep in places; >60 rocks moved on 20 Dec 2013; GPS rocks moved up to 224 m in Dec 2013-Jan 2014), S2 (breakup around noon; seen in person) | solid. ⚠ "ankle-deep" = a few cm. "Next morning" = the breakup morning, not a claim about the exact night. |
+| F9 | The sun cracks the ice, thinner than a phone, into huge panes; a breeze pushes the panes; the panes push the rocks. | S1 abstract (3-6 mm "windowpane" ice; breaks up in the late-morning sun under light winds of ~4-5 m/s; panels tens of metres across push rocks at 2-5 m/min); S3 (ice < 5 mm) | solid. "Thinner than a phone": 3-6 mm vs a phone's ~7-9 mm. Speed shown on the GPS insert (3 m/min), not said. |
 | F10 | (Not said: the GPS rocks moved up to 224 m over Dec 2013-Jan 2014; it is rare.) | S1 | for the shot list only |
 
-Fiction, made up for the story: the "alien rock tours" guide, his tourists, his prices, his postcards, his van, his sign (and the rock that flattens it) and every line he says; the cousins' looks and the camp. The two cousins and the geologists are drawn as our own generic bean-heads, never as the real people, and none of them are named. No brands.
+Fiction, made up for the story: the cousins' setbacks (dust storm, summer heat, the fried egg) and the trackers "pinging" sound; the "alien rock tours" guide, his tourists, his prices, his postcards, his van, his sign (and the rock that flattens it) and every line he says; the cousins' looks and the camp. The two cousins and the geologists are drawn as our own generic bean-heads, never as the real people, and none of them are named. No brands.
 
 **Analogy check:** "a giant window sliding across a wet kitchen floor and shoving the fridge": the pane is big and thin (it catches the wind like a sail), the wet mud is slippery, the rock is heavy. Physically fair.
 
@@ -42,36 +41,33 @@ Fiction, made up for the story: the "alien rock tours" guide, his tourists, his 
 1. Two cousins hid GPS trackers inside fifteen rocks, then waited for the rocks to run away.
 2. You see, in a dry Death Valley lake,
 3. some rocks heavier than a man leave long trails,
-4. and nobody had seen one move.
-5. A local guide sells tours to see the culprits.
-6. "Rocks don't walk, pal," he laughs.
-7. "Aliens drag them at night.
-8. Twenty bucks a ticket."
+4. and nobody has ever seen one move.
+5. Next to the lake, a guide sells alien rock tours.
+6. "Sixty years of scientists!" he laughs.
+7. "Whirlwinds! Fences! Zero witnesses!
+8. It's aliens, pal. Twenty bucks."
 9. And his tours sell out.
-10. In 1948, geologists blamed whirlwinds.
-11. Never caught one in the act.
-12. "Whirlwinds?" snorts the guide. "Aliens with leaf blowers."
-13. In the sixties, a geologist named thirty rocks
-14. and fenced some in. One escaped anyway.
-15. Seven years. Zero witnesses. Then two cousins got stubborn.
-16. The guide doubles his prices. "Aliens jump fences, genius."
-17. In 2011, they set up trackers and cameras,
-18. ready to wait ten years.
-19. "See you in ten years, nerds!" yells the guide.
-20. Two years later, dozens of rocks start sliding
-21. right there, in broad daylight.
-22. Overnight, a shallow rain pond froze millimetres thick,
-23. and the morning sun cracked it into floating panes.
-24. A light breeze pushed the panes,
-25. and the panes pushed the rocks,
-26. a few metres a minute.
-27. Like a giant window sliding across a wet kitchen floor
-28. and shoving the fridge.
-29. And the guide? Snoring in his van,
-30. while an ice pane shoves a rock over his alien sign.
-31. Next day, his new sign reads: ICE TOURS. Forty bucks.
+10. Month one: the cousins stare at fifteen rocks.
+11. Nothing moves except a dust storm,
+12. which buries their camera.
+13. "Rocks one, nerds zero," says the guide. "Thirty bucks."
+14. Year one: summer bakes the lake bed.
+15. The cousins fry an egg on a rock.
+16. The rock doesn't even blink.
+17. "Maybe they're shy," snorts the guide. "Forty bucks."
+18. Year two, December: rain turns the lake bed into an ankle-deep pond,
+19. and one night it freezes over.
+20. Next morning, their trackers start pinging.
+21. Dozens of rocks are sliding, in broad daylight.
+22. The sun cracks the ice, thinner than a phone, into huge panes,
+23. a breeze pushes the panes, and the panes push the rocks.
+24. Like a giant window sliding across a wet kitchen floor and shoving the fridge.
+25. And the guide? Snoring in his van,
+26. while an ice pane shoves a rock straight through his alien sign.
+27. He wakes up, spits out his coffee,
+28. and now he sells ice tours, and starts every one the same way:
 
 ## Notes for voicing (after approval)
-- Say "1948" as "nineteen forty-eight" and "2011" as "twenty eleven".
-- Breaths after the guide's closing quotes (shots 6, 8, 12, 16, 19) and before "In 1948", "In the sixties", "So in 2011".
+- Breaths after the guide's closing quotes (shots 6-8, 13, 17) and before "Month one", "Year one", "Year two".
+- The last line ends on a colon and an upward, mid-sentence tone so the loop into line 1 sounds continuous.
 - The guide's lines in a smug, salesy tone if the voice allows; one narrator voice is fine.

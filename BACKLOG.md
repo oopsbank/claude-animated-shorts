@@ -35,7 +35,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P3 Foreground occluder props near the camera (window frames, logs, railings) for the engine to depth-test against.
 
 ## characters (`characters/`, bean-head cast)
-- [ ] P1 Video 2 (`sailing-stones`): hat `antennae` (a headband with two springy green antennae balls, for the guide and his tourists); arm_pose `sleep` (arms folded, head tipped, eyes shut) with a `seated` option for the van seat; held props `gps_box`, `screwdriver`, `tripod`, `mug`, `flashlight`, `cash_fan`, `camera`, `leaf_blower`, `binoculars`, `paintbrush`, `crate`. Cast ids and colours are in `scripts/sailing-stones/build.py` (CAST).
+- [ ] P1 Video 2 (`sailing-stones`): hat `antennae` (a headband with two springy green antennae balls, for the guide and his tourists); arm_pose `sleep` (arms folded, head tipped, eyes shut) with a `seated` option for the van seat; held props `gps_box`, `screwdriver`, `tripod`, `mug`, `flashlight`, `cash_fan`, `camera`, `binoculars`, `paintbrush`, `umbrella`, `fan`, `egg`, `flag`. Cast ids and colours are in `scripts/sailing-stones/build.py` (CAST).
 - [ ] P1 (for the engine) In `character()`:
   - `lid=` (0..1, with 0.5 = half-shut) so the engine can drop its blink overlay;
   - arm in-betweens (`arm_pose=('hang', 'point', 0.4)` or elbow/hand offsets) so gestures ease and overshoot;
@@ -50,7 +50,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - Stickman (`stickman/`) is **on hold**. Its open items (unreviewed hats/props/mouths, think-pose sliver, sleeve merge, head turn, toe-roll, run/sit) are in git history before 2026-11-21.
 
 ## fx (`fx/`)
-- [ ] P1 Video 2 (`sailing-stones`) new effects, same flat style: `ice_pane` (kw `stage`=water|freeze|panes|drift, `direction`, `view`=top|side: a pale cyan translucent sheet with white edge glints; drift slides the panes slowly), `ice_crack` (white crack lines racing across the sheet), `sliding_rock` (a dark rock sprite sliding along `path` with a groove trail drawn on behind it; `count`, `sprite`=rock|fridge, `path`='away' = shrinking toward the horizon), `gps_ping` (expanding radar rings + a dot), `zzz` (sleep Zs, ≥0.40 W), `year_badge` (a UI date tag in the top third: white Poppins Bold on a plum pill, kw `label`).
+- [ ] P1 Video 2 (`sailing-stones`) new effects, same flat style: `ice_pane` (kw `stage`=water|freeze|panes|drift, `direction`, `view`=top|side: a pale cyan translucent sheet with white edge glints; drift slides the panes slowly), `ice_crack` (white crack lines racing across the sheet), `dust_storm` (a brown wall of dust rolling across, then settling), `rain` (slanted streaks), `heat_haze` (wobbling shimmer bands), `sliding_rock` (a dark rock sprite sliding along `path` with a groove trail drawn on behind it; `count`, `sprite`=rock|fridge, `path`='away' = shrinking toward the horizon), `gps_ping` (expanding radar rings + a dot), `zzz` (sleep Zs, ≥0.40 W), `year_badge` (a UI date tag in the top third: white Poppins Bold on a plum pill, kw `label`).
 - [ ] P2 Polish from the cast review and review round 4:
   - glow_eyes: scale in from a slit, about 70% smaller, below the brows;
   - anger_vein and question_mark: ease the exit over 2-3 more frames;

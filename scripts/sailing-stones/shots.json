@@ -41,7 +41,7 @@
     "x": 0.42,
     "y": 0.72
    },
-   "note": "Opens as an extreme close-up of the hands pushing the GPS box into a hollowed rock (zoom 1.9), pulls out to the cousins at \"fifteen\", to the camp with the rock row at \"waited\": 3 picture changes, the first two before 3 s.",
+   "note": "Opens on an extreme close-up of hands pushing the GPS box into a hollowed rock (zoom 1.9); pull-out to the cousins at \"fifteen\", to the camp and the rock row at \"waited\". Matches the last shot for the loop.",
    "characters": [
     {
      "id": "kip",
@@ -151,11 +151,55 @@
     "direction": "right",
     "amount": 0.06
    },
-   "note": "Depth-layered: a rock and its trail in the near foreground, the cracked playa mid, the mountains far. No characters.",
-   "characters": [],
+   "note": "Depth-layered: a rock and its trail in the near foreground, the cousins small at their camp mid, the mountains far.",
+   "characters": [
+    {
+     "id": "kip",
+     "x": 0.46,
+     "beats": [
+      {
+       "prop": "mug",
+       "at_word": 0,
+       "arm_pose": [
+        "hold",
+        "hang"
+       ]
+      }
+     ],
+     "build": "adult",
+     "skin": "#f1c9a5",
+     "shirt": "#3a8fd1",
+     "pants": "#3b3b4f",
+     "hat": "beanie",
+     "hat_col": "#e8613c",
+     "seed": 21
+    },
+    {
+     "id": "lou",
+     "x": 0.56,
+     "beats": [
+      {
+       "at_word": 0,
+       "arm_pose": [
+        "chin",
+        "hang"
+       ]
+      }
+     ],
+     "build": "stout",
+     "skin": "#8d5a3b",
+     "shirt": "#f2b134",
+     "pants": "#2f4b3a",
+     "hat": "cap",
+     "hat_col": "#2f6b4f",
+     "glasses": true,
+     "seed": 22
+    }
+   ],
    "fx": [],
    "props": [
-    "rock_trail_hero"
+    "rock_trail_hero",
+    "tent"
    ]
   },
   {
@@ -222,7 +266,7 @@
   },
   {
    "id": "s04",
-   "text": "and nobody had seen one move.",
+   "text": "and nobody has ever seen one move.",
    "set": "playa",
    "cam": "rock_low",
    "light": "golden",
@@ -234,7 +278,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 3,
+      "at_word": 4,
       "to": {
        "zoom": 1.6
       },
@@ -250,7 +294,7 @@
      "x": 0.62,
      "y": 0.32,
      "size": 0.45,
-     "at_word": 5
+     "at_word": 6
     }
    ],
    "props": [
@@ -259,7 +303,7 @@
   },
   {
    "id": "s05",
-   "text": "A local guide sells tours to see the culprits.",
+   "text": "Next to the lake, a guide sells alien rock tours.",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
@@ -268,11 +312,11 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 4,
+      "at_word": 7,
       "to": {
        "zoom": 1.12
       },
-      "dur": 10
+      "dur": 8
      }
     ]
    },
@@ -292,7 +336,7 @@
       {
        "expr": "smug",
        "points_at": "tour_sign",
-       "at_word": 8,
+       "at_word": 7,
        "arm_pose": [
         "point",
         "hip"
@@ -310,6 +354,28 @@
       "collar"
      ],
      "seed": 23
+    },
+    {
+     "id": "kip",
+     "x": 0.22,
+     "beats": [
+      {
+       "prop": "gps_box",
+       "at_word": 0,
+       "arm_pose": [
+        "hold",
+        "hang"
+       ]
+      }
+     ],
+     "view": "rear",
+     "build": "adult",
+     "skin": "#f1c9a5",
+     "shirt": "#3a8fd1",
+     "pants": "#3b3b4f",
+     "hat": "beanie",
+     "hat_col": "#e8613c",
+     "seed": 21
     }
    ],
    "fx": [],
@@ -320,7 +386,7 @@
   },
   {
    "id": "s06",
-   "text": "\"Rocks don't walk, pal,\" he laughs.",
+   "text": "\"Sixty years of scientists!\" he laughs.",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
@@ -356,7 +422,7 @@
        "at_word": 0,
        "arm_pose": [
         "hip",
-        "hip"
+        "wave"
        ]
       },
       {
@@ -365,52 +431,7 @@
        "at_word": 5,
        "arm_pose": [
         "hip",
-        "wave"
-       ]
-      }
-     ],
-     "talk": true,
-     "build": "stout",
-     "skin": "#ffd9b8",
-     "shirt": "#7a3fb0",
-     "pants": "#2b2f3a",
-     "hat": "antennae",
-     "hat_col": "#6fd16a",
-     "moustache": "#5a3a22",
-     "outfit": [
-      "collar"
-     ],
-     "seed": 23
-    }
-   ],
-   "fx": [],
-   "props": [
-    "tour_sign:ALIEN ROCK TOURS (a green alien dragging a rock)"
-   ]
-  },
-  {
-   "id": "s07",
-   "text": "\"Aliens drag them at night.",
-   "set": "playa",
-   "cam": "overlook_med",
-   "light": "night",
-   "size": "medium",
-   "camera": {
-    "move": "push_in",
-    "amount": 0.06
-   },
-   "characters": [
-    {
-     "id": "guide",
-     "x": 0.42,
-     "beats": [
-      {
-       "prop": "flashlight",
-       "expr": "grin",
-       "at_word": 0,
-       "arm_pose": [
-        "hold",
-        "point"
+        "hip"
        ]
       }
      ],
@@ -430,20 +451,62 @@
    ],
    "fx": [
     {
-     "name": "glow_eyes",
-     "x": 0.76,
-     "y": 0.55,
-     "at_word": 1
+     "name": "year_badge",
+     "x": 0.5,
+     "y": 0.14,
+     "label": "1948-2011",
+     "at_word": 0
     }
    ],
    "props": [
-    "alien_cutout",
-    "tour_sign:ALIEN ROCK TOURS (a green alien dragging a rock)"
+    "tour_sign:ALIEN ROCK TOURS"
+   ]
+  },
+  {
+   "id": "s07",
+   "text": "\"Whirlwinds! Fences! Zero witnesses!",
+   "set": "inserts",
+   "cam": "logbook",
+   "light": "day",
+   "size": "close",
+   "grammar": [
+    "insert"
+   ],
+   "camera": {
+    "move": "push_in",
+    "amount": 0.08
+   },
+   "note": "Three quick flashback cards on the logbook page, one per word (sepia): a whirlwind sketch with \"1948\", a stake fence with named rocks, a big \"0\" in the witnesses column.",
+   "characters": [],
+   "fx": [
+    {
+     "name": "whoosh",
+     "x": 0.5,
+     "y": 0.4,
+     "angle": 90,
+     "at_word": 0
+    },
+    {
+     "name": "impact_star",
+     "x": 0.5,
+     "y": 0.5,
+     "at_word": 1
+    },
+    {
+     "name": "exclaim",
+     "x": 0.5,
+     "y": 0.4,
+     "size": 0.45,
+     "at_word": 2
+    }
+   ],
+   "props": [
+    "logbook:WHIRLWINDS? (1948) / FENCED ROCKS: DORIS, HUGO, PEARL (1960s) / WITNESSES: 0"
    ]
   },
   {
    "id": "s08",
-   "text": "Twenty bucks a ticket.\"",
+   "text": "It's aliens, pal. Twenty bucks.\"",
    "set": "inserts",
    "cam": "ticket",
    "light": "day",
@@ -461,7 +524,7 @@
      "name": "sparkle",
      "x": 0.5,
      "y": 0.45,
-     "at_word": 1
+     "at_word": 3
     }
    ],
    "props": [
@@ -594,347 +657,41 @@
   },
   {
    "id": "s10",
-   "text": "In 1948, geologists blamed whirlwinds.",
+   "text": "Month one: the cousins stare at fifteen rocks.",
    "set": "playa",
    "cam": "playa_med",
-   "light": "golden",
+   "light": "day",
    "size": "medium",
    "camera": {
-    "move": "push_in",
-    "amount": 0.05
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 4,
+      "to": {
+       "zoom": 1.15
+      },
+      "dur": 8
+     }
+    ]
    },
-   "grade": "sepia",
    "characters": [
     {
-     "id": "geo48",
+     "id": "kip",
      "x": 0.36,
      "beats": [
       {
+       "prop": "binoculars",
        "expr": "neutral",
        "at_word": 0,
        "arm_pose": [
         "hold",
-        "hang"
-       ]
-      },
-      {
-       "expr": "smug",
-       "at_word": 4,
-       "arm_pose": [
-        "hold",
-        "point"
-       ]
-      }
-     ],
-     "build": "adult",
-     "skin": "#e9b48a",
-     "shirt": "#c9a46a",
-     "pants": "#6b5a3e",
-     "hat": "cap",
-     "hat_col": "#8a6d3b",
-     "glasses": true,
-     "prop": "clipboard",
-     "seed": 24
-    }
-   ],
-   "fx": [
-    {
-     "name": "year_badge",
-     "x": 0.5,
-     "y": 0.14,
-     "label": "1948",
-     "at_word": 0
-    },
-    {
-     "name": "whoosh",
-     "x": 0.72,
-     "y": 0.6,
-     "angle": 90,
-     "at_word": 3
-    },
-    {
-     "name": "dust_puff",
-     "x": 0.72,
-     "y": 0.85,
-     "direction": "both",
-     "at_word": 4
-    }
-   ],
-   "props": []
-  },
-  {
-   "id": "s11",
-   "text": "Never caught one in the act.",
-   "set": "playa",
-   "cam": "rock_low",
-   "light": "golden",
-   "size": "medium",
-   "grade": "sepia",
-   "camera": {
-    "move": "shake",
-    "amount": 0.012
-   },
-   "note": "Visual surprise: a dust devil whirls right over the hero rock, blows the geologist's hat off, and the rock doesn't budge.",
-   "characters": [
-    {
-     "id": "geo48",
-     "x": 0.3,
-     "beats": [
-      {
-       "lean": -14,
-       "expr": "shock",
-       "at_word": 0,
-       "arm_pose": [
-        "hold",
-        "hang"
-       ]
-      },
-      {
-       "lean": 0,
-       "expr": "pained",
-       "at_word": 5,
-       "arm_pose": [
-        "hold",
-        "chin"
-       ]
-      }
-     ],
-     "build": "adult",
-     "skin": "#e9b48a",
-     "shirt": "#c9a46a",
-     "pants": "#6b5a3e",
-     "hat": "cap",
-     "hat_col": "#8a6d3b",
-     "glasses": true,
-     "prop": "clipboard",
-     "seed": 24
-    }
-   ],
-   "fx": [
-    {
-     "name": "whoosh",
-     "x": 0.6,
-     "y": 0.55,
-     "angle": 90,
-     "at_word": 0
-    },
-    {
-     "name": "dust_puff",
-     "x": 0.62,
-     "y": 0.86,
-     "direction": "both",
-     "at_word": 1
-    }
-   ],
-   "props": [
-    "rock_trail_hero"
-   ]
-  },
-  {
-   "id": "s12",
-   "text": "\"Whirlwinds?\" snorts the guide. \"Aliens with leaf blowers.\"",
-   "set": "playa",
-   "cam": "overlook_med",
-   "light": "day",
-   "size": "close",
-   "grammar": [
-    "dutch"
-   ],
-   "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 7,
-      "to": {
-       "zoom": 1.5,
-       "roll": -8
-      },
-      "dur": 6
-     }
-    ],
-    "zoom": 1.3,
-    "roll": -8
-   },
-   "characters": [
-    {
-     "id": "guide",
-     "x": 0.5,
-     "beats": [
-      {
-       "expr": "smug",
-       "at_word": 0,
-       "arm_pose": [
-        "hip",
-        "hip"
-       ]
-      },
-      {
-       "prop": "leaf_blower",
-       "expr": "grin",
-       "lean": 6,
-       "at_word": 7,
-       "arm_pose": [
-        "hold",
         "hold"
        ]
-      }
-     ],
-     "talk": true,
-     "build": "stout",
-     "skin": "#ffd9b8",
-     "shirt": "#7a3fb0",
-     "pants": "#2b2f3a",
-     "hat": "antennae",
-     "hat_col": "#6fd16a",
-     "moustache": "#5a3a22",
-     "outfit": [
-      "collar"
-     ],
-     "seed": 23
-    }
-   ],
-   "fx": [
-    {
-     "name": "whoosh",
-     "x": 0.7,
-     "y": 0.5,
-     "angle": 0,
-     "at_word": 7
-    }
-   ],
-   "props": [
-    "tour_sign:ALIEN ROCK TOURS"
-   ]
-  },
-  {
-   "id": "s13",
-   "text": "In the sixties, a geologist named thirty rocks",
-   "set": "inserts",
-   "cam": "logbook",
-   "light": "day",
-   "size": "close",
-   "grammar": [
-    "insert"
-   ],
-   "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 5,
-      "to": {
-       "zoom": 1.2,
-       "y": 0.55
       },
-      "dur": 10
-     }
-    ]
-   },
-   "note": "Prop insert: an old field logbook, a hand writes our own rock names (DORIS, HUGO, PEARL...) beside sketch maps.",
-   "characters": [],
-   "fx": [
-    {
-     "name": "year_badge",
-     "x": 0.5,
-     "y": 0.14,
-     "label": "1960s",
-     "at_word": 0
-    }
-   ],
-   "props": [
-    "logbook:ROCK NAMES 1-30 (DORIS, HUGO, PEARL, ...)"
-   ]
-  },
-  {
-   "id": "s14",
-   "text": "and fenced some in. One escaped anyway.",
-   "set": "playa",
-   "cam": "playa_top",
-   "light": "day",
-   "size": "medium",
-   "grammar": [
-    "top"
-   ],
-   "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 4,
-      "to": {
-       "zoom": 1.25
-      },
-      "dur": 10
-     }
-    ]
-   },
-   "note": "Top view: a ring of stakes around a rock; at \"escaped\" the rock sits outside the ring at the end of a fresh trail. Directions are only shown from above.",
-   "characters": [],
-   "fx": [
-    {
-     "name": "sliding_rock",
-     "x": 0.5,
-     "y": 0.5,
-     "path": [
-      [
-       0.5,
-       0.5
-      ],
-      [
-       0.72,
-       0.38
-      ]
-     ],
-     "dur": 1.2,
-     "at_word": 5
-    },
-    {
-     "name": "exclaim",
-     "x": 0.74,
-     "y": 0.28,
-     "size": 0.45,
-     "at_word": 6
-    }
-   ],
-   "props": [
-    "stake_corral"
-   ]
-  },
-  {
-   "id": "s15",
-   "text": "Seven years. Zero witnesses. Then two cousins got stubborn.",
-   "set": "playa",
-   "cam": "playa_med",
-   "light": "golden",
-   "size": "medium",
-   "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 2,
-      "to": {
-       "zoom": 1.2
-      },
-      "dur": 8
-     },
-     {
-      "at_word": 4,
-      "to": {
-       "zoom": 1.0,
-       "x": 0.6
-      },
-      "dur": 8
-     }
-    ]
-   },
-   "note": "The geologist slumps at \"Zero\"; the camera slides to the cousins arriving with crates at \"Then\" (they come back into the story here).",
-   "characters": [
-    {
-     "id": "kip",
-     "x": 0.78,
-     "beats": [
       {
-       "prop": "crate",
-       "expr": "smug",
-       "at_word": 4,
+       "expr": "nervous",
+       "lean": 6,
+       "at_word": 6,
        "arm_pose": [
         "hold",
         "hold"
@@ -950,39 +707,34 @@
      "seed": 21
     },
     {
-     "id": "geo70",
-     "x": 0.4,
+     "id": "lou",
+     "x": 0.66,
      "beats": [
       {
-       "prop": "binoculars",
        "expr": "neutral",
        "at_word": 0,
-       "arm_pose": [
-        "hold",
-        "hang"
-       ]
-      },
-      {
-       "expr": "pained",
-       "lean": 6,
-       "at_word": 2,
        "arm_pose": [
         "chin",
         "hang"
        ]
+      },
+      {
+       "expr": "stern",
+       "at_word": 7,
+       "arm_pose": [
+        "hip",
+        "hip"
+       ]
       }
      ],
-     "build": "adult",
-     "skin": "#d79a6c",
-     "shirt": "#d96a3a",
-     "pants": "#3e4a6b",
-     "hat": "beanie",
-     "hat_col": "#2f6fb3",
-     "moustache": "#3b2a1a",
-     "outfit": [
-      "stripes"
-     ],
-     "seed": 25
+     "build": "stout",
+     "skin": "#8d5a3b",
+     "shirt": "#f2b134",
+     "pants": "#2f4b3a",
+     "hat": "cap",
+     "hat_col": "#2f6b4f",
+     "glasses": true,
+     "seed": 22
     }
    ],
    "fx": [
@@ -990,27 +742,143 @@
      "name": "year_badge",
      "x": 0.5,
      "y": 0.14,
-     "label": "7 YEARS",
+     "label": "MONTH 1",
      "at_word": 0
     }
    ],
    "props": [
-    "rock_trail_hero",
-    "stake_corral"
+    "rock_row_15",
+    "folding_chairs",
+    "timelapse_cam"
    ]
   },
   {
-   "id": "s16",
-   "text": "The guide doubles his prices. \"Aliens jump fences, genius.\"",
+   "id": "s11",
+   "text": "Nothing moves except a dust storm,",
+   "set": "playa",
+   "cam": "playa_wide",
+   "light": "golden",
+   "size": "wide",
+   "camera": {
+    "move": "shake",
+    "amount": 0.012
+   },
+   "characters": [
+    {
+     "id": "kip",
+     "x": 0.4,
+     "beats": [
+      {
+       "expr": "neutral",
+       "at_word": 0,
+       "arm_pose": [
+        "hold",
+        "hold"
+       ]
+      },
+      {
+       "lean": -12,
+       "at_word": 5,
+       "arm_pose": [
+        "wave",
+        "wave"
+       ]
+      }
+     ],
+     "build": "adult",
+     "skin": "#f1c9a5",
+     "shirt": "#3a8fd1",
+     "pants": "#3b3b4f",
+     "hat": "beanie",
+     "hat_col": "#e8613c",
+     "seed": 21
+    },
+    {
+     "id": "lou",
+     "x": 0.58,
+     "beats": [
+      {
+       "lean": -14,
+       "at_word": 5,
+       "arm_pose": [
+        "hold",
+        "hold"
+       ]
+      }
+     ],
+     "build": "stout",
+     "skin": "#8d5a3b",
+     "shirt": "#f2b134",
+     "pants": "#2f4b3a",
+     "hat": "cap",
+     "hat_col": "#2f6b4f",
+     "glasses": true,
+     "seed": 22
+    }
+   ],
+   "fx": [
+    {
+     "name": "dust_storm",
+     "x": 0.5,
+     "y": 0.5,
+     "at_word": 2
+    }
+   ],
+   "props": [
+    "tent",
+    "timelapse_cam"
+   ]
+  },
+  {
+   "id": "s12",
+   "text": "which buries their camera.",
+   "set": "playa",
+   "cam": "rock_low",
+   "light": "golden",
+   "size": "close",
+   "grammar": [
+    "xcu"
+   ],
+   "camera": {
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 3,
+      "to": {
+       "zoom": 1.6,
+       "y": 0.7
+      },
+      "dur": 6
+     }
+    ],
+    "zoom": 1.2
+   },
+   "characters": [],
+   "fx": [
+    {
+     "name": "dust_puff",
+     "x": 0.5,
+     "y": 0.75,
+     "direction": "both",
+     "at_word": 1
+    }
+   ],
+   "props": [
+    "timelapse_cam_buried"
+   ]
+  },
+  {
+   "id": "s13",
+   "text": "\"Rocks one, nerds zero,\" says the guide. \"Thirty bucks.\"",
    "set": "playa",
    "cam": "overlook_med",
-   "light": "day",
+   "light": "golden",
    "size": "medium",
    "camera": {
     "move": "glide",
     "glides": [
      {
-      "at_word": 5,
+      "at_word": 7,
       "to": {
        "zoom": 1.3
       },
@@ -1021,23 +889,23 @@
    "characters": [
     {
      "id": "guide",
-     "x": 0.5,
+     "x": 0.56,
      "beats": [
       {
-       "prop": "paintbrush",
        "expr": "smug",
        "at_word": 0,
        "arm_pose": [
-        "hold",
-        "hang"
+        "point",
+        "hip"
        ]
       },
       {
+       "prop": "paintbrush",
        "expr": "grin",
-       "points_at": "tour_sign",
-       "at_word": 5,
+       "lean": -6,
+       "at_word": 7,
        "arm_pose": [
-        "point",
+        "hold",
         "hip"
        ]
       }
@@ -1059,55 +927,38 @@
    "fx": [
     {
      "name": "sparkle",
-     "x": 0.62,
+     "x": 0.66,
      "y": 0.3,
-     "at_word": 4
+     "at_word": 7
     }
    ],
    "props": [
-    "tour_sign:ALIEN ROCK TOURS $40 (\"$20\" crossed out)"
+    "tour_sign:ALIEN ROCK TOURS $30 (\"$20\" crossed out)"
    ]
   },
   {
-   "id": "s17",
-   "text": "In 2011, they set up trackers and cameras,",
+   "id": "s14",
+   "text": "Year one: summer bakes the lake bed.",
    "set": "playa",
    "cam": "playa_med",
-   "light": "day",
+   "light": "golden",
    "size": "medium",
    "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 5,
-      "to": {
-       "zoom": 1.15,
-       "x": 0.45
-      },
-      "dur": 8
-     }
-    ]
+    "move": "push_in",
+    "amount": 0.06
    },
+   "note": "Heat: the plate golden light plus a shimmer fx; both cousins wilt in their chairs.",
    "characters": [
     {
      "id": "kip",
      "x": 0.36,
      "beats": [
       {
-       "prop": "gps_box",
-       "expr": "neutral",
+       "expr": "pained",
+       "lean": 10,
        "at_word": 0,
        "arm_pose": [
-        "hold",
-        "hold"
-       ]
-      },
-      {
-       "expr": "smile",
-       "points_at": "timelapse_cam",
-       "at_word": 7,
-       "arm_pose": [
-        "point",
+        "hang",
         "hang"
        ]
       }
@@ -1122,15 +973,16 @@
     },
     {
      "id": "lou",
-     "x": 0.68,
+     "x": 0.66,
      "beats": [
       {
-       "prop": "tripod",
-       "expr": "neutral",
-       "at_word": 0,
+       "prop": "fan",
+       "expr": "pained",
+       "lean": -8,
+       "at_word": 2,
        "arm_pose": [
         "hold",
-        "hold"
+        "hang"
        ]
       }
      ],
@@ -1149,71 +1001,72 @@
      "name": "year_badge",
      "x": 0.5,
      "y": 0.14,
-     "label": "2011",
+     "label": "YEAR 1",
      "at_word": 0
     },
     {
-     "name": "gps_ping",
-     "x": 0.3,
-     "y": 0.78,
+     "name": "heat_haze",
+     "x": 0.5,
+     "y": 0.55,
+     "at_word": 2
+    },
+    {
+     "name": "sweat_drop",
+     "x": 0.36,
+     "y": 0.3,
+     "on": "kip",
      "size": 0.45,
-     "at_word": 5
+     "at_word": 3
     }
    ],
    "props": [
-    "tent",
-    "timelapse_cam",
-    "rock_row_15",
-    "weather_station"
+    "folding_chairs",
+    "tent"
    ]
   },
   {
-   "id": "s18",
-   "text": "ready to wait ten years.",
+   "id": "s15",
+   "text": "The cousins fry an egg on a rock.",
    "set": "playa",
-   "cam": "playa_wide",
-   "light": "golden",
-   "size": "wide",
+   "cam": "rock_low",
+   "light": "day",
+   "size": "close",
    "grammar": [
-    "depth"
+    "xcu"
    ],
    "camera": {
-    "move": "push_in",
-    "amount": 0.06
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 4,
+      "to": {
+       "zoom": 1.6,
+       "y": 0.75
+      },
+      "dur": 8
+     }
+    ],
+    "zoom": 1.2
    },
-   "note": "Depth-layered: weather-station mast near, the cousins on folding chairs mid, the playa and mountains far.",
    "characters": [
     {
-     "id": "kip",
-     "x": 0.42,
+     "id": "lou",
+     "x": 0.7,
      "beats": [
       {
-       "prop": "mug",
+       "prop": "egg",
        "expr": "smile",
        "at_word": 0,
        "arm_pose": [
         "hold",
         "hang"
        ]
-      }
-     ],
-     "build": "adult",
-     "skin": "#f1c9a5",
-     "shirt": "#3a8fd1",
-     "pants": "#3b3b4f",
-     "hat": "beanie",
-     "hat_col": "#e8613c",
-     "seed": 21
-    },
-    {
-     "id": "lou",
-     "x": 0.6,
-     "beats": [
+      },
       {
-       "expr": "neutral",
-       "at_word": 2,
+       "expr": "grin",
+       "at_word": 4,
        "arm_pose": [
-        "chin",
+        "point",
         "hang"
        ]
       }
@@ -1228,27 +1081,69 @@
      "seed": 22
     }
    ],
-   "fx": [],
+   "fx": [
+    {
+     "name": "sparkle",
+     "x": 0.42,
+     "y": 0.72,
+     "at_word": 7
+    }
+   ],
    "props": [
-    "weather_station",
-    "tent",
-    "folding_chairs"
+    "fried_egg_on_rock"
    ]
   },
   {
-   "id": "s19",
-   "text": "\"See you in ten years, nerds!\" yells the guide.",
+   "id": "s16",
+   "text": "The rock doesn't even blink.",
+   "set": "playa",
+   "cam": "playa_top",
+   "light": "day",
+   "size": "medium",
+   "grammar": [
+    "top"
+   ],
+   "camera": {
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 4,
+      "to": {
+       "zoom": 1.3
+      },
+      "dur": 6
+     }
+    ]
+   },
+   "note": "Gag beat: the hero rock with the fried egg on top, still; the time-lapse counter ticks hours in a corner (the gps_screen readout as an overlay).",
+   "characters": [],
+   "fx": [
+    {
+     "name": "question_mark",
+     "x": 0.6,
+     "y": 0.3,
+     "size": 0.45,
+     "at_word": 4
+    }
+   ],
+   "props": [
+    "fried_egg_on_rock"
+   ]
+  },
+  {
+   "id": "s17",
+   "text": "\"Maybe they're shy,\" snorts the guide. \"Forty bucks.\"",
    "set": "playa",
    "cam": "overlook_med",
-   "light": "golden",
+   "light": "day",
    "size": "medium",
    "camera": {
     "move": "glide",
     "glides": [
      {
-      "at_word": 5,
+      "at_word": 6,
       "to": {
-       "zoom": 1.2
+       "zoom": 1.3
       },
       "dur": 8
      }
@@ -1260,21 +1155,21 @@
      "x": 0.56,
      "beats": [
       {
-       "prop": "cash_fan",
-       "expr": "grin",
+       "expr": "smug",
        "at_word": 0,
        "arm_pose": [
-        "wave",
-        "hold"
+        "chin",
+        "hip"
        ]
       },
       {
-       "expr": "smug",
-       "lean": -8,
+       "prop": "cash_fan",
+       "expr": "grin",
+       "lean": -6,
        "at_word": 6,
        "arm_pose": [
         "wave",
-        "hip"
+        "hold"
        ]
       }
      ],
@@ -1292,24 +1187,31 @@
      "seed": 23
     }
    ],
-   "fx": [],
+   "fx": [
+    {
+     "name": "sparkle",
+     "x": 0.66,
+     "y": 0.3,
+     "at_word": 6
+    }
+   ],
    "props": [
-    "tour_van",
-    "tour_sign:ALIEN ROCK TOURS $40"
+    "tour_sign:ALIEN ROCK TOURS $40 (\"$30\" crossed out)",
+    "tour_van"
    ]
   },
   {
-   "id": "s20",
-   "text": "Two years later, dozens of rocks start sliding",
+   "id": "s18",
+   "text": "Year two, December: rain turns the lake bed into an ankle-deep pond,",
    "set": "playa",
    "cam": "playa_wide",
-   "light": "frost",
+   "light": "golden",
    "size": "wide",
    "camera": {
     "move": "glide",
     "glides": [
      {
-      "at_word": 7,
+      "at_word": 10,
       "to": {
        "zoom": 1.2
       },
@@ -1320,15 +1222,23 @@
    "characters": [
     {
      "id": "kip",
-     "x": 0.44,
+     "x": 0.42,
      "beats": [
       {
-       "prop": "mug",
+       "prop": "umbrella",
        "expr": "neutral",
        "at_word": 0,
        "arm_pose": [
         "hold",
         "hang"
+       ]
+      },
+      {
+       "expr": "shock",
+       "at_word": 10,
+       "arm_pose": [
+        "hold",
+        "point"
        ]
       }
      ],
@@ -1345,10 +1255,10 @@
      "x": 0.58,
      "beats": [
       {
-       "expr": "neutral",
-       "at_word": 0,
+       "expr": "smile",
+       "at_word": 3,
        "arm_pose": [
-        "chin",
+        "wave",
         "hang"
        ]
       }
@@ -1368,30 +1278,97 @@
      "name": "year_badge",
      "x": 0.5,
      "y": 0.14,
-     "label": "2 YEARS LATER",
+     "label": "YEAR 2 · DECEMBER",
      "at_word": 0
     },
     {
-     "name": "sliding_rock",
+     "name": "rain",
      "x": 0.5,
-     "y": 0.6,
-     "count": 5,
-     "path": "away",
-     "dur": 2.0,
-     "at_word": 7
+     "y": 0.4,
+     "at_word": 3
+    },
+    {
+     "name": "splash",
+     "x": 0.5,
+     "y": 0.86,
+     "at_word": 10
     }
    ],
    "props": [
-    "ice_sheet"
+    "pond_water"
+   ]
+  },
+  {
+   "id": "s19",
+   "text": "and one night it freezes over.",
+   "set": "playa",
+   "cam": "playa_top",
+   "light": "night",
+   "size": "medium",
+   "grammar": [
+    "metaphor"
+   ],
+   "camera": {
+    "move": "push_in",
+    "amount": 0.06
+   },
+   "characters": [],
+   "fx": [
+    {
+     "name": "ice_pane",
+     "x": 0.5,
+     "y": 0.5,
+     "stage": "freeze",
+     "at_word": 4
+    }
+   ],
+   "props": [
+    "rock_trail_hero"
+   ]
+  },
+  {
+   "id": "s20",
+   "text": "Next morning, their trackers start pinging.",
+   "set": "inserts",
+   "cam": "gps_screen",
+   "light": "day",
+   "size": "close",
+   "grammar": [
+    "pov"
+   ],
+   "camera": {
+    "move": "push_in",
+    "amount": 0.1
+   },
+   "note": "POV: the laptop map lights up, dots start drawing tracks, a readout \"MOVING 3 m/min\".",
+   "characters": [],
+   "fx": [
+    {
+     "name": "gps_ping",
+     "x": 0.45,
+     "y": 0.45,
+     "size": 0.5,
+     "at_word": 3
+    },
+    {
+     "name": "gps_ping",
+     "x": 0.62,
+     "y": 0.58,
+     "size": 0.45,
+     "at_word": 5
+    }
+   ],
+   "props": [
+    "gps_screen:TRACKS 03 07 11 · MOVING · 3 m/min"
    ]
   },
   {
    "id": "s21",
-   "text": "right there, in broad daylight.",
+   "text": "Dozens of rocks are sliding, in broad daylight.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
-   "size": "close",
+   "size": "medium",
    "grammar": [
     "depth"
    ],
@@ -1399,29 +1376,37 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 3,
+      "at_word": 6,
       "to": {
-       "zoom": 1.4,
+       "zoom": 1.35,
        "y": 0.42
       },
-      "dur": 6
+      "dur": 8
      }
-    ],
-    "zoom": 1.15
+    ]
    },
-   "note": "Depth-layered: cousins in the foreground facing camera, rocks sliding behind them with growing trails; punch-in on their shocked faces at \"broad\". Rocks slide away from camera (no left/right claim).",
+   "note": "Depth-layered: cousins in the foreground facing camera, rocks sliding behind them on the ice with growing trails, away from camera (no left/right claim); punch-in on their shocked faces at \"broad\".",
    "characters": [
     {
      "id": "kip",
      "x": 0.32,
      "beats": [
       {
+       "prop": "laptop",
        "expr": "shock",
-       "lean": -6,
        "at_word": 0,
        "arm_pose": [
-        "point",
+        "hold",
         "hang"
+       ]
+      },
+      {
+       "expr": "grin",
+       "lean": -6,
+       "at_word": 6,
+       "arm_pose": [
+        "point",
+        "hold"
        ]
       }
      ],
@@ -1439,7 +1424,15 @@
      "beats": [
       {
        "expr": "shock",
-       "at_word": 3,
+       "at_word": 0,
+       "arm_pose": [
+        "hang",
+        "hang"
+       ]
+      },
+      {
+       "expr": "grin",
+       "at_word": 6,
        "arm_pose": [
         "wave",
         "wave"
@@ -1461,9 +1454,9 @@
      "name": "sliding_rock",
      "x": 0.5,
      "y": 0.62,
-     "count": 3,
+     "count": 5,
      "path": "away",
-     "dur": 1.6,
+     "dur": 2.4,
      "at_word": 0
     },
     {
@@ -1471,7 +1464,7 @@
      "x": 0.5,
      "y": 0.2,
      "size": 0.45,
-     "at_word": 3
+     "at_word": 4
     }
    ],
    "props": [
@@ -1480,137 +1473,7 @@
   },
   {
    "id": "s22",
-   "text": "Overnight, a shallow rain pond froze millimetres thick,",
-   "set": "playa",
-   "cam": "rock_low",
-   "light": "frost",
-   "size": "close",
-   "grammar": [
-    "xcu"
-   ],
-   "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 6,
-      "to": {
-       "zoom": 1.7,
-       "y": 0.8
-      },
-      "dur": 10
-     }
-    ],
-    "zoom": 1.2
-   },
-   "note": "Extreme close-up at ground level: the thin ice edge against the rock, glinting.",
-   "characters": [],
-   "fx": [
-    {
-     "name": "splash",
-     "x": 0.5,
-     "y": 0.82,
-     "at_word": 3
-    },
-    {
-     "name": "ice_pane",
-     "x": 0.5,
-     "y": 0.8,
-     "stage": "freeze",
-     "view": "side",
-     "at_word": 5
-    },
-    {
-     "name": "sparkle",
-     "x": 0.5,
-     "y": 0.78,
-     "at_word": 6
-    }
-   ],
-   "props": [
-    "ice_sheet"
-   ]
-  },
-  {
-   "id": "s23",
-   "text": "and the morning sun cracked it into floating panes.",
-   "set": "playa",
-   "cam": "playa_top",
-   "light": "frost",
-   "size": "medium",
-   "grammar": [
-    "metaphor"
-   ],
-   "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 7,
-      "to": {
-       "zoom": 0.9
-      },
-      "dur": 12
-     }
-    ]
-   },
-   "characters": [],
-   "fx": [
-    {
-     "name": "ice_crack",
-     "x": 0.5,
-     "y": 0.5,
-     "at_word": 4
-    },
-    {
-     "name": "ice_pane",
-     "x": 0.5,
-     "y": 0.5,
-     "stage": "panes",
-     "at_word": 8
-    }
-   ],
-   "props": [
-    "ice_sheet"
-   ]
-  },
-  {
-   "id": "s24",
-   "text": "A light breeze pushed the panes,",
-   "set": "playa",
-   "cam": "playa_top",
-   "light": "frost",
-   "size": "medium",
-   "grammar": [
-    "metaphor"
-   ],
-   "camera": {
-    "move": "glide",
-    "direction": "right",
-    "amount": 0.05
-   },
-   "note": "Top view, so the drift direction is unambiguous: wind lines and panes all move screen-right.",
-   "characters": [],
-   "fx": [
-    {
-     "name": "whoosh",
-     "x": 0.3,
-     "y": 0.5,
-     "angle": 0,
-     "at_word": 2
-    },
-    {
-     "name": "ice_pane",
-     "x": 0.5,
-     "y": 0.5,
-     "stage": "drift",
-     "direction": "right",
-     "at_word": 3
-    }
-   ],
-   "props": []
-  },
-  {
-   "id": "s25",
-   "text": "and the panes pushed the rocks,",
+   "text": "The sun cracks the ice, thinner than a phone, into huge panes,",
    "set": "playa",
    "cam": "playa_top",
    "light": "frost",
@@ -1624,6 +1487,57 @@
      {
       "at_word": 5,
       "to": {
+       "zoom": 1.4
+      },
+      "dur": 8
+     },
+     {
+      "at_word": 10,
+      "to": {
+       "zoom": 0.9
+      },
+      "dur": 8
+     }
+    ]
+   },
+   "note": "Top view: crack lines race across the sheet; at \"thinner\" a punch-in on a pane edge with a phone silhouette beside it for scale; pull back to the panes.",
+   "characters": [],
+   "fx": [
+    {
+     "name": "ice_crack",
+     "x": 0.5,
+     "y": 0.5,
+     "at_word": 2
+    },
+    {
+     "name": "ice_pane",
+     "x": 0.5,
+     "y": 0.5,
+     "stage": "panes",
+     "at_word": 11
+    }
+   ],
+   "props": [
+    "ice_sheet",
+    "phone_silhouette"
+   ]
+  },
+  {
+   "id": "s23",
+   "text": "a breeze pushes the panes, and the panes push the rocks.",
+   "set": "playa",
+   "cam": "playa_top",
+   "light": "frost",
+   "size": "medium",
+   "grammar": [
+    "metaphor"
+   ],
+   "camera": {
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 10,
+      "to": {
        "zoom": 1.3,
        "x": 0.6
       },
@@ -1631,15 +1545,23 @@
      }
     ]
    },
+   "note": "Top view, so the drift direction is unambiguous: wind lines, panes and the rock all move screen-right; the trail draws on behind the rock.",
    "characters": [],
    "fx": [
+    {
+     "name": "whoosh",
+     "x": 0.3,
+     "y": 0.5,
+     "angle": 0,
+     "at_word": 1
+    },
     {
      "name": "ice_pane",
      "x": 0.5,
      "y": 0.5,
      "stage": "drift",
      "direction": "right",
-     "at_word": 0
+     "at_word": 2
     },
     {
      "name": "sliding_rock",
@@ -1657,43 +1579,14 @@
      ],
      "dur": 1.5,
      "trail": true,
-     "at_word": 3
+     "at_word": 8
     }
    ],
    "props": []
   },
   {
-   "id": "s26",
-   "text": "a few metres a minute.",
-   "set": "inserts",
-   "cam": "gps_screen",
-   "light": "day",
-   "size": "close",
-   "grammar": [
-    "pov"
-   ],
-   "camera": {
-    "move": "push_in",
-    "amount": 0.08
-   },
-   "note": "POV insert: the cousins' laptop/GPS screen, a dot drawing a track with a readout ticking \"3 m/min\".",
-   "characters": [],
-   "fx": [
-    {
-     "name": "gps_ping",
-     "x": 0.55,
-     "y": 0.5,
-     "size": 0.45,
-     "at_word": 1
-    }
-   ],
-   "props": [
-    "gps_screen:TRACK 07 · 3 m/min"
-   ]
-  },
-  {
-   "id": "s27",
-   "text": "Like a giant window sliding across a wet kitchen floor",
+   "id": "s24",
+   "text": "Like a giant window sliding across a wet kitchen floor and shoving the fridge.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1705,15 +1598,16 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 7,
+      "at_word": 11,
       "to": {
-       "zoom": 1.2
+       "zoom": 1.25,
+       "x": 0.4
       },
-      "dur": 10
+      "dur": 8
      }
     ]
    },
-   "note": "The analogy staged as a gag on the playa: a giant house window (glass in a frame) slides across the wet mud toward a fridge. Lou watches.",
+   "note": "The analogy staged as a gag on the playa: a giant house window slides across the wet mud and shoves a fridge; Lou watches deadpan, Kip films it.",
    "characters": [
     {
      "id": "lou",
@@ -1729,7 +1623,7 @@
       },
       {
        "expr": "smug",
-       "at_word": 7,
+       "at_word": 13,
        "arm_pose": [
         "chin",
         "hang"
@@ -1744,52 +1638,18 @@
      "hat_col": "#2f6b4f",
      "glasses": true,
      "seed": 22
-    }
-   ],
-   "fx": [
-    {
-     "name": "whoosh",
-     "x": 0.25,
-     "y": 0.55,
-     "angle": 0,
-     "at_word": 2
-    }
-   ],
-   "props": [
-    "giant_window",
-    "fridge"
-   ]
-  },
-  {
-   "id": "s28",
-   "text": "and shoving the fridge.",
-   "set": "playa",
-   "cam": "rock_low",
-   "light": "frost",
-   "size": "medium",
-   "camera": {
-    "move": "shake",
-    "amount": 0.01
-   },
-   "characters": [
+    },
     {
      "id": "kip",
-     "x": 0.72,
+     "x": 0.22,
      "beats": [
       {
-       "expr": "smile",
+       "prop": "camera",
+       "expr": "grin",
        "at_word": 0,
        "arm_pose": [
         "hold",
-        "hang"
-       ]
-      },
-      {
-       "expr": "grin",
-       "at_word": 3,
-       "arm_pose": [
-        "point",
-        "hang"
+        "hold"
        ]
       }
      ],
@@ -1804,20 +1664,36 @@
    ],
    "fx": [
     {
-     "name": "splash",
-     "x": 0.4,
-     "y": 0.85,
-     "at_word": 1
+     "name": "whoosh",
+     "x": 0.35,
+     "y": 0.55,
+     "angle": 0,
+     "at_word": 2
     },
     {
      "name": "sliding_rock",
-     "x": 0.4,
+     "x": 0.45,
      "y": 0.75,
      "sprite": "fridge",
-     "path": "away",
+     "path": [
+      [
+       0.45,
+       0.75
+      ],
+      [
+       0.6,
+       0.75
+      ]
+     ],
      "dur": 1.2,
      "trail": true,
-     "at_word": 1
+     "at_word": 11
+    },
+    {
+     "name": "splash",
+     "x": 0.45,
+     "y": 0.85,
+     "at_word": 11
     }
    ],
    "props": [
@@ -1826,7 +1702,7 @@
    ]
   },
   {
-   "id": "s29",
+   "id": "s25",
    "text": "And the guide? Snoring in his van,",
    "set": "playa",
    "cam": "overlook_med",
@@ -1845,7 +1721,6 @@
      }
     ]
    },
-   "note": "The van with the guide asleep in the driver's seat (sleep pose), the sun high.",
    "characters": [
     {
      "id": "guide",
@@ -1885,12 +1760,12 @@
    ],
    "props": [
     "tour_van",
-    "tour_sign:ALIEN ROCK TOURS · NIGHT ONLY"
+    "tour_sign:ALIEN ROCK TOURS $40 · NIGHT ONLY"
    ]
   },
   {
-   "id": "s30",
-   "text": "while an ice pane shoves a rock over his alien sign.",
+   "id": "s26",
+   "text": "while an ice pane shoves a rock straight through his alien sign.",
    "set": "playa",
    "cam": "rock_low",
    "light": "frost",
@@ -1915,7 +1790,7 @@
      }
     ]
    },
-   "note": "Spectacle: low angle, an ice pane drives the hero rock into the sign standing on the playa; at \"over\" the sign tips flat with a crack and a splash, the alien cut-out face-down in the water. Seen from the low side, the rock moves away from camera (no left/right claim). Physically: slow (a few m/min), so the shot is the topple moment; the sign is our fiction.",
+   "note": "Spectacle: low angle, an ice pane drives the hero rock into the sign standing on the playa; at \"through\" the sign splits and falls flat with a splash, the alien cut-out face-down in the water. The rock moves away from camera (no left/right claim). The push is slow and true; the sign is our fiction.",
    "characters": [],
    "fx": [
     {
@@ -1939,55 +1814,43 @@
      "name": "impact_star",
      "x": 0.55,
      "y": 0.55,
-     "at_word": 7
+     "at_word": 8
     },
     {
      "name": "splash",
      "x": 0.55,
      "y": 0.82,
-     "at_word": 10
+     "at_word": 11
     }
    ],
    "props": [
-    "tour_sign_free:ALIEN ROCK TOURS · NIGHT ONLY (a separate sprite that can topple)",
+    "tour_sign_free:ALIEN ROCK TOURS $40 · NIGHT ONLY (a separate sprite that splits and topples)",
     "alien_cutout"
    ]
   },
   {
-   "id": "s31",
-   "text": "Next day, his new sign reads: ICE TOURS. Forty bucks.",
+   "id": "s27",
+   "text": "He wakes up, spits out his coffee,",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
-   "size": "medium",
+   "size": "close",
+   "grammar": [
+    "dutch"
+   ],
    "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 6,
-      "to": {
-       "zoom": 1.2
-      },
-      "dur": 6
-     },
-     {
-      "at_word": 9,
-      "to": {
-       "zoom": 1.4,
-       "x": 0.55
-      },
-      "dur": 6
-     }
-    ]
+    "move": "shake",
+    "amount": 0.015,
+    "roll": -6,
+    "zoom": 1.4
    },
-   "note": "Final gag, no fade: the guide, unbothered, paints over the dented sign: ALIEN crossed out, ICE TOURS $40, a snowflake doodle. Punch-in on his grin at \"bucks\".",
    "characters": [
     {
      "id": "guide",
-     "x": 0.4,
+     "x": 0.5,
      "beats": [
       {
-       "prop": "paintbrush",
+       "prop": "mug",
        "expr": "neutral",
        "at_word": 0,
        "arm_pose": [
@@ -1996,25 +1859,16 @@
        ]
       },
       {
-       "expr": "smug",
-       "points_at": "tour_sign",
-       "at_word": 6,
+       "expr": "shock",
+       "lean": 8,
+       "at_word": 3,
        "arm_pose": [
-        "point",
-        "hold"
-       ]
-      },
-      {
-       "expr": "grin",
-       "lean": -6,
-       "at_word": 9,
-       "arm_pose": [
-        "hip",
-        "hold"
+        "hold",
+        "wave"
        ]
       }
      ],
-     "talk": false,
+     "seated": "van",
      "build": "stout",
      "skin": "#ffd9b8",
      "shirt": "#7a3fb0",
@@ -2030,15 +1884,125 @@
    ],
    "fx": [
     {
-     "name": "sparkle",
-     "x": 0.62,
-     "y": 0.32,
+     "name": "splash",
+     "x": 0.42,
+     "y": 0.42,
+     "at_word": 3
+    },
+    {
+     "name": "exclaim",
+     "x": 0.58,
+     "y": 0.22,
+     "size": 0.45,
      "at_word": 6
     }
    ],
    "props": [
-    "tour_sign:ICE TOURS $40 (ALIEN crossed out, dented)",
     "tour_van"
+   ]
+  },
+  {
+   "id": "s28",
+   "text": "and now he sells ice tours, and starts every one the same way:",
+   "set": "playa",
+   "cam": "playa_med",
+   "light": "day",
+   "size": "medium",
+   "camera": {
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 4,
+      "to": {
+       "zoom": 1.15
+      },
+      "dur": 6
+     },
+     {
+      "at_word": 7,
+      "to": {
+       "zoom": 1.9,
+       "x": 0.42,
+       "y": 0.72
+      },
+      "dur": 10
+     }
+    ]
+   },
+   "note": "Loop: the guide, in a new ICE TOURS cap-with-antennae, leads tourists to the rock row; at \"starts\" the camera pushes to the same XCU as shot 1 (a hand pushing a GPS box into a rock) so the last frame matches the first.",
+   "characters": [
+    {
+     "id": "guide",
+     "x": 0.4,
+     "beats": [
+      {
+       "prop": "flag",
+       "expr": "grin",
+       "at_word": 0,
+       "arm_pose": [
+        "point",
+        "hold"
+       ]
+      },
+      {
+       "prop": "gps_box",
+       "expr": "smug",
+       "lean": 8,
+       "at_word": 7,
+       "arm_pose": [
+        "hold",
+        "hold"
+       ]
+      }
+     ],
+     "build": "stout",
+     "skin": "#ffd9b8",
+     "shirt": "#7a3fb0",
+     "pants": "#2b2f3a",
+     "hat": "antennae",
+     "hat_col": "#6fd16a",
+     "moustache": "#5a3a22",
+     "outfit": [
+      "collar"
+     ],
+     "seed": 23
+    },
+    {
+     "id": "tour1",
+     "x": 0.7,
+     "beats": [
+      {
+       "prop": "camera",
+       "expr": "smile",
+       "at_word": 0,
+       "arm_pose": [
+        "hold",
+        "hang"
+       ]
+      }
+     ],
+     "scale": 0.9,
+     "build": "adult",
+     "skin": "#f6d2b0",
+     "shirt": "#3fb37f",
+     "pants": "#2f3f6b",
+     "hat": "antennae",
+     "hat_col": "#6fd16a",
+     "seed": 31
+    }
+   ],
+   "fx": [
+    {
+     "name": "sparkle",
+     "x": 0.6,
+     "y": 0.3,
+     "at_word": 4
+    }
+   ],
+   "props": [
+    "tour_sign:ICE TOURS $40 (ALIEN crossed out)",
+    "rock_row_15",
+    "gps_box"
    ]
   }
  ]
