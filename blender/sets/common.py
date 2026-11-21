@@ -613,17 +613,20 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
         co = camera(c['loc'], c['target'], c.get('lens', 27), c.get('roll', 0))
         if c.get('setup'): c['setup']()
         if a.depth:
+            if c.get('per_light'): c['per_light'](lights[0])
             metric_depth(co, os.path.join(out, f'{set_name}__{cn}__depth.png'), out, set_name, cn); continue
         cam = co.data; cam.dof.use_dof = bool(c.get('fstop'))
         cam.dof.focus_distance = (co.location - (Vector(c['stand']) + Vector((0, 0, 1.2)))).length
         cam.dof.aperture_fstop = c.get('fstop') or 2.0
         ink(a.pct, c.get('ink_fade', INK_FADE), c.get('ink_thick', INK_THICK), rng=c.get('ink_range', INK_RANGE), border=INK_BORDER, far_k=INK_FAR_K)
         dpath = os.path.join(tmp, f'{cn}_depth.png')
-        if not (a.repost and os.path.exists(dpath)): _depth_pass(dpath, *c.get('haze_range', haze_range))
+        if not c.get('per_light') and not (a.repost and os.path.exists(dpath)): _depth_pass(dpath, *c.get('haze_range', haze_range))
         for ln in lights:
             ov = dict(LIGHTS[ln] or {}); ov.update(c.get('light_overrides', {}).get(ln, {}))
             p, sun = apply_light(ln, co, ov)
-            if c.get('per_light'): c['per_light'](ln)
+            if c.get('per_light'):   # the scene changes per light (props shown/hidden): the haze depth must match it
+                c['per_light'](ln); dpath = os.path.join(tmp, f'{cn}_{ln}_depth.png')
+                if not (a.repost and os.path.exists(dpath)): _depth_pass(dpath, *c.get('haze_range', haze_range))
             base = f'{set_name}__{cn}__{ln}'
             raw = os.path.join(tmp, base + '_raw.png'); sc().render.filepath = raw
             t = time.time()
