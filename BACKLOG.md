@@ -11,6 +11,8 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P2 Re-review `scripts/bike-countersteer` clarity after the round-4 fixes (a fresh reviewer, the QA scripts criteria).
 - [ ] P2 When `audio/` produces `words.json`, check that the beat `at_word` indexes still match the spoken words (the punctuation-split rule is in the `shots.json` note).
 
+- [ ] P1 `sailing-stones` shots.json, from sets: the three alien_cam panels are separate plates. Set `"plate": "inserts__alien_cam__day__rock_racing_league.png"` on s12 and `"plate": "inserts__alien_cam__day__alien_air_hockey_final.png"` on s16 (s09 uses the default `inserts__alien_cam__day.png` = leaf_blower_aliens). The playa targets are `rock`, `tour_sign`, `camp_rocks` and `tent`.
+
 ## sets (`blender/sets/`)
 - [x] P1 Refactor `blender/scripts/scene2.py` into `blender/sets/village/build.py`: cams `wide`, `well_close`, `street_low`, and lights `day`, `golden`, `night`, with plates and JSON. (Plus `square_med` and `street_med`. Review round 3: colour 7, lighting 5, ink 7, depth 6, composition 6, reads 7. Round-4 fixes were rendered, but the round-4 review did not run because of the usage limit. **Next: review the round-4 plates.**)
 - [ ] P1 New set `harbour` (Quaternius ships pack + water + pier): cams `pier_wide`, `deck`, and lights `day`, `storm`, `night`.
@@ -81,6 +83,11 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [x] P2 Bike rigs wired: `bikes.ride()` with eased lean/body_lean/bike_lean, knee_out, auto countersteer, bean `mouth=`/`blink=` (shots 6-9 test passes QA). Remaining: `contact_shift`, `points_at`, `broom_*`, `path` (s09 top-view arc), walk via `walk.py`.
 - [ ] P2 Character tint from the plate JSON `tint`, plus a rim light from `light_dir`.
 - [~] P1 (for `bike-countersteer`, 650c8f7: arm_pose rider-side, lean/body_lean, prop beats, insert, glide/follow/pan/tilt/shake/hold done; `rig`/`view`/`bike_lean`/`knee_out`/`contact_shift`/`points_at`/`broom_*`/`path` wait for wardrobe) Support the new `shots.json` fields: `rig` + `view` (bike composites), `insert` (a cut-in of another cam/rig from `at_word` to `until_word`), `camera.at_word`, `contact_shift`, `lean`/`body_lean`/`bike_lean`, `points_at`. Left/right are always the rider's own (see the note in `shots.json`).
+
+- [ ] P1 Video 2 (`sailing-stones`) sprites the engine composites (they are NOT on the plates; sets built the plates without them):
+  - Ready in `blender/sets/inserts/sprites/`: `price_card_30/40/50.png` (flip in the corner of the alien_cam plates; each plate JSON has `price_card_xy`), `tour_sign_ice.png` and `tour_sign_ice_strike.png` (ALIEN crossed out; s22 on `playa_med` day), `tour_sign_free.png` (the NIGHT ONLY sign that splits and topples, s20 on `rock_low` frost).
+  - Still to draw (characters or engine): `googly_eyes` on the hero rock (anchor at the plate `targets.rock`; that rock becomes Gary in s02/s11/s20), `gary_buried` (one eye in dust, s08), `tent_floating` (s10), `cooler` + `cooler_trophy` (s11, s22), `flood_water` (fx `flash_flood`), `fridge_silhouette` (s03) and `phone_silhouette` (s17) scale cues, `air_hockey_overlay` (s18), `livestream_counter` (s14; the gps_screen plate JSON has `counter_xy`), `flying_bills` (s21).
+  - Baked into the plates: tour van and sign (overlook_med; day/golden = NIGHT ONLY · $20, night = SOLD OUT, van lamps lit at night), FINAL FAIL · LIVE banner (overlook_med frost), tent, time-lapse camera, weather mast, chairs, cooler, lantern and the 15-rock row (playa_med), hero rock + trail (playa_wide, rock_low, playa_top), ice sheet (every frost plate), pond water (playa_top night).
 
 ## audio (`audio/`)
 - [x] P1 (for `bike-countersteer`) Voice-over: the 18 numbered lines in `scripts/bike-countersteer/SCRIPT.md` › Voice-over (231 words, aim for about 62 s).
