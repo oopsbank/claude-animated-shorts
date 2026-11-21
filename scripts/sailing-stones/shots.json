@@ -160,7 +160,7 @@
   },
   {
    "id": "s03",
-   "text": "rocks heavier than a man leave long trails,",
+   "text": "some rocks heavier than a man leave long trails,",
    "set": "playa",
    "cam": "rock_low",
    "light": "day",
@@ -180,7 +180,7 @@
       {
        "lean": 18,
        "expr": "pained",
-       "at_word": 0,
+       "at_word": 1,
        "arm_pose": [
         "hold",
         "hold"
@@ -189,7 +189,7 @@
       {
        "lean": 0,
        "expr": "nervous",
-       "at_word": 7,
+       "at_word": 8,
        "arm_pose": [
         "hip",
         "hang"
@@ -213,7 +213,7 @@
      "y": 0.3,
      "on": "lou",
      "size": 0.45,
-     "at_word": 1
+     "at_word": 2
     }
    ],
    "props": [
@@ -665,15 +665,14 @@
   },
   {
    "id": "s11",
-   "text": "and later someone aimed a plane propeller at the rocks. Nothing conclusive.",
+   "text": "or maybe floods. Nobody could prove either one.",
    "set": "playa",
    "cam": "playa_med",
    "light": "golden",
    "size": "medium",
    "grade": "sepia",
    "camera": {
-    "move": "shake",
-    "amount": 0.012,
+    "move": "glide",
     "glides": [
      {
       "at_word": 1,
@@ -683,38 +682,36 @@
       "dur": 8
      },
      {
-      "at_word": 10,
+      "at_word": 3,
       "to": {
-       "zoom": 1.35,
-       "x": 0.7
+       "zoom": 1.3,
+       "x": 0.4
       },
       "dur": 8
      }
     ]
    },
-   "note": "Two framings: the propeller rig blasting at a rock and the hat flying off the geologist, then a punch-in on the rock that hasn't moved at \"Nothing\".",
+   "note": "Two framings: a second geologist splashes in with a bucket and a \"FLOODS!\" placard as the playa floods ankle-deep, then a punch-in on both shrugging at \"Nobody\".",
    "characters": [
     {
      "id": "geo48",
      "x": 0.3,
      "beats": [
       {
-       "lean": -14,
-       "expr": "shock",
-       "hat": null,
-       "at_word": 1,
+       "expr": "smug",
+       "at_word": 0,
        "arm_pose": [
         "hold",
-        "hang"
+        "point"
        ]
       },
       {
        "lean": 0,
        "expr": "pained",
-       "at_word": 10,
+       "at_word": 3,
        "arm_pose": [
-        "hold",
-        "chin"
+        "hip",
+        "hip"
        ]
       }
      ],
@@ -727,26 +724,56 @@
      "glasses": true,
      "prop": "clipboard",
      "seed": 24
+    },
+    {
+     "id": "geo70",
+     "x": 0.68,
+     "beats": [
+      {
+       "prop": "bucket",
+       "expr": "grin",
+       "at_word": 2,
+       "arm_pose": [
+        "hold",
+        "wave"
+       ]
+      },
+      {
+       "expr": "nervous",
+       "at_word": 3,
+       "arm_pose": [
+        "chin",
+        "hang"
+       ]
+      }
+     ],
+     "hat": "cap",
+     "hat_col": "#5a6b3a",
+     "outfit": [],
+     "moustache": null,
+     "seed": 27,
+     "build": "adult",
+     "skin": "#d79a6c",
+     "shirt": "#d96a3a",
+     "pants": "#3e4a6b"
     }
    ],
    "fx": [
     {
-     "name": "speed_lines",
-     "x": 0.45,
-     "y": 0.55,
-     "angle": 0,
-     "at_word": 6
+     "name": "splash",
+     "x": 0.68,
+     "y": 0.86,
+     "at_word": 2
     },
     {
-     "name": "dust_puff",
-     "x": 0.72,
-     "y": 0.86,
-     "direction": "right",
-     "at_word": 9
+     "name": "question_mark",
+     "x": 0.5,
+     "y": 0.25,
+     "size": 0.45,
+     "at_word": 6
     }
    ],
    "props": [
-    "propeller_cart",
     "rock_trail_hero"
    ]
   },
@@ -790,7 +817,7 @@
   },
   {
    "id": "s13",
-   "text": "and fenced some in with stakes. Some escaped anyway,",
+   "text": "and fenced some in with stakes. One escaped anyway,",
    "set": "playa",
    "cam": "playa_top",
    "light": "day",
@@ -1802,7 +1829,7 @@
   },
   {
    "id": "s29",
-   "text": "And the guide? Asleep in his van.",
+   "text": "And the guide? Snoring in his van.",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
