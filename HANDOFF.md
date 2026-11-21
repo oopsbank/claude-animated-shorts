@@ -1,74 +1,56 @@
 # Producer handoff (read this first)
 
-This is the state of the project, written by the first Producer session before it was archived on 2026-11-21. A new Producer session starts by reading this file, then `PIPELINE.md`, `QA.md`, `LESSONS.md` and `BACKLOG.md`.
+The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, `LESSONS.md` and `BACKLOG.md`. Updated 2026-11-21.
 
-## The user (the Director)
-- **Reply in Vietnamese**, briefly and plainly. Keep code, docs and commits in English.
-- **Videos are in English**, for a global audience.
-- **Target quality: the "Ricks Clips" YouTube channel style.** That means 2D bean-head cartoon characters over bright 3D toon sets, daylight by default, readable joke signage, and medium/close framing. The measured targets are in `references/reports/recent_style_2026-11.md` and `references/reports/characters.md`.
-- Never copy their characters, scripts or shots. Share the style only, and never name the channel in our videos.
-- **Main cast: our own bean-head characters** (`characters/`). The stickman (`stickman/`) is **on hold**, reserved for later. Its anatomy and animation rules (`stickman/DRAWING_RULES.md` 1-29) still apply to every character.
-- **Captions: dynamic word-by-word captions are ON** (decided 2026-11-20; spec in `PIPELINE.md` › Captions).
-- The user waived script approval for the first video. **Always ask before publishing.**
-- The user cares about usage and cost, and asked to keep sessions lean (see "How to run the crew").
+## The Director (the user)
+- **Reply in Vietnamese**, briefly and plainly. Keep code, docs and commits in English. **Videos are in English.**
+- **Style target:** 2D bean-head cartoon characters over bright 3D toon sets, daylight by default, readable joke signage, medium/close framing. The numbers are in `references/reports/recent_style_2026-11.md` and `characters.md`. A second channel in the genre is studied in `segment_zero_2026-11.md`. Share the style only: never copy scripts, characters, shots or titles, and never name another channel in a video.
+- **Cast:** our own bean-heads (`characters/`). The stickman is on hold, but its anatomy and animation rules (`stickman/DRAWING_RULES.md`) apply to every character.
+- **Captions:** dynamic, word by word (`PIPELINE.md` › Captions).
+- **Lean crew, nothing extra and nothing missing:** see "How to run the crew" below. **No scheduled tasks** unless asked. The nightly 1st AD task (`trig_01RG5qNmG98WYrpCXKiSLCjq`) is disabled.
+- **Always ask before publishing.** Upload-Post was removed on 2026-11-21: the Director posts by hand, and we prepare the files and the text.
 
-## First video: "Why Your Bike Steers Backwards First" (countersteering)
-- Script: `scripts/bike-countersteer/` (SCRIPT.md, shots.json v2; the voice-over is locked).
-- Audio: `audio/bike-countersteer/`. The voice is ElevenLabs "Liam"; 64.033 s = 1921 frames; `mix.wav` at -14 LUFS.
-- **Latest: `videos/bike-countersteer/draft_v2.mp4`.** It has captions, the brightness grade, the fixed rear-view motorbike, the broom insert and countersteer cue arrows. qa.py passes every hard check, and frame stats pass 43/65. The independent full-cut review scored clarity 5; its two blockers were fixed but not re-reviewed.
-- **Status: waiting for the Director's decision on draft v2:** publish, polish to v3, or other feedback.
-- Nice-to-haves for v3 (see `videos/bike-countersteer/NOTES.md`):
-  - s18: Dale is small behind the near instructor;
-  - s15: the riders are specks on track_wide;
-  - the "?" at 36 s is small;
-  - the ghost hand on the broom card is faint.
-- **Final file to post:** `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4` (draft v4 with the cover as the first 3 frames; 1924 frames, 64.14 s) and `thumbnail.png`. Follow `PIPELINE.md` › Publishing.
-- To publish, propose a title, description and hashtags, then **ask the user** which platforms and when. Upload-Post was removed at the Director's request on 2026-11-21: the Director posts by hand, and we prepare the files and the text. Nothing has been published yet.
+## Status
+- **Video 1, "Why Your Bike Steers Backwards First": final, not yet posted.**
+  - File to post: `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4` (draft v4 with the thumbnail as the first 3 frames, 64.14 s).
+  - Also: `thumbnail.png`. The proposed title and captions are in `videos/bike-countersteer/NOTES.md`.
+  - The draft history and open nice-to-haves are in the same NOTES file.
+- **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session.
 
 ## Accounts and limits
-- **ElevenLabs:** connected through the proxy (`api.elevenlabs.io`). The user replaced the key on 2026-11-19; it is the FREE tier: 10,000 characters a month, 1,251 used. One video is about 1,250 characters. Generate the real voice-over **once** per script.
-- **Claude usage: a shared 5-hour limit across ALL sessions.** Six parallel sessions hit it within hours and stalled for about 5 h each time.
+- **ElevenLabs** (proxy-injected, `api.elevenlabs.io`): free tier, 10,000 characters a month; 1,251 were used in November. One video is about 1,250 characters. Voice each script **once**.
+- **Claude usage:** one 5-hour limit is shared by **all** sessions. Six parallel sessions hit it within hours and stalled for about 5 h each time.
 - **Environment `claude-animated-shorts`:**
-  - The setup script installs `.venv` (bpy 5.3, Pillow, numpy, yt-dlp) and clones the CC0 packs into `packs/` (KayKit x3, quaternius-showcase).
-  - Allowed hosts: YouTube (`www.youtube.com`, `i.ytimg.com`), Poly Haven (`api.polyhaven.com`, `dl.polyhaven.org`), `kenney.nl` (it blocks automated clients anyway).
-  - There is no GPU; plates are CPU stills, which is fine.
+  - The setup script installs `.venv` (bpy 5.3, Pillow, numpy, yt-dlp) and clones the CC0 packs into `packs/`.
+  - Allowed hosts: YouTube (`www.youtube.com`, `i.ytimg.com`), Poly Haven, `kenney.nl`.
+  - No GPU; CPU renders are fine.
 
-## How to run the crew (lessons from the first video)
-- **Director's rule (2026-11-21): lean, nothing extra and nothing missing.**
-  - The Producer does small fixes in any area itself: shot-list edits, parameters, one-line engine/asset tweaks. It records each one in the commit and the area's notes.
-  - A specialist session is opened only for a full area job: a new script, a new set, a new character/rig/asset, a new voice-over, or a full render plus review. It is closed (archived) as soon as its job is merged.
-  - Never more than 3 sessions at once, counting the Producer.
-  - No scheduled tasks unless the Director asks.
-- **A new video gets a fresh set of sessions.** Long sessions re-read their whole history on every turn, so they get expensive. Everything a fresh session needs is in the repo.
-- **Run 2-3 sessions at a time, not 6.** A suggested order:
-  1. Screenwriter (topic + script + shots.json; the user picks the topic).
-  2. Sound (voice once) and Production Designer (new sets only if needed), in parallel.
-  3. Costume/VFX only for new characters, props or effects.
-  4. Animator renders the draft, with qa.py plus one independent full-cut review.
+## How to run the crew
+- **The Producer does small fixes in any area itself** (shot-list edits, parameters, one-line engine/asset tweaks), and records them in the commit and the area notes.
+- **Open a specialist session only for a full area job:** a new script, a new set, a new character/rig/asset, a voice-over, or a full render plus review. Archive it as soon as its work is merged.
+- **At most 3 sessions at once**, counting the Producer. A new video gets fresh sessions, because long sessions re-read their history on every turn. Usual order:
+  1. Screenwriter (G1-G2);
+  2. Sound, plus a set or asset only if needed;
+  3. Animator (G5).
 - At most 2 reviewer rounds per item unless something fails.
-- Each crew session works on its own branch `claude/area-<area>`. The Producer merges into the integration branch `claude/busy-maxwell-tkdir9`, resolving LESSONS/BACKLOG conflicts as a union. Then the Producer tells the dependent sessions.
-- **Messages sent to a session that is rate-limited are lost.** After a limit reset, resend the full instructions, not "continue".
-- Do not run an hourly check trigger inside a long Producer session: every fire re-reads the whole history. The hourly crew-check trigger is **disabled**.
-- The nightly "🌙 1st AD" scheduled task (`trig_01RG5qNmG98WYrpCXKiSLCjq`) was **disabled at the Director's request on 2026-11-21**. Do not re-enable it unless asked. The Producer integrates branches.
+- Crew sessions push to `claude/area-<area>`. The Producer merges into the integration branch `claude/busy-maxwell-tkdir9`, keeping both sides of LESSONS/BACKLOG conflicts.
+- Messages sent to a rate-limited session are lost. After a reset, resend the full instructions, not "continue".
+- Kept session: Sound Designer `session_01CUE8441Kj9vhQtH74MvcqK` (it can voice the next script). All other first-video sessions are archived.
 
 ## Where the knowledge lives
 | What | File |
 |---|---|
-| Areas, contracts, **stage gates (preflight, storyboard)**, branches, captions, self-check loop | `PIPELINE.md` |
-| Channel logo and brand notes | `channel/` |
-| Competitor study: Segment Zero (characters inside 3D space, lighting, overlays) | `references/reports/segment_zero_2026-11.md` |
-| Where defects are born and caught (study) | `references/reports/defect_origins_v1.md` |
-| Per-area checklists and the reviewer protocol | `QA.md` |
-| General lessons (tools, look, process) | `LESSONS.md` |
-| Work queue per area | `BACKLOG.md` |
-| Reference style numbers | `references/reports/*.md`, `references/scripts/frame_stats.py` |
-| Character style and API | `characters/README.md`, `characters/RULES.md`, `references/reports/characters.md` |
-| Anatomy and animation rules (the user's corrections) | `stickman/DRAWING_RULES.md` |
-| Sets: plates and JSON | `blender/sets/*/`, `blender/README.md` |
-| FX catalogue | `fx/CATALOG.md` |
-| Engine usage, captions, grade, QA | `engine/README.md` |
-| Audio pipeline and voice choice | `audio/VOICE.md`, `audio/tts.py`, `audio/build_mix.py` |
+| Contracts, stage gates, captions, publishing, branches | `PIPELINE.md` |
+| Checklists and the reviewer protocol | `QA.md` |
+| Lessons (one line per mistake already made) | `LESSONS.md` |
+| Open work per area | `BACKLOG.md` |
+| Pre-render checks | `tools/preflight.py`, `tools/storyboard.py` |
+| Thumbnail and cover | `tools/thumbnail.py`, `tools/add_cover.sh` |
+| Channel logo and brand | `channel/` |
+| Style studies (deep reference: read only the section you need) | `references/STYLE_BIBLE.md`, `references/reports/*.md` |
+| Characters: API and rules | `characters/README.md`, `characters/RULES.md`, `stickman/DRAWING_RULES.md` |
+| Sets, plates, depth maps, racing lines | `blender/README.md`, `blender/sets/*/` |
+| Engine: usage, rules, ride parallax | `engine/README.md`, `engine/RULES.md`, `engine/parallax.py` |
+| FX | `fx/CATALOG.md`, `fx/RULES.md` |
+| Audio | `audio/README.md`, `audio/VOICE.md` |
 | Per-video notes | `videos/<slug>/NOTES.md` |
-
-## Archived sessions (first video)
-The Producer, Screenwriter, Production Designer, Costume Designer, VFX Artist and Animator sessions were archived after this handoff. Their work is all on the branches above and in the integration branch. The Sound Designer session (`session_01CUE8441Kj9vhQtH74MvcqK`) was kept, because it is short and can voice the next script.

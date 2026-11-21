@@ -2,10 +2,10 @@
 
 > New Producer? Start with [`HANDOFF.md`](HANDOFF.md).
 
-This repo is worked on by **several Claude sessions in parallel**, each owning one area. This file is the contract between them. Read it fully before you start, then read [`QA.md`](QA.md) (how to check your work), [`LESSONS.md`](LESSONS.md) (mistakes not to repeat) and [`BACKLOG.md`](BACKLOG.md) (what to do).
+This repo is worked on by a small crew of Claude sessions (at most 3 at once), each owning one area. This file is the contract between them. Read it fully, then [`QA.md`](QA.md), [`LESSONS.md`](LESSONS.md) and your area's items in [`BACKLOG.md`](BACKLOG.md).
 
 ## The video we make
-- A vertical 1080x1920, 30 fps, 45-65 s explainer short: "Why / How + a surprising real phenomenon".
+- A vertical 1080x1920, 30 fps, 61-65 s explainer short: "Why / How + a surprising real phenomenon".
 - Our own **2D bean-head cartoon characters** (`characters/`, the main cast) act over **3D background plates** rendered in Blender (`blender/`). The stickman (`stickman/`) is **on hold**, reserved for later.
 - There is a voice-over, SFX and music, and **dynamic word-by-word captions** (the user asked for them on 2026-11-20; see Captions below).
 - The script formula and visual targets are in [`references/STYLE_BIBLE.md`](references/STYLE_BIBLE.md). The reference channel is study material only: never copy its scripts, characters, shots or titles, and never name it in our videos.
@@ -22,11 +22,10 @@ Each session edits **only its own folders**. If you need a change elsewhere, add
 | 💥 Kỹ xảo (VFX Artist) | fx | `fx/` | `fx.py` with `render(name, t, size, **kw) -> RGBA PIL image` |
 | 🕺 Hoạt họa (Animator) | engine | `engine/` | `render_video.py shots.json words.json -> frames -> mp4` (picture only) |
 | 🎧 Âm thanh (Sound Designer) | audio | `audio/` | `voice.wav`, `words.json`, SFX, music, `mix.wav` |
-| ✂️ Dựng phim (Editor) | videos | `videos/<slug>/` | final `video.mp4` (not committed if >50 MB), `qa/` reports, `NOTES.md` |
+| 🎥 Producer (with the Animator) | videos | `videos/<slug>/` | final `video.mp4` (not committed if >50 MB), `qa/` reports, `NOTES.md` |
 
 Coordination roles:
-- 🎥 **Nhà sản xuất (Producer)**: the orchestrating session. It creates the crew sessions, monitors them and relays the user's decisions.
-- 🌙 **Trợ lý đạo diễn (1st AD)**: the nightly scheduled task. It integrates branches, does one backlog item, and writes `reports/nightly/`.
+- 🎥 **Nhà sản xuất (Producer)**: the orchestrating session. It does small fixes in any area itself, opens a specialist session only for a full area job, merges branches and relays the Director's decisions (`HANDOFF.md`).
 - The user is the **Đạo diễn (Director)**: they approve topics and scripts, review drafts, and give the final OK to publish.
 
 ## Data contracts
@@ -73,9 +72,6 @@ Coordination roles:
 - New options are keyword arguments with defaults, so old calls keep working.
 - **Characters are our own designs.** Share the style, never copy a reference character's look.
 
-### Stickman (on hold): `stickman/scripts/stickman.py`
-- `draw(expr, pose, color, hat=None, look=0.0, fixed=False)`. Do not develop it further unless the user asks.
-
 ### FX: `fx/fx.py`
 - `render(name, t, size, **kw)`: `t` runs 0..1 over the effect's life and the result is an RGBA image.
 - Use flat 2D cartoon sprites in the same style as the cast: plum ink #241726 with a thick/thin line weight and soft crescent shading.
@@ -106,18 +102,13 @@ A missing plate is a G1 ERROR: it becomes a sets backlog item before anything is
 The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its publishing log is `projects/channel/PUBLISHING.md` on branch `claude/sleepy-lovelace-n8psvk` (the earlier shorts). Always ask the Director before publishing.
 - **Thumbnail:** run `tools/thumbnail.py` on a caption-free engine frame. Zoom inside the engine (a camera `zoom` in a copy of shots.json), never by upscaling the frame. The house style is a 3-4 line headline in the top third: white, with the keyword line in yellow or red, a thick plum outline and a shadow. The character and the action sit below it. Save it as `videos/<slug>/thumbnail.png`.
 - **Cover as the first 3 frames:** `tools/add_cover.sh video.mp4 thumbnail.png videos/<slug>/<slug>_captions_cover_1080x1920.mp4` puts the thumbnail in the first 0.1 s and delays the audio by 0.1 s. Only this captioned cut with the cover is posted.
-- **Upload-Post was removed at the Director's request (2026-11-21).** The Director posts by hand with the final cover cut and `thumbnail.png`. Use the notes below only if the Director adds the key back. Profile `somecrazythings`:
-  - YouTube, Instagram and the Facebook Page; send `thumbnail=@thumbnail.png` with every upload.
-  - Free plan: 10 uploads a month, and each platform counts as 1. 6 of 10 were used by 2026-11-20.
-  - Keep the Facebook caption under 255 bytes, or it is cut.
-  - YouTube can hit a rate limit. A failed upload does not use a credit; retry later.
-  - TikTok is posted by hand.
+- **Posting is by hand** (Upload-Post was removed on 2026-11-21). Prepare the cover cut, `thumbnail.png`, a title, a YouTube description and an Instagram/Facebook caption under 255 bytes (Facebook cuts longer ones), and record them in `videos/<slug>/NOTES.md`.
 - **Length:** TikTok and Snapchat pay only for videos over 1 minute, so aim for 61-70 s.
 
 ## Branches
 - Each session works on **its own branch** (given in its first message) and pushes there. Never push to another session's branch.
-- The integration branch is `claude/busy-maxwell-tkdir9`. The nightly integrator task (see below) merges area branches whose `QA.md` checks pass.
-- Commit small and often. Never commit `packs/`, `.venv/`, `__pycache__/`, renders over 20 MB, or anything secret.
+- The integration branch is `claude/busy-maxwell-tkdir9`. The Producer merges area branches whose `QA.md` checks pass.
+- Commit small and often. Never commit `packs/`, `.venv/`, `__pycache__/`, files over 50 MB, or anything secret.
 
 ## The self-check loop (mandatory, every task)
 1. **Read** `PIPELINE.md`, `QA.md`, `LESSONS.md`, your area's rules (for example `references/reports/characters.md` §2 and `stickman/DRAWING_RULES.md`) and your `BACKLOG.md` items.
@@ -126,7 +117,7 @@ The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its p
 4. **Get an independent review.** Spawn a fresh reviewer agent with the previews, the relevant rules and the reference frames. Ask for a score per criterion out of 10 and a numbered fix list. It must not have seen your work in progress.
 5. **Fix and repeat** until every criterion is 7 or higher and the automatic checks pass. Stop after 4 rounds and record what is still missing in `BACKLOG.md`.
 6. **Learn.** Every mistake you found and fixed becomes a one-line rule in `LESSONS.md` (general) or your area's rules file (specific). Phrase it as an instruction for next time.
-7. **Update `BACKLOG.md`**: tick what you finished, and add what you discovered. Then commit and push.
+7. **Update `BACKLOG.md`**: delete what you finished (name it in the commit), and add what you discovered. Then commit and push.
 
 ## Human checkpoints (always ask the user)
 - Approve the topic and script before any video is produced.
@@ -134,6 +125,4 @@ The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its p
 - Approve anything that publishes, spends money or deletes data.
 
 ## Environment
-- The setup script installs `.venv` (Blender `bpy`, Pillow, numpy) and clones the CC0 packs into `packs/`. Run Python with `.venv/bin/python`.
-- The container has no GPU. Plates are stills, so Cycles on the CPU is fine (1-3 min each). Characters are 2D and cheap.
-- YouTube blocks automated downloads. Kenney.nl blocks automated user agents; never spoof one. Use Poly Haven's API and the KayKit and Quaternius git repos.
+See `HANDOFF.md` › Accounts and limits, and `LESSONS.md` › Tools and environment. Run Python with `.venv/bin/python`.

@@ -99,3 +99,17 @@
 - **Top-down paths follow the real road.** Racing lines are projected from the track geometry into the `track_top` JSON (`blender/sets/track/paths.py`), and the planned line is yellow. In s09 the rider runs wide over the outer kerb. The s12 cut-in rider rides the kink, and the diagram ends with its cut-in.
 - **Automatic QA:** all hard checks pass. Frame stats pass 45 of 65 (v3: 43).
 - **Review:** no independent review of v4 yet. The changes are the background and the paths, checked by eye on sampled frames.
+
+---
+
+# Final cut and posting (2026-11-21)
+
+- **Post this:** `bike-countersteer_captions_cover_1080x1920.mp4`, which is draft v4 with `thumbnail.png` as the first 3 frames and the audio delayed by 0.1 s (1924 frames, 64.14 s). Not posted yet; the Director posts by hand.
+- **Title:** Why Your Bike Steers Backwards First 🏍️
+- **YouTube description:** To turn left on a bike, you steer right for a split second. It's called countersteering: that nudge pulls the wheels out from under you, so the bike leans left, then turns left. Riders do it without noticing, and motorcycle schools teach it on purpose. #countersteering #motorcycle #physics #science #shorts
+- **Instagram/Facebook caption** (under 255 bytes): To turn left on a bike, you steer RIGHT first 🤯 It's called countersteering, and you've done it your whole life without noticing. #countersteering #motorcycle #bicycle #physics #science
+- **Open nice-to-haves** (not planned):
+  - the bars and front tyre never visibly turn (BACKLOG characters P2);
+  - the "I STEER WITH MY HIPS" sticker is unreadable at phone size;
+  - the ending two-shot is static for about 4 s;
+  - the 0-4 s hook doesn't show "steers right first".
