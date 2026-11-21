@@ -44,6 +44,8 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Generate `shots.json` from a script with anchor words, not hand-typed indexes, and check every voice-over line has a shot with identical text.
 
 ## Scripts and topics
+- Retention dies in the middle when the picture sits still: change it every ≤ 1.5 s (a cut, a punch-in, an insert, a camera move), and never hold one framing over 3 s. Our posted shorts ran 2-3.4 s static shots against the leaders' ~1 s (`references/reports/retention_2026-11.md`).
+- Open mid-action on a character or an extreme close-up, with 2+ picture changes before 3 s, and start the voice inside the story, not with a setup. End on a payoff gag or a seamless loop; never fade to black.
 - Judge originality by "is this already a viral short?", not "is it true?". Classic facts score low (toast, ring-road jams, tickling yourself, Leidenfrost…).
 - A hook states a fact, never an instruction, and never contains the mechanism. Count words with a script.
 - Check each source against the exact claim, and check press numbers against the paper. Hedge or drop what doesn't match.

@@ -49,6 +49,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 | Channel logo and brand | `channel/` |
 | How Ricks Clips and Segment Zero make shorts (start here for style) | `references/reports/channels_2026-11.md` |
 | How to get their look in our stack (measured gaps, every option, plan) | `references/reports/replication_playbook_2026-11.md` |
+| Why retention stops at ~50%, and the fixes | `references/reports/retention_2026-11.md` |
 | Competitor titles, for originality checks | `references/titles.md` |
 | Style studies (deep reference: read only the section you need) | `references/STYLE_BIBLE.md`, `references/reports/*.md` |
 | Characters: API and rules | `characters/README.md`, `characters/RULES.md`, `stickman/DRAWING_RULES.md` |

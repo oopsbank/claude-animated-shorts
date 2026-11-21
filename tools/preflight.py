@@ -65,6 +65,8 @@ def main():
     # ---- script level
     text = ' '.join(s['text'] for s in shots); n = len(text.split())
     if not 170 <= n <= 240: add('ERROR', '-', f'voice-over is {n} words (need 170-240; aim <= 232)')
+    if shots and (shots[0].get('camera') or {}).get('move') in (None, 'hold'):
+        add('WARN', 's01', 'the hook shot holds still: start mid-action with a moving camera or an extreme close-up, and change the picture before 3 s (retention study)')
     hook = re.split(r'(?<=[.!?])\s', shots[0]['text'] if shots else '')[0]
     if not 10 <= len(hook.split()) <= 16: add('ERROR', 's01', f'hook is {len(hook.split())} words (need 10-16): "{hook}"')
     script_md = os.path.join(os.path.dirname(a.shots), 'SCRIPT.md')
@@ -75,7 +77,8 @@ def main():
         sid = s.get('id', f'#{k}'); nw = len(s['text'].split()); size = s.get('size', 'medium')
         dur = (sp['f1'] - sp['f0']) / FPS
         if dur < 1.2: add('WARN', sid, f'shot lasts {dur:.1f} s: too short to read; merge it with a neighbour')
-        if dur > 6.5: add('WARN', sid, f'shot lasts {dur:.1f} s with one framing: add a camera move, a cut or an insert')
+        if dur > 3.0 and not ((s.get('camera') or {}).get('glides') or any(c.get('insert') for c in s.get('characters', []))):
+            add('WARN', sid, f'shot lasts {dur:.1f} s with one framing: leaders change the picture every ~1 s; add a punch-in glide, an insert or a cut (retention study)')
 
         # every at_word inside the shot's own text
         def chk(at, what):
