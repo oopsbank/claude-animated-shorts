@@ -21,6 +21,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
   - the red pit-wall block reads hot;
   - `pit_ots` has a cluttered grandstand behind the head.
 - [ ] P2 Ink density (`frame_stats` edge) stays at 0.01-0.03 in close-ups with DOF (the reference is about 0.05). Try a thicker near-silhouette lineset, or less DOF in close cams.
+- [ ] P2 A procedural material library in `common.py` (tufted cushion, tiles, brick, planks, wallpaper, shelf stock) and 3-5 labelled hero props per set (playbook §3D).
 - [ ] P3 Foreground occluder props near the camera (window frames, logs, railings) for the engine to depth-test against.
 
 ## characters (`characters/`, bean-head cast)
@@ -29,6 +30,8 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
   - arm in-betweens (`arm_pose=('hang', 'point', 0.4)` or elbow/hand offsets) so gestures ease and overshoot;
   - `res=` (output scale) instead of the engine grabbing the 4x canvas.
 - [ ] P2 A bars close-up rig view from behind or above (hands, bars and front tyre, with the steer angle from the rig), so a countersteer is seen, not only signalled by an arrow.
+- [ ] P2 Brush ink (variable width ±12% with a slight wobble, rounded caps, inner lines at 0.6x) and a bigger face library: joy arcs, a toothy grin, crying, gritted teeth, shocked pupils (playbook §3C).
+- [ ] P3 A costume library per period or job, and crowds by seed variation.
 - [ ] P2 Speed: `turned()` and `ride()` take about 3 s each (full-size S=4 layers). Crop the layers to the figure bbox.
 - [ ] P2 Riding: the near leg in side view makes a small S-bend near the seat tube; the 3/4 motorbike steer could read stronger; the rear-view far hand hides behind a hard-leaning torso.
 - [ ] P2 Walk: the hip should be highest just after passing (the up pose), and the arms could lag a little more at passing.
@@ -52,7 +55,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P3 `path_line`: a thicker "actual" stroke and a longer hold on the kink.
 
 ## engine (`engine/`)
-- [ ] P2 Caption style test (a Director decision): both leading channels use sentence case, white, 1-2 words, no keyword colour. Ours are caps with yellow keywords. Render one shot both ways for the Director.
+- [ ] P1 Grade: a vignette to a corner/centre ratio of about 0.80, plus split toning (warm highlights R-B ≈ +0.08, neutral or cool shadows). Today ours has no vignette and an inverted split (`references/reports/replication_playbook_2026-11.md` §3A).
 - [ ] P1 Depth-tested compositing (the biggest gap in the channel study): give each character a depth (its ground point in the plate's depth map) and draw nearer plate pixels over it, so characters stand behind posts, sit inside cabs and sink into snow (Segment Zero study).
 - [ ] P2 Depth of field for far characters, from the plate depth.
 - [ ] P2 Arm in-betweens with anticipation and overshoot once `character()` has them. Today arm poses are 1-frame swaps, so a held point reads stiff (acting 6).

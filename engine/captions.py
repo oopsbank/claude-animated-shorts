@@ -14,10 +14,10 @@ WHITE, YELLOW, BLACK = (255, 255, 255), (255, 210, 63), (0, 0, 0)
 LEAD = 1                   # frames before the word is spoken (spec 0-2)
 SILENCE = 0.4              # s: longer gaps clear the caption
 # Styles (shots.json "captions": {"style": ...}):
-#   'pop' (default): one word, UPPER case, yellow + bigger keywords, strong pop.
-#   'sentence': like both leading channels (references/reports/channels_2026-11.md): 1-2 words as written
+#   'sentence' (default since 2026-11-21, the Director's pick): like both leading channels (references/reports/channels_2026-11.md): 1-2 words as written
 #   (sentence case, punctuation kept), white only, thinner outline, a small pop, baseline ~70 %.
-STYLE = {'name': 'pop'}
+#   'pop': one word, UPPER case, yellow + bigger keywords, strong pop (video 1 drafts).
+STYLE = {'name': 'sentence'}
 NUM_WORDS = set('zero one two three four five six seven eight nine ten eleven twelve twenty thirty forty fifty hundred '
                 'thousand million first second third half double'.split())
 STOP = set('the a an and or but of to in on at for with by from is are was were be been it its it\'s that this these those '
@@ -28,7 +28,11 @@ STOP = set('the a an and or but of to in on at for with by from is are was were 
 def clean(w): return re.sub(r"[^\w'\-]", '', w)
 
 
+SENT_FONT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts', 'Poppins-Bold.ttf')
+
+
 def font_path():
+    if STYLE['name'] == 'sentence' and os.path.exists(SENT_FONT): return SENT_FONT
     return next(p for p in FONT_PATHS if p and os.path.exists(p))
 
 
@@ -54,7 +58,7 @@ def is_key(w, kw):
 
 
 def schedule(words, doc, n_frames, case='upper'):
-    STYLE['name'] = doc.get('captions', {}).get('style', 'pop'); _cache.clear()
+    STYLE['name'] = doc.get('captions', {}).get('style', 'sentence'); _cache.clear()
     if STYLE['name'] == 'sentence': return _schedule_sentence(words, n_frames)
     """List of caption events: (f_on, f_off, text, key). Short function words (<= 2 letters, said quickly) ride along
     with the next word."""
@@ -112,9 +116,9 @@ def _card(text, key, H):
     k = (text, key, H)
     if k in _cache: return _cache[k]
     sent = STYLE['name'] == 'sentence'
-    size = int(H * (0.058 if sent else 0.078 if key else 0.068))
+    size = int(H * (0.037 if sent else 0.078 if key else 0.068))     # sentence: measured on both leading channels
     font = ImageFont.truetype(font_path(), size)
-    stroke = max(3, int(size * (0.085 if sent else 0.11)))
+    stroke = max(3, int(size * (0.10 if sent else 0.11)))
     d0 = ImageDraw.Draw(Image.new('L', (1, 1)))
     l, t, r, b = d0.textbbox((0, 0), text, font=font, stroke_width=stroke)
     pad = int(size * 0.3); w, h = r - l + 2 * pad, b - t + 2 * pad

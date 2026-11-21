@@ -59,6 +59,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Limit to -1.2 dBTP: later steps and codecs overshoot -1.0.
 
 ## Process and QA
+- Measure, don't eyeball, when matching a reference: our first "sentence" captions were 3x wider than theirs. Our frames also had no vignette (0.99 vs 0.78) and an inverted warm/cool split, and both only showed up in `style_metrics.py`.
 - Catch defects where they are born: run `tools/preflight.py` and `tools/storyboard.py` before the voice-over. Every defect found later becomes a preflight check or a line here.
 - Judge new assets in their real shots (storyboard), not only on their own sheet.
 - Render a cheap low-res still after every change. Compare side by side with a reference frame. Show joints at 2x zoom. Review animation on a dense sheet (t = 1/12 … 11/12).

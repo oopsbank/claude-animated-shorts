@@ -6,7 +6,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **Reply in Vietnamese**, briefly and plainly. Keep code, docs and commits in English. **Videos are in English.**
 - **Style target:** 2D bean-head cartoon characters over bright 3D toon sets, daylight by default, readable joke signage, medium/close framing. The numbers are in `references/reports/recent_style_2026-11.md` and `characters.md`. A second channel in the genre is studied in `segment_zero_2026-11.md`. Share the style only: never copy scripts, characters, shots or titles, and never name another channel in a video.
 - **Cast:** our own bean-heads (`characters/`). The stickman is on hold, but its anatomy and animation rules (`stickman/DRAWING_RULES.md`) apply to every character.
-- **Captions:** dynamic, word by word (`PIPELINE.md` › Captions).
+- **Captions:** the "sentence" style (Poppins Bold, 1-2 words as written, white), picked on 2026-11-21 (`PIPELINE.md` › Captions).
 - **Lean crew, nothing extra and nothing missing:** see "How to run the crew" below. **No scheduled tasks** unless asked. The nightly 1st AD task (`trig_01RG5qNmG98WYrpCXKiSLCjq`) is disabled.
 - **Always ask before publishing.** Upload-Post was removed on 2026-11-21: the Director posts by hand, and we prepare the files and the text.
 
@@ -48,6 +48,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 | Thumbnail and cover | `tools/thumbnail.py`, `tools/add_cover.sh` |
 | Channel logo and brand | `channel/` |
 | How Ricks Clips and Segment Zero make shorts (start here for style) | `references/reports/channels_2026-11.md` |
+| How to get their look in our stack (measured gaps, every option, plan) | `references/reports/replication_playbook_2026-11.md` |
 | Competitor titles, for originality checks | `references/titles.md` |
 | Style studies (deep reference: read only the section you need) | `references/STYLE_BIBLE.md`, `references/reports/*.md` |
 | Characters: API and rules | `characters/README.md`, `characters/RULES.md`, `stickman/DRAWING_RULES.md` |

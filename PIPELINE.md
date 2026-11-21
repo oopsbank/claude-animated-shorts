@@ -78,13 +78,13 @@ Coordination roles:
 - `fx/CATALOG.md` lists every name with a preview PNG.
 
 ## Captions (engine renders them from words.json)
-- **One word at a time** (2-3 only for very short words like "a", "of the"), with a hard swap on each word's start time.
-- **Style:** white bold sans, about 7% of the frame height, a thick black outline (about 10% of the font size) and a soft drop shadow.
-- **Placement:** horizontally centred, baseline at about 66% of the frame height. Nudge it up if a face or key prop would sit behind it.
-- **Dynamic:** each word pops in, scaling 1.25 to 1.0 over 4 frames with an ease-out and a slight overshoot. **Keywords** (numbers, "left", "right", the punchline, key nouns) are yellow #ffd23f and pop bigger.
-- Captions sit above FX and below nothing. They must never cover the face of the character speaking.
-- **Alternative style `"captions": {"style": "sentence"}`** in shots.json, like both leading channels: 1-2 words as written (sentence case, punctuation kept), white only, a thinner outline, a small pop, baseline at about 70%. An A/B test is in `videos/bike-countersteer/qa/caption_style_AB.mp4`; the Director picks.
-- Must pass: readable at phone size, in sync with the voice (each word appears 0-2 frames before it is spoken), and no caption on screen during silences longer than 0.4 s.
+The Director picked the **sentence** style on 2026-11-21 (the A/B test is `videos/bike-countersteer/qa/caption_style_AB.mp4`). It is the engine default:
+- **1-2 words as written:** sentence case, punctuation kept. A word joins the next when both are short and said together.
+- **Style:** white only, **Poppins Bold** (`engine/fonts/`) at **3.7% of the frame height**, a black outline of 10% of the font size, and a soft shadow. These numbers are measured on both leading channels: a caption is about 0.22-0.25 W wide.
+- **Placement:** centred, baseline at **70%** of the height, nudged off any face.
+- **Motion:** a small pop (1.08 to 1.0 over 4 frames), with a hard swap on each word.
+- Must pass: readable at phone size; each caption appears 0-2 frames before it is spoken; nothing on screen during silences over 0.4 s; never over the speaker's face.
+- The old `"captions": {"style": "pop"}` (one word, caps, yellow keywords) is still available.
 
 ## Stage gates (catch defects where they are born)
 Most defects in the first video were born in the shot list and caught only after a full render (see `references/reports/defect_origins_v1.md`). So nothing moves to an expensive stage until the cheap gate before it passes:
