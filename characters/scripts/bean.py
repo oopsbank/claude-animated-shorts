@@ -1,7 +1,8 @@
 # Bean-head cartoon characters (the channel's main cast style), built from the measured spec in
 # references/reports/characters.md (§2). Our own characters: the STYLE is shared, no reference character is copied.
 # Canvas 600x1000 design units, soles at y=975.
-import math, random
+import math, random, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from PIL import Image, ImageDraw, ImageFilter, ImageChops
 
 S = 4
@@ -87,18 +88,23 @@ def bow(p0, p1, amt, n=16):
 def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', expr='neutral', facing=0.0,
               hat=None, hat_col='#e2453c', hair=None, hair_col='#5a3b2a', outfit=(), glasses=False,
               arm_pose='hang', prop=None, seed=1, white_head=False, moustache=None, lean=0.0,
-              view='front', pose=None, mouth=None, blink=False, tilt=0.0, ground=True):
+              view='front', pose=None, mouth=None, blink=False, tilt=0.0, ground=True,
+              antennae='up', antennae_sway=0.0, seated=None):
     # view: 'front' (default), 'side' or '3q'. In side/3q, facing < 0 faces left, otherwise right.
     # pose (side/3q): joint angles / IK targets, see turned(). mouth: lip-sync shape from MOUTHS. blink: eyes shut.
+    # antennae (hat='antennae'): 'up' | 'droop' | 0..1 droop amount; antennae_sway: spring sway in degrees (+ = right).
+    # seated: None | 'cooler' (sits on a drawn cooler) | 'bare' (same pose, no seat: the engine supplies the prop).
+    #   The seat top is at seat_top(build) on the card (soles stay at y=975).
     if view != 'front':
         return turned(view=view, build=build, skin=skin, shirt=shirt, pants=pants, expr=expr, facing=facing, hat=hat,
                       hat_col=hat_col, hair=hair, hair_col=hair_col, outfit=outfit, glasses=glasses, prop=prop, seed=seed,
                       white_head=white_head, moustache=moustache, pose=pose, mouth=mouth, blink=blink, tilt=tilt,
-                      lean=lean, ground=ground)
+                      lean=lean, ground=ground, antennae=antennae, antennae_sway=antennae_sway)
     B = BUILDS[build]; a, b = B['a'], B['b']; HH, Wd = 2 * b, 2 * a; u = Wd / 100
     rnd = random.Random(seed)
     total = 1.0 * HH + B['torso'] * HH + B['legs'] * HH
     crown = 975 - total
+    if seated: crown += seat_drop(build)
     cx = 300; hy = crown + b; chin = hy + b
     torso_bot = chin + B['torso'] * HH
     C = Canvas()
@@ -117,7 +123,11 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     # ---- legs & feet (single ink-tinted strokes, slight bow, A-stance)
     leg_c = mix(pants_c, INK, 0.55)
     hip_y = torso_bot - 0.12 * HH
-    for sgn in (-1, 1):
+    if seated:
+        if seated == 'cooler': draw_cooler(C, cx, seat_top(build), 975, Ta * 2.5, u)
+        seat_legs(C, cx, hip_y, torso_bot, u, leg_c, facing)
+    else:
+      for sgn in (-1, 1):
         hip = (cx + sgn * 15 * u, hip_y); ft = (cx + sgn * 22 * u, 975 - 3.5 * u)
         C.stroke(bow(hip, ft, sgn * 2 * u), 5.8 * u, leg_c)
         C.stroke([ft, (ft[0] + sgn * 14 * u + facing * 8 * u, ft[1] + 0.5 * u)], 7.5 * u, INK)
@@ -141,7 +151,8 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
         elif pose == 'chin':     # hand to chin
             el = (cx + sgn * (0.9 * Ta), sh_y + 0.55 * HH); hd = (cx + sgn * 0.12 * Ta + facing * 6 * u, chin - 2 * u)
         return [s0, el, hd]
-    poses = arm_pose if isinstance(arm_pose, tuple) else (arm_pose, arm_pose)
+    poses = tuple(arm_pose) if isinstance(arm_pose, (tuple, list)) else (arm_pose, arm_pose)
+    both_hold = poses[0] == 'hold' and poses[1] == 'hold'
     front = []; late_prop = []
     for sgn, ps in zip((-1, 1), poses):
         pts = arm(sgn, ps)
@@ -153,7 +164,11 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     C.fill_shaded(torso, shirt_c, SH_CLOTH, 0.55 * Ta, 0.18 * Ta, cx, tcy, rim=True)
     def clothes(dd):
         def P(x, y): return (x * S, y * S)
+        DEF = dict(buttons=(3, '#f1efe6'), tie=('#c0353a',), belt=('#3b2a22',), apron=('#f1efe6',), overalls=('#2f5aa8',),
+                   coat_open=('#f4f4f0',), stripes=('#f1efe6',), collar=('#f1efe6',))
         for item in outfit:
+            if isinstance(item, str): item = (item,)           # a bare name ('collar',) gets the default colour
+            if len(item) == 1 and item[0] in DEF: item = (item[0],) + DEF[item[0]]
             kind = item[0]
             if kind == 'buttons':
                 for k in range(item[1]):
@@ -203,20 +218,24 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
             C.fill_shaded(bun, hc, SH_CLOTH, 6, 4, cx, hy - b * 1.1); C.outline(bun, cx, hy - b * 1.1, 0.8 * w0)
     C.outline(head, cx + facing * 4 * u, hy, w0)
     # ---- hat (sits low; base edge follows the skull)
-    if hat: draw_hat(C, hat, hexrgb(hat_col), cx + facing * 4 * u, hy, a, b, u, w0, facing, hrot)
+    if hat: draw_hat(C, hat, hexrgb(hat_col), cx + facing * 4 * u, hy, a, b, u, w0, facing, hrot, antennae=antennae, sway=antennae_sway)
     # ---- face
     draw_face(C, expr, cx + facing * 4 * u, hy, u, facing, glasses, moustache, hat is not None, mouth, blink)
-    for hp_ in late_prop: draw_prop(C, prop, hp_, u)       # a raised prop (a broom) must sit over the head and hat
+    for hp_ in late_prop: draw_prop(C, prop, hp_, u, side=1)      # a raised prop (a broom) must sit over the head and hat
     # ---- arms in front of the body
     for pts, ps in front:
         sgn = 1 if pts[0][0] > cx else -1
         C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], sgn * 1.0 * u, 8)[1:], 5.2 * u, arm_c)
         C.dot(*pts[2], 5.5 * u)
-        if prop and ps == 'hold': draw_prop(C, prop, pts[2], u)
+        if prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)
+    if prop and both_hold:          # one prop, two hands (DRAWING rule 23): drawn once between the hands
+        hands = sorted((p[0][2] for p in front), key=lambda q: q[0])
+        draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))
     return C.im.resize((W, H), Image.LANCZOS)
 
-def draw_hat(C, kind, col, cx, hy, a, b, u, w0, facing, rot, rear=False, sticker=None):
+def draw_hat(C, kind, col, cx, hy, a, b, u, w0, facing, rot, rear=False, sticker=None, antennae='up', sway=0.0):
     if kind == 'helmet': return draw_helmet(C, col, cx, hy, a, b, u, w0, facing, rear, sticker)
+    if kind == 'antennae': return draw_antennae(C, col, cx, hy, a, b, u, w0, facing, rot, rear, antennae, sway)
     base_y = hy - b + 0.52 * b                # covers the top ~25% of the head; brows sit just under the base
     sag = 0.05 * 2 * a
     dk = mul(col, (0.75, 0.75, 0.8))
@@ -319,11 +338,14 @@ def draw_face(C, expr, cx, cy, u, facing, glasses, moustache, has_hat, mouth=Non
                 px, py = mx + sg * (1 + 9 * t) * u, my - 7 * u + 2.5 * u * t * t
                 d.ellipse(((px - w / 2) * S, (py - w / 2) * S, (px + w / 2) * S, (py + w / 2) * S), fill=col)
 
-def draw_prop(C, kind, hand, u):
+def draw_prop(C, kind, hand, u, side=1, two=None):
     """Held props, gripped by the dot hand. Parameterised names:
        'broom_upright' / 'broom_tip_left' / 'broom_tip_right' / 'broom:<deg>' - a broom balanced handle-down on the palm
            (+ deg tips it to screen right);  'clipboard:<text>' - a clipboard whose sheet carries readable text;
        'helmet' or 'helmet:<sticker text>' - an open-face helmet held by its edge, sticker large enough to read."""
+    import held
+    if kind.split(':', 1)[0] in held.NAMES: return held.draw(C, kind, hand, u, side, two)
+    if two: hand = ((two[0][0] + two[1][0]) / 2, (two[0][1] + two[1][1]) / 2)
     x, y = hand
     if kind.startswith('broom'):
         tilt = {'broom_upright': 0, 'broom_tip_left': -18, 'broom_tip_right': 18}.get(kind)
@@ -353,6 +375,89 @@ def draw_prop(C, kind, hand, u):
         C.d.line(((x) * S, (y) * S, (x + 4 * u) * S, (y - 28 * u) * S), fill=(150, 156, 166), width=int(5 * u * S))
         C.d.ellipse(((x - 1 * u) * S, (y - 36 * u) * S, (x + 11 * u) * S, (y - 24 * u) * S), fill=(150, 156, 166), outline=INK, width=int(2 * u * S))
         C.dot(x, y, 5.5 * u / 1.7)
+
+# ============================ video 2 additions: seated pose, cooler, antennae hat ============================
+def seat_top(build='adult'):
+    """Card y of the seat top for seated= (the lid of the cooler); soles stay at y=975."""
+    B = BUILDS[build]; HH = 2 * B['b']
+    return 975 - 0.55 * B['legs'] * HH
+
+def seat_drop(build='adult'):
+    B = BUILDS[build]; HH = 2 * B['b']
+    return (seat_top(build) + 0.07 * HH) - (975 - B['legs'] * HH)
+
+def seat_legs(C, cx, hip_y, torso_bot, u, leg_c, facing=0.0):
+    """Front-view sitting: thighs point at the camera (foreshortened under the torso), knees out, shins straight down."""
+    for sgn in (-1, 1):
+        hip = (cx + sgn * 15 * u, hip_y); kn = (cx + sgn * 30 * u, torso_bot + 2 * u); ft = (cx + sgn * 30 * u, 975 - 3.5 * u)
+        C.stroke(bow(hip, kn, sgn * 1 * u, 8) + bow(kn, ft, -sgn * 1.5 * u, 12)[1:], 5.8 * u, leg_c)
+        C.dot(kn[0], kn[1], 3.6 * u, leg_c)
+        C.stroke([ft, (ft[0] + sgn * 12 * u + facing * 8 * u, ft[1] + 0.5 * u)], 7.5 * u, INK)
+
+COOLER = dict(body='#d9453a', lid='#f4f1ea', trim='#9e2b24')
+
+def draw_cooler(C, cx, top, bot, w, u, body=None, lid=None, label=None):
+    """A picnic cooler box seen from the front: white lid, coloured tub, side handle, drain plug."""
+    from ink import stamp, rpoly, text
+    bc, lc, tc = hexrgb(body or COOLER['body']), hexrgb(lid or COOLER['lid']), hexrgb(COOLER['trim'])
+    h = bot - top; e = 4.2 * u
+    stamp(C, [('p', rpoly(cx, top + h * 0.58, w, h * 0.84, 7 * u), bc), ('p', rpoly(cx, top + h * 0.1, w * 1.05, h * 0.2, 6 * u), lc),
+              ('p', rpoly(cx + w * 0.54, top + h * 0.42, 9 * u, h * 0.22, 3 * u), lc)], e,
+          details=[('p', rpoly(cx, top + h * 0.215, w * 0.97, 3 * u, 1 * u), tc), ('c', cx + w * 0.36, bot - h * 0.16, 3.2 * u, tc)])
+    if label: text(C, cx, top + h * 0.56, label, h * 0.2, (255, 255, 255), maxw=w * 0.8)
+
+def antenna_geo(root, a, b, sgn, droop, sway):
+    """Stalk centre line (bezier) and tip for one antenna. droop 0 = up and springy, 1 = sagging beside the head."""
+    up_tip = (root[0] + sgn * 0.22 * a, root[1] - 0.95 * b); dn_tip = (root[0] + sgn * 0.92 * a, root[1] + 0.55 * b)
+    up_c = (root[0] + sgn * 0.02 * a, root[1] - 0.5 * b); dn_c = (root[0] + sgn * 0.55 * a, root[1] - 0.6 * b)
+    L = lambda p, q: (p[0] + (q[0] - p[0]) * droop, p[1] + (q[1] - p[1]) * droop)
+    tip, ctl = L(up_tip, dn_tip), L(up_c, dn_c)
+    tip = rot_pt(tip, root, sway); ctl = rot_pt(ctl, root, sway * 0.5)
+    return ctl, tip
+
+def draw_antennae(C, col, cx, hy, a, b, u, w0, facing, rot, rear, antennae='up', sway=0.0):
+    """hat='antennae': a headband with two springy antenna stalks topped with balls (the alien-tour guide and his fans).
+    antennae='up' | 'droop' | float droop 0..1; sway: degrees (+ = toward screen right) for spring wobble."""
+    from ink import stamp
+    droop = {'up': 0.0, 'droop': 1.0, None: 0.0}.get(antennae, antennae)
+    droop = max(0.0, min(1.0, float(droop)))
+    dk = mul(col, (0.62, 0.62, 0.7)); stalk = mix(col, INK, 0.6)
+    base_y = hy - 0.48 * b; f = facing if abs(facing) >= 1 else facing * 0.5
+    def hw(y):   # half-width of the skull at height y (crown exponent 1.75)
+        t = min(1.0, abs((y - hy) / b)); return a * (1 - t ** 1.75) ** (1 / 1.75)
+    # headband: a strip that follows the skull, sagging a little at the front
+    yt, yb = base_y - 9 * u, base_y + 1 * u
+    n = 14; top, botm = [], []
+    for i in range(n + 1):
+        X = -1 + 2 * i / n; sag = 0.1 * a * (1 - X * X) * (0 if rear else 1)
+        top.append((cx + X * hw(yt) * 1.02, yt + sag)); botm.append((cx + X * hw(yb) * 1.03, yb + sag))
+    band = top + botm[::-1]
+    # stalks + balls (far one first in turned views)
+    spread = 0.40 * a * (1 - 0.45 * abs(f)); off = f * 0.12 * a
+    order = (-1, 1) if f >= 0 else (1, -1)
+    if abs(f) >= 1: order = order   # near stalk = facing side, drawn last
+    parts = []
+    for sgn in order:
+        rx = cx + off + sgn * spread
+        root = (rx, yt + 0.1 * a * (1 - (sgn * spread / (hw(yt) or 1)) ** 2) * (0 if rear else 1) + 2 * u)
+        ctl, tip = antenna_geo(root, a, b, sgn, droop, sway)
+        pts = []
+        m = 40
+        for k in range(m + 1):
+            t = k / m
+            x = (1 - t) ** 2 * root[0] + 2 * (1 - t) * t * ctl[0] + t * t * tip[0]
+            y = (1 - t) ** 2 * root[1] + 2 * (1 - t) * t * ctl[1] + t * t * tip[1]
+            dx = 2 * (1 - t) * (ctl[0] - root[0]) + 2 * t * (tip[0] - ctl[0]); dy = 2 * (1 - t) * (ctl[1] - root[1]) + 2 * t * (tip[1] - ctl[1])
+            L = math.hypot(dx, dy) or 1
+            amp = 4.2 * u * math.sin(math.pi * min(1, t * 1.25)) * (1 - 0.6 * droop)     # the spring coil, slacker when drooping
+            wob = amp * math.sin(t * 2 * math.pi * 4.5)
+            pts.append((x - dy / L * wob, y + dx / L * wob, 3.4 * u))
+        rb = 0.17 * a
+        parts.append((pts, tip, rb))
+    for pts, tip, rb in parts:
+        stamp(C, [('s', pts, stalk), ('e', tip[0], tip[1], rb, rb * (1 - 0.1 * droop), col)], 0.7 * w0,
+              details=[('c', tip[0] - rb * 0.38, tip[1] - rb * 0.4, rb * 0.22, mix(col, (255, 255, 255), 0.55))])
+    stamp(C, [('p', band, dk)], 0.8 * w0, shade=False)
 
 if __name__ == '__main__':
     import sys
@@ -539,7 +644,7 @@ FRONT_STAND = dict(legN=(3, 1), legF=(3, 1), armN=(20, 9), armF=(20, 9), lean=0.
 def turned(view='side', build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', expr='neutral', facing=1.0,
            hat=None, hat_col='#e2453c', hair=None, hair_col='#5a3b2a', outfit=(), glasses=False, prop=None, seed=1,
            white_head=False, moustache=None, pose=None, mouth=None, blink=False, tilt=0.0, lean=0.0, ground=True,
-           rig=None, layers=None, sticker=None, pad=0, prop_hand='N'):
+           rig=None, layers=None, sticker=None, pad=0, prop_hand='N', antennae='up', antennae_sway=0.0):
     """Rig views: 'side', '3q', 'rear', and 'front' (a jointed front body; character(view='front') keeps the legacy one).
        pose keys (all optional):
          legN, legF, armN, armF: (upper, lower[, upper-length factor]) angles in degrees from straight down.
@@ -744,7 +849,7 @@ def turned(view='side', build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#
             Hd.fill_shaded(bun, hc, SH_CLOTH, 6, 4, hx, hy - b); Hd.outline(bun, hx, hy - b, 0.8 * 5 * u)
     Hd.outline(head, hx, hy, 5 * u)
     if hat: draw_hat(Hd, hat, hexrgb(hat_col), hx, hy, a, b, u, 5 * u, 0 if flat else s, 0 if flat else 3 * s,
-                     rear=(view == 'rear'), sticker=sticker)
+                     rear=(view == 'rear'), sticker=sticker, antennae=antennae, sway=antennae_sway)
     if view != 'rear':
         draw_face_turned(Hd, expr, hx, hy, u, s, view, glasses, moustache, hat is not None, mouth, blink)
     neck = (cx, chin - 0.1 * HH)
@@ -754,7 +859,7 @@ def turned(view='side', build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#
     # ---- the near arm in front of the body, with the held prop
     if not flat: draw_arm(LY['near'], 'N')
     hand_p = arms[prop_hand][2]
-    if prop: draw_prop(LY['near'], prop, hand_p, u)
+    if prop: draw_prop(LY['near'], prop, hand_p, u, side=(s if not flat else (1 if prop_hand == 'N' else -1)))
     if rig is not None:
         rig.update(hip=hip, neck=up(neck), head=up((hx, hy)), u=u, s=s, HH=HH,
                    handN=arms['N'][2], handF=arms['F'][2], shoulderN=arms['N'][0], shoulderF=arms['F'][0],
