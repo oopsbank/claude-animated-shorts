@@ -91,7 +91,7 @@ Most defects in the first video were born in the shot list and caught only after
 
 | Gate | When | Run | Pass |
 |---|---|---|---|
-| **G1 Script** | `shots.json` written, **before** the voice-over and before new sets/props are commissioned | `.venv/bin/python tools/preflight.py scripts/<slug>/shots.json` (stand-in timings, ~4 s), plus the **5-reviewer script panel** (`QA.md` › scripts) | 0 ERROR; every WARN fixed or justified in the shot's `note`; panel: each engagement reviewer ≥ 9/10 with no swipe before 50 s, comedy and facts ≥ 8; then the **Director approves the script** |
+| **G1 Script** | `shots.json` written, **before** the voice-over and before new sets/props are commissioned | `.venv/bin/python tools/preflight.py scripts/<slug>/shots.json` (stand-in timings, ~4 s), plus the **5-reviewer script panel** (`QA.md` › scripts) | 0 ERROR; every WARN fixed or justified in the shot's `note`; panel: all 5 reviewers ≥ 9/10, no swipe before 50 s, no round cap; then the **Director approves the script** |
 | **G2 Storyboard** | right after G1 | `.venv/bin/python tools/storyboard.py scripts/<slug>/shots.json videos/<slug>/storyboard` (~2 min) | one reviewer reads `storyboard.jpg` against the script: each shot shows its point (who acts, which way, cause before effect, readable at phone size). The Director gets the sheet with the script. |
 | **G3 Assets** | each new plate, prop or rig | re-run G2 with the new asset | the asset reads in its real shots, not only on its own sheet |
 | **G4 Voice** | after G1-G2 pass | audio makes `words.json` once; re-run preflight with it | 0 ERROR with real timings |
