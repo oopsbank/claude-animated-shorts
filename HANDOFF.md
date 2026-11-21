@@ -24,7 +24,9 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
     - Sound `session_01CUE8441Kj9vhQtH74MvcqK` (voice + mix, `claude/area-audio`);
     - Production Designer `session_01CUE843skpWDtxaczYJp1up` (look test → `playa` + `inserts` plates → G2 storyboard, `claude/area-sets`);
     - Screenwriter `session_01CUE841LfyxuYFPbEVjdLVm` is idle; keep it for script fixes, then archive.
-  - Next wave (after Sound finishes): one assets session for the characters/props/fx in BACKLOG. Then the engine P1s and the render.
+  - Sound: done (65.7 s, 1,390 characters, review 8.0; merged). The voice was sped up 1.24x, so the Director should listen (`videos/sailing-stones/preview_*.mp3`).
+  - Assets `session_01CUE843yWqYSyTQCUwPyKUW` (characters/props/fx, `claude/area-assets`) is running.
+  - Next: the engine P1s and wiring the new props/fx, then the render (G5).
   - A one-shot wake-up (`trig_01X7aHfDtbgBbvATacSfVXP6`, 2026-11-22 01:30 Asia/Ho_Chi_Minh) wakes stalled sessions with their full instructions; the Director asked for it.
 - **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session. It must apply, from the start:
   - the leaders' story engine (`QA.md` › scripts; `references/reports/retention_2026-11.md` §8);
