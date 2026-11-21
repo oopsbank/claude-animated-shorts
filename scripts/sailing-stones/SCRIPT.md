@@ -1,11 +1,11 @@
-# The Rocks That Walk Across the Desert (script v17, 2026-11-21)
+# The Rocks That Walk Across the Desert (script v17 final, 2026-11-21; passed the panel bar chosen by the Director: median ≥ 8, no swipe point before 50 s, facts ≥ 9)
 
 - **Slug:** `sailing-stones`
 - **Topic:** M4 in `scripts/TOPICS.md` v7, picked by the Director on 2026-11-21.
 - **Approval:** waiting for the Director. Do not voice before approval.
 - **Format (v15, ABSURD comedy per the Director):** line 1 is the cousins' odd act; a googly-eyed rock, Gary, is the runner (buried by the dust storm, steers their cooler, slides, goes through the sign). A compact "You see," on line 3 (v16 test; the genre-fan reviewer docks for its absence). The rival escalates in KIND and his alien theory escalates into ever more ridiculous FANTASY CUTAWAYS shown in his head (thought bubble + "ALIEN CAM" filter, clearly fantasy): leaf-blowing aliens ($30) → an alien rock-racing league ($40) → an alien air-hockey final with a referee ($50). The real reveal is a smash cut to the SAME framing, real: sun-cracked phone-thin ice panes shoved by a light breeze; the one analogy lands as a deadpan "Same game. No aliens." His livestream shows the world; a pane shoves Gary through his NIGHT ONLY sign; his refund cash blows away on the same breeze; his antennae droop: "Fine. It's ice." He pivots to $5 ice tours and his pitch loops into line 1.
 - **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2: 7/10, swipe at ~30 s (repeats), FAIL. v3: 7/10, swipe at ~25-30 s (history stages without the cousins, the alien joke three times), FAIL. v4 applies round 3's fixes (the cousins return at ~30 s, a new alien jab, a shorter 1948 stage) and merges the pond/ice lines (mechanism ~13 s); not re-reviewed.
-- **Length:** 234 words, no numbers said aloud. Calibrated on video 1 (231 words = 63.2 s): about 64 s.
+- **Length:** 235 words, no numbers said aloud. Calibrated on video 1 (231 words = 63.2 s): about 64 s.
 
 ## Facts and sources (everything said in the voice-over)
 
@@ -52,7 +52,7 @@ Fiction, made up for the story: Gary the googly-eyed rock; the guide's alien fan
 12. "Alien rock-racing league!" he yells. "Forty bucks."
 13. Year two, last try: he livestreams their failure to his fans.
 14. Rain floods the lake bed; cold nights freeze it, sleeping cousins included. Even his imaginary aliens doze off.
-15. One sunny morning, the ice crackles, and dozens of rocks start sliding. Gary too, tracker blinking.
+15. One rare sunny morning, the ice crackles, and dozens of rocks start sliding. Gary too, tracker logging.
 16. "Alien air-hockey final!" cries the guide. "The referee's a rock! Fifty bucks!"
 17. The sun breaks the phone-thin ice into huge panes; a light breeze shoves them into rocks.
 18. Same game. No aliens.

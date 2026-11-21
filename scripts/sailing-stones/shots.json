@@ -1183,7 +1183,7 @@
   },
   {
    "id": "s15",
-   "text": "One sunny morning, the ice crackles, and dozens of rocks start sliding. Gary too, tracker blinking.",
+   "text": "One rare sunny morning, the ice crackles, and dozens of rocks start sliding. Gary too, tracker logging.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1195,7 +1195,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 5,
+      "at_word": 6,
       "to": {
        "zoom": 1.6,
        "y": 0.78
@@ -1203,14 +1203,14 @@
       "dur": 6
      },
      {
-      "at_word": 7,
+      "at_word": 8,
       "to": {
        "zoom": 1.0
       },
       "dur": 6
      },
      {
-      "at_word": 12,
+      "at_word": 13,
       "to": {
        "zoom": 1.4,
        "x": 0.6,
@@ -1220,7 +1220,7 @@
      }
     ]
    },
-   "note": "Starts as an XCU of crack lines racing through the thin ice; pulls back at \"dozens\": the cousins in the foreground facing camera, rocks sliding behind them away from camera (no left/right claim); punch-in on Gary gliding, googly eyes wobbling.",
+   "note": "Starts as an XCU of crack lines racing through the thin ice; pulls back at \"dozens\": the cousins in the foreground facing camera, rocks sliding behind them away from camera (no left/right claim); punch-in on Gary gliding, googly eyes wobbling (no live-tracking UI: the GPS units only logged data, read out later).",
    "characters": [
     {
      "id": "kip",
@@ -1238,7 +1238,7 @@
       {
        "expr": "shock",
        "lean": -6,
-       "at_word": 7,
+       "at_word": 8,
        "arm_pose": [
         "point",
         "hold"
@@ -1267,7 +1267,7 @@
       },
       {
        "expr": "grin",
-       "at_word": 12,
+       "at_word": 13,
        "arm_pose": [
         "wave",
         "wave"
@@ -1289,7 +1289,7 @@
      "name": "ice_crack",
      "x": 0.5,
      "y": 0.78,
-     "at_word": 4
+     "at_word": 5
     },
     {
      "name": "sliding_rock",
@@ -1298,14 +1298,14 @@
      "count": 5,
      "path": "away",
      "dur": 2.4,
-     "at_word": 7
+     "at_word": 8
     },
     {
      "name": "gps_ping",
      "x": 0.32,
      "y": 0.6,
      "size": 0.45,
-     "at_word": 11
+     "at_word": 12
     }
    ],
    "props": [
