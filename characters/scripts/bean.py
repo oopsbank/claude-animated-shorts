@@ -217,7 +217,7 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     C.outline(torso, cx, tcy, w0)
     if seated:   # knees poking forward over the seat edge, in front of the belly: reads as sitting, not stacking
         from ink import stamp as _stamp
-        _stamp(C, [('e', cx + sg * 30 * u, torso_bot - 1 * u, 13 * u, 9.5 * u, leg_c) for sg in (-1, 1)], 0.8 * w0)
+        _stamp(C, [('e', cx + sg * 30 * u, torso_bot + 1 * u, 7.5 * u, 6 * u, leg_c) for sg in (-1, 1)], 0.55 * w0)
     # ---- head
     head_col = hexrgb('#fbf8f4') if white_head else skin_c
     C.fill_shaded(head, head_col, head_sh, 0.30 * a, 0.09 * a, cx, hy)
@@ -251,7 +251,9 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
             C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], sgn * 1.0 * u, 8)[1:], 5.4 * u, hold_c if ps == 'hold' else arm_c)
             if ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)
         if both_hold: draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))
-        for pts, ps in front: C.dot(*pts[2], (6.3 if ps == 'hold' else 5.5) * u)
+        for pts, ps in front:      # a gripping hand gets a sleeve-coloured cuff ring, so it pops over the prop's ink
+            if ps == 'hold': C.dot(*pts[2], 7.4 * u, hold_c)
+            C.dot(*pts[2], 5.8 * u)
         front = []
     for pts, ps in front:
         sgn = 1 if pts[0][0] > cx else -1
@@ -438,8 +440,8 @@ def draw_cooler(C, cx, top, bot, w, u, body=None, lid=None, label=None):
 def antenna_geo(root, a, b, sgn, droop, sway):
     """Stalk centre line (bezier) and tip for one antenna. droop 0 = up and springy, 1 = sagging beside the head."""
     # the tip swings down an arc under gravity (13 deg -> 128 deg from vertical); the stem near the root stays upright
-    th = math.radians(13 + 135 * droop ** 0.85); R = b * (0.98 - 0.06 * droop)
-    tip = (root[0] + sgn * R * math.sin(th) * (1 + 0.15 * droop), root[1] - R * math.cos(th))
+    th = math.radians(13 + 132 * droop ** 0.6); R = b * (0.98 + 0.12 * droop)
+    tip = (root[0] + sgn * (R * math.sin(th) + 0.45 * a * droop), root[1] - R * math.cos(th))     # hangs clear of the cheeks
     tc = math.radians(6 + 40 * droop); Rc = R * (0.55 + 0.1 * droop)
     ctl = (root[0] + sgn * Rc * math.sin(tc), root[1] - Rc * math.cos(tc))
     tip = rot_pt(tip, root, sway); ctl = rot_pt(ctl, root, sway * 0.5)
@@ -487,7 +489,8 @@ def draw_antennae(C, col, cx, hy, a, b, u, w0, facing, rot, rear, antennae='up',
     for pts, tip, rb in parts:
         stamp(C, [('s', pts, stalk), ('e', tip[0], tip[1], rb, rb * (1 - 0.1 * droop), col)], 0.7 * w0,
               details=[('c', tip[0] - rb * 0.38, tip[1] - rb * 0.4, rb * 0.22, mix(col, (255, 255, 255), 0.55))])
-    stamp(C, [('p', band, dk)], 0.8 * w0, shade=False)
+    stamp(C, [('p', band, dk)] + [('e', p_[0][0], p_[0][1] + 1 * u, 0.09 * a, 0.07 * a, dk) for p_, _t, _r in parts], 0.8 * w0,
+          details=[('s', [(x, y + 2.2 * u, 1.6 * u) for x, y in top[2:-2]], mix(col, (255, 255, 255), 0.25))])   # band + spring sockets, a lit top rim
 
 if __name__ == '__main__':
     import sys

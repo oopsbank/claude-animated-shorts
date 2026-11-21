@@ -873,13 +873,24 @@ def _cells(n, u, seed=5, m=5):
     step = 2 * u / m
     P = [[(cx - u + i * step + (rnd.uniform(-0.28, 0.28) * step if 0 < i < m else 0),
            cy - u + j * step + (rnd.uniform(-0.28, 0.28) * step if 0 < j < m else 0)) for j in range(m + 1)] for i in range(m + 1)]
+    def clamp_r(p):        # pull points outside the pond's (slightly wobbly) rim onto it: a round pond, not a grid
+        dx, dy = p[0] - cx, p[1] - cy; d = math.hypot(dx, dy) or 1; a = math.atan2(dy, dx)
+        R = u * (0.97 + 0.04 * math.sin(3 * a + 1) + 0.025 * math.sin(5 * a))
+        return p if d <= R else (cx + dx / d * R, cy + dy / d * R)
     cells = []
     for i in range(m):
         for j in range(m):
-            q = [P[i][j], P[i + 1][j], P[i + 1][j + 1], P[i][j + 1]]
-            gx = sum(p[0] for p in q) / 4; gy = sum(p[1] for p in q) / 4
+            q0 = [P[i][j], P[i + 1][j], P[i + 1][j + 1], P[i][j + 1]]
+            gx = sum(p[0] for p in q0) / 4; gy = sum(p[1] for p in q0) / 4
             dist = math.hypot(gx - cx, gy - cy) / u
-            if dist < 0.98: cells.append((q, (gx, gy), dist, i, j))
+            if dist > 1.12: continue
+            q = []
+            for a_, b_ in zip(q0, q0[1:] + q0[:1]):
+                for k in range(4): q.append(clamp_r((lerp(a_[0], b_[0], k / 4), lerp(a_[1], b_[1], k / 4))))
+            ar = 0.5 * abs(sum(q[k][0] * q[k - 1][1] - q[k - 1][0] * q[k][1] for k in range(len(q))))
+            if ar < step * step * 0.12: continue
+            gx = sum(p[0] for p in q) / len(q); gy = sum(p[1] for p in q) / len(q)
+            cells.append((q, (gx, gy), min(1.0, math.hypot(gx - cx, gy - cy) / u), i, j))
     return cells
 
 
@@ -967,7 +978,7 @@ def fx_ice_pane(t, n, u, e, kw):
         cr = []
         rc = random.Random(9)
         for q, c, dist, i, j in cells:
-            for a_, b_ in ((q[0], q[1]), (q[1], q[2])):
+            for a_, b_ in ((q[0], q[4]), (q[4], q[8])):
                 md = math.hypot((a_[0] + b_[0]) / 2 - cx, (a_[1] + b_[1]) / 2 - cy) / u
                 f = seg(crack_p, md * 0.7, md * 0.7 + 0.3)
                 if f <= 0: continue
@@ -981,7 +992,7 @@ def fx_ice_pane(t, n, u, e, kw):
 def _ice_side(t, n, u, e, kw):
     """Low-angle view: a phone-thin translucent sheet lying on the playa near the bottom of the canvas."""
     stage = kw.get('stage', 'drift'); sgn = -1 if kw.get('direction', 'right') == 'left' else 1
-    gy = n * 0.72; th = u * 0.05; depth = u * 0.16
+    gy = n * 0.74; th = u * 0.09; depth = u * 0.34
     g = smooth(seg(t, 0.0, 0.08)); out_a = fade(t, 0.92, 1.0)
     shapes, det = [], []
     if stage == 'water':
@@ -1059,14 +1070,14 @@ def fx_sliding_rock(t, n, u, e, kw):
         p = seg(t, 0.06 + d0, 0.86)
         mv = smooth(p) - 0.04 * bump(seg(p, 0.0, 0.18))          # creak back, then glide
         x = lerp(p0[0], p1[0], mv); y = lerp(p0[1], p1[1], mv); k = lerp(k0, k1, mv) * (0.5 if cnt > 2 else 1.0)
-        rx = u * 0.32 * k; ry = u * 0.24 * k
+        rx = u * 0.25 * k; ry = u * 0.19 * k
         wob = 3 * math.sin(t * 40 + i) * bump(p)
         if trail and mv > 0.01:     # groove: darker clay with a light rim, narrowing toward the horizon
             m = 16; tp, rim = [], []
             for j in range(m + 1):
                 f = mv * j / m; kk = lerp(k0, k1, f) * (0.5 if cnt > 2 else 1.0)
-                tx, ty = lerp(p0[0], p1[0], f), lerp(p0[1], p1[1], f) + u * 0.12 * kk
-                tp.append((tx, ty, u * 0.34 * kk)); rim.append((tx, ty - u * 0.06 * kk, u * 0.06 * kk))
+                tx, ty = lerp(p0[0], p1[0], f), lerp(p0[1], p1[1], f) + u * 0.1 * kk
+                tp.append((tx, ty, u * 0.2 * kk)); rim.append((tx, ty - u * 0.07 * kk, u * 0.035 * kk))
             lay_t.append(('s', tp, (150, 118, 86))); lay_t.append(('s', rim, (226, 198, 160)))
         sq = 1 + 0.08 * bump(seg(p, 0.0, 0.18))                      # a little squash on the creak
         if sprite == 'fridge':
@@ -1169,14 +1180,14 @@ def fx_flash_flood(t, n, u, e, kw):
     X = (lambda x: x) if sgn > 0 else (lambda x: n - x)
     front = lerp(-0.2 * n, 1.25 * n, smooth(seg(t, 0.08, 0.55)))
     level = n * (1 - 0.42 * smooth(seg(t, 0.1, 0.5)) + 0.42 * smooth(seg(t, 0.78, 0.98)))   # water surface y
-    crest = n * 0.16 * bump(seg(t, 0.08, 0.6))
+    crest = n * 0.3 * bump(seg(t, 0.08, 0.6))
     trickle = bump(seg(t, 0.0, 0.12))                                       # anticipation: a thin trickle first
     surf, foam = [], []
     m = 40
     for j in range(m + 1):
         x = -10 + (front + 10) * j / m
         dist = (front - x) / n
-        hump = crest * math.exp(-((dist - 0.06) / 0.07) ** 2)                 # the tall wave just behind the front
+        hump = crest * math.exp(-((dist - 0.08) / 0.09) ** 2)                 # the tall wave just behind the front
         y = level - hump + n * 0.012 * math.sin(j * 1.1 + t * 40)
         surf.append((X(x), y))
     shapes, det = [], []

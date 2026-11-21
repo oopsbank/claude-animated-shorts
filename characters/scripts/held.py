@@ -134,7 +134,7 @@ def phone(C, x, y, u, d, two, e, badge='LIVE'):
 
 def selfie_stick(C, x, y, u, d, two, e):
     dd = d or -1
-    top = (x + dd * 22 * u, y - 150 * u)
+    top = (x + dd * 20 * u, y - 128 * u)
     stamp(C, [('s', [(x - dd * 2 * u, y + 10 * u, 5.5 * u), (top[0], top[1] + 14 * u, 4.5 * u)], (110, 114, 126)),
               ('p', rpoly(top[0], top[1], 24 * u, 40 * u, 4 * u, ang=dd * 10), DARK)], e * 0.85,
           details=[('c', *fx.rot(top[0] - 5 * u, top[1] - 12 * u, top[0], top[1], dd * 10), 3.4 * u, (120, 124, 140)),

@@ -29,7 +29,7 @@ class Card:
         im.info['anchor'] = (anchor[0] * k, anchor[1] * k); return im
 
 
-E = 12.0      # ink width in design units (the cast's outline is ~12 at the head, props ~10)
+E = 11.0      # ink width in design units (the cast's outline is ~12 at the head, props ~10)
 
 
 # ------------------------------------------------------------------ rocks
@@ -76,7 +76,7 @@ def gary_buried(t=0.0, k=1.0, **kw):
 
 def gps_box(t=0.0, k=1.0, **kw):
     """The tracker: a small grey box with a whip antenna and a green LED (blinks with t)."""
-    C = Card(160, 190); cx, gy = 80, 175; cy = gy - 34
+    C = Card(170, 220); cx, gy = 80, 205; cy = gy - 34
     led = (120, 230, 110) if (t == 0 or (t * 8) % 1 < 0.5) else (40, 90, 50)
     stamp(C, [('s', [(cx + 34, cy - 30, 6), (cx + 42, cy - 140, 5)], (52, 55, 68)), ('c', cx + 42, cy - 146, 9, RED),
               ('p', rpoly(cx, cy, 110, 72, 12), (154, 163, 173))], E,
@@ -196,7 +196,9 @@ def tour_sign_free(t=0.0, k=1.0, text_='ALIEN ROCK TOURS|NIGHT ONLY', **kw):
             pts = [(x, y) for x, y in crack if y >= gy_top - 5][:n]
             if len(pts) >= 2:
                 out.d = ImageDraw.Draw(out.im)
-                out.d.line([((x + sh) * S, y * S) for x, y in pts], fill=INK, width=int(7 * S), joint='curve')
+                out.d.line([((x + sh) * S, y * S) for x, y in pts], fill=INK, width=int(13 * S), joint='curve')
+                tip = pts[-1]          # chips fly off the running crack
+                stamp(out, [('c', tip[0] + 18 * dx, tip[1] - 10 + 6 * dx, 7, PAPER) for dx in (-1, 1)], 3)
         return out.out(k, (cx, gy))
     # split into two halves along the crack and topple each outward about its post foot
     m = Image.new('L', full.size, 0)
@@ -243,8 +245,9 @@ def flying_bills(t=0.0, k=1.0, count=9, direction='right', seed=3, **kw):
         bw, bh = 190 * g, 88 * g
         if bw < 4: continue
         fw = max(8, bw * (0.35 + 0.65 * abs(flip)))
-        stamp(C, [('p', rpoly(x, y, fw, bh, 4, ang=spin), GREEN)], E * 0.8 * g,
-              details=[('p', rpoly(x, y, fw * 0.8, bh * 0.62, 3, ang=spin), (88, 160, 84)), ('c', x, y, bh * 0.26, (170, 225, 160))])
+        stamp(C, [('p', rpoly(x, y, fw, bh, 4, ang=spin), (236, 246, 228))], E * 0.8 * g,      # white border = a banknote
+              details=[('p', rpoly(x, y, fw * 0.84, bh * 0.72, 3, ang=spin), GREEN), ('c', x, y, bh * 0.24, (236, 246, 228))])
+        text(C, x, y, '$', bh * 0.32, (40, 110, 44), rot=-spin)
     return C.out(k, (ox, oy))
 
 
