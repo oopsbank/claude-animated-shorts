@@ -172,6 +172,121 @@ def cyl(r, depth, loc, m, rot=(0, 0, 0), verts=12):
                                         rotation=tuple(math.radians(a) for a in rot))
     o = bpy.context.object; assign(o, m); return o
 
+# ---------------------------------------------------------------- stylised PBR props (playbook 3b)
+# Hero props read by light and shape, not ink: rounded bevels that catch a highlight, glossy toy-like paint with a
+# clearcoat, gold metallic trim, soft key + AO from Cycles. Props made with these go in the `noink` collection.
+GOLD = (0.69, 0.37, 0.05)   # linear #d9a441
+
+def pbr(name, col, rough=0.4, metal=0.0, coat=0.4, bevel=0.05, emit=0.0, sheen=0.0, noise=0.0, noise_scale=6.0, dust=None):
+    """Principled paint with clearcoat and a Bevel node in the normal (every edge gets a highlight, even on flat-shaded
+    boxes). noise > 0 adds a soft value variation (painted, hand-made surfaces), never a photo texture."""
+    m = bpy.data.materials.get(name)
+    if m: return m
+    m = bpy.data.materials.new(name); m.use_nodes = True; n = m.node_tree.nodes; l = m.node_tree.links; P = n['Principled BSDF']
+    P.inputs['Base Color'].default_value = (*col, 1); P.inputs['Roughness'].default_value = rough
+    P.inputs['Metallic'].default_value = metal; P.inputs['Coat Weight'].default_value = coat
+    P.inputs['Coat Roughness'].default_value = 0.15
+    if sheen: P.inputs['Sheen Weight'].default_value = sheen
+    if emit: P.inputs['Emission Color'].default_value = (*col, 1); P.inputs['Emission Strength'].default_value = emit
+    if bevel:
+        bv = n.new('ShaderNodeBevel'); bv.samples = 6; bv.inputs['Radius'].default_value = bevel
+        l.new(bv.outputs['Normal'], P.inputs['Normal'])
+        if coat: l.new(bv.outputs['Normal'], P.inputs['Coat Normal'])
+    if noise:
+        tc = n.new('ShaderNodeTexCoord'); nz = n.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = noise_scale
+        nz.inputs['Detail'].default_value = 3; l.new(tc.outputs['Object'], nz.inputs['Vector'])
+        r = n.new('ShaderNodeValToRGB'); e = r.color_ramp.elements
+        e[0].color = (*[c * (1 - noise) for c in col], 1); e[1].color = (*[min(1, c * (1 + noise)) for c in col], 1)
+        l.new(nz.outputs['Fac'], r.inputs['Fac']); l.new(r.outputs['Color'], P.inputs['Base Color'])
+    if dust:   # (height m, colour): road dust on the lower body, fading out by `height` (world Z), mottled
+        h, dc = dust; base = P.inputs['Base Color'].links[0].from_socket if P.inputs['Base Color'].is_linked else None
+        geo = n.new('ShaderNodeNewGeometry'); sz = n.new('ShaderNodeSeparateXYZ'); l.new(geo.outputs['Position'], sz.inputs['Vector'])
+        mr = n.new('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 0.2; mr.inputs['From Max'].default_value = h
+        mr.inputs['To Min'].default_value = 0.85; mr.inputs['To Max'].default_value = 0.0; l.new(sz.outputs['Z'], mr.inputs['Value'])
+        nz = n.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 9; l.new(geo.outputs['Position'], nz.inputs['Vector'])
+        mm = n.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; l.new(mr.outputs['Result'], mm.inputs[0]); l.new(nz.outputs['Fac'], mm.inputs[1])
+        mx = n.new('ShaderNodeMix'); mx.data_type = 'RGBA'; l.new(mm.outputs[0], mx.inputs['Factor'])
+        if base: l.new(base, mx.inputs[6])
+        else: mx.inputs[6].default_value = (*col, 1)
+        mx.inputs[7].default_value = (*dc, 1); l.new(mx.outputs[2], P.inputs['Base Color'])
+        rr = n.new('ShaderNodeMapRange'); rr.inputs['To Min'].default_value = rough; rr.inputs['To Max'].default_value = 0.9
+        l.new(mm.outputs[0], rr.inputs['Value']); l.new(rr.outputs['Result'], P.inputs['Roughness'])
+    return m
+
+def softbox(loc, target, size=4.0, power=400, col=(1.0, 0.95, 0.88)):
+    """Big soft area light, placed so glossy paint shows a long specular streak (camera-invisible)."""
+    ld = bpy.data.lights.new('softbox', 'AREA'); ld.shape = 'RECTANGLE'; ld.size = size; ld.size_y = size * 0.35
+    ld.energy = power; ld.color = col
+    o = bpy.data.objects.new('softbox', ld); bpy.data.collections['lights'].objects.link(o); o.location = loc
+    o.rotation_euler = (Vector(target) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler(); o.visible_camera = False
+    return o
+
+def contact_blob(loc, sx, sy, rz=0, strength=0.92):
+    """Soft dark ambient-occlusion pad on the ground under a prop (vehicles, rocks): the stylised contact shadow."""
+    m = bpy.data.materials.get('_blob')
+    if not m:
+        m = bpy.data.materials.new('_blob'); m.use_nodes = True; n = m.node_tree.nodes; l = m.node_tree.links; n.clear()
+        o = n.new('ShaderNodeOutputMaterial'); tr = n.new('ShaderNodeBsdfTransparent'); dk = n.new('ShaderNodeBsdfDiffuse')
+        dk.inputs['Color'].default_value = (0.02, 0.012, 0.015, 1)
+        tc = n.new('ShaderNodeTexCoord'); g = n.new('ShaderNodeTexGradient'); g.gradient_type = 'SPHERICAL'
+        l.new(tc.outputs['Object'], g.inputs['Vector'])
+        r = n.new('ShaderNodeMapRange'); r.name = 'k'; r.inputs['To Max'].default_value = strength; l.new(g.outputs['Fac'], r.inputs['Value'])
+        pw = n.new('ShaderNodeMath'); pw.operation = 'POWER'; pw.inputs[1].default_value = 0.9; l.new(r.outputs['Result'], pw.inputs[0])
+        mx = n.new('ShaderNodeMixShader'); l.new(pw.outputs[0], mx.inputs['Fac']); l.new(tr.outputs[0], mx.inputs[1]); l.new(dk.outputs[0], mx.inputs[2])
+        l.new(mx.outputs[0], o.inputs['Surface'])
+    o = plane(2, (loc[0], loc[1], loc[2] + 0.004), m); o.scale = (sx / 2, sy / 2, 1); o.rotation_euler.z = math.radians(rz)
+    o.visible_shadow = False; return o
+
+def gold(name='gold'):
+    return pbr(name, GOLD, rough=0.28, metal=1.0, coat=0.0, bevel=0.01)
+
+def glass(name='glass', col=(0.30, 0.45, 0.55), emit=0.0, see=0.0):
+    """Glossy window glass that reflects the sky; see > 0 lets an interior show through (transmission)."""
+    m = pbr(name, col, rough=0.03, coat=0.0, bevel=0.005, emit=emit)
+    P = m.node_tree.nodes['Principled BSDF']; P.inputs['Specular IOR Level'].default_value = 0.8
+    if see: P.inputs['Transmission Weight'].default_value = see; P.inputs['IOR'].default_value = 1.05
+    return m
+
+def soften(o, width=0.04, seg=3, smooth=True):
+    """Geometric bevel + smooth shading: rounded toy edges that catch the key light."""
+    b = o.modifiers.new('bevel', 'BEVEL'); b.width = width; b.segments = seg; b.limit_method = 'ANGLE'
+    b.harden_normals = smooth   # flat faces stay flat, the rounded rim carries the highlight
+    if smooth and o.type == 'MESH':
+        for pl in o.data.polygons: pl.use_smooth = True
+    return o
+
+def rbox(size, loc, m, r=0.05, rz=0, ink=False, seg=3):
+    """Rounded box prop (no ink by default)."""
+    o = box(size, loc, m, rz=rz, ink=ink); bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    return soften(o, r, seg)
+
+def rcyl(rad, depth, loc, m, rot=(0, 0, 0), verts=24, r=0.02, ink=False):
+    o = cyl(rad, depth, loc, m, rot, verts); soften(o, r, 2)
+    if not ink: no_ink(o)
+    return o
+
+def rock(loc, size=(0.7, 0.55, 0.4), seed=0, m=None, rz=0, ink=False, detail=2, facet=False):
+    """Stylised boulder: a subdivided cube pushed by noise, smooth-shaded, flat-bottomed (sits on the ground)."""
+    import random
+    rnd = random.Random(seed)
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0)); o = bpy.context.object
+    sub = o.modifiers.new('sub', 'SUBSURF'); sub.levels = detail; sub.render_levels = detail
+    bpy.ops.object.modifier_apply(modifier='sub')
+    ox, oy, oz = rnd.uniform(-9, 9), rnd.uniform(-9, 9), rnd.uniform(-9, 9)
+    from mathutils import noise as mn
+    for v in o.data.vertices:
+        c = v.co.normalized()
+        k = 1 + 0.30 * mn.noise(Vector((c.x * 1.4 + ox, c.y * 1.4 + oy, c.z * 1.4 + oz))) + 0.10 * mn.noise(c * 3.2 + Vector((oy, oz, ox)))
+        p = c * 0.5 * k
+        v.co = Vector((p.x * size[0] * 2, p.y * size[1] * 2, min(max(p.z, -0.32), 0.30 + 0.04 * c.x) * size[2] * 2))   # flat-topped slab
+    for pl in o.data.polygons: pl.use_smooth = not facet
+    if facet: soften(o, 0.02, 2, smooth=False)   # chunky low-poly facets; the bevel catches the key on every edge
+    bb = min(v.co.z for v in o.data.vertices)
+    o.location = (loc[0], loc[1], loc[2] - bb); o.rotation_euler.z = math.radians(rz)
+    assign(o, m or pbr('rock', (0.11, 0.085, 0.075), rough=0.6, coat=0.15, bevel=0.03, noise=0.45, noise_scale=4.0))
+    if not ink: no_ink(o)
+    return o
+
 # ---------------------------------------------------------------- signage
 FONTS = ['/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', '/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf',
          '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf']
@@ -309,7 +424,13 @@ def _sky(p):
     bg_amb = n.new('ShaderNodeBackground'); bg_amb.inputs['Color'].default_value = (*p['amb'], 1)
     bg_amb.inputs['Strength'].default_value = p['amb_e']
     lp = n.new('ShaderNodeLightPath'); mx = n.new('ShaderNodeMixShader')
-    l.new(lp.outputs['Is Camera Ray'], mx.inputs['Fac']); l.new(bg_amb.outputs[0], mx.inputs[1]); l.new(bg_cam.outputs[0], mx.inputs[2])
+    if p.get('sky_refl'):   # glossy rays see the painted sky too: clearcoat paint and glass get a sky reflection
+        g = n.new('ShaderNodeMath'); g.operation = 'MULTIPLY'; g.inputs[1].default_value = p['sky_refl']
+        l.new(lp.outputs['Is Glossy Ray'], g.inputs[0])
+        mxm = n.new('ShaderNodeMath'); mxm.operation = 'MAXIMUM'; l.new(lp.outputs['Is Camera Ray'], mxm.inputs[0]); l.new(g.outputs[0], mxm.inputs[1])
+        l.new(mxm.outputs[0], mx.inputs['Fac'])
+    else: l.new(lp.outputs['Is Camera Ray'], mx.inputs['Fac'])
+    l.new(bg_amb.outputs[0], mx.inputs[1]); l.new(bg_cam.outputs[0], mx.inputs[2])
     l.new(mx.outputs[0], out.inputs['Surface'])
 
 def apply_light(name, cam_obj, overrides=None):
@@ -319,6 +440,7 @@ def apply_light(name, cam_obj, overrides=None):
     sun = bpy.data.lights.new('sun', 'SUN'); sun.color = p['sun']; sun.energy = p['sun_e']; sun.angle = math.radians(p.get('sun_soft', 6))
     so = bpy.data.objects.new('sun', sun); bpy.data.collections['lights'].objects.link(so); so['preset'] = 1
     so.rotation_euler = (math.radians(90 - p['elev']), 0, math.radians(p.get('az', 210)))
+    if p.get('sun_from'): so.rotation_euler = Vector(p['sun_from']).normalized().to_track_quat('Z', 'Y').to_euler()   # world vector toward the sun
     if p['fill_e']:   # soft camera-side fill so facades never go black at night
         f = bpy.data.lights.new('fill', 'AREA'); f.color = p['fill']; f.energy = p['fill_e']; f.size = 14
         fo = bpy.data.objects.new('fill', f); bpy.data.collections['lights'].objects.link(fo); fo['preset'] = 1
