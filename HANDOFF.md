@@ -10,6 +10,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **Captions:** the "sentence" style (Poppins Bold, 1-2 words as written, white), picked on 2026-11-21 (`PIPELINE.md` › Captions).
 - **Lean crew, nothing extra and nothing missing:** see "How to run the crew" below. **No scheduled tasks** unless asked. The nightly 1st AD task (`trig_01RG5qNmG98WYrpCXKiSLCjq`) is disabled.
 - **Quality bar: 9/10 or higher on every criterion, for everything.**
+- **Comedy taste: ABSURD** (picked 2026-11-21 over slapstick and deadpan). Lean into absurd escalation and imagined cutaways (e.g. aliens playing air hockey with boulders), always framed as a character's fantasy or a joke, never as fact. One deadpan line can land the payoff.
 - **Always ask before publishing.** Upload-Post was removed on 2026-11-21: the Director posts by hand, and we prepare the files and the text.
 
 ## Status
