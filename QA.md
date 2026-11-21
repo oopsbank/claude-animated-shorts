@@ -26,6 +26,21 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
 - [ ] The story, characters and jokes are original: no topic angle or title overlaps `references/titles.md`.
 - [ ] Every sentence has a visual in `shots.json`, and each shot uses an existing set, cam and light, or adds the set to `BACKLOG.md`.
 - [ ] Reviewer scores: hook, clarity, humour, accuracy and visual potential.
+- [ ] **Engagement review** (a second, separate reviewer that plays a bored phone viewer, not an editor). It gets only the voice-over with the time of each sentence (about 3.7 words/s), and answers:
+  - At each 5 s mark, would I keep watching, and why? (a new question, a twist, a laugh, a stake)
+  - Where is the first moment I would swipe?
+  - Is there an open question I need answered at 15 s, 30 s and 45 s?
+  - Is the ending a payoff or a loop that makes me rewatch?
+  - Score "would watch to the end" out of 10, compared with the leaders' story engine (`references/reports/retention_2026-11.md` §8).
+
+  **Bar raised by the Director (2026-11-21): a panel of 3 fresh engagement reviewers, each a different viewer:**
+  1. a 16-year-old TikTok scroller;
+  2. a curious adult on YouTube Shorts;
+  3. a regular viewer of the leading channels, who compares directly with their story engine.
+
+  Plus one **comedy reviewer** (are the gags actually funny?) and one **fact checker** (is every claim true and sourced?).
+  - **Pass:** every engagement reviewer gives **≥ 9/10** and no swipe point before 50 s; the comedy and fact reviewers give ≥ 8.
+  - Fresh reviewers every round, with no view of earlier drafts. At most 4 rounds, then the Director decides.
 
 ## sets
 - [ ] `build.py` rebuilds the set from scratch with no manual steps, and renders every cam × light plate.
