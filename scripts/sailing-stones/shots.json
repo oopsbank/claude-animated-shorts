@@ -303,7 +303,7 @@
   },
   {
    "id": "s05",
-   "text": "Nearby, a guide sells alien rock tours.",
+   "text": "Nearby, an alien-tour guide mocks them.",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
@@ -657,7 +657,7 @@
   },
   {
    "id": "s10",
-   "text": "Month one: the cousins stare at fifteen rocks.",
+   "text": "Month one: they stare at fifteen rocks.",
    "set": "playa",
    "cam": "playa_med",
    "light": "day",
@@ -666,7 +666,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 4,
+      "at_word": 3,
       "to": {
        "zoom": 1.15
       },
@@ -691,7 +691,7 @@
       {
        "expr": "nervous",
        "lean": 6,
-       "at_word": 6,
+       "at_word": 5,
        "arm_pose": [
         "hold",
         "hold"
@@ -720,7 +720,7 @@
       },
       {
        "expr": "stern",
-       "at_word": 7,
+       "at_word": 6,
        "arm_pose": [
         "hip",
         "hip"
@@ -1095,7 +1095,7 @@
   },
   {
    "id": "s16",
-   "text": "Only the egg runs.",
+   "text": "Only the yolk runs.",
    "set": "playa",
    "cam": "playa_top",
    "light": "day",
@@ -1143,7 +1143,7 @@
   },
   {
    "id": "s17",
-   "text": "\"Maybe they're shy,\" snorts the guide. \"Forty bucks.\"",
+   "text": "\"Aliens only drive at night,\" snorts the guide. \"Forty bucks.\"",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
@@ -1152,7 +1152,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 6,
+      "at_word": 8,
       "to": {
        "zoom": 1.3
       },
@@ -1177,7 +1177,7 @@
        "prop": "cash_fan",
        "expr": "grin",
        "lean": -6,
-       "at_word": 6,
+       "at_word": 8,
        "arm_pose": [
         "wave",
         "hold"
@@ -1203,7 +1203,7 @@
      "name": "sparkle",
      "x": 0.66,
      "y": 0.3,
-     "at_word": 6
+     "at_word": 8
     }
    ],
    "props": [
@@ -1311,7 +1311,7 @@
   },
   {
    "id": "s19",
-   "text": "and one night it freezes over.",
+   "text": "and cold nights freeze it over.",
    "set": "playa",
    "cam": "playa_top",
    "light": "night",
@@ -1330,7 +1330,7 @@
      "x": 0.5,
      "y": 0.5,
      "stage": "freeze",
-     "at_word": 4
+     "at_word": 3
     }
    ],
    "props": [
@@ -1339,7 +1339,7 @@
   },
   {
    "id": "s20",
-   "text": "Next morning, the ice starts crackling.",
+   "text": "One sunny morning, the ice crackles.",
    "set": "playa",
    "cam": "rock_low",
    "light": "frost",
@@ -1368,7 +1368,7 @@
      "name": "ice_crack",
      "x": 0.5,
      "y": 0.78,
-     "at_word": 3
+     "at_word": 4
     },
     {
      "name": "exclaim",
@@ -1384,7 +1384,7 @@
   },
   {
    "id": "s21",
-   "text": "Dozens of rocks across the lake start sliding, in broad daylight.",
+   "text": "Dozens of rocks start sliding in broad daylight, their trackers logging every metre.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1396,7 +1396,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 9,
+      "at_word": 6,
       "to": {
        "zoom": 1.35,
        "y": 0.42
@@ -1423,7 +1423,7 @@
       {
        "expr": "grin",
        "lean": -6,
-       "at_word": 9,
+       "at_word": 6,
        "arm_pose": [
         "point",
         "hold"
@@ -1452,7 +1452,7 @@
       },
       {
        "expr": "grin",
-       "at_word": 9,
+       "at_word": 6,
        "arm_pose": [
         "wave",
         "wave"
@@ -1484,7 +1484,14 @@
      "x": 0.5,
      "y": 0.2,
      "size": 0.45,
-     "at_word": 7
+     "at_word": 4
+    },
+    {
+     "name": "gps_ping",
+     "x": 0.32,
+     "y": 0.6,
+     "size": 0.45,
+     "at_word": 9
     }
    ],
    "props": [
@@ -1606,7 +1613,7 @@
   },
   {
    "id": "s24",
-   "text": "Like a giant window sliding across a wet kitchen floor and shoving the fridge.",
+   "text": "Like a giant window skating across a wet kitchen floor, shoving the fridge.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1618,7 +1625,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 11,
+      "at_word": 10,
       "to": {
        "zoom": 1.25,
        "x": 0.4
@@ -1643,7 +1650,7 @@
       },
       {
        "expr": "smug",
-       "at_word": 13,
+       "at_word": 12,
        "arm_pose": [
         "chin",
         "hang"
@@ -1707,13 +1714,13 @@
      ],
      "dur": 1.2,
      "trail": true,
-     "at_word": 11
+     "at_word": 10
     },
     {
      "name": "splash",
      "x": 0.45,
      "y": 0.85,
-     "at_word": 11
+     "at_word": 10
     }
    ],
    "props": [
@@ -1850,7 +1857,7 @@
   },
   {
    "id": "s27",
-   "text": "Rocks one, guide zero.",
+   "text": "Nerds one, aliens zero.",
    "set": "playa",
    "cam": "playa_top",
    "light": "frost",
@@ -1859,14 +1866,14 @@
     "move": "push_in",
     "amount": 0.1
    },
-   "note": "Callback to his own taunt: top view of the flattened sign lying under the rock, the alien cut-out face-down in the water, a tiny scoreboard badge ROCKS 1 · GUIDE 0.",
+   "note": "Callback to his own taunt: top view of the flattened sign lying under the rock, the alien cut-out face-down in the water, a scoreboard badge NERDS 1 · ALIENS 0 (flips his own \"Rocks one, nerds zero\").",
    "characters": [],
    "fx": [
     {
      "name": "year_badge",
      "x": 0.5,
      "y": 0.14,
-     "label": "ROCKS 1 · GUIDE 0",
+     "label": "NERDS 1 · ALIENS 0",
      "at_word": 0
     },
     {
@@ -1883,7 +1890,7 @@
   },
   {
    "id": "s28",
-   "text": "He wakes up, spits out his coffee,",
+   "text": "He wakes, spits out his coffee,",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
@@ -1914,7 +1921,7 @@
       {
        "expr": "shock",
        "lean": 8,
-       "at_word": 3,
+       "at_word": 2,
        "arm_pose": [
         "hold",
         "wave"
@@ -1940,14 +1947,14 @@
      "name": "splash",
      "x": 0.42,
      "y": 0.42,
-     "at_word": 3
+     "at_word": 2
     },
     {
      "name": "exclaim",
      "x": 0.58,
      "y": 0.22,
      "size": 0.45,
-     "at_word": 6
+     "at_word": 5
     }
    ],
    "props": [
