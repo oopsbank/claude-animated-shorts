@@ -58,6 +58,16 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 
 - [ ] P2 A bars close-up from behind/above (rider's hands, bars and front tyre visible, steer angle driven by the rig) so a countersteer flick is seen, not only signalled by an arrow (v3 review, s13).
 
+## engine: from the Segment Zero study (`references/reports/segment_zero_2026-11.md`)
+- [ ] P2 Depth-tested compositing: a character gets a depth (from its ground point and the plate's depth map). Plate pixels nearer than the character are drawn over it, so characters stand behind posts, sit inside cabs and sink into snow.
+- [ ] P2 Depth of field for characters: blur far characters by the plate depth, so multi-plane shots read.
+- [ ] P3 Smear frames / motion blur for fast prop and limb moves (swing, flick), and for wheels.
+- [ ] P3 Our own retention overlay (a small chapter-dot row in our palette) and a faint channel watermark. Design our own; don't copy theirs.
+
+## sets: from the same study
+- [ ] P2 One motivated practical light per interior, a low sun with long shadows for exteriors, and light steam/dust volumetrics where the story has them.
+- [ ] P3 Foreground occluder props near the camera (window frames, logs, railings) that the engine can depth-test against.
+
 ## fx (`fx/`)
 - [ ] P3 Thicker `path_line` "actual" stroke and a longer hold on the kink (v3 review, s12 top insert).
 - [x] P1 `fx/fx.py` with: explosion, impact_star, dust_puff, speed_lines, sweat_drop, anger_vein, glow_eyes, sparkle, splash, question_mark, exclaim, music_note. (claude/area-fx) After 4 review rounds, 11 of 12 effects pass (every score >= 7). See `fx/RULES.md`.
