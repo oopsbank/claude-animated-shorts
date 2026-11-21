@@ -14,7 +14,14 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
 - [ ] `tools/preflight.py` has 0 ERROR, and `tools/storyboard.py` was reviewed (PIPELINE › Stage gates, G1-G2), before the voice-over.
 - [ ] The hook is sentence 1, states a paradox as fact, and has 10-16 words.
 - [ ] Every fact has a source URL at the top of `SCRIPT.md`. Mark anything uncertain.
-- [ ] It follows the formula: hook, setting, 3-6 escalation beats, a mystery beat, "You see,", the mechanism with an everyday analogy, and an ironic payoff.
+- [ ] It follows the leaders' story engine (`references/reports/retention_2026-11.md` §8):
+  - line 1: a person doing something that looks wrong (past tense, a fact);
+  - line 2: "You see," plus the stakes;
+  - a mocking rival in quoted dialogue, whose way wins first;
+  - 3 escalating stages with markers;
+  - the mechanism late and short, with one everyday analogy;
+  - the rival's way fails spectacularly;
+  - a punchline or a loop line back into line 1.
 - [ ] 170-240 words (about 3.7 words/s gives 45-65 s). Plain spoken English.
 - [ ] The story, characters and jokes are original: no topic angle or title overlaps `references/titles.md`.
 - [ ] Every sentence has a visual in `shots.json`, and each shot uses an existing set, cam and light, or adds the set to `BACKLOG.md`.

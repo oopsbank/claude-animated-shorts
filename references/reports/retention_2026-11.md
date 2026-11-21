@@ -64,3 +64,32 @@ Loudness is equal (all -14 LUFS). Their LRA is 1.4-3.2 LU against our 1.2 (ours 
   - the first line starts in the story, not with a setup ("One night in 1986…").
 - **End on a payoff gag, or a seamless loop where the last line runs into the first.** Never fade to black.
 - **One insert type per 10 s:** a map, a newspaper, an X-ray cutaway, a UI badge or counter, a POV.
+
+## 8. How their scripts are built (transcripts read from the burned-in captions with OCR)
+All four follow the same story engine. We study the structure only; never reuse their stories or lines.
+
+1. **Line 1 is a person doing something that looks wrong, told as fact, in the past tense:**
+   - "He sawed gaps into a railroad every 39 feet."
+   - "He rolled the bomb into the enemy camp but made sure it wouldn't go off."
+   - "He poured a ton of sand into a brand-new locomotive…"
+   - Or the paradox stated plainly: "The deadliest sniper in history … never used a scope."
+
+   Line 1 is never a setting ("One night in 1986…") and never second person.
+2. **Line 2 is "You see,"** plus the stakes (two companies racing, 10,000 samurai attacking at sunrise, paid by the ton, the Soviets invading). In the leaders, "You see," comes **early** to set the scene, not late before the mechanism.
+3. **A mocking rival or boss, in quoted dialogue:**
+   - "You're wrecking my railroad."
+   - "Get out of my tent."
+   - "Is that a locomotive or a litter box?"
+   - "Son, real snipers use a scope."
+4. **The rival's way wins first** (they finish first; the big engine storms up hill 1). The narration is in the present tense.
+5. **Three escalating stages with clear markers:** May → July → the hottest day; hill 1 → 2 → 3; four soldiers → 25 → an army.
+6. **The mechanism comes late and short,** with one physical analogy: "Ever run across a kitchen floor in socks?"; "a scope is just a tiny mirror".
+7. **A reversal and a punchline:** the rival's way fails spectacularly (the rail kicks sideways under a train; the hammer hits the powder), the quirk is vindicated, then a last gag line ("Sorry. The sand is for the cat.") or a loop line ("And that's why…" into line 1).
+8. **Length and rate:** 59-71 s at about 3.5-4 words/s (OCR estimate; ours is 3.66). There is no intro, no "did you know" and no call to action in the voice (Segment Zero adds a "Subscribe for more" pill on screen at the end).
+
+**Our bike script, by this measure:**
+- Its opening is second person ("Ride into a left turn…"), and "Meet Dale" comes second.
+- The instructor is a voice, not a mocking rival.
+- There is no spectacular failure of the rival's way, and "You see," comes late.
+
+The posted Lake Nyos script is a documentary with no protagonist at all. Both are weaker story engines than the leaders'.
