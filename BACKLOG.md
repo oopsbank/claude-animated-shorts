@@ -8,6 +8,8 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P1 Shot grammar for every new script (`references/reports/channels_2026-11.md` §6): at least one extreme close-up, one POV or prop insert, one Dutch or low angle, one crowd or depth-layered shot, and one visual-metaphor set piece for the mechanism. Add a count of these to `tools/preflight.py`. (`scripts/sailing-stones/build.py` counts them from per-shot `grammar` tags; preflight could read the same tags.)
 - [ ] P2 `scripts/TOPICS.md`: re-review topics 6-7 (fixed after round 4) or replace 8-10 from the reserves before the next pick.
 
+- [ ] P1 `sailing-stones` shots.json, from sets: the three alien_cam panels are separate plates. Set `"plate": "inserts__alien_cam__day__rock_racing_league.png"` on s12 and `"plate": "inserts__alien_cam__day__alien_air_hockey_final.png"` on s16 (s09 uses the default `inserts__alien_cam__day.png` = leaf_blower_aliens). The playa targets are `rock`, `tour_sign`, `camp_rocks` and `tent`.
+
 ## sets (`blender/sets/`)
 - [ ] P1 **Video 2 (`sailing-stones`), set `playa`** (shots in `scripts/sailing-stones/shots.json`; G1 fails on these plates until built). A dry lake bed (Racetrack Playa style, not a copy of a photo): flat, pale tan clay cracked into polygons, low mountains in dark brown/purple all around, a few dark rocks each with a long, shallow groove trail behind it. 4 lights: `day` (high sun, blue sky), `golden` (low warm sun, long rock shadows), `night` (deep blue, stars, one warm van light), `frost` (late-morning sun on a sheet of thin ice/shallow water with mirror reflections of the mountains; for the mechanism). 5 cams, each needs `--depth`:
   - `playa_wide`: depth-layered wide; a hero rock + trail in the near foreground, playa mid, mountains far; ground space 0.35-0.65 W for two small characters.
@@ -106,6 +108,11 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P2 Composite fx with `line=3.2*char_scale` so fx outlines match the characters.
 - [ ] P3 Smear frames or motion blur for fast prop and limb moves, and for wheels.
 - [ ] P3 Our own retention overlay (a small chapter-dot row in our palette) and a faint watermark from `channel/logo/`. Design our own.
+
+- [ ] P1 Video 2 (`sailing-stones`) sprites the engine composites (they are NOT on the plates; sets built the plates without them):
+  - Ready in `blender/sets/inserts/sprites/`: `price_card_30/40/50.png` (flip in the corner of the alien_cam plates; each plate JSON has `price_card_xy`), `tour_sign_ice.png` and `tour_sign_ice_strike.png` (ALIEN crossed out; s22 on `playa_med` day), `tour_sign_free.png` (the NIGHT ONLY sign that splits and topples, s20 on `rock_low` frost).
+  - Still to draw (characters or engine): `googly_eyes` on the hero rock (anchor at the plate `targets.rock`; that rock becomes Gary in s02/s11/s20), `gary_buried` (one eye in dust, s08), `tent_floating` (s10), `cooler` + `cooler_trophy` (s11, s22), `flood_water` (fx `flash_flood`), `fridge_silhouette` (s03) and `phone_silhouette` (s17) scale cues, `air_hockey_overlay` (s18), `livestream_counter` (s14; the gps_screen plate JSON has `counter_xy`), `flying_bills` (s21).
+  - Baked into the plates: tour van and sign (overlook_med; day/golden = NIGHT ONLY · $20, night = SOLD OUT, van lamps lit at night), FINAL FAIL · LIVE banner (overlook_med frost), tent, time-lapse camera, weather mast, chairs, cooler, lantern and the 15-rock row (playa_med), hero rock + trail (playa_wide, rock_low, playa_top), ice sheet (every frost plate), pond water (playa_top night).
 
 ## audio (`audio/`)
 - [ ] P2 Re-run `build_mix.py` whenever `shots.json` changes (fx entries drive the SFX). New fx names need an entry in `lib/sfx_x.py` GEN or SILENT.
