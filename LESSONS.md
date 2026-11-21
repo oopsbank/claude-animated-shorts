@@ -55,7 +55,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Check each source against the exact claim, and check press numbers against the paper. Hedge or drop what doesn't match.
 - Keep the payoff physically true, and never show or say brand names.
 - The mystery line and the "You see," line must not contradict each other in wording: name the exact thing.
-- Keep the script ≤ about 232 words (≤ 63 s), but aim for 61+ s, because TikTok/Snapchat pay only over 1 minute.
+- Make every video a little over 1 minute: 225-240 words gives 62-66 s. Never under 61 s (TikTok/Snapchat pay only over 1 minute), never over about 66 s (retention).
 
 ## Audio
 - Free tier: dry-run `tts.py` and read the extracted text first (the parser once grabbed the wrong heading). Cache the raw response, and re-process from it at no cost.

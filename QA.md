@@ -22,7 +22,7 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
   - the mechanism late and short, with one everyday analogy;
   - the rival's way fails spectacularly;
   - a punchline or a loop line back into line 1.
-- [ ] 170-240 words (about 3.7 words/s gives 45-65 s). Plain spoken English.
+- [ ] **225-240 words**, so the voice runs 62-66 s at about 3.6-3.7 words/s: always a little over 1 minute, never under 61 s. Plain spoken English.
 - [ ] The story, characters and jokes are original: no topic angle or title overlaps `references/titles.md`.
 - [ ] Every sentence has a visual in `shots.json`, and each shot uses an existing set, cam and light, or adds the set to `BACKLOG.md`.
 - [ ] Reviewer scores: hook, clarity, humour, accuracy and visual potential.

@@ -5,7 +5,7 @@
 This repo is worked on by a small crew of Claude sessions (at most 3 at once), each owning one area. This file is the contract between them. Read it fully, then [`QA.md`](QA.md), [`LESSONS.md`](LESSONS.md) and your area's items in [`BACKLOG.md`](BACKLOG.md).
 
 ## The video we make
-- A vertical 1080x1920, 30 fps, 61-65 s explainer short: "Why / How + a surprising real phenomenon".
+- A vertical 1080x1920, 30 fps explainer short of **62-66 s: always a little over 1 minute** (the Director's rule, 2026-11-21), about: "Why / How + a surprising real phenomenon".
 - Our own **2D bean-head cartoon characters** (`characters/`, the main cast) act over **3D background plates** rendered in Blender (`blender/`). The stickman (`stickman/`) is **on hold**, reserved for later.
 - There is a voice-over, SFX and music, and **dynamic word-by-word captions** (the user asked for them on 2026-11-20; see Captions below).
 - The script formula and visual targets are in [`references/STYLE_BIBLE.md`](references/STYLE_BIBLE.md). The reference channel is study material only: never copy its scripts, characters, shots or titles, and never name it in our videos.
@@ -104,7 +104,7 @@ The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its p
 - **Thumbnail:** run `tools/thumbnail.py` on a caption-free engine frame. Zoom inside the engine (a camera `zoom` in a copy of shots.json), never by upscaling the frame. The house style is a 3-4 line headline in the top third: white, with the keyword line in yellow or red, a thick plum outline and a shadow. The character and the action sit below it. Save it as `videos/<slug>/thumbnail.png`.
 - **Cover as the first 3 frames:** `tools/add_cover.sh video.mp4 thumbnail.png videos/<slug>/<slug>_captions_cover_1080x1920.mp4` puts the thumbnail in the first 0.1 s and delays the audio by 0.1 s. Only this captioned cut with the cover is posted.
 - **Posting is by hand** (Upload-Post was removed on 2026-11-21). Prepare the cover cut, `thumbnail.png`, a title, a YouTube description and an Instagram/Facebook caption under 255 bytes (Facebook cuts longer ones), and record them in `videos/<slug>/NOTES.md`.
-- **Length:** TikTok and Snapchat pay only for videos over 1 minute, so aim for 61-70 s.
+- **Length: 62-66 s, never under 61 s** (the final file, cover frames included). TikTok's Creator Rewards and Snapchat pay only for videos over 1 minute (TikTok needs an eligible account country; Vietnam isn't one in 2026). YouTube Shorts is the platform that pays per view for us: YPP needs 1,000 subscribers + 10 M Shorts views in 90 days.
 
 ## Branches
 - Each session works on **its own branch** (given in its first message) and pushes there. Never push to another session's branch.

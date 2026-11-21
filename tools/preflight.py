@@ -64,7 +64,9 @@ def main():
 
     # ---- script level
     text = ' '.join(s['text'] for s in shots); n = len(text.split())
-    if not 170 <= n <= 240: add('ERROR', '-', f'voice-over is {n} words (need 170-240; aim <= 232)')
+    if not 225 <= n <= 240: add('ERROR', '-', f'voice-over is {n} words (need 225-240 so the video runs 62-66 s: always a little over 1 minute)')
+    secs = spans[-1]['f1'] / FPS if spans else 0
+    if a.words and not 61.5 <= secs <= 67: add('ERROR', '-', f'video runs {secs:.1f} s with real timings (need 62-66 s, never under 61 s)')
     if shots and (shots[0].get('camera') or {}).get('move') in (None, 'hold'):
         add('WARN', 's01', 'the hook shot holds still: start mid-action with a moving camera or an extreme close-up, and change the picture before 3 s (retention study)')
     hook = re.split(r'(?<=[.!?])\s', shots[0]['text'] if shots else '')[0]
