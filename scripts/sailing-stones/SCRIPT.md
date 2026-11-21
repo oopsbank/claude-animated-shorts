@@ -3,8 +3,8 @@
 - **Slug:** `sailing-stones`
 - **Topic:** M4 in `scripts/TOPICS.md` v7, picked by the Director on 2026-11-21.
 - **Approval:** waiting for the Director. Do not voice before approval.
-- **Format:** story engine (`QA.md` › scripts). Line 1: two people doing something that looks wrong (hiding trackers in rocks and waiting for them to run away). The mocking rival is an original "alien rock tours" guide whose way wins at every stage in his own voice (sold out → "Told ya. Aliens." → doubled prices, "Aliens don't do fences." → "See you in ten years, nerds!"). 3 stages, each with a visual surprise: 1948 (a whirlwind passes over the rock and it doesn't budge) → the sixties (the fenced rock escapes) → 2011 (the trackers). The mechanism comes late (shots 23-30) with one analogy (a window shoving a fridge across a wet kitchen floor). The rival fails on screen: while he snores, an ice pane shoves a rock over his alien sign, and the last line loops back to the cousins' trackers and the "culprits" of shot 5.
-- **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2 rewrote the middle and the ending (see the Producer report).
+- **Format:** story engine (`QA.md` › scripts). Line 1: two people doing something that looks wrong (hiding trackers in rocks and waiting for them to run away). The mocking rival is an original "alien rock tours" guide whose way wins at every stage in his own voice (sold out → "Aliens with leaf blowers." → doubled prices, "Aliens don't do fences." → "See you in ten years, nerds!"). 3 stages, each with a visual surprise: 1948 (a whirlwind passes over the rock and it doesn't budge) → the sixties (the fenced rock escapes) → 2011 (the trackers). The mechanism comes late (shots 23-30) with one analogy (a window shoving a fridge across a wet kitchen floor). The rival fails on screen: while he snores, an ice pane shoves a rock over his alien sign, and the last line is his shameless pivot: ICE TOURS, forty bucks.
+- **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2: 7/10, swipe at ~30 s (repeats), FAIL; its 3 fixes plus a shorter pond line are applied in v3 (not re-reviewed: 2-round cap).
 - **Length:** 233 words (+3 spoken in "nineteen forty-eight" and "twenty eleven"). Calibrated on video 1 (231 words gave 63.2 s of real voice), that is about 64-65 s.
 
 ## Facts and sources (everything said in the voice-over)
@@ -27,10 +27,10 @@ Sources:
 | F2 | Some of the rocks are heavier than a man. | S8 (Karen ≈ 700-800 lb ≈ 320-360 kg); S3 ("hundreds of pounds") | solid. Said as "heavier than a man", no number. |
 | F3 | Before December 2013 nobody had ever seen one move. | S1 (title: "First Observation of Rocks in Motion"), S2, S3 | solid |
 | F4 | In 1948, geologists blamed whirlwinds; they never caught one pushing a rock. | S6 (USGS geologists McAllister and Agnew, 1948, proposed dust devils, perhaps with flooding); S1 (no one saw a rock move before 2013) | solid (secondary for the 1948 detail; names not used) |
-| F6 | In the sixties a geologist named thirty rocks and fenced some in; one escaped anyway; in seven years nobody saw it move. | S4 via S6, S7 (monitoring from May 1968, 30 stones named, stake corrals, positions recorded over 7 years; despite frequent visits the pair never saw one move) | solid. "One escaped" matches the narrowest account (one corralled stone left its corral). The geologist is unnamed and not drawn as the real person. |
+| F6 | In the sixties a geologist named thirty rocks and fenced some in; one escaped anyway; seven years of watching, zero witnesses. | S4 via S6, S7 (monitoring from May 1968, 30 stones named, stake corrals, positions recorded over 7 years; despite frequent visits the pair never saw one move) | solid. "One escaped" matches the narrowest account (one corralled stone left its corral). The geologist is unnamed and not drawn as the real person. |
 | F7 | In 2011 two cousins put GPS trackers in fifteen rocks and set up cameras (also a weather station, shown on screen), and expected to wait years (Richard Norris: "five or ten years"). | S1, S2 (winter 2011: 15 rocks with motion-activated GPS units built by Jim Norris; a weather station; several time-lapse cameras) | solid. "Hid GPS trackers inside fifteen rocks": the GPS rocks were rocks of the local type fitted with the units, placed on the playa with NPS permission. "Ten years" is from the quote. |
 | F8 | Two years later (December 2013) dozens of rocks started sliding right in front of them, in daylight. | S1 (the largest event involved >60 rocks on 20 Dec 2013), S2 ("we just happened to be there at the right time to see it happen in person"; ice breakup around noon on 21 Dec) | solid. ⚠ The paper dates the big event 20 Dec; Norris's account dates the breakup he saw 21 Dec. The VO gives no date. |
-| F9 | Winter rain made a shallow pond; at night it froze into ice millimetres thick; the late-morning sun broke it into floating panes; a light breeze pushed the panes, which pushed the rocks, a few metres a minute. | S1 abstract (thin 3-6 mm "windowpane" ice on the playa pool, which melts in the late-morning sun and breaks up under light winds of ~4-5 m/s; floating panels tens of metres across push rocks at 2-5 m/min); S3 (winds about 3-5 m/s, ice < 5 mm); S2 | solid. "Huge" = panels tens of metres across. "A few metres a minute" = 2-5 m/min. |
+| F9 | Rain made a shallow pond; overnight it froze into ice millimetres thick; the late-morning sun broke it into floating panes; a light breeze pushed the panes, which pushed the rocks, a few metres a minute. | S1 abstract (thin 3-6 mm "windowpane" ice on the playa pool, which melts in the late-morning sun and breaks up under light winds of ~4-5 m/s; floating panels tens of metres across push rocks at 2-5 m/min); S3 (winds about 3-5 m/s, ice < 5 mm); S2 | solid. "Huge" = panels tens of metres across. "A few metres a minute" = 2-5 m/min. |
 | F10 | (Not said: the GPS rocks moved up to 224 m over Dec 2013-Jan 2014; it is rare.) | S1 | for the shot list only |
 
 Fiction, made up for the story: the "alien rock tours" guide, his tourists, his prices, his postcards, his van, his sign (and the rock that flattens it) and every line he says; the cousins' looks and the camp. The two cousins and the geologists are drawn as our own generic bean-heads, never as the real people, and none of them are named. No brands.
@@ -50,18 +50,18 @@ Fiction, made up for the story: the "alien rock tours" guide, his tourists, his 
 9. And his tours sell out.
 10. In 1948, geologists blamed whirlwinds.
 11. They never caught one pushing a rock.
-12. "Told ya," grins the guide. "Aliens."
+12. "Whirlwinds?" snorts the guide. "Aliens with leaf blowers."
 13. In the sixties, a geologist named thirty rocks
 14. and fenced some in. One escaped anyway.
-15. In seven years, nobody saw it move.
+15. Seven years of watching. Zero witnesses.
 16. The guide doubles his prices. "Aliens don't do fences."
 17. So in 2011, the cousins set up trackers and cameras,
 18. ready to wait ten years.
 19. "See you in ten years, nerds!" yells the guide.
 20. Two years later, dozens of rocks start sliding
 21. right there, in broad daylight.
-22. Winter rain had left a shallow pond
-23. that froze overnight into ice millimetres thick.
+22. Rain left a shallow pond
+23. that froze overnight, millimetres thick.
 24. The late-morning sun cracked it into huge floating panes.
 25. A light breeze pushed the panes,
 26. and the panes pushed the rocks,
@@ -70,7 +70,7 @@ Fiction, made up for the story: the "alien rock tours" guide, his tourists, his 
 29. and shoving the fridge.
 30. And the guide? Snoring in his van,
 31. while an ice pane shoves a rock over his alien sign.
-32. The cousins' trackers caught the real culprit.
+32. Next day, his new sign reads: ICE TOURS. Forty bucks.
 
 ## Notes for voicing (after approval)
 - Say "1948" as "nineteen forty-eight" and "2011" as "twenty eleven".
