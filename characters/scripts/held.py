@@ -15,8 +15,8 @@ def _scr(x, y, w, h, col, r=2.0): return ('p', rpoly(x, y, w, h, r), col)
 
 def gps_box(C, x, y, u, d, two, e):
     w, h = (62 * u, 40 * u) if two else (46 * u, 32 * u)
-    cx, cy = (x, y - 6 * u) if two else (x + d * 12 * u, y - 14 * u)
-    ax, ay = cx + w * 0.32, cy - h / 2
+    cx, cy = (x, y) if two else (x - d * 2 * u, y - 14 * u)
+    ax, ay = cx + (d if not two else 1) * w * 0.32, cy - h / 2
     stamp(C, [('s', [(ax, ay + 2 * u, 3.2 * u), (ax + 4 * u, ay - 26 * u, 3.2 * u)], DARK),
               ('c', ax + 4 * u, ay - 28 * u, 4.6 * u, RED),
               ('p', rpoly(cx, cy, w, h, 6 * u), GREY)], e,
@@ -36,14 +36,14 @@ def screwdriver(C, x, y, u, d, two, e):
 
 def googly_eyes(C, x, y, u, d, two, e):
     r = 10.5 * u
-    s1, d1 = googly(x + d * 4 * u, y - 16 * u, r, look=(-0.6, 0.6))
-    s2, d2 = googly(x + d * 28 * u, y - 20 * u, r, look=(0.7, -0.5))
+    s1, d1 = googly(x - d * 10 * u, y - 18 * u, r, look=(-0.6, 0.6))
+    s2, d2 = googly(x + d * 12 * u, y - 24 * u, r, look=(0.7, -0.5))
     stamp(C, [s1, s2], e * 0.8, details=[d1, d2], shade=True)
 
 
 def laptop(C, x, y, u, d, two, e):
-    cx = x if two else x + d * 24 * u; cy = y - 30 * u
     w, h = 70 * u, 46 * u
+    cx = x if two else x - d * 4 * u; cy = y - h / 2 - 7 * u
     stamp(C, [('p', [(cx - w * 0.56, cy + h / 2 + 2 * u), (cx + w * 0.56, cy + h / 2 + 2 * u),
                      (cx + w * 0.62, cy + h / 2 + 11 * u), (cx - w * 0.62, cy + h / 2 + 11 * u)], (120, 126, 140)),
               ('p', rpoly(cx, cy, w, h, 4 * u), DARK)], e,
@@ -72,14 +72,14 @@ def frying_pan(C, x, y, u, d, two, e):
 
 
 def ticket(C, x, y, u, d, two, e):
-    cx, cy = x + d * 18 * u, y - 10 * u
+    cx, cy = x + d * 4 * u, y - 14 * u
     stamp(C, [('p', rpoly(cx, cy, 44 * u, 22 * u, 2 * u, ang=-12 * d), (247, 180, 196))], e * 0.8,
           details=[('c', *fx.rot(cx - 22 * u, cy, cx, cy, -12 * d), 4 * u, INK), ('c', *fx.rot(cx + 22 * u, cy, cx, cy, -12 * d), 4 * u, INK)])
     text(C, cx, cy, 'ADMIT 1', 6.5 * u, (150, 40, 70), rot=12 * d)
 
 
 def cash_fan(C, x, y, u, d, two, e):
-    for i, ang in enumerate((-80, -62, -44, -26, -8)):
+    for i, ang in enumerate((-118, -100, -82, -64, -46)):
         a = ang if d >= 0 else -180 - ang
         r = math.radians(a); cx, cy = x + math.cos(r) * 24 * u, y + math.sin(r) * 24 * u
         stamp(C, [('p', rpoly(cx, cy, 44 * u, 20 * u, 1.5 * u, ang=a), GREEN)], e * 0.7,
@@ -90,7 +90,7 @@ def cash_fan(C, x, y, u, d, two, e):
 
 
 def camera(C, x, y, u, d, two, e):
-    cx, cy = (x, y - 10 * u) if two else (x + d * 16 * u, y - 12 * u)
+    cx, cy = (x, y) if two else (x - d * 2 * u, y - 16 * u)
     stamp(C, [('p', rpoly(cx - 8 * u, cy - 17 * u, 16 * u, 10 * u, 2 * u), DARK),
               ('p', rpoly(cx, cy, 48 * u, 30 * u, 5 * u), DARK), ('c', cx + 4 * u, cy + 1 * u, 12 * u, (150, 156, 170))], e,
           details=[('c', cx + 4 * u, cy + 1 * u, 7.5 * u, (34, 36, 52)), ('c', cx + 1 * u, cy - 2 * u, 2.6 * u, (230, 240, 255)),
@@ -114,7 +114,7 @@ def flashlight(C, x, y, u, d, two, e):
 
 
 def phone(C, x, y, u, d, two, e, badge='LIVE'):
-    if two: cx, cy, w, h = x, y - 14 * u, 46 * u, 28 * u
+    if two: cx, cy, w, h = x, y, 46 * u, 28 * u
     else: cx, cy, w, h = x + d * 8 * u, y - 20 * u, 26 * u, 46 * u
     stamp(C, [('p', rpoly(cx, cy, w, h, 4 * u), DARK)], e * 0.85,
           details=[_scr(cx, cy, w - 6 * u, h - 6 * u, (120, 190, 235), 2 * u),
@@ -125,7 +125,7 @@ def phone(C, x, y, u, d, two, e, badge='LIVE'):
 
 def selfie_stick(C, x, y, u, d, two, e):
     dd = d or -1
-    top = (x + dd * 70 * u, y - 175 * u)
+    top = (x + dd * 22 * u, y - 150 * u)
     stamp(C, [('s', [(x, y, 4 * u), (top[0], top[1] + 14 * u, 3.2 * u)], (110, 114, 126)),
               ('p', rpoly(top[0], top[1], 24 * u, 40 * u, 4 * u, ang=dd * 10), DARK)], e * 0.85,
           details=[('c', *fx.rot(top[0] - 5 * u, top[1] - 12 * u, top[0], top[1], dd * 10), 3.4 * u, (120, 124, 140)),
@@ -133,33 +133,33 @@ def selfie_stick(C, x, y, u, d, two, e):
 
 
 def megaphone(C, x, y, u, d, two, e):
-    a = math.radians(-20); dx, dy = math.cos(a) * d, math.sin(a); nx, ny = -dy, dx
+    a = math.radians(-38); dx, dy = math.cos(a) * d, math.sin(a); nx, ny = -dy, dx
     def P(f, w): return (x + dx * f * u + nx * w * u, y + dy * f * u + ny * w * u)
-    bell = P(52, 0)
-    stamp(C, [('p', [P(4, 6), P(52, 20), P(52, -20), P(4, -6)], WHITE),
+    bell = P(44, 0)
+    stamp(C, [('p', [P(4, 6), P(44, 18), P(44, -18), P(4, -6)], WHITE),
               ('s', [(x - dx * 4 * u, y - dy * 4 * u, 8 * u), (x + dx * 6 * u, y + dy * 6 * u, 8 * u)], DARK),
-              ('e', bell[0], bell[1], 6 * u, 20 * u, RED)], e,
-          details=[('p', [P(20, 10.5), P(32, 15), P(32, -15), P(20, -10.5)], RED), ('e', bell[0] + dx * 1 * u, bell[1], 3 * u, 14 * u, (150, 40, 34))])
+              ('e', bell[0], bell[1], 6 * u, 18 * u, RED)], e,
+          details=[('p', [P(18, 9.5), P(28, 13), P(28, -13), P(18, -9.5)], RED), ('e', bell[0] + dx * 1 * u, bell[1], 3 * u, 12 * u, (150, 40, 34))])
 
 
 def flag(C, x, y, u, d, two, e, label=''):
     dd = d or 1
     top = (x + dd * 4 * u, y - 150 * u)
-    fl = [(top[0], top[1] + 2 * u), (top[0] + dd * 74 * u, top[1] + 20 * u), (top[0], top[1] + 40 * u)]
+    fl = [(top[0], top[1] + 2 * u), (top[0] - dd * 74 * u, top[1] + 20 * u), (top[0], top[1] + 40 * u)]   # the pennant flies over the head side
     stamp(C, [('s', [(x - dd * 1 * u, y + 12 * u, 3.6 * u), (top[0], top[1], 3.6 * u)], (122, 84, 50)),
               ('p', fl, (60, 190, 210)), ('c', top[0], top[1] - 2 * u, 4.5 * u, YEL)], e * 0.85)
-    if label: text(C, top[0] + dd * 26 * u, top[1] + 20 * u, label, 6.5 * u, (255, 255, 255), maxw=44 * u, rot=-dd * 13)
+    if label: text(C, top[0] - dd * 28 * u, top[1] + 20 * u, label, 7 * u, (255, 255, 255), maxw=44 * u, rot=dd * 13)
 
 
 def air_hockey_mallet(C, x, y, u, d, two, e):
-    k = 1.35; cx, cy = x, y + 8 * k * u     # gripped by the knob, the disc hangs under the hand
+    k = 1.0; cx, cy = x, y + 8 * k * u     # gripped by the knob, the disc hangs under the hand
     stamp(C, [('e', cx, cy + 16 * k * u, 28 * k * u, 13 * k * u, RED), ('s', [(cx, cy + 12 * k * u, 12 * k * u), (cx, cy - 2 * k * u, 10 * k * u)], RED),
               ('c', cx, cy - 8 * k * u, 10 * k * u, RED)], e,
           details=[('e', cx, cy + 13 * k * u, 23 * k * u, 8 * k * u, (240, 104, 88)), ('c', cx - 3 * u, cy - 11 * k * u, 3 * u, (255, 160, 150))])
 
 
 def gary_rock(C, x, y, u, d, two, e, askew=False):
-    cx, cy = (x, y - 14 * u) if two else (x + d * 14 * u, y - 24 * u)
+    cx, cy = (x, y - 4 * u) if two else (x + d * 14 * u, y - 24 * u)
     rx, ry = 40 * u, 29 * u
     s1, d1 = googly(cx - 11 * u, cy - 8 * u, 9 * u, look=(0.2, 0.5))
     s2, d2 = googly(cx + 13 * u, cy - (14 if askew else 8) * u, (8 if askew else 9) * u, look=((0.8, -0.6) if askew else (0.2, 0.5)))
@@ -173,6 +173,11 @@ NAMES = {'gps_box': gps_box, 'screwdriver': screwdriver, 'googly_eyes': googly_e
          'phone': phone, 'selfie_stick': selfie_stick, 'megaphone': megaphone, 'flag': flag,
          'air_hockey_mallet': air_hockey_mallet, 'gary_rock': gary_rock}
 TWO_HANDED = {'gps_box', 'laptop', 'frying_pan', 'camera', 'phone', 'gary_rock'}   # centred between the hands
+K = 1.25                                    # props read big (video size), like the reference
+TWO_W = dict(gps_box=31, laptop=40, frying_pan=20, camera=24, phone=23, gary_rock=38)   # half-width at the grip (u)
+
+
+def two_halfwidth(base): return TWO_W.get(base, 26) * K
 
 
 def draw(C, kind, hand, u, side=1, two=None):
@@ -183,11 +188,11 @@ def draw(C, kind, hand, u, side=1, two=None):
         x, y = (two[0][0] + two[1][0]) / 2, (two[0][1] + two[1][1]) / 2
     else:
         two = None; x, y = hand
-    e = 4.2 * u
+    e = 4.4 * u; u = u * K
     kw = {}
     if base == 'flag': kw['label'] = arg
     if base == 'gary_rock': kw['askew'] = arg == 'askew'
     if base == 'phone' and arg: kw['badge'] = arg
     fn(C, x, y, u, d, two, e, **kw)
     for h in (two or (hand,)):     # the dot hand grips in front of the prop
-        C.dot(h[0], h[1], 5.5 * u)
+        C.dot(h[0], h[1], 5.5 * u / K)

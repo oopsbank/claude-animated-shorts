@@ -232,7 +232,7 @@ def flying_bills(t=0.0, k=1.0, count=7, direction='right', seed=3, **kw):
         y = oy - (480 + rnd.uniform(-80, 80)) * math.sin(p * 1.6) + 40 * math.sin(p * 12 + i * 2)
         spin = rnd.uniform(200, 500) * p * sgn + rnd.uniform(-30, 30)
         flip = math.cos(p * rnd.uniform(8, 14) + i)
-        bw, bh = 120 * g, 56 * g
+        bw, bh = 160 * g, 74 * g
         if bw < 4: continue
         fw = max(8, bw * (0.35 + 0.65 * abs(flip)))
         stamp(C, [('p', rpoly(x, y, fw, bh, 4, ang=spin), GREEN)], E * 0.8 * g,
@@ -276,32 +276,30 @@ def price_card(t=0.0, k=1.0, text_='$40', **kw):
     return C.out(k, (160, 160))
 
 
-def _ghost(C, pts, label=None, at=None):
-    lay = Image.new('RGBA', C.im.size, (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-    d.polygon(C.P(pts), fill=(255, 255, 255, 120))
-    P = C.P(pts) + [C.P(pts)[0]]
-    for i in range(len(P) - 1):     # dashed plum outline
-        x0, y0 = P[i]; x1, y1 = P[i + 1]; L = math.hypot(x1 - x0, y1 - y0); n = max(1, int(L / (28 * S)))
-        for j in range(n):
-            if j % 2: continue
-            a, b = j / n, min(1, (j + 1) / n)
-            d.line([(x0 + (x1 - x0) * a, y0 + (y1 - y0) * a), (x0 + (x1 - x0) * b, y0 + (y1 - y0) * b)], fill=INK + (255,), width=int(7 * S))
-    C.im.alpha_composite(lay)
-    if label: text(C, at[0], at[1], label, 26, INK)
+def _ghosted(C, ghost):
+    if ghost:      # a translucent scale cue: the same drawing at 55% so the rock shows through
+        a = C.im.getchannel('A').point(lambda v: int(v * 0.55)); C.im.putalpha(a)
 
 
-def fridge_silhouette(t=0.0, k=1.0, label='FRIDGE', **kw):
-    """Scale cue: a translucent dashed fridge outline (~1.8 m tall), the size of the biggest sliding rocks."""
-    C = Card(420, 860); cx, gy = 210, 840
-    _ghost(C, rpoly(cx, gy - 400, 360, 800, 30), label, (cx, gy - 400))
-    C.d.line([((cx - 150) * S, (gy - 560) * S), ((cx + 150) * S, (gy - 560) * S)], fill=INK, width=int(5 * S))
+def fridge_silhouette(t=0.0, k=1.0, ghost=False, **kw):
+    """Scale cue: a cartoon fridge (~1.8 m), the size of the biggest sliding rocks. ghost=True draws it see-through."""
+    C = Card(420, 860); cx, gy = 210, 840; top = gy - 790; w = 340
+    stamp(C, [('p', rpoly(cx, top + 395, w, 790, 34), (236, 240, 244))], E,
+          details=[('p', rpoly(cx, top + 270, w - 8, 7, 3), (150, 160, 175)),
+                   ('p', rpoly(cx - w * 0.36, top + 160, 14, 120, 7), (150, 160, 175)),
+                   ('p', rpoly(cx - w * 0.36, top + 400, 14, 150, 7), (150, 160, 175)),
+                   ('p', rpoly(cx + w * 0.18, top + 120, 70, 44, 6), (255, 210, 90)),
+                   ('c', cx + w * 0.3, top + 360, 16, (220, 70, 60))])
+    _ghosted(C, ghost)
     return C.out(k, (cx, gy))
 
 
-def phone_silhouette(t=0.0, k=1.0, label='PHONE', **kw):
-    """Scale cue: a translucent dashed phone outline laid on the ground, phone-thin (the ice panes' thickness)."""
-    C = Card(420, 160); cx, gy = 210, 140
-    _ghost(C, rpoly(cx, gy - 30, 360, 46, 14), label, (cx, gy - 95))
+def phone_silhouette(t=0.0, k=1.0, ghost=False, **kw):
+    """Scale cue for the ice panes' thickness: a phone seen edge-on (side buttons, camera bump), lying flat."""
+    C = Card(460, 120); cx, gy = 230, 105
+    stamp(C, [('p', rpoly(cx, gy - 18, 380, 30, 13), (52, 55, 68))], E * 0.8,
+          details=[('p', rpoly(cx + 60, gy - 35, 60, 6, 3), (120, 126, 140)), ('p', rpoly(cx - 110, gy - 18, 150, 6, 3), (90, 180, 230))])
+    _ghosted(C, ghost)
     return C.out(k, (cx, gy))
 
 
@@ -321,8 +319,8 @@ NAMES = {
     'banner': (banner, "red swallow-tail banner. 'banner:TEXT'; waves with t"),
     'livestream_counter': (livestream_counter, "LIVE pill + viewer count. 'livestream_counter:3'"),
     'price_card': (price_card, "yellow starburst price sticker. 'price_card:$40'"),
-    'fridge_silhouette': (fridge_silhouette, 'dashed translucent fridge outline (scale cue). label'),
-    'phone_silhouette': (phone_silhouette, 'dashed translucent phone outline lying flat (scale cue). label'),
+    'fridge_silhouette': (fridge_silhouette, 'cartoon fridge (~1.8 m) as a scale cue. ghost=True draws it see-through'),
+    'phone_silhouette': (phone_silhouette, 'phone seen edge-on lying flat: the ice-pane thickness cue. ghost'),
 }
 ARG = {'tour_sign': 'text_', 'tour_sign_free': 'text_', 'banner': 'text_', 'livestream_counter': 'n', 'price_card': 'text_',
        'gary_rock': 'eyes'}

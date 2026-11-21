@@ -134,8 +134,18 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     # ---- arms (thin strokes from just inside the torso sides, dot hands)
     arm_c = mix(shirt_c, INK, 0.5)
     sh_y = chin + 0.12 * HH
+    import held
+    hp = prop.split(':', 1)[0] if prop else None
+    hp = hp if hp in held.NAMES else None
     def arm(sgn, pose):
         s0 = (cx + sgn * 0.85 * Ta, sh_y)
+        if pose == 'hold' and hp:      # new held props: shown off the belly, the dot hand visibly on the grip
+            if both_hold and hp in held.TWO_HANDED:     # hands on the prop's two edges, at chest height
+                hd = (cx + sgn * held.two_halfwidth(hp) * u, sh_y + 0.40 * HH)
+                el = (cx + sgn * max(1.12 * Ta + 4 * u, abs(hd[0] - cx) + 10 * u), sh_y + 0.50 * HH)
+            else:                       # forearm raised outward: the prop is held out beside the body
+                el = (cx + sgn * (1.16 * Ta + 8 * u), sh_y + 0.47 * HH); hd = (cx + sgn * (1.1 * Ta + 14 * u), sh_y + 0.28 * HH)
+            return [s0, el, hd]
         if pose == 'hang':
             el = (cx + sgn * (1.12 * Ta + 4 * u), sh_y + 0.48 * HH); hd = (el[0] + sgn * 3 * u, chin + 1.04 * HH)
         elif pose == 'wave':
@@ -390,11 +400,11 @@ def seat_legs(C, cx, hip_y, torso_bot, u, leg_c, facing=0.0):
     """Front-view sitting: thighs point at the camera (foreshortened under the torso), knees out, shins straight down."""
     for sgn in (-1, 1):
         hip = (cx + sgn * 15 * u, hip_y); kn = (cx + sgn * 30 * u, torso_bot + 2 * u); ft = (cx + sgn * 30 * u, 975 - 3.5 * u)
-        C.stroke(bow(hip, kn, sgn * 1 * u, 8) + bow(kn, ft, -sgn * 1.5 * u, 12)[1:], 5.8 * u, leg_c)
-        C.dot(kn[0], kn[1], 3.6 * u, leg_c)
+        path = bow(hip, kn, sgn * 1 * u, 8) + bow(kn, ft, -sgn * 1.5 * u, 12)[1:]
+        C.stroke(path, 5.8 * u, leg_c)
         C.stroke([ft, (ft[0] + sgn * 12 * u + facing * 8 * u, ft[1] + 0.5 * u)], 7.5 * u, INK)
 
-COOLER = dict(body='#d9453a', lid='#f4f1ea', trim='#9e2b24')
+COOLER = dict(body='#f1ece0', lid='#2fa89a', trim='#1f6f66')   # a cream tub: dark seated legs read in front of it
 
 def draw_cooler(C, cx, top, bot, w, u, body=None, lid=None, label=None):
     """A picnic cooler box seen from the front: white lid, coloured tub, side handle, drain plug."""
@@ -408,10 +418,11 @@ def draw_cooler(C, cx, top, bot, w, u, body=None, lid=None, label=None):
 
 def antenna_geo(root, a, b, sgn, droop, sway):
     """Stalk centre line (bezier) and tip for one antenna. droop 0 = up and springy, 1 = sagging beside the head."""
-    up_tip = (root[0] + sgn * 0.22 * a, root[1] - 0.95 * b); dn_tip = (root[0] + sgn * 0.92 * a, root[1] + 0.55 * b)
-    up_c = (root[0] + sgn * 0.02 * a, root[1] - 0.5 * b); dn_c = (root[0] + sgn * 0.55 * a, root[1] - 0.6 * b)
-    L = lambda p, q: (p[0] + (q[0] - p[0]) * droop, p[1] + (q[1] - p[1]) * droop)
-    tip, ctl = L(up_tip, dn_tip), L(up_c, dn_c)
+    # the tip swings down an arc under gravity (13 deg -> 128 deg from vertical); the stem near the root stays upright
+    th = math.radians(13 + 115 * droop ** 0.85); R = b * (0.98 - 0.06 * droop)
+    tip = (root[0] + sgn * R * math.sin(th) * (1 + 0.15 * droop), root[1] - R * math.cos(th))
+    tc = math.radians(6 + 40 * droop); Rc = R * (0.55 + 0.1 * droop)
+    ctl = (root[0] + sgn * Rc * math.sin(tc), root[1] - Rc * math.cos(tc))
     tip = rot_pt(tip, root, sway); ctl = rot_pt(ctl, root, sway * 0.5)
     return ctl, tip
 

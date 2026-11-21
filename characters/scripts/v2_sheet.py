@@ -27,20 +27,26 @@ ROWS = [
      ('phone x2', C('tour1', arm_pose=('hold', 'hold'), prop='phone', expr='grin')), ('selfie_stick', C('guide', arm_pose=('hold', 'point'), prop='selfie_stick', expr='grin')),
      ('megaphone', C('guide', arm_pose=('hang', 'hold'), prop='megaphone', expr='grin')), ('flag:ICE TOURS', C('guide', arm_pose=('point', 'hold'), prop='flag:ICE TOURS', expr='grin')),
      ('air_hockey_mallet', C('lou', arm_pose=('hold', 'hang'), prop='air_hockey_mallet')), ('gary_rock:askew', C('kip', arm_pose=('hold', 'hold'), prop='gary_rock:askew', expr='smug'))],
+    [('night: flashlight', C('tour1', arm_pose=('wave', 'hold'), prop='flashlight', expr='grin')), ('night: ticket', C('guide', arm_pose=('hold', 'point'), prop='ticket', expr='smug')),
+     ('night: camera', C('tour3', arm_pose=('hold', 'hang'), prop='camera', expr='smile')), ('night: kid', C('tour2', arm_pose=('wave', 'wave'), expr='grin')),
+     ('phone x2', C('tour3', arm_pose=('hold', 'hold'), prop='phone', expr='smile')), ('laptop x2', C('kip', arm_pose=('hold', 'hold'), prop='laptop', expr='shock')),
+     ('camera x2', C('tour1', arm_pose=('hold', 'hold'), prop='camera', expr='grin')), ('gps_box rear', C('kip', view='rear', arm_pose=('hold', 'hang'), prop='gps_box'))],
 ]
+NIGHT = 3
 if __name__ == '__main__':
     cw = 300; ch = 500
     F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 20)
     sheet = Image.new('RGBA', (cw * 8, (ch + 34) * len(ROWS)), (240, 237, 230, 255)); d = ImageDraw.Draw(sheet)
     full = []
     for r, row in enumerate(ROWS):
+        if r == NIGHT: d.rectangle((0, r * (ch + 34), cw * 4, (r + 1) * (ch + 34)), fill=(36, 34, 78))
         for i, (name, kw) in enumerate(row):
             im = character(**kw); full.append(im)
             sheet.alpha_composite(im.resize((cw, ch), Image.LANCZOS), (i * cw, r * (ch + 34) + 30))
-            w = d.textlength(name, font=F); d.text((i * cw + (cw - w) / 2, r * (ch + 34) + 6), name, font=F, fill=(30, 30, 40))
+            w = d.textlength(name, font=F); d.text((i * cw + (cw - w) / 2, r * (ch + 34) + 6), name, font=F, fill=(230, 230, 240) if (r == NIGHT and i < 4) else (30, 30, 40))
     sheet.save(sys.argv[1])
     if len(sys.argv) > 2:   # 2x-ish crops of the upper bodies (heads, hands, props) for the joint review
-        cs = Image.new("RGBA", (400 * 8, 640 * 3), (240, 237, 230, 255))
+        cs = Image.new("RGBA", (400 * 8, 640 * 4), (240, 237, 230, 255))
         for k, im in enumerate(full):
             cs.alpha_composite(im.crop((100, 120, 500, 760)), ((k % 8) * 400, (k // 8) * 640))
         cs.save(sys.argv[2])
