@@ -26,6 +26,14 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
 - [ ] The story, characters and jokes are original: no topic angle or title overlaps `references/titles.md`.
 - [ ] Every sentence has a visual in `shots.json`, and each shot uses an existing set, cam and light, or adds the set to `BACKLOG.md`.
 - [ ] Reviewer scores: hook, clarity, humour, accuracy and visual potential.
+- [ ] **Engagement review** (a second, separate reviewer that plays a bored phone viewer, not an editor). It gets only the voice-over with the time of each sentence (about 3.7 words/s), and answers:
+  - At each 5 s mark, would I keep watching, and why? (a new question, a twist, a laugh, a stake)
+  - Where is the first moment I would swipe?
+  - Is there an open question I need answered at 15 s, 30 s and 45 s?
+  - Is the ending a payoff or a loop that makes me rewatch?
+  - Score "would watch to the end" out of 10, compared with the leaders' story engine (`references/reports/retention_2026-11.md` §8).
+
+  It passes at 8/10, with no "swipe point" before 45 s.
 
 ## sets
 - [ ] `build.py` rebuilds the set from scratch with no manual steps, and renders every cam × light plate.
