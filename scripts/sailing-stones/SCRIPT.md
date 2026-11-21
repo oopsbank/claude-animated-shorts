@@ -1,11 +1,11 @@
-# The Rocks That Walk Across the Desert (script v16, 2026-11-21)
+# The Rocks That Walk Across the Desert (script v17, 2026-11-21)
 
 - **Slug:** `sailing-stones`
 - **Topic:** M4 in `scripts/TOPICS.md` v7, picked by the Director on 2026-11-21.
 - **Approval:** waiting for the Director. Do not voice before approval.
 - **Format (v15, ABSURD comedy per the Director):** line 1 is the cousins' odd act; a googly-eyed rock, Gary, is the runner (buried by the dust storm, steers their cooler, slides, goes through the sign). A compact "You see," on line 3 (v16 test; the genre-fan reviewer docks for its absence). The rival escalates in KIND and his alien theory escalates into ever more ridiculous FANTASY CUTAWAYS shown in his head (thought bubble + "ALIEN CAM" filter, clearly fantasy): leaf-blowing aliens ($30) → an alien rock-racing league ($40) → an alien air-hockey final with a referee ($50). The real reveal is a smash cut to the SAME framing, real: sun-cracked phone-thin ice panes shoved by a light breeze; the one analogy lands as a deadpan "Same game. No aliens." His livestream shows the world; a pane shoves Gary through his NIGHT ONLY sign; his refund cash blows away on the same breeze; his antennae droop: "Fine. It's ice." He pivots to $5 ice tours and his pitch loops into line 1.
 - **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2: 7/10, swipe at ~30 s (repeats), FAIL. v3: 7/10, swipe at ~25-30 s (history stages without the cousins, the alien joke three times), FAIL. v4 applies round 3's fixes (the cousins return at ~30 s, a new alien jab, a shorter 1948 stage) and merges the pond/ice lines (mechanism ~13 s); not re-reviewed.
-- **Length:** 235 words, no numbers said aloud. Calibrated on video 1 (231 words = 63.2 s): about 64 s.
+- **Length:** 234 words, no numbers said aloud. Calibrated on video 1 (231 words = 63.2 s): about 64 s.
 
 ## Facts and sources (everything said in the voice-over)
 
@@ -24,8 +24,8 @@ Sources:
 | # | Claim in the voice-over | Sources | Status |
 |---|---|---|---|
 | F1 | On a dry lake bed (Racetrack Playa) in Death Valley, rocks leave long trails across the surface. | S3, S1 | solid |
-| F2 | Some of the rocks are heavier than a fridge (a full-size fridge is ~70-130 kg). | S8 (Karen ≈ 700-800 lb ≈ 320-360 kg); S3 ("hundreds of pounds") | solid. Said as "heavier than a fridge", no number. |
-| F3 | Before December 2013 nobody had ever seen one move. | S1 (title: "First Observation of Rocks in Motion"), S2, S3 | solid |
+| F2 | Some of the rocks are as heavy as a fridge or more (a full-size fridge is ~70-130 kg). | S8 (Karen ≈ 700-800 lb ≈ 320-360 kg); S3 ("hundreds of pounds") | solid. Said as "heavier than a fridge", no number. |
+| F3 | Before December 2013 nobody had ever filmed (or scientifically observed) one moving. | S1 (title: "First Observation of Rocks in Motion"), S2, S3 | solid |
 | F4 | "Scientists blamed wind, then ice. A fenced-in rock escaped anyway!" (wind: 1948 dust devils, Sharp & Carey; ice: Stanley 1955, Reid et al. 1995; the corral tested the ice idea) (Sharp & Carey's corral: the test stone moved ~8.5 m out in the first winter): 1948 whirlwind (dust devil) theory; Sharp & Carey's stake/rebar corrals around named rocks (monitoring from May 1968); nobody saw a rock move until December 2013. | S6, S7 (McAllister & Agnew 1948; Sharp & Carey from 1968); S1, S2, S3 (first observation 2013) | solid ("sixty years" counts 1948 to 2011, when the cousins start) |
 | F7 | Two cousins put GPS trackers in fifteen rocks and waited (it took two years). | S1, S2 (winter 2011: 15 rocks with motion-activated GPS units built by Jim Norris, a weather station, time-lapse cameras; "we expected to wait five or ten years") | solid. The stage setbacks (dust storm, baking summer, the fried egg) are generic comic beats, not claims about the real team, and are drawn as our own cousins. |
 | F8 | Year two: rain floods the lake bed (ankle-deep in the visuals); cold nights freeze it over; one sunny morning the ice crackles; dozens of rocks slide in daylight, trackers included ("slowly": 2-5 m/min). | S1 (pond from winter storms, up to ~7 cm deep in places; >60 rocks moved on 20 Dec 2013; GPS rocks moved up to 224 m in Dec 2013-Jan 2014), S2 (breakup around noon; seen in person) | solid. The pond formed in late Nov 2013 (AGU abstract, https://agu.confex.com/agu/fm14/webprogram/Paper28841.html), the big move was 20 Dec, so the VO says "winter", not "December". Crackling: Norris is quoted "the ice started cracking"; the GPS units logged positions (read out later, not live). The ice formed over several cold nights. ⚠ "ankle-deep" = a few cm. "Next morning" = the breakup morning, not a claim about the exact night. |
@@ -40,8 +40,8 @@ Fiction, made up for the story: Gary the googly-eyed rock; the guide's alien fan
 
 1. Two cousins hid GPS trackers inside fifteen rocks, then waited for the rocks to run away.
 2. They even named one Gary.
-3. You see, on a Death Valley lake bed, some rocks heavier than a fridge leave long trails,
-4. and nobody had ever caught one moving.
+3. On a Death Valley lake bed, some rocks as heavy as a fridge leave long trails.
+4. You see, nobody had ever filmed one moving.
 5. A guide in alien antennae laughs at them.
 6. "Scientists blamed wind, then ice. A fenced-in rock escaped anyway!
 7. It's aliens, pal. Twenty bucks." His night-only tours sell out.
@@ -51,16 +51,15 @@ Fiction, made up for the story: Gary the googly-eyed rock; the guide's alien fan
 11. They paddle home on a cooler. Gary steers.
 12. "Alien rock-racing league!" he yells. "Forty bucks."
 13. Year two, last try: he livestreams their failure to his fans.
-14. Rain floods the lake bed; cold nights freeze it. Even his imaginary aliens doze off.
+14. Rain floods the lake bed; cold nights freeze it, sleeping cousins included. Even his imaginary aliens doze off.
 15. One sunny morning, the ice crackles, and dozens of rocks start sliding. Gary too, tracker blinking.
-16. "Alien air-hockey final!" cries the guide. "Referee included! Fifty bucks!"
+16. "Alien air-hockey final!" cries the guide. "The referee's a rock! Fifty bucks!"
 17. The sun breaks the phone-thin ice into huge panes; a light breeze shoves them into rocks.
 18. Same game. No aliens.
 19. His livestream shows rocks sliding in broad daylight.
 20. A pane shoves Gary straight through his NIGHT ONLY sign.
-21. His refund cash blows away on the same breeze.
-22. His antennae droop. "Fine. It's ice."
-23. Now he sells ice tours, five bucks, and opens every one the same way:
+21. His antennae droop. "Fine. It's ice." "Gary says hi," say the cousins.
+22. Now he sells ice tours for five bucks. His new pitch:
 
 ## Notes for voicing (after approval)
 - Breaths after the guide's closing quotes (shots 6-8, 13, 17) and before "Month one", "Year one", "Year two".
