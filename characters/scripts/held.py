@@ -15,7 +15,7 @@ def _scr(x, y, w, h, col, r=2.0): return ('p', rpoly(x, y, w, h, r), col)
 
 def gps_box(C, x, y, u, d, two, e):
     w, h = (62 * u, 40 * u) if two else (46 * u, 32 * u)
-    cx, cy = (x, y) if two else (x - d * 2 * u, y - h / 2 + 2 * u)
+    cx, cy = (x, y) if two else (x + d * 8 * u, y - h / 2 + 2 * u)
     ax, ay = cx + (d if not two else 1) * w * (0.32 if not two else 0.4), cy - h / 2
     tx = ax + (14 if two else 4) * u; ty = ay - (20 if two else 26) * u
     stamp(C, [('s', [(ax, ay + 2 * u, 3.2 * u), (tx, ty, 3.2 * u)], DARK),
@@ -74,7 +74,7 @@ def frying_pan(C, x, y, u, d, two, e):
                   ('p', [fx.rot(pc[0] + 13 * u * math.cos(t), pc[1] + 22 * u * math.sin(t), pc[0], pc[1], -35) for t in (i * math.pi / 14 for i in range(28))], DARK)], e,
               details=[('p', [fx.rot(pc[0] + 8 * u * math.cos(t), pc[1] + 16 * u * math.sin(t), pc[0], pc[1], -35) for t in (i * math.pi / 14 for i in range(28))], (82, 86, 100))])
         return
-    a = math.radians(-70); dx, dy = math.cos(a) * d, math.sin(a)
+    a = math.radians(-78); dx, dy = math.cos(a) * d, math.sin(a)
     p1 = (x + dx * 30 * u, y + dy * 30 * u); pc = (x + dx * 52 * u, y + dy * 52 * u)
     stamp(C, [('s', [(x - dx * 6 * u, y - dy * 6 * u, 7 * u), (p1[0], p1[1], 6 * u)], (58, 50, 46)), ('c', pc[0], pc[1], 24 * u, DARK)], e,
           details=[('c', pc[0], pc[1], 17 * u, (82, 86, 100)), ('c', pc[0] - 6 * u, pc[1] - 6 * u, 4 * u, (120, 124, 140))])
@@ -97,7 +97,7 @@ def cash_fan(C, x, y, u, d, two, e):
 
 
 def camera(C, x, y, u, d, two, e):
-    cx, cy = (x, y) if two else (x - d * 2 * u, y - 13 * u)
+    cx, cy = (x, y) if two else (x + d * 6 * u, y - 13 * u)
     stamp(C, [('p', rpoly(cx - 8 * u, cy - 17 * u, 16 * u, 10 * u, 2 * u), DARK),
               ('p', rpoly(cx, cy, 48 * u, 30 * u, 5 * u), DARK), ('c', cx + 4 * u, cy + 1 * u, 12 * u, (150, 156, 170))], e,
           details=[('c', cx + 4 * u, cy + 1 * u, 7.5 * u, (34, 36, 52)), ('c', cx + 1 * u, cy - 2 * u, 2.6 * u, (230, 240, 255)),
@@ -179,7 +179,9 @@ NAMES = {'mug': mug, 'gps_box': gps_box, 'screwdriver': screwdriver, 'googly_eye
          'frying_pan': frying_pan, 'ticket': ticket, 'cash_fan': cash_fan, 'camera': camera, 'flashlight': flashlight,
          'phone': phone, 'selfie_stick': selfie_stick, 'megaphone': megaphone, 'flag': flag,
          'air_hockey_mallet': air_hockey_mallet, 'gary_rock': gary_rock}
-TWO_HANDED = {'gps_box', 'laptop', 'frying_pan', 'camera', 'phone', 'gary_rock'}   # centred between the hands
+TWO_HANDED = {'gps_box', 'laptop', 'camera', 'phone', 'gary_rock'}   # centred between the hands
+SHOW = {'gps_box', 'screwdriver', 'googly_eyes', 'mug', 'frying_pan', 'ticket', 'cash_fan', 'camera', 'flashlight', 'phone',
+        'megaphone', 'air_hockey_mallet'}       # one-hand props raised beside the head (arm pose 'hold'); the others stay at the chest
 K = 1.25                                    # props read big (video size), like the reference
 TWO_W = dict(gps_box=30, laptop=38, frying_pan=20, camera=23, phone=22, gary_rock=33)   # the hands clamp the side edges   # hands sit on the fill, inside the edge   # half-width at the grip (u)
 

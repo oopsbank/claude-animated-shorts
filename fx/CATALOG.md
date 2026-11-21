@@ -118,6 +118,74 @@ tapered speed swoosh with two trailers. Kwargs: color, angle (travel direction, 
 
 ![whoosh](previews/whoosh.png)
 
+## Video 2 (`sailing-stones`): playa, ice and weather
+
+Environment effects (`ice_pane`, `dust_storm`, `flash_flood`, `rain`) enter by spreading or rolling in and leave by receding, with only the last ~8% as an alpha fade. They are still empty at t=0 and t=1. `dust_storm`, `flash_flood` and `rain` are meant to be placed full-frame (`size` = the frame width, centred).
+
+### `ice_pane`
+The mechanism, one stage per call. Kwargs:
+- `stage`: one of
+  - `water`: a shallow pond spreads, with ripples and sky glints;
+  - `freeze`: thin ice grows in from the rim, with frost needles and a sparkle;
+  - `panes`: white cracks race along the sheet from the centre, then it splits into panes over dark water;
+  - `drift`: the panes slide downwind, with gaps of dark water opening behind them.
+- `view`: `top` (straight down, a round pond) or `side` (low angle: a phone-thin sheet seen edge-on near the bottom).
+- `direction`: `left`, `right`, `up` or `down`.
+- `seed`.
+
+Chain the stages in one framing by calling them in order: water, then freeze, then panes, then drift.
+
+![ice_pane](previews/ice_pane.png)
+![ice_pane freeze](previews/ice_pane_freeze.png)
+![ice_pane panes](previews/ice_pane_panes.png)
+![ice_pane drift](previews/ice_pane_drift.png)
+![ice_pane side](previews/ice_pane_side.png)
+
+### `ice_crack`
+White crack lines race out from the centre and branch, then erase from the centre outward. Kwargs: color, seed.
+
+![ice_crack](previews/ice_crack.png)
+
+### `sliding_rock`
+Rocks creak back, glide (ease in-out) and stop, each carving a groove trail (darker clay with a light rim). Kwargs:
+- `path`: either `'away'` (from the bottom toward the horizon at the canvas middle, shrinking) or `[[x, y], ...]` in **canvas** fractions (0..1). The engine converts frame fractions to canvas fractions.
+- `count`: the number of rocks, spread across.
+- `sprite`: `rock` or `fridge`.
+- `trail`: default True.
+- `seed`.
+
+The trail exists only while the effect lives. For a trail that stays, the set or engine draws `rock_trail_hero` on the plate.
+
+![sliding_rock](previews/sliding_rock.png)
+![sliding_rock away x5](previews/sliding_rock_away5.png)
+![sliding_rock fridge](previews/sliding_rock_fridge.png)
+
+### `gps_ping`
+A green tracker dot pops in and pulses, while radar rings expand from it (3 rings, twice). Kwargs: color.
+
+![gps_ping](previews/gps_ping.png)
+
+### `year_badge`
+A UI tag for the top third: white Poppins Bold on a plum pill. It pops in with a squash, bobs gently, then shrinks out. Kwargs: `label` (e.g. `'1948'`, `'MONTH 1'`, `'YEAR 2 · LAST TRY'`; long labels shrink to fit), color.
+
+![year_badge](previews/year_badge.png)
+![year_badge long](previews/year_badge_long.png)
+
+### `dust_storm`
+A brown wall of dust rolls across, churning with grit streaks. It buries the frame, then settles to the ground and clears. Kwargs: direction=right|left, color, seed.
+
+![dust_storm](previews/dust_storm.png)
+
+### `flash_flood`
+A muddy wall of water rushes in with a foaming crest, floods the bottom ~40% of the frame with choppy water, then recedes. The ground is the canvas bottom. Kwargs: direction=right|left, color.
+
+![flash_flood](previews/flash_flood.png)
+
+### `rain`
+Slanted rain streaks fall with splash ticks at the bottom. The rain builds up, pours, then eases off. Kwargs: angle (deg from vertical, default 15), density, color, seed.
+
+![rain](previews/rain.png)
+
 These effects next to bean characters:
 
 ![with cast](previews/with_cast_bike.png)

@@ -18,7 +18,7 @@ d = ImageDraw.Draw(sheet)
 for i, nm in enumerate(STAT):
     im = sprite(nm, 0.3, k=0.5)
     im.thumbnail((cw - 20, ch - 20))
-    if im.height < 140:   # small props shown enlarged
+    if im.height < 140 and im.width * 2 <= cw - 20:   # small props shown enlarged
         im = im.resize((im.width * 2, im.height * 2), Image.LANCZOS); nm = nm + ' (x2)'
     x, y = (i % cols) * cw, (i // cols) * (ch + 26)
     d.line([(x + 10, y + 26 + ch - 12), (x + cw - 10, y + 26 + ch - 12)], fill=(170, 140, 100), width=2)

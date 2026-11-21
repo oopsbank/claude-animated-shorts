@@ -140,13 +140,13 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     def arm(sgn, pose):
         s0 = (cx + sgn * 0.85 * Ta, sh_y)
         if pose == 'hold' and hp:      # new held props: shown off the belly, the dot hand visibly on the grip
+            if both_hold and hp not in held.TWO_HANDED and sgn < 0:    # a one-hand prop on a two-hand beat: the left hand rests
+                return [s0, (cx - (1.1 * Ta + 4 * u), sh_y + 0.42 * HH), (cx - 0.45 * Ta, sh_y + 0.62 * HH)]
             if both_hold and hp in held.TWO_HANDED:     # hands just inside the prop's two edges, at chest height
-                if hp == 'frying_pan':                   # a paddle: top hand high, bottom hand low, blade out to the side
-                    hd = (cx + 0.3 * Ta, sh_y + 0.26 * HH) if sgn < 0 else (cx + 1.12 * Ta, sh_y + 0.6 * HH)
-                    el = (cx - 0.95 * Ta, sh_y + 0.42 * HH) if sgn < 0 else (cx + 1.25 * Ta + 8 * u, sh_y + 0.36 * HH)
-                    return [s0, el, hd]
                 hd = (cx + sgn * held.two_halfwidth(hp) * u, sh_y + 0.40 * HH)
                 el = (cx + sgn * max(1.12 * Ta + 4 * u, abs(hd[0] - cx) + 10 * u), sh_y + 0.50 * HH)
+            elif hp in held.SHOW:      # small props are shown off beside the head: arm and prop read against the background
+                el = (cx + sgn * (1.22 * Ta + 12 * u), sh_y + 0.2 * HH); hd = (cx + sgn * (1.12 * Ta + 20 * u), sh_y - 0.1 * HH)
             elif hp in ('flag', 'selfie_stick'):   # a pole: held close to the body so its top stays on the card
                 el = (cx + sgn * (1.1 * Ta + 6 * u), sh_y + 0.47 * HH); hd = (cx + sgn * (0.95 * Ta + 6 * u), sh_y + 0.30 * HH)
             else:                       # forearm raised outward: the prop is held out beside the body
@@ -246,8 +246,8 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
         for pts, ps in front:
             sgn = 1 if pts[0][0] > cx else -1
             C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], sgn * 1.0 * u, 8)[1:], 5.4 * u, hold_c if ps == 'hold' else arm_c)
-            if ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)
-        if both_hold: draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))
+            if ps == 'hold' and (not both_hold or (hp not in held.TWO_HANDED and sgn > 0)): draw_prop(C, prop, pts[2], u, side=sgn)
+        if both_hold and hp in held.TWO_HANDED: draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))
         for pts, ps in front:      # a gripping hand gets a sleeve-coloured cuff ring, so it pops over the prop's ink
             if ps == 'hold': C.dot(*pts[2], 7.4 * u, hold_c)
             C.dot(*pts[2], 5.8 * u)
