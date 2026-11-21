@@ -275,9 +275,9 @@ def alien_cutout(loc, rz=0, h=1.9):
 def gravel_mat():
     m = bpy.data.materials.new('gravel'); m.use_nodes = True; n = m.node_tree.nodes; l = m.node_tree.links; P = n['Principled BSDF']
     P.inputs['Roughness'].default_value = 0.8
-    tc = n.new('ShaderNodeTexCoord'); v = n.new('ShaderNodeTexVoronoi'); v.inputs['Scale'].default_value = 22; l.new(tc.outputs['Object'], v.inputs['Vector'])
-    r = n.new('ShaderNodeValToRGB'); e = r.color_ramp.elements; e[0].color = (0.16, 0.13, 0.12, 1); e[1].color = (0.40, 0.33, 0.27, 1)
+    tc = n.new('ShaderNodeTexCoord'); v = n.new('ShaderNodeTexVoronoi'); v.inputs['Scale'].default_value = 55; l.new(tc.outputs['Object'], v.inputs['Vector'])
+    r = n.new('ShaderNodeValToRGB'); e = r.color_ramp.elements; e[0].color = (0.28, 0.22, 0.18, 1); e[1].color = (0.42, 0.34, 0.27, 1)
     l.new(v.outputs['Color'], r.inputs['Fac']); l.new(r.outputs['Color'], P.inputs['Base Color'])
-    v2 = n.new('ShaderNodeTexVoronoi'); v2.feature = 'DISTANCE_TO_EDGE'; v2.inputs['Scale'].default_value = 22; l.new(tc.outputs['Object'], v2.inputs['Vector'])
+    v2 = n.new('ShaderNodeTexVoronoi'); v2.feature = 'DISTANCE_TO_EDGE'; v2.inputs['Scale'].default_value = 55; l.new(tc.outputs['Object'], v2.inputs['Vector'])
     b = n.new('ShaderNodeBump'); b.inputs['Strength'].default_value = 0.6; l.new(v2.outputs['Distance'], b.inputs['Height']); l.new(b.outputs['Normal'], P.inputs['Normal'])
     return m
