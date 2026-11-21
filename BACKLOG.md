@@ -56,7 +56,10 @@ Take the highest-priority open item in **your area**. Tick it (`[x]`) with the c
 - [ ] P2 A toe-roll / heel-strike foot in walks.
 - [ ] P3 Run cycle and sit pose, following DRAWING_RULES.
 
+- [ ] P2 A bars close-up from behind/above (rider's hands, bars and front tyre visible, steer angle driven by the rig) so a countersteer flick is seen, not only signalled by an arrow (v3 review, s13).
+
 ## fx (`fx/`)
+- [ ] P3 Thicker `path_line` "actual" stroke and a longer hold on the kink (v3 review, s12 top insert).
 - [x] P1 `fx/fx.py` with: explosion, impact_star, dust_puff, speed_lines, sweat_drop, anger_vein, glow_eyes, sparkle, splash, question_mark, exclaim, music_note. (claude/area-fx) After 4 review rounds, 11 of 12 effects pass (every score >= 7). See `fx/RULES.md`.
 - [x] P1 `fx/CATALOG.md` with preview strips (`fx/previews/`), a demo GIF, and automatic checks in `fx/scripts/catalog.py`.
 - [x] Restyled the fx to the bean-head cast (plum ink #241726, 3:1 thick/thin weight, crescent shading), as the Producer asked. An independent review passed all 12 effects at 7 or higher (glow_eyes 8/7/7). The previews are `fx/previews/with_cast.png`.

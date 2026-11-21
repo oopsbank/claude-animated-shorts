@@ -120,7 +120,10 @@ def main():
         for c in cs:
             h = meta['px_per_m'] * 1.75 * float(c.get('scale', 1.0)) * float(c.get('_depth', 1.0)) / H
             heights[c.get('id')] = h; h *= max_zoom(s.get('camera'))
-            if h < MIN_H.get(size, 0.3) and not top:
+            mech = any(e['name'] in DIRECTIONAL for e in s.get('fx', [])) and c.get('rig')
+            if mech and h < 0.28 and not top:
+                add('WARN', sid, f"{c.get('id')} shows the mechanism (steer/lean cue) at only {h:.0%} of the frame height: frame it medium or closer (v2/v3 review: 'the mechanism doesn't show')")
+            elif h < MIN_H.get(size, 0.3) and not top:
                 add('WARN', sid, f"{c.get('id')} is {h:.0%} of the frame height on {s['cam']} ({size} needs >= {MIN_H.get(size, .3):.0%}): they will read as a speck")
         near = [c for c in cs if c.get('_near')]
         for c in cs:

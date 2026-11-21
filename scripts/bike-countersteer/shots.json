@@ -683,10 +683,14 @@
    "set": "track",
    "cam": "bike_chase",
    "light": "golden",
-   "size": "wide",
+   "size": "medium",
    "camera": {
-    "move": "push_in",
-    "amount": 0.05
+    "move": "glide",
+    "at_word": 0,
+    "to": {
+     "zoom": 1.35
+    },
+    "dur": 12
    },
    "characters": [
     {
@@ -820,8 +824,10 @@
     {
      "name": "steer_arrow",
      "x": 0.5,
-     "y": 0.82,
+     "y": 0.6,
      "direction": "right",
+     "size": 0.5,
+     "dur": 1.2,
      "at_word": 1
     },
     {
