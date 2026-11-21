@@ -86,3 +86,16 @@
   - the "I STEER WITH MY HIPS" sticker is unreadable at phone size;
   - the ending two-shot is static for about 4 s;
   - nothing on screen shows "steers right first" in the 0-4 s hook.
+
+---
+
+# Draft v4 (2026-11-21)
+
+`draft_v4.mp4`: v3 plus the Director's two notes on v3. The voice-over is unchanged. **It is a draft, not for publishing until the Director says so.**
+
+- **The background moves when riding.** Sets write metric depth maps (`build.py --depth`) for `bike_chase`, `track_med` and `street_med`. The engine dollies the chase camera into the plate (`engine/parallax.py`), so near ground, cones and the start line stream past while the distance barely moves.
+  - Travel: up to 2.5 m in the village, 1.2 m on `track_med`, and 1.6 + 2.0 m carried across the s12/s13 cut.
+  - A light unsharp mask after the warp keeps the ink edges.
+- **Top-down paths follow the real road.** Racing lines are projected from the track geometry into the `track_top` JSON (`blender/sets/track/paths.py`), and the planned line is yellow. In s09 the rider runs wide over the outer kerb. The s12 cut-in rider rides the kink, and the diagram ends with its cut-in.
+- **Automatic QA:** all hard checks pass. Frame stats pass 45 of 65 (v3: 43).
+- **Review:** no independent review of v4 yet. The changes are the background and the paths, checked by eye on sampled frames.
