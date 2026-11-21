@@ -89,6 +89,19 @@ Coordination roles:
 - Captions sit above FX and below nothing. They must never cover the face of the character speaking.
 - Must pass: readable at phone size, in sync with the voice (each word appears 0-2 frames before it is spoken), and no caption on screen during silences longer than 0.4 s.
 
+## Stage gates (catch defects where they are born)
+Most defects in the first video were born in the shot list and caught only after a full render (see `references/reports/defect_origins_v1.md`). So nothing moves to an expensive stage until the cheap gate before it passes:
+
+| Gate | When | Run | Pass |
+|---|---|---|---|
+| **G1 Script** | `shots.json` written, **before** the voice-over and before new sets/props are commissioned | `.venv/bin/python tools/preflight.py scripts/<slug>/shots.json` (stand-in timings, ~4 s) | 0 ERROR; every WARN fixed or justified in the shot's `note` |
+| **G2 Storyboard** | right after G1 | `.venv/bin/python tools/storyboard.py scripts/<slug>/shots.json videos/<slug>/storyboard` (~2 min) | one reviewer reads `storyboard.jpg` against the script: each shot shows its point (who acts, which way, cause before effect, readable at phone size). The Director gets the sheet with the script. |
+| **G3 Assets** | each new plate, prop or rig | re-run G2 with the new asset | the asset reads in its real shots, not only on its own sheet |
+| **G4 Voice** | after G1-G2 pass | audio makes `words.json` once; re-run preflight with it | 0 ERROR with real timings |
+| **G5 Draft** | full render | `engine/qa.py` + one full-cut review | as before; any defect found here gets a new preflight check or a LESSONS rule, so it is caught at G1 next time |
+
+A missing plate is a G1 ERROR: it becomes a sets backlog item before anything is voiced.
+
 ## Branches
 - Each session works on **its own branch** (given in its first message) and pushes there. Never push to another session's branch.
 - The integration branch is `claude/busy-maxwell-tkdir9`. The nightly integrator task (see below) merges area branches whose `QA.md` checks pass.

@@ -52,6 +52,12 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Limit to -1.2 dBTP, not -1.0: fades and 24-bit writing after the limiter, and codecs, can overshoot.
 
 ## Process
+- Catch defects where they are born: 9 of 13 first-video defects were decidable from `shots.json` alone but found after a full render. Run `tools/preflight.py` and `tools/storyboard.py` before the voice-over (PIPELINE › Stage gates).
+- Every defect found at the draft stage becomes a new preflight check or a rule here, so the next video catches it at G1.
+- Judge new assets in their real shots (storyboard), not only on their own sheet: the motorbike passed its sheet and failed from behind in context.
+- An effect must follow its cause on screen by at least 8-10 frames (the broom tipped before the hand flicked).
+- Symbol FX (?, !, sweat, notes) need at least 0.40 W to read on a phone; the default 0.35 W is too small.
+- Keep a character the audience must read at >= 28% of the frame height in medium shots (>= 14% in wide ones), and a far acting character at >= 2/3 of the near one in an over-the-shoulder shot.
 - Review animation on a dense sheet (t = 1/12 .. 11/12), never only on a 5-frame strip. Pops at the entry or exit and frozen holds hide between the samples.
 - PIL `GaussianBlur` on straight RGBA drags black in from empty pixels, which gives grey or brown halos. Blur only the alpha channel and keep the RGB solid.
 - Feed each reviewer round the same inputs, and turn every fix into a rule (for example `fx/RULES.md`). Otherwise the next round undoes the last one: alpha fades get swapped for shrinks, then the shrink pops.

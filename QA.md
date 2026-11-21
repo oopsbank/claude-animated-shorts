@@ -11,6 +11,7 @@ Spawn a fresh agent. Give it:
 Ask it for a **score per criterion out of 10**, then a **numbered fix list with locations**, then "PASS" or "FAIL", in 200 words or fewer. Do not show it your earlier attempts or explain your intent. Map every fix to a change, and re-review after fixing.
 
 ## scripts
+- [ ] `tools/preflight.py` has 0 ERROR, and `tools/storyboard.py` was reviewed (PIPELINE › Stage gates, G1-G2), before the voice-over.
 - [ ] The hook is sentence 1, states a paradox as fact, and has 10-16 words.
 - [ ] Every fact has a source URL at the top of `SCRIPT.md`. Mark anything uncertain.
 - [ ] It follows the formula: hook, setting, 3-6 escalation beats, a mystery beat, "You see,", the mechanism with an everyday analogy, and an ironic payoff.

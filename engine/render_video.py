@@ -1,5 +1,5 @@
 # Engine: shots.json + words.json -> frames -> mp4 (picture only; --audio muxes a track for previews).
-# usage: python engine/render_video.py shots.json words.json out_dir [--plates DIR ...] [--frames A:B[:step]] [--workers 4]
+# usage: python engine/render_video.py shots.json words.json out_dir [--plates DIR ...] [--frames A:B[:step] | f1,f2,...] [--workers 4]
 #                                      [--audio voice.wav] [--png] [--no-mp4]
 # Contracts: PIPELINE.md (shots.json, plates + JSON, characters, fx). Motion grammar: engine/anim.py.
 import os, sys, json, math, argparse, subprocess, importlib.util, zlib
@@ -543,9 +543,12 @@ def main():
             for b in [c] + c.get('beats', []):
                 ap = b.get('arm_pose')
                 for p in (ap if isinstance(ap, list) else [ap] if ap else []): G['rig'].arm_ok(p)
-    rng = [int(v) for v in a.frames.split(':')] if a.frames else [0, n]
     ext = 'png' if a.png else 'jpg'
-    frames = list(range(rng[0], min(rng[1], n), rng[2] if len(rng) > 2 else 1))
+    if a.frames and ',' in a.frames:          # a frame list (storyboards: tools/storyboard.py)
+        frames = sorted({int(v) for v in a.frames.split(',') if v.strip() and int(v) < n})
+    else:
+        rng = [int(v) for v in a.frames.split(':')] if a.frames else [0, n]
+        frames = list(range(rng[0], min(rng[1], n), rng[2] if len(rng) > 2 else 1))
     print(f"{len(G['shots'])} shots, {n} frames ({n / FPS:.2f} s); fx: {'fx/fx.py' if G['fx'] else 'stub'}; "
           f"mouth: {'bean' if G['rig'].HAS_MOUTH else 'overlay'}; lid: {'bean' if G['rig'].HAS_LID else 'overlay'}", flush=True)
     metas = []

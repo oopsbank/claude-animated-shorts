@@ -48,7 +48,8 @@ This is the state of the project, written by the first Producer session before i
 ## Where the knowledge lives
 | What | File |
 |---|---|
-| Areas, contracts, branches, captions, self-check loop | `PIPELINE.md` |
+| Areas, contracts, **stage gates (preflight, storyboard)**, branches, captions, self-check loop | `PIPELINE.md` |
+| Where defects are born and caught (study) | `references/reports/defect_origins_v1.md` |
 | Per-area checklists and the reviewer protocol | `QA.md` |
 | General lessons (tools, look, process) | `LESSONS.md` |
 | Work queue per area | `BACKLOG.md` |
