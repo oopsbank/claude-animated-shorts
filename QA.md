@@ -1,6 +1,12 @@
 # QA checklists
 
-Every task ends with these checks: first the automatic checks, then your own look, then an independent reviewer. A criterion passes at **7/10 or higher**, and all automatic checks must pass.
+Every task ends with these checks: first the automatic checks, then your own look, then an independent reviewer.
+
+**The standard for EVERYTHING is 9/10 or higher** (the Director, 2026-11-21): scripts, sets, plates, characters, props, fx, the engine, audio, storyboards, drafts, thumbnails.
+- Every criterion must score ≥ 9, and all automatic checks must pass.
+- Fix and re-review with fresh reviewers until it passes. There is no round cap.
+- Report progress to the Producer every 3 rounds, so the Director can step in.
+- Reviewers never see earlier drafts or the target score.
 
 ## Reviewer protocol
 Spawn a fresh agent. Give it:

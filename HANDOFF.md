@@ -9,6 +9,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **Length: always a little over 1 minute (62-66 s, never under 61 s).** YouTube Shorts is the platform that pays per view for us; TikTok's Creator Rewards needs an eligible country and >1 min.
 - **Captions:** the "sentence" style (Poppins Bold, 1-2 words as written, white), picked on 2026-11-21 (`PIPELINE.md` › Captions).
 - **Lean crew, nothing extra and nothing missing:** see "How to run the crew" below. **No scheduled tasks** unless asked. The nightly 1st AD task (`trig_01RG5qNmG98WYrpCXKiSLCjq`) is disabled.
+- **Quality bar: 9/10 or higher on every criterion, for everything.**
 - **Always ask before publishing.** Upload-Post was removed on 2026-11-21: the Director posts by hand, and we prepare the files and the text.
 
 ## Status
@@ -42,7 +43,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
   1. Screenwriter (G1-G2);
   2. Sound, plus a set or asset only if needed;
   3. Animator (G5).
-- At most 2 reviewer rounds per item unless something fails.
+- **The standard for everything is ≥ 9/10** (`QA.md`): iterate with fresh reviewers until every criterion passes, with no round cap, and report every 3 rounds. To save usage, review cheap previews (low-res stills, storyboards, crops) before expensive renders.
 - Crew sessions push to `claude/area-<area>`. The Producer merges into the integration branch `claude/busy-maxwell-tkdir9`, keeping both sides of LESSONS/BACKLOG conflicts.
 - Messages sent to a rate-limited session are lost. After a reset, resend the full instructions, not "continue".
 - Kept session: Sound Designer `session_01CUE8441Kj9vhQtH74MvcqK` (it can voice the next script). All other first-video sessions are archived.
