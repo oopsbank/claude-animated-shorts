@@ -19,7 +19,13 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
   - Also: `thumbnail.png`. The proposed title and captions are in `videos/bike-countersteer/NOTES.md`.
   - The draft history and open nice-to-haves are in the same NOTES file.
   - **The Director decided (2026-11-21) not to remake it.** It has the pacing and story weaknesses found in the retention study, so the lessons go into the next video. Posting it is the Director's call.
-- **Video 2: "sailing-stones"** (topic M4 in `scripts/TOPICS.md`, picked 2026-11-21). A Screenwriter session writes the script on `claude/area-scripts`; the Director approves the script before voicing.
+- **Video 2: "sailing-stones"**: the script is final (v17, merged) and the Director said to produce it to a finished video (each stage's overall score ≥ 8).
+  - Crew sessions:
+    - Sound `session_01CUE8441Kj9vhQtH74MvcqK` (voice + mix, `claude/area-audio`);
+    - Production Designer `session_01CUE843skpWDtxaczYJp1up` (look test → `playa` + `inserts` plates → G2 storyboard, `claude/area-sets`);
+    - Screenwriter `session_01CUE841LfyxuYFPbEVjdLVm` is idle; keep it for script fixes, then archive.
+  - Next wave (after Sound finishes): one assets session for the characters/props/fx in BACKLOG. Then the engine P1s and the render.
+  - A one-shot wake-up (`trig_01X7aHfDtbgBbvATacSfVXP6`, 2026-11-22 01:30 Asia/Ho_Chi_Minh) wakes stalled sessions with their full instructions; the Director asked for it.
 - **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session. It must apply, from the start:
   - the leaders' story engine (`QA.md` › scripts; `references/reports/retention_2026-11.md` §8);
   - a picture change every ≤ 1.5 s and a mid-action hook (preflight warns);
