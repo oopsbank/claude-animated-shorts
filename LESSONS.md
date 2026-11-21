@@ -52,6 +52,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Limit to -1.2 dBTP, not -1.0: fades and 24-bit writing after the limiter, and codecs, can overshoot.
 
 ## Process
+- Check the other branches and earlier sessions for channel conventions before calling a video final. The cover-as-first-3-frames rule lived only in another project's `PUBLISHING.md` and was missing from the handoff.
 - Catch defects where they are born: 9 of 13 first-video defects were decidable from `shots.json` alone but found after a full render. Run `tools/preflight.py` and `tools/storyboard.py` before the voice-over (PIPELINE › Stage gates).
 - Every defect found at the draft stage becomes a new preflight check or a rule here, so the next video catches it at G1.
 - Judge new assets in their real shots (storyboard), not only on their own sheet: the motorbike passed its sheet and failed from behind in context.

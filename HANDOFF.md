@@ -22,6 +22,7 @@ This is the state of the project, written by the first Producer session before i
   - s15: the riders are specks on track_wide;
   - the "?" at 36 s is small;
   - the ghost hand on the broom card is faint.
+- **Final file to post:** `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4` (draft v4 with the cover as the first 3 frames; 1924 frames, 64.14 s) and `thumbnail.png`. Follow `PIPELINE.md` › Publishing.
 - To publish, propose a title, description and hashtags, then **ask the user** which platforms and when. Upload-Post is connected (`api.upload-post.com`; the proxy injects the key). Nothing has been published yet.
 
 ## Accounts and limits
