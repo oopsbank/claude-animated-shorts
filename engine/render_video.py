@@ -13,6 +13,7 @@ sys.path.insert(0, HERE)
 import anim  # noqa: E402
 import captions as CAP  # noqa: E402
 import grade as GRADE  # noqa: E402
+import parallax as PX  # noqa: E402
 from anim import W, H, FPS, smooth, clamp, lerp  # noqa: E402
 
 PLATE_DEFAULTS = {'horizon_y': H * 0.4, 'light_dir': 'left', 'tint': '#fff8f0'}
@@ -444,12 +445,38 @@ def camera_xform(img, c):
     return out, to_screen, {'zoom': round(z, 4), 'cx': round(cx, 1), 'cy': round(cy, 1), 'roll': round(c['roll'], 3)}
 
 
+RIDE_SPEED, RIDE_MAX = 1.0, 3.0      # m/s and metres of camera travel per shot (2.5D parallax breaks down beyond ~3 m)
+
+
+def ride_distance(k, f, meta):
+    """How far the chase camera has moved into the plate at frame f. On for shots with a rider seen from behind
+    (or "ride": {"speed": m/s, "max": m} on the shot; "ride": false turns it off) when the plate has a depth map."""
+    shot = G['shots'][k]; r = shot.get('ride')
+    if r is False or 'depth' not in meta: return 0.0
+    if r is None and not any(c.get('rig') and c.get('view') == 'rear' for c in shot.get('characters', [])): return 0.0
+    r = r if isinstance(r, dict) else {}
+    t = (f - G['spans'][k]['f0']) / FPS
+    return min(float(r.get('max', RIDE_MAX)), float(r.get('start', 0.0)) + float(r.get('speed', RIDE_SPEED)) * t)   # start: carry on from the previous shot
+
+
+def ride_warper(pkey, plate, meta):
+    """One parallax rig per worker, for the plate in use (frames come in contiguous chunks)."""
+    cache = G.setdefault('_rider', {})
+    if pkey not in cache:
+        cache.clear(); info = meta['depth']
+        dep = PX.load_depth(os.path.join(os.path.dirname(pkey), info['file']), info)
+        cache[pkey] = PX.Rider(np.asarray(plate.convert('RGB')), dep, info['f_px'], info['ride_dir'])
+    return cache[pkey]
+
+
 def render_shot(k, f):
     shot = G['shots'][k]; pkey = shot['_plate']
     ins = shot.get('_insert'); crop_any = False
     if ins and ins[0] <= f < ins[1]: pkey = ins[2]; crop_any = 'close' in os.path.basename(pkey)   # close cut-ins crop freely
     plate, meta = G['plates'][pkey]
-    base = plate.convert('RGBA')
+    d_ride = ride_distance(k, f, meta) if pkey == shot['_plate'] else 0.0
+    if d_ride > 1e-3: base = Image.fromarray(ride_warper(pkey, plate, meta).warp(d_ride)).convert('RGBA')
+    else: base = plate.convert('RGBA')
     if shot.get('_bike_prop'):
         kind, sx_ = shot['_bike_prop']; s = meta['px_per_m'] * 1.75 / 777
         im = G['rig'].bike_card(kind, s, view=shot.get('bike_view', '3q'))

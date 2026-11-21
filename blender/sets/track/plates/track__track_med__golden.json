@@ -14,5 +14,18 @@
    639.5,
    718.6
   ]
+ },
+ "depth": {
+  "file": "track__track_med__depth.png",
+  "near": 0.3,
+  "far": 400.0,
+  "kind": "distance",
+  "encoding": "srgb",
+  "f_px": 1280.0,
+  "ride_dir": [
+   -0.0,
+   -0.1073,
+   -0.9942
+  ]
  }
 }

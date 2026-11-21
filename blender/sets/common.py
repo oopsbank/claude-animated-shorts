@@ -2,7 +2,7 @@
 # render settings, a depth-haze pass, warm-only glow post, and the plate JSON writer.
 # A set's build.py builds its geometry once, then calls main(set_name, CAMS, LIGHTS) to render every cam x light.
 #   python blender/sets/<set>/build.py [--cams a,b] [--lights day,night] [--pct 25] [--samples 24] [--out DIR]
-import bpy, sys, os, math, json, time, colorsys, argparse
+import bpy, sys, os, math, json, time, colorsys, argparse, glob
 import numpy as np
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
@@ -454,6 +454,24 @@ def project_targets(cam_obj, targets):
         out[name] = [round(v.x * W, 1), round((1 - v.y) * H, 1)]
     return out
 
+DEPTH_NEAR, DEPTH_FAR = 0.3, 400.0
+
+def metric_depth(cam_obj, path, out, set_name, cn):
+    """16-bit linear depth: value = (camera distance - near) / (far - near). Sky = 1. Written for the engine's ride
+    parallax, with the camera intrinsics and the ride direction (world forward along the ground, in camera space)
+    added to every plate JSON of this cam."""
+    s = sc(); vt, ld, cm = s.view_settings.view_transform, s.render.image_settings.color_depth, s.render.image_settings.color_mode
+    s.view_settings.view_transform = 'Raw'; s.render.image_settings.color_depth = '16'; s.render.image_settings.color_mode = 'BW'
+    _depth_pass(path, DEPTH_NEAR, DEPTH_FAR)
+    s.view_settings.view_transform = vt; s.render.image_settings.color_depth = ld; s.render.image_settings.color_mode = cm
+    R = cam_obj.matrix_world.to_3x3(); fwd = R @ Vector((0, 0, -1)); fwd.z = 0
+    ride = (R.transposed() @ fwd.normalized()) if fwd.length > 1e-6 else Vector((0, 0, -1))
+    info = {'file': os.path.basename(path), 'near': DEPTH_NEAR, 'far': DEPTH_FAR, 'kind': 'distance', 'encoding': 'srgb',   # PNG save applies the sRGB curve: decode before use
+            'f_px': round(cam_obj.data.lens / 36.0 * max(W, H), 2), 'ride_dir': [round(v, 4) for v in ride]}
+    for jp in glob.glob(os.path.join(out, f'{set_name}__{cn}__*.json')):
+        js = json.load(open(jp)); js['depth'] = info; json.dump(js, open(jp, 'w'), indent=1)
+    print('DEPTH', path, info, flush=True)
+
 def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
     """CAMS: name -> dict(loc, target, lens, stand, fstop, roll, ink_fade, light_overrides, setup=callable)
        LIGHTS: name -> dict of preset overrides (az, elev, ...)."""
@@ -461,6 +479,7 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
     ap.add_argument('--cams'); ap.add_argument('--lights'); ap.add_argument('--pct', type=int, default=100)
     ap.add_argument('--samples', type=int, default=32); ap.add_argument('--out')
     ap.add_argument('--repost', action='store_true', help='redo only the Python post from the kept raw renders')
+    ap.add_argument('--depth', action='store_true', help='only write metric depth maps (16-bit) for the engine parallax')
     argv = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]
     a = ap.parse_args(argv)
     out = a.out or os.path.join(ROOT, 'blender/sets', set_name, 'plates'); os.makedirs(out, exist_ok=True)
@@ -471,6 +490,8 @@ def main(set_name, CAMS, LIGHTS, haze_range=(4, 90), targets=None):
         c = CAMS[cn]
         co = camera(c['loc'], c['target'], c.get('lens', 27), c.get('roll', 0))
         if c.get('setup'): c['setup']()
+        if a.depth:
+            metric_depth(co, os.path.join(out, f'{set_name}__{cn}__depth.png'), out, set_name, cn); continue
         cam = co.data; cam.dof.use_dof = bool(c.get('fstop'))
         cam.dof.focus_distance = (co.location - (Vector(c['stand']) + Vector((0, 0, 1.2)))).length
         cam.dof.aperture_fstop = c.get('fstop') or 2.0

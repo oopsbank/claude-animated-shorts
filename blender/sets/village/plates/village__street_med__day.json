@@ -8,5 +8,18 @@
  "ground_x": 455.5,
  "set": "village",
  "cam": "street_med",
- "light": "day"
+ "light": "day",
+ "depth": {
+  "file": "village__street_med__depth.png",
+  "near": 0.3,
+  "far": 400.0,
+  "kind": "distance",
+  "encoding": "srgb",
+  "f_px": 1600.0,
+  "ride_dir": [
+   0.0,
+   -0.0338,
+   -0.9994
+  ]
+ }
 }

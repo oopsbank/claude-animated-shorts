@@ -15,6 +15,9 @@
     "move": "push_in",
     "amount": 0.05
    },
+   "ride": {
+    "max": 2.5
+   },
    "characters": [
     {
      "id": "you",
@@ -328,6 +331,10 @@
     "move": "follow",
     "direction": "left"
    },
+   "ride": {
+    "speed": 0.6,
+    "max": 1.2
+   },
    "characters": [
     {
      "id": "dale",
@@ -434,6 +441,10 @@
    "camera": {
     "move": "shake",
     "amount": 0.01
+   },
+   "ride": {
+    "speed": 0.6,
+    "max": 1.2
    },
    "characters": [
     {
@@ -685,6 +696,10 @@
    "cam": "bike_chase",
    "light": "golden",
    "size": "medium",
+   "ride": {
+    "speed": 0.45,
+    "max": 1.6
+   },
    "camera": {
     "move": "glide",
     "glides": [
@@ -764,6 +779,11 @@
    "cam": "bike_chase",
    "light": "golden",
    "size": "close",
+   "ride": {
+    "start": 1.6,
+    "speed": 0.45,
+    "max": 3.6
+   },
    "camera": {
     "move": "glide",
     "zoom": 1.45,
@@ -915,6 +935,10 @@
    "camera": {
     "move": "push_in",
     "amount": 0.06
+   },
+   "ride": {
+    "speed": 0.6,
+    "max": 1.2
    },
    "characters": [
     {
@@ -1087,6 +1111,9 @@
     "move": "glide",
     "direction": "left",
     "amount": 0.06
+   },
+   "ride": {
+    "max": 2.5
    },
    "characters": [
     {
