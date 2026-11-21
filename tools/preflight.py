@@ -139,6 +139,10 @@ def main():
                     add('ERROR', sid, f"{c.get('id')} face beat '{b['expr']}' at word {b.get('at_word', 0)} but we see their back/top")
                 if set(b) - {'at_word', 'expr', 'mouth', 'blink', 'talk'} == set() and b.get('expr') and b.get('at_word', 0) != 0:
                     add('WARN', sid, f"{c.get('id')} beat at word {b.get('at_word')} only changes the face: add a body change")
+        for c in cs:     # a whole-bike lean that flips back and forth hides the cause/effect order (v3 review, s12)
+            ls = [float(b['lean']) for b in sorted(c.get('beats', []), key=lambda b: b.get('at_word', 0)) if 'lean' in b]
+            flips = sum(1 for a_, b_ in zip(ls, ls[1:]) if a_ != b_)
+            if flips >= 3: add('WARN', sid, f"{c.get('id')} lean changes {flips} times ({ls}): show one continuous move per idea")
         views = {c.get('view', 'front') for c in cs}
         for e in s.get('fx', []):
             if e['name'] in DIRECTIONAL and e.get('direction') in ('left', 'right') and cs and views <= {'front'}:

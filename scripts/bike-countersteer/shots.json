@@ -701,18 +701,6 @@
        "lean": 0,
        "at_word": 0,
        "arm_pose": "ride"
-      },
-      {
-       "lean": -20,
-       "at_word": 5
-      },
-      {
-       "lean": 0,
-       "at_word": 11
-      },
-      {
-       "lean": -20,
-       "at_word": 20
       }
      ],
      "rig": "motorbike",
@@ -764,19 +752,13 @@
    "size": "close",
    "camera": {
     "move": "glide",
+    "zoom": 1.35,
     "glides": [
-     {
-      "at_word": 2,
-      "to": {
-       "zoom": 1.35
-      },
-      "dur": 10
-     },
      {
       "at_word": 15,
       "to": {
-       "zoom": 1.15,
-       "x": 0.42
+       "zoom": 1.2,
+       "x": 0.45
       },
       "dur": 14
      }
@@ -826,8 +808,9 @@
      "x": 0.5,
      "y": 0.6,
      "direction": "right",
-     "size": 0.5,
-     "dur": 1.2,
+     "size": 0.55,
+     "dur": 1.4,
+     "color": "#ffd23f",
      "at_word": 1
     },
     {

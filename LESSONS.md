@@ -57,6 +57,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Judge new assets in their real shots (storyboard), not only on their own sheet: the motorbike passed its sheet and failed from behind in context.
 - An effect must follow its cause on screen by at least 8-10 frames (the broom tipped before the hand flicked).
 - The shot that carries the mechanism must frame the action at medium or closer (rider >= 28% of the frame height), with the cue arrow at the part that moves and at >= 0.5 W. A wide chase with a small arrow near the ground failed clarity twice.
+- Choreograph the mechanism as one continuous chain: upright, the cause (steer cue), then a single move as the effect. A lean that rocks back and forth before the cue (0, -20, 0, -20) made the order unreadable.
 - A front-view close-up mirrors left/right cues: a "rider's right" arrow reads as screen right in the wrong sense. Show a steering mechanism from behind or above only.
 - Symbol FX (?, !, sweat, notes) need at least 0.40 W to read on a phone; the default 0.35 W is too small.
 - Keep a character the audience must read at >= 28% of the frame height in medium shots (>= 14% in wide ones), and a far acting character at >= 2/3 of the near one in an over-the-shoulder shot.
