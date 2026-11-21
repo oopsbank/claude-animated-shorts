@@ -23,7 +23,7 @@ This is the state of the project, written by the first Producer session before i
   - the "?" at 36 s is small;
   - the ghost hand on the broom card is faint.
 - **Final file to post:** `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4` (draft v4 with the cover as the first 3 frames; 1924 frames, 64.14 s) and `thumbnail.png`. Follow `PIPELINE.md` › Publishing.
-- To publish, propose a title, description and hashtags, then **ask the user** which platforms and when. Upload-Post is connected (`api.upload-post.com`; the proxy injects the key). Nothing has been published yet.
+- To publish, propose a title, description and hashtags, then **ask the user** which platforms and when. Upload-Post was removed at the Director's request on 2026-11-21: the Director posts by hand, and we prepare the files and the text. Nothing has been published yet.
 
 ## Accounts and limits
 - **ElevenLabs:** connected through the proxy (`api.elevenlabs.io`). The user replaced the key on 2026-11-19; it is the FREE tier: 10,000 characters a month, 1,251 used. One video is about 1,250 characters. Generate the real voice-over **once** per script.

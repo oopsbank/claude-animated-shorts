@@ -106,7 +106,7 @@ A missing plate is a G1 ERROR: it becomes a sets backlog item before anything is
 The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its publishing log is `projects/channel/PUBLISHING.md` on branch `claude/sleepy-lovelace-n8psvk` (the earlier shorts). Always ask the Director before publishing.
 - **Thumbnail:** run `tools/thumbnail.py` on a caption-free engine frame. Zoom inside the engine (a camera `zoom` in a copy of shots.json), never by upscaling the frame. The house style is a 3-4 line headline in the top third: white, with the keyword line in yellow or red, a thick plum outline and a shadow. The character and the action sit below it. Save it as `videos/<slug>/thumbnail.png`.
 - **Cover as the first 3 frames:** `tools/add_cover.sh video.mp4 thumbnail.png videos/<slug>/<slug>_captions_cover_1080x1920.mp4` puts the thumbnail in the first 0.1 s and delays the audio by 0.1 s. Only this captioned cut with the cover is posted.
-- **Upload-Post** (`api.upload-post.com`, the proxy injects the key), profile `somecrazythings`:
+- **Upload-Post was removed at the Director's request (2026-11-21).** The Director posts by hand with the final cover cut and `thumbnail.png`. Use the notes below only if the Director adds the key back. Profile `somecrazythings`:
   - YouTube, Instagram and the Facebook Page; send `thumbnail=@thumbnail.png` with every upload.
   - Free plan: 10 uploads a month, and each platform counts as 1. 6 of 10 were used by 2026-11-20.
   - Keep the Facebook caption under 255 bytes, or it is cut.
