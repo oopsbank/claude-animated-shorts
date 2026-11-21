@@ -147,6 +147,8 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
                     return [s0, el, hd]
                 hd = (cx + sgn * held.two_halfwidth(hp) * u, sh_y + 0.40 * HH)
                 el = (cx + sgn * max(1.12 * Ta + 4 * u, abs(hd[0] - cx) + 10 * u), sh_y + 0.50 * HH)
+            elif hp in ('flag', 'selfie_stick'):   # a pole: held close to the body so its top stays on the card
+                el = (cx + sgn * (1.1 * Ta + 6 * u), sh_y + 0.47 * HH); hd = (cx + sgn * (0.95 * Ta + 6 * u), sh_y + 0.30 * HH)
             else:                       # forearm raised outward: the prop is held out beside the body
                 el = (cx + sgn * (1.16 * Ta + 8 * u), sh_y + 0.47 * HH); hd = (cx + sgn * (1.1 * Ta + 14 * u), sh_y + 0.28 * HH)
             return [s0, el, hd]
@@ -242,11 +244,18 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
     # ---- arms in front of the body
     if prop and both_hold:          # one prop, two hands (DRAWING rule 23): drawn once between the hands
         hands = sorted((p[0][2] for p in front), key=lambda q: q[0])
-        if hp: draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))      # new props: under the forearms
+    if hp:   # new props: every forearm first (it reaches the prop's edge from outside), then the prop, then the hands
+        hold_c = mix(shirt_c, INK, 0.66)        # a touch darker than a hanging arm, so it reads over the torso
+        for pts, ps in front:
+            sgn = 1 if pts[0][0] > cx else -1
+            C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], sgn * 1.0 * u, 8)[1:], 5.4 * u, hold_c if ps == 'hold' else arm_c)
+            if ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)
+        if both_hold: draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))
+        for pts, ps in front: C.dot(*pts[2], (6.3 if ps == 'hold' else 5.5) * u)
+        front = []
     for pts, ps in front:
         sgn = 1 if pts[0][0] > cx else -1
         C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], sgn * 1.0 * u, 8)[1:], 5.2 * u, arm_c)
-        if hp and prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)   # arm, prop, then the gripping hand
         C.dot(*pts[2], 5.5 * u)
         if not hp and prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)
     if prop and both_hold and not hp:
@@ -429,7 +438,7 @@ def draw_cooler(C, cx, top, bot, w, u, body=None, lid=None, label=None):
 def antenna_geo(root, a, b, sgn, droop, sway):
     """Stalk centre line (bezier) and tip for one antenna. droop 0 = up and springy, 1 = sagging beside the head."""
     # the tip swings down an arc under gravity (13 deg -> 128 deg from vertical); the stem near the root stays upright
-    th = math.radians(13 + 115 * droop ** 0.85); R = b * (0.98 - 0.06 * droop)
+    th = math.radians(13 + 135 * droop ** 0.85); R = b * (0.98 - 0.06 * droop)
     tip = (root[0] + sgn * R * math.sin(th) * (1 + 0.15 * droop), root[1] - R * math.cos(th))
     tc = math.radians(6 + 40 * droop); Rc = R * (0.55 + 0.1 * droop)
     ctl = (root[0] + sgn * Rc * math.sin(tc), root[1] - Rc * math.cos(tc))

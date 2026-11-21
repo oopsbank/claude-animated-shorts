@@ -15,7 +15,7 @@ def _scr(x, y, w, h, col, r=2.0): return ('p', rpoly(x, y, w, h, r), col)
 
 def gps_box(C, x, y, u, d, two, e):
     w, h = (62 * u, 40 * u) if two else (46 * u, 32 * u)
-    cx, cy = (x, y) if two else (x - d * 2 * u, y - 14 * u)
+    cx, cy = (x, y) if two else (x - d * 2 * u, y - h / 2 + 2 * u)
     ax, ay = cx + (d if not two else 1) * w * (0.32 if not two else 0.4), cy - h / 2
     tx = ax + (14 if two else 4) * u; ty = ay - (20 if two else 26) * u
     stamp(C, [('s', [(ax, ay + 2 * u, 3.2 * u), (tx, ty, 3.2 * u)], DARK),
@@ -36,9 +36,9 @@ def mug(C, x, y, u, d, two, e):
 
 def screwdriver(C, x, y, u, d, two, e):
     a = math.radians(-62); dx, dy = math.cos(a) * d, math.sin(a)
-    p0 = (x - dx * 8 * u, y - dy * 8 * u); p1 = (x + dx * 16 * u, y + dy * 16 * u); p2 = (x + dx * 46 * u, y + dy * 46 * u)
-    stamp(C, [('s', [(p1[0], p1[1], 3.6 * u), (p2[0], p2[1], 3.0 * u)], (190, 196, 206)),
-              ('s', [(p0[0], p0[1], 10 * u), (p1[0], p1[1], 9 * u)], RED)], e * 0.85,
+    p0 = (x - dx * 10 * u, y - dy * 10 * u); p1 = (x + dx * 20 * u, y + dy * 20 * u); p2 = (x + dx * 56 * u, y + dy * 56 * u)
+    stamp(C, [('s', [(p1[0], p1[1], 4.6 * u), (p2[0], p2[1], 3.6 * u)], (190, 196, 206)),
+              ('s', [(p0[0], p0[1], 13 * u), (p1[0], p1[1], 12 * u)], RED)], e * 0.85,
           details=[('s', [(p0[0] + dx * 4 * u, p0[1] + dy * 4 * u, 2.2 * u), (p1[0] - dx * 3 * u, p1[1] - dy * 3 * u, 2.2 * u)], (255, 140, 120))])
 
 
@@ -99,7 +99,7 @@ def cash_fan(C, x, y, u, d, two, e):
 
 
 def camera(C, x, y, u, d, two, e):
-    cx, cy = (x, y) if two else (x - d * 2 * u, y - 16 * u)
+    cx, cy = (x, y) if two else (x - d * 2 * u, y - 13 * u)
     stamp(C, [('p', rpoly(cx - 8 * u, cy - 17 * u, 16 * u, 10 * u, 2 * u), DARK),
               ('p', rpoly(cx, cy, 48 * u, 30 * u, 5 * u), DARK), ('c', cx + 4 * u, cy + 1 * u, 12 * u, (150, 156, 170))], e,
           details=[('c', cx + 4 * u, cy + 1 * u, 7.5 * u, (34, 36, 52)), ('c', cx + 1 * u, cy - 2 * u, 2.6 * u, (230, 240, 255)),
@@ -154,10 +154,10 @@ def megaphone(C, x, y, u, d, two, e):
 def flag(C, x, y, u, d, two, e, label=''):
     dd = d or 1
     top = (x + dd * 4 * u, y - 150 * u)
-    fl = [(top[0], top[1] + 2 * u), (top[0] - dd * 84 * u, top[1] + 22 * u), (top[0], top[1] + 44 * u)]   # the pennant flies over the head side
+    fl = [(top[0], top[1] + 2 * u), (top[0] + dd * 62 * u, top[1] + 20 * u), (top[0], top[1] + 40 * u)]   # the pennant flies over the head side
     stamp(C, [('s', [(x - dd * 1 * u, y + 12 * u, 5 * u), (top[0], top[1], 5 * u)], (122, 84, 50)),
               ('p', fl, (60, 190, 210)), ('c', top[0], top[1] - 2 * u, 4.5 * u, YEL)], e * 0.85)
-    if label: text(C, top[0] - dd * 30 * u, top[1] + 19 * u, label, 9 * u, (255, 255, 255), maxw=50 * u, rot=dd * 13)
+    if label: text(C, top[0] + dd * 24 * u, top[1] + 18 * u, label, 8 * u, (255, 255, 255), maxw=38 * u, rot=-dd * 13)
 
 
 def air_hockey_mallet(C, x, y, u, d, two, e):

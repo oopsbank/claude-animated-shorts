@@ -29,7 +29,7 @@ class Card:
         im.info['anchor'] = (anchor[0] * k, anchor[1] * k); return im
 
 
-E = 10.0      # ink width in design units (the cast's outline is ~12 at the head, props ~10)
+E = 12.0      # ink width in design units (the cast's outline is ~12 at the head, props ~10)
 
 
 # ------------------------------------------------------------------ rocks
@@ -225,15 +225,15 @@ def tour_sign_free(t=0.0, k=1.0, text_='ALIEN ROCK TOURS|NIGHT ONLY', **kw):
 
 
 # ------------------------------------------------------------------ cash, UI cards, scale cues
-def flying_bills(t=0.0, k=1.0, count=7, direction='right', seed=3, **kw):
+def flying_bills(t=0.0, k=1.0, count=9, direction='right', seed=3, **kw):
     """His refund cash blowing away on the breeze: bills flutter out of a bunch at the bottom-left (or right) and
     tumble off across the card. Empty at t=0 and t=1. Card 1000x700 units, anchor = where the bunch starts."""
     W_, H_ = 1000, 700; sgn = 1 if direction == 'right' else -1
     C = Card(W_, H_); rnd = random.Random(seed)
     ox, oy = (W_ / 2 - sgn * 380), H_ - 120
     for i in range(count):
-        d0 = 0.04 + 0.05 * i
-        p = seg(t, d0, d0 + 0.5)
+        d0 = 0.01 + 0.04 * i
+        p = seg(t, d0, d0 + 0.55)
         if p <= 0 or p >= 1: continue
         g = smooth(seg(p, 0, 0.05)) * (1 - smooth(seg(p, 0.85, 1.0)))
         x = ox + sgn * (820 * p ** 1.2 + 40 * math.sin(p * 9 + i))
