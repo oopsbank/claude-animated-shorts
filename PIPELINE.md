@@ -103,7 +103,18 @@ A missing plate is a G1 ERROR: it becomes a sets backlog item before anything is
 The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its publishing log is `projects/channel/PUBLISHING.md` on branch `claude/sleepy-lovelace-n8psvk` (the earlier shorts). Always ask the Director before publishing.
 - **Thumbnail:** run `tools/thumbnail.py` on a caption-free engine frame. Zoom inside the engine (a camera `zoom` in a copy of shots.json), never by upscaling the frame. The house style is a 3-4 line headline in the top third: white, with the keyword line in yellow or red, a thick plum outline and a shadow. The character and the action sit below it. Save it as `videos/<slug>/thumbnail.png`.
 - **Cover as the first 3 frames:** `tools/add_cover.sh video.mp4 thumbnail.png videos/<slug>/<slug>_captions_cover_1080x1920.mp4` puts the thumbnail in the first 0.1 s and delays the audio by 0.1 s. Only this captioned cut with the cover is posted.
-- **Posting is by hand** (Upload-Post was removed on 2026-11-21). Prepare the cover cut, `thumbnail.png`, a title, a YouTube description and an Instagram/Facebook caption under 255 bytes (Facebook cuts longer ones), and record them in `videos/<slug>/NOTES.md`.
+- **Posting through the Buffer API** (connected 2026-11-21; the key is proxy-injected for `api.buffer.com`, never in code). **Every post needs the Director's explicit OK** for that video, platform and time.
+  - GraphQL: `POST https://api.buffer.com` (JSON `{"query": …}`). Organization `6b018582f6a79e91855f453f`.
+  - Channels:
+    - YouTube "Some Crazy Thingzz" `6b01866eece6dfde5f4381e4`;
+    - TikTok "somecrazythingzz" `6b018688ece6dfde5f438288`;
+    - Facebook page "Some Crazy Things" `6b018635ece6dfde5f438054`.
+    - No Instagram yet.
+  - `createPost(input: {channelId, text, assets: {videos: [{url, thumbnailUrl}]}, mode: shareNow|customScheduled|addToQueue, dueAt, metadata: {youtube: {title, privacy, madeForKids: false, categoryId}}, saveToDraft})`.
+  - **The video and thumbnail must be at public URLs** that stay up until the post goes out; Buffer has no file upload. TikTok pulls from a URL and may need a verified domain.
+  - Test with `saveToDraft: true` first.
+  - Fallback: the Director posts by hand.
+- Posting by hand (Upload-Post was removed on 2026-11-21). Prepare the cover cut, `thumbnail.png`, a title, a YouTube description and an Instagram/Facebook caption under 255 bytes (Facebook cuts longer ones), and record them in `videos/<slug>/NOTES.md`.
 - **Length: 62-66 s, never under 61 s** (the final file, cover frames included). TikTok's Creator Rewards and Snapchat pay only for videos over 1 minute (TikTok needs an eligible account country; Vietnam isn't one in 2026). YouTube Shorts is the platform that pays per view for us: YPP needs 1,000 subscribers + 10 M Shorts views in 90 days.
 
 ## Branches
