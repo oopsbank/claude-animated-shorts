@@ -55,6 +55,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Check each source against the exact claim, and check press numbers against the paper. Hedge or drop what doesn't match.
 - Keep the payoff physically true, and never show or say brand names.
 - The mystery line and the "You see," line must not contradict each other in wording: name the exact thing.
+- Estimate length from the word count (video 1: 231 words = 63.2 s of real voice), not from preflight's stand-in total, which reads ~15% long (72.8 s for the same script). Spoken years add words ("1948" = three).
 - Make every video a little over 1 minute: 225-240 words gives 62-66 s. Never under 61 s (TikTok/Snapchat pay only over 1 minute), never over about 66 s (retention).
 
 ## Audio
@@ -65,6 +66,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Limit to -1.2 dBTP: later steps and codecs overshoot -1.0.
 
 ## Process and QA
+- `tools/preflight.py` must report every missing plate, not exit on the first one: `find_plate` raises SystemExit, so catch it (fixed 2026-11-21).
 - Measure, don't eyeball, when matching a reference: our first "sentence" captions were 3x wider than theirs. Our frames also had no vignette (0.99 vs 0.78) and an inverted warm/cool split, and both only showed up in `style_metrics.py`.
 - Catch defects where they are born: run `tools/preflight.py` and `tools/storyboard.py` before the voice-over. Every defect found later becomes a preflight check or a line here.
 - Judge new assets in their real shots (storyboard), not only on their own sheet.

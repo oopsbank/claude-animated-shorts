@@ -94,7 +94,7 @@ def main():
         # plate exists (the engine falls back to a stand-in silently when ENGINE_STANDIN=1)
         with contextlib.redirect_stdout(io.StringIO()):
             try: p = RV.find_plate(s, plate_dirs)
-            except Exception: p = None
+            except (Exception, SystemExit): p = None   # find_plate exits on a missing plate
         if not p or not os.path.exists(p):
             add('ERROR', sid, f"no plate for {s['set']}/{s['cam']}/{s['light']}: add it to the sets backlog before voicing")
             continue
