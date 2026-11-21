@@ -303,7 +303,7 @@
   },
   {
    "id": "s05",
-   "text": "Nearby, an alien-tour guide mocks them.",
+   "text": "Nearby, an antenna-wearing guide mocks the cousins.",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
@@ -386,7 +386,7 @@
   },
   {
    "id": "s06",
-   "text": "\"Sixty years of scientists!\" he laughs.",
+   "text": "\"Scientists blamed the wind!\" he laughs.",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
@@ -454,7 +454,7 @@
      "name": "year_badge",
      "x": 0.5,
      "y": 0.14,
-     "label": "1948-2011",
+     "label": "1948",
      "at_word": 0
     }
    ],
@@ -464,7 +464,7 @@
   },
   {
    "id": "s07",
-   "text": "\"Whirlwind theories! Fenced-in rocks! Zero witnesses!",
+   "text": "\"They fenced rocks in! Sixty years, zero witnesses!",
    "set": "inserts",
    "cam": "logbook",
    "light": "day",
@@ -476,28 +476,28 @@
     "move": "push_in",
     "amount": 0.08
    },
-   "note": "Three quick flashback cards on the logbook page, one per word (sepia): a whirlwind sketch with \"1948\", a stake fence with named rocks, a big \"0\" in the witnesses column.",
+   "note": "Three quick flashback cards on the logbook page, (sepia): a stake fence around named rocks, then \"60 YEARS\" and a big \"0\" in the witnesses column. (The whirlwind is on shot 6, behind the guide.)",
    "characters": [],
    "fx": [
-    {
-     "name": "whoosh",
-     "x": 0.5,
-     "y": 0.4,
-     "angle": 90,
-     "at_word": 0
-    },
     {
      "name": "impact_star",
      "x": 0.5,
      "y": 0.5,
-     "at_word": 2
+     "at_word": 1
+    },
+    {
+     "name": "year_badge",
+     "x": 0.5,
+     "y": 0.14,
+     "label": "60 YEARS",
+     "at_word": 4
     },
     {
      "name": "exclaim",
      "x": 0.5,
      "y": 0.4,
      "size": 0.45,
-     "at_word": 4
+     "at_word": 6
     }
    ],
    "props": [
@@ -657,7 +657,7 @@
   },
   {
    "id": "s10",
-   "text": "Month one: they stare at fifteen rocks.",
+   "text": "Month one: they stare at the rocks.",
    "set": "playa",
    "cam": "playa_med",
    "light": "day",
@@ -691,7 +691,7 @@
       {
        "expr": "nervous",
        "lean": 6,
-       "at_word": 5,
+       "at_word": 3,
        "arm_pose": [
         "hold",
         "hold"
@@ -1213,7 +1213,7 @@
   },
   {
    "id": "s18",
-   "text": "Year two, December: rain turns the lake bed into an ankle-deep pond,",
+   "text": "Year two: winter rain floods the lake bed ankle-deep,",
    "set": "playa",
    "cam": "playa_wide",
    "light": "golden",
@@ -1222,7 +1222,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 10,
+      "at_word": 8,
       "to": {
        "zoom": 1.2
       },
@@ -1246,7 +1246,7 @@
       },
       {
        "expr": "shock",
-       "at_word": 10,
+       "at_word": 8,
        "arm_pose": [
         "hold",
         "point"
@@ -1289,7 +1289,7 @@
      "name": "year_badge",
      "x": 0.5,
      "y": 0.14,
-     "label": "YEAR 2 · DECEMBER",
+     "label": "YEAR 2 · WINTER",
      "at_word": 0
     },
     {
@@ -1302,7 +1302,7 @@
      "name": "splash",
      "x": 0.5,
      "y": 0.86,
-     "at_word": 10
+     "at_word": 8
     }
    ],
    "props": [
@@ -1384,7 +1384,7 @@
   },
   {
    "id": "s21",
-   "text": "Dozens of rocks start sliding in broad daylight, their trackers logging every metre.",
+   "text": "Dozens of rocks start sliding in broad daylight, tracker rocks among them.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1491,7 +1491,7 @@
      "x": 0.32,
      "y": 0.6,
      "size": 0.45,
-     "at_word": 9
+     "at_word": 8
     }
    ],
    "props": [
@@ -1613,7 +1613,7 @@
   },
   {
    "id": "s24",
-   "text": "Like a giant window skating across a wet kitchen floor, shoving the fridge.",
+   "text": "Picture a giant window skating across a wet kitchen floor, pushing your fridge.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1792,7 +1792,7 @@
   },
   {
    "id": "s26",
-   "text": "while an ice pane shoves a rock through his alien sign.",
+   "text": "while daylight ice shoves a rock through his NIGHT ONLY sign.",
    "set": "playa",
    "cam": "rock_low",
    "light": "frost",
@@ -1835,13 +1835,13 @@
      "path": "away",
      "dur": 1.6,
      "trail": true,
-     "at_word": 4
+     "at_word": 3
     },
     {
      "name": "impact_star",
      "x": 0.55,
      "y": 0.55,
-     "at_word": 7
+     "at_word": 6
     },
     {
      "name": "splash",
@@ -1963,7 +1963,7 @@
   },
   {
    "id": "s29",
-   "text": "and now he sells ice tours for five bucks, and starts every one the same way:",
+   "text": "and now sells ice tours. Five bucks. And he starts every one the same way:",
    "set": "playa",
    "cam": "playa_med",
    "light": "day",
@@ -1972,14 +1972,14 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 4,
+      "at_word": 3,
       "to": {
        "zoom": 1.15
       },
       "dur": 6
      },
      {
-      "at_word": 10,
+      "at_word": 9,
       "to": {
        "zoom": 1.9,
        "x": 0.42,
@@ -2008,7 +2008,7 @@
        "prop": "gps_box",
        "expr": "smug",
        "lean": 8,
-       "at_word": 10,
+       "at_word": 9,
        "arm_pose": [
         "hold",
         "hold"
@@ -2056,7 +2056,7 @@
      "name": "sparkle",
      "x": 0.6,
      "y": 0.3,
-     "at_word": 4
+     "at_word": 3
     }
    ],
    "props": [
