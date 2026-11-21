@@ -121,3 +121,7 @@
 - This is draft v4 with the Director's caption pick, the **"sentence" style**: Poppins Bold at 3.7% of the height, 1-2 words as written, white, baseline at 70%. Nothing else changed.
 - QA: all hard checks pass (130 captions in sync, none in silences, none over a face). Frame stats pass 43/65 (a warning).
 - `bike-countersteer_captions_cover_1080x1920.mp4` is now v5 with the cover (1924 frames). The posting text above is unchanged.
+
+# Draft v6 = the final (2026-11-22)
+- v5 re-rendered with the corrected `words.json`. The tts.py timing drift had made captions and lip sync up to about 0.26 s late by the end; the audio is unchanged. QA: all hard checks pass (130 captions in sync).
+- The cover cut was rebuilt from v6. The Buffer draft made on 2026-11-21 points to the old file: re-upload to the media repo and re-create the draft before posting.
