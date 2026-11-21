@@ -33,7 +33,14 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
   - Is the ending a payoff or a loop that makes me rewatch?
   - Score "would watch to the end" out of 10, compared with the leaders' story engine (`references/reports/retention_2026-11.md` §8).
 
-  It passes at 8/10, with no "swipe point" before 45 s.
+  **Bar raised by the Director (2026-11-21): a panel of 3 fresh engagement reviewers, each a different viewer:**
+  1. a 16-year-old TikTok scroller;
+  2. a curious adult on YouTube Shorts;
+  3. a regular viewer of the leading channels, who compares directly with their story engine.
+
+  Plus one **comedy reviewer** (are the gags actually funny?) and one **fact checker** (is every claim true and sourced?).
+  - **Pass:** every engagement reviewer gives **≥ 9/10** and no swipe point before 50 s; the comedy and fact reviewers give ≥ 8.
+  - Fresh reviewers every round, with no view of earlier drafts. At most 4 rounds, then the Director decides.
 
 ## sets
 - [ ] `build.py` rebuilds the set from scratch with no manual steps, and renders every cam × light plate.
