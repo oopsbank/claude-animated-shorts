@@ -43,7 +43,7 @@ This is the state of the project, written by the first Producer session before i
 - Each crew session works on its own branch `claude/area-<area>`. The Producer merges into the integration branch `claude/busy-maxwell-tkdir9`, resolving LESSONS/BACKLOG conflicts as a union. Then the Producer tells the dependent sessions.
 - **Messages sent to a session that is rate-limited are lost.** After a limit reset, resend the full instructions, not "continue".
 - Do not run an hourly check trigger inside a long Producer session: every fire re-reads the whole history. The hourly crew-check trigger is **disabled**.
-- The nightly "🌙 1st AD" trigger (`trig_01RG5qNmG98WYrpCXKiSLCjq`, 02:13 Asia/Ho_Chi_Minh) starts a FRESH session each night to integrate area branches and do one backlog item. It is cheap per run, and the user may disable it.
+- The nightly "🌙 1st AD" scheduled task (`trig_01RG5qNmG98WYrpCXKiSLCjq`) was **disabled at the Director's request on 2026-11-21**. Do not re-enable it unless asked. The Producer integrates branches.
 
 ## Where the knowledge lives
 | What | File |
