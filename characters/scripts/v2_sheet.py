@@ -18,7 +18,7 @@ ROWS = [
      ('antennae droop', C('guide', expr='neutral', antennae='droop')), ('sway +14', C('tour2', expr='grin', arm_pose=('wave', 'wave'), antennae_sway=14)),
      ('side', C('tour1', view='side', expr='smile')), ('rear', C('guide', view='rear')),
      ('seated cooler', C('kip', seated='cooler', arm_pose=('hold', 'hold'), prop='frying_pan', expr='stern')),
-     ('seated cooler', C('lou', seated='cooler', arm_pose=('hold', 'hold'), prop='gps_box', expr='pained'))],
+     ('seated cooler', C('lou', seated='cooler', arm_pose=('hold', 'hold'), prop='gps_box', expr='stern'))],
     [('gps_box', C('kip', arm_pose=('hold', 'hang'), prop='gps_box')), ('screwdriver', C('lou', arm_pose=('hold', 'hang'), prop='screwdriver')),
      ('googly_eyes', C('lou', arm_pose=('hold', 'hang'), prop='googly_eyes', expr='smile')), ('mug', C('kip', arm_pose=('hold', 'hang'), prop='mug')),
      ('laptop', C('kip', arm_pose=('hold', 'hang'), prop='laptop')), ('frying_pan', C('kip', arm_pose=('hang', 'hold'), prop='frying_pan', expr='stern')),

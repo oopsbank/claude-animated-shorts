@@ -21,17 +21,17 @@ def gps_box(C, x, y, u, d, two, e):
     stamp(C, [('s', [(ax, ay + 2 * u, 3.2 * u), (tx, ty, 3.2 * u)], DARK),
               ('c', tx, ty - 2 * u, 4.6 * u, RED),
               ('p', rpoly(cx, cy, w, h, 6 * u), GREY)], e,
-          details=[_scr(cx - w * 0.12, cy - h * 0.05, w * 0.52, h * 0.5, (40, 70, 52), 2.5 * u),
-                   ('c', cx + w * 0.33, cy - h * 0.18, 3 * u, (120, 230, 110)),
+          details=[_scr(cx - w * 0.12, cy - h * 0.05, w * 0.52, h * 0.5, (38, 40, 62), 2.5 * u),
+                   ('c', cx + w * 0.33, cy - h * 0.18, 3 * u, (255, 120, 90)),
                    ('p', rpoly(cx + w * 0.33, cy + h * 0.2, 7 * u, 4 * u, 1.5 * u), DARK)])
-    text(C, cx - w * 0.12, cy - h * 0.05, 'GPS', h * 0.3, (150, 240, 140))
+    text(C, cx - w * 0.12, cy - h * 0.05, 'GPS', h * 0.3, (255, 196, 70))
 
 
 def mug(C, x, y, u, d, two, e):
-    cx, cy = x + d * 6 * u, y - 4 * u
-    stamp(C, [('s', [(cx + d * 10 * u, cy - 6 * u, 3.2 * u), (cx + d * 16 * u, cy - 1 * u, 3.2 * u), (cx + d * 10 * u, cy + 5 * u, 3.2 * u)], (236, 236, 230)),
-              ('p', rpoly(cx, cy, 20 * u, 22 * u, 3 * u), (236, 236, 230))], e * 0.85,
-          details=[('p', rpoly(cx, cy - 9 * u, 15 * u, 3 * u, 1.5 * u), (120, 70, 40)), ('p', rpoly(cx - d * 3 * u, cy + 2 * u, 7 * u, 7 * u, 2 * u), (232, 90, 80))])
+    k = 1.3; cx, cy = x + d * 7 * u, y - 6 * u      # the hand wraps the mug's near side
+    stamp(C, [('s', [(cx + d * 13 * k * u, cy - 6 * k * u, 3.4 * u), (cx + d * 20 * k * u, cy - 1 * k * u, 3.4 * u), (cx + d * 13 * k * u, cy + 5 * k * u, 3.4 * u)], (236, 236, 230)),
+              ('p', rpoly(cx, cy, 26 * k * u, 28 * k * u, 4 * u), (236, 236, 230))], e * 0.85,
+          details=[('p', rpoly(cx, cy - 11 * k * u, 20 * k * u, 4 * u, 2 * u), (120, 70, 40)), ('p', rpoly(cx + d * 2 * u, cy + 3 * u, 10 * k * u, 10 * k * u, 3 * u), (232, 90, 80))])
 
 
 def screwdriver(C, x, y, u, d, two, e):
@@ -43,9 +43,9 @@ def screwdriver(C, x, y, u, d, two, e):
 
 
 def googly_eyes(C, x, y, u, d, two, e):
-    r = 10.5 * u
-    s1, d1 = googly(x - d * 10 * u, y - 18 * u, r, look=(-0.6, 0.6))
-    s2, d2 = googly(x + d * 12 * u, y - 24 * u, r, look=(0.7, -0.5))
+    r = 13 * u
+    s1, d1 = googly(x - d * 6 * u, y - 12 * u, r, look=(-0.6, 0.6))
+    s2, d2 = googly(x + d * 20 * u, y - 22 * u, r, look=(0.7, -0.5))
     stamp(C, [s1, s2], e * 0.8, details=[d1, d2], shade=True)
 
 
@@ -135,7 +135,7 @@ def phone(C, x, y, u, d, two, e, badge='LIVE'):
 def selfie_stick(C, x, y, u, d, two, e):
     dd = d or -1
     top = (x + dd * 22 * u, y - 150 * u)
-    stamp(C, [('s', [(x - dd * 2 * u, y + 10 * u, 4.5 * u), (top[0], top[1] + 14 * u, 3.2 * u)], (110, 114, 126)),
+    stamp(C, [('s', [(x - dd * 2 * u, y + 10 * u, 5.5 * u), (top[0], top[1] + 14 * u, 4.5 * u)], (110, 114, 126)),
               ('p', rpoly(top[0], top[1], 24 * u, 40 * u, 4 * u, ang=dd * 10), DARK)], e * 0.85,
           details=[('c', *fx.rot(top[0] - 5 * u, top[1] - 12 * u, top[0], top[1], dd * 10), 3.4 * u, (120, 124, 140)),
                    ('c', *fx.rot(top[0] + 5 * u, top[1] - 12 * u, top[0], top[1], dd * 10), 1.6 * u, RED)])
@@ -154,10 +154,10 @@ def megaphone(C, x, y, u, d, two, e):
 def flag(C, x, y, u, d, two, e, label=''):
     dd = d or 1
     top = (x + dd * 4 * u, y - 150 * u)
-    fl = [(top[0], top[1] + 2 * u), (top[0] - dd * 74 * u, top[1] + 20 * u), (top[0], top[1] + 40 * u)]   # the pennant flies over the head side
-    stamp(C, [('s', [(x - dd * 1 * u, y + 12 * u, 3.6 * u), (top[0], top[1], 3.6 * u)], (122, 84, 50)),
+    fl = [(top[0], top[1] + 2 * u), (top[0] - dd * 84 * u, top[1] + 22 * u), (top[0], top[1] + 44 * u)]   # the pennant flies over the head side
+    stamp(C, [('s', [(x - dd * 1 * u, y + 12 * u, 5 * u), (top[0], top[1], 5 * u)], (122, 84, 50)),
               ('p', fl, (60, 190, 210)), ('c', top[0], top[1] - 2 * u, 4.5 * u, YEL)], e * 0.85)
-    if label: text(C, top[0] - dd * 28 * u, top[1] + 20 * u, label, 7 * u, (255, 255, 255), maxw=44 * u, rot=dd * 13)
+    if label: text(C, top[0] - dd * 30 * u, top[1] + 19 * u, label, 9 * u, (255, 255, 255), maxw=50 * u, rot=dd * 13)
 
 
 def air_hockey_mallet(C, x, y, u, d, two, e):
@@ -183,7 +183,7 @@ NAMES = {'mug': mug, 'gps_box': gps_box, 'screwdriver': screwdriver, 'googly_eye
          'air_hockey_mallet': air_hockey_mallet, 'gary_rock': gary_rock}
 TWO_HANDED = {'gps_box', 'laptop', 'frying_pan', 'camera', 'phone', 'gary_rock'}   # centred between the hands
 K = 1.25                                    # props read big (video size), like the reference
-TWO_W = dict(gps_box=26, laptop=33, frying_pan=20, camera=19, phone=18, gary_rock=31)   # hands sit on the fill, inside the edge   # half-width at the grip (u)
+TWO_W = dict(gps_box=30, laptop=38, frying_pan=20, camera=23, phone=22, gary_rock=37)   # the hands clamp the side edges   # hands sit on the fill, inside the edge   # half-width at the grip (u)
 
 
 def two_halfwidth(base): return TWO_W.get(base, 26) * K

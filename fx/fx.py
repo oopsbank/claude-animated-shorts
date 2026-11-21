@@ -7,7 +7,7 @@
 # Common kwargs: color (hex or rgb), scale (content size, 1 = fills ~90% of the canvas), line (outline px in
 # the OUTPUT image, default scales with size), seed (layout variation). Effect-specific kwargs are listed in NAMES.
 # usage: python fx.py <name> <t> [size] out.png
-import math, random, sys
+import math, os, random, sys
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 S = 4                                   # supersampling, like bean.py
@@ -847,6 +847,378 @@ def fx_whoosh(t, n, u, e, kw):
 
 
 
+
+# ---------------------------------------------------------------- video 2 (sailing-stones): playa, ice, weather
+# Environment effects (ice_pane, dust_storm, flash_flood, rain) enter by spreading / rolling in and leave by receding,
+# with only the last ~8% as an alpha fade; they are still empty at t=0 and t=1 (fx/RULES.md 1).
+
+ICE = (178, 228, 244); ICE_DK = (120, 186, 214); WATER = (84, 170, 214); WATER_DK = (52, 128, 176)
+DUSTC = (201, 162, 117); MUD = (138, 104, 66); FOAM = (246, 240, 226); ROCKC = (128, 116, 106)
+
+
+def rock_poly(cx, cy, rx, ry, seed=0, n=24):
+    rnd = random.Random(seed); ph = [rnd.uniform(0, 6.28) for _ in range(3)]
+    pts = []
+    for i in range(n):
+        a = 2 * math.pi * i / n
+        r = 1 + 0.1 * (0.5 * math.sin(2 * a + ph[0]) + 0.35 * math.sin(3 * a + ph[1]) + 0.2 * math.sin(5 * a + ph[2]))
+        y = math.sin(a) * ry * r
+        pts.append((cx + math.cos(a) * rx * r, cy + (y * 0.7 if y > 0 else y)))
+    return pts
+
+
+def _cells(n, u, seed=5, m=5):
+    """Ice panes as a jittered grid (shared corners, so cracks are shared edges), kept inside a round pond."""
+    rnd = random.Random(seed); cx = cy = n / 2
+    step = 2 * u / m
+    P = [[(cx - u + i * step + (rnd.uniform(-0.28, 0.28) * step if 0 < i < m else 0),
+           cy - u + j * step + (rnd.uniform(-0.28, 0.28) * step if 0 < j < m else 0)) for j in range(m + 1)] for i in range(m + 1)]
+    cells = []
+    for i in range(m):
+        for j in range(m):
+            q = [P[i][j], P[i + 1][j], P[i + 1][j + 1], P[i][j + 1]]
+            gx = sum(p[0] for p in q) / 4; gy = sum(p[1] for p in q) / 4
+            dist = math.hypot(gx - cx, gy - cy) / u
+            if dist < 0.98: cells.append((q, (gx, gy), dist, i, j))
+    return cells
+
+
+def _scale_pts(pts, c, k): return [(c[0] + (x - c[0]) * k, c[1] + (y - c[1]) * k) for x, y in pts]
+
+
+def _jag(p, q, rnd, amt, k=3):
+    out = [p]
+    for i in range(1, k):
+        f = i / k; out.append((lerp(p[0], q[0], f) + rnd.uniform(-amt, amt), lerp(p[1], q[1], f) + rnd.uniform(-amt, amt)))
+    return out
+
+
+def fx_ice_pane(t, n, u, e, kw):
+    """The sailing-stones mechanism, one stage per call. stage: water (a shallow pond spreads, ripples) | freeze (thin
+    ice grows in from the edge, frost glints) | panes (cracks race along the sheet, it splits into panes) | drift (the
+    panes slide downwind, gaps of dark water opening behind). view: top (straight down) | side (low angle, thin sheet
+    edge-on near the bottom). direction: left|right|up|down (drift)."""
+    if kw.get('view', 'top') == 'side': return _ice_side(t, n, u, e, kw)
+    stage = kw.get('stage', 'water')
+    rnd = random.Random(kw.get('seed', 5))
+    cx = cy = n / 2
+    cells = _cells(n, u, kw.get('seed', 5))
+    dvec = {'right': (1, 0), 'left': (-1, 0), 'up': (0, -1), 'down': (0, 1)}[kw.get('direction', 'right')]
+    out_a = fade(t, 0.92, 1.0)
+    im = new(n)
+    if stage == 'water':
+        g = pop(t, 0.04, 0.4, pre=0.3, dip=0.22, s=1.1) * (1 - 0.15 * smooth(seg(t, 0.85, 1.0)))
+        shapes = [('p', _scale_pts(q, (cx, cy), g), WATER) for q, *_ in cells]
+        det = []
+        for r_i in range(3):                     # ripples running outward
+            p = (t * 2.2 + r_i / 3) % 1
+            rr = u * g * (0.15 + 0.75 * p); w = u * 0.025 * (1 - p) * g
+            if w > 0.3:
+                det.append(('s', [(cx + rr * math.cos(a), cy + rr * 0.92 * math.sin(a), w) for a in (2 * math.pi * j / 48 for j in range(49))], light(WATER, 0.45)))
+        for j in range(5):                       # sky glints
+            gx, gy = cx + u * g * (rnd.uniform(-0.5, 0.5)), cy + u * g * rnd.uniform(-0.5, 0.5)
+            L = u * 0.12 * g * (0.6 + 0.4 * math.sin(t * 9 + j))
+            det.append(('s', [(gx - L, gy + L * 0.4, u * 0.02 * g), (gx + L, gy - L * 0.4, u * 0.02 * g)], (236, 248, 255)))
+        return comp(im, opacity(group(n, shapes, ink_w(e, g) * 0.8, details=det, alpha=0.88), out_a))
+    if stage == 'freeze':
+        g = smooth(seg(t, 0.0, 0.06))
+        shapes, det = [], []
+        for q, c, dist, i, j in cells:
+            f = smooth(seg(t, 0.06 + 0.45 * (1 - dist), 0.2 + 0.45 * (1 - dist)))    # edge cells freeze first
+            shapes.append(('p', q, mixc(WATER, ICE, f)))
+            if f > 0.5:                                                               # frost needles on frozen cells
+                for k_ in range(2):
+                    a = rnd.uniform(0, math.pi); L = u * 0.08 * smooth(seg(f, 0.5, 1))
+                    x, y = c[0] + rnd.uniform(-0.1, 0.1) * u, c[1] + rnd.uniform(-0.1, 0.1) * u
+                    det.append(('s', [(x - math.cos(a) * L, y - math.sin(a) * L, u * 0.012), (x + math.cos(a) * L, y + math.sin(a) * L, u * 0.012)], WHITE))
+            else: rnd.uniform(0, 1); rnd.uniform(0, 1); rnd.uniform(0, 1); rnd.uniform(0, 1); rnd.uniform(0, 1); rnd.uniform(0, 1)
+        tw = bump(seg(t, 0.62, 0.9))                                                   # a sparkle when the sheet is whole
+        if tw > 0.02: det.append(('p', star_pts(cx + u * 0.3, cy - u * 0.35, 4, u * 0.14 * tw, u * 0.03 * tw), WHITE))
+        return opacity(group(n, [('p', _scale_pts(q, (cx, cy), 0.9 + 0.1 * g), col) for (_, q, col) in shapes], e * 0.8 * g, details=det, alpha=0.9 * g), out_a)
+    # panes / drift share the cracked sheet
+    gap = 0.0; shift = [(0, 0)] * len(cells); rot_ = [0] * len(cells)
+    if stage == 'panes':
+        crack_p = seg(t, 0.06, 0.55); gap = smooth(seg(t, 0.5, 0.8)) * 0.07
+        g = smooth(seg(t, 0.0, 0.06))
+    else:   # drift: panes slide downwind, upwind rows later, with a little spin
+        crack_p = 1.0; gap = 0.07; g = smooth(seg(t, 0.0, 0.06))
+        for k_, (q, c, dist, i, j) in enumerate(cells):
+            proj = ((c[0] - cx) * dvec[0] + (c[1] - cy) * dvec[1]) / u          # downwind panes move first
+            p = seg(t, 0.08 + 0.18 * (1 - proj) / 2, 0.9)
+            back = -0.03 * bump(seg(p, 0, 0.15))                                 # anticipation: a tiny creak back
+            d = u * (0.55 * in_quad(p) * (1 + 0.15 * math.sin(i * 1.7 + j)) + back)
+            shift[k_] = (dvec[0] * d - dvec[1] * d * 0.08 * math.sin(i + j), dvec[1] * d + dvec[0] * d * 0.08 * math.sin(i * 2 + j))
+            rot_[k_] = 6 * p * math.sin(i * 3.1 + j * 1.3)
+    shapes, det = [], []
+    under = [('p', q, WATER_DK) for q, *_ in cells]
+    for k_, (q, c, dist, i, j) in enumerate(cells):
+        qq = _scale_pts(q, c, (1 - gap) * (0.9 + 0.1 * g))
+        qq = [rot(x, y, c[0], c[1], rot_[k_]) for x, y in qq]
+        qq = [(x + shift[k_][0], y + shift[k_][1]) for x, y in qq]
+        shapes.append(('p', qq, ICE))
+        cc = (c[0] + shift[k_][0], c[1] + shift[k_][1])
+        L = u * 0.07
+        det.append(('s', [(cc[0] - L, cc[1] + L * 0.5, u * 0.016), (cc[0] + L, cc[1] - L * 0.5, u * 0.016)], WHITE))
+    lay = new(n)
+    if gap > 0.001:   # dark water shows in the opening gaps (and behind drifting panes)
+        comp(lay, group(n, under, 0, alpha=0.75 * smooth(seg(gap, 0, 0.03))))
+    comp(lay, group(n, shapes, e * 0.8, details=det, alpha=0.9))
+    if stage == 'panes' and 0 < crack_p and gap < 0.069:   # white cracks race along the shared edges, from the centre
+        cr = []
+        rc = random.Random(9)
+        for q, c, dist, i, j in cells:
+            for a_, b_ in ((q[0], q[1]), (q[1], q[2])):
+                md = math.hypot((a_[0] + b_[0]) / 2 - cx, (a_[1] + b_[1]) / 2 - cy) / u
+                f = seg(crack_p, md * 0.7, md * 0.7 + 0.3)
+                if f <= 0: continue
+                pts = [(x, y, u * 0.028) for x, y in _jag(a_, b_, rc, u * 0.03)] + [(b_[0], b_[1], u * 0.028)]
+                part = sub_path(pts, 0, f)
+                if len(part) >= 2: cr.append(('s', part, WHITE))
+        if cr: comp(lay, group(n, cr, e * 0.5, shade=False, alpha=1 - smooth(seg(gap, 0.0, 0.07))))
+    return opacity(lay, out_a * g)
+
+
+def _ice_side(t, n, u, e, kw):
+    """Low-angle view: a phone-thin translucent sheet lying on the playa near the bottom of the canvas."""
+    stage = kw.get('stage', 'drift'); sgn = -1 if kw.get('direction', 'right') == 'left' else 1
+    gy = n * 0.72; th = u * 0.05; depth = u * 0.16
+    g = smooth(seg(t, 0.0, 0.08)); out_a = fade(t, 0.92, 1.0)
+    shapes, det = [], []
+    if stage == 'water':
+        w = u * 2 * pop(t, 0.04, 0.4, pre=0.3, dip=0.2, s=1.1)
+        top = [(n / 2 - w / 2 + w * i / 30, gy - depth + u * 0.012 * math.sin(i * 1.3 + t * 30)) for i in range(31)]
+        shapes.append(('p', top + [(n / 2 + w / 2, gy), (n / 2 - w / 2, gy)], WATER))
+        det.append(('s', [(x, y + depth * 0.3, u * 0.012) for x, y in top[3:-3]], light(WATER, 0.5)))
+        return opacity(group(n, shapes, e * 0.7, details=det, alpha=0.85), out_a)
+    panes = 6; pw = 2.1 * u / panes
+    for i in range(panes):
+        x0 = n / 2 - 1.05 * u + i * pw
+        d = 0.0
+        if stage in ('drift',):
+            p = seg(t, 0.08 + 0.04 * (panes - 1 - i if sgn > 0 else i), 0.92)
+            d = sgn * u * (0.5 * in_quad(p) - 0.03 * bump(seg(p, 0, 0.15)))
+        gap = u * 0.03 if stage in ('panes', 'drift') else 0
+        a, b = x0 + gap / 2 + d, x0 + pw - gap / 2 + d
+        tilt = (u * 0.02 * math.sin(i * 2.3)) if stage in ('panes', 'drift') else 0
+        top = [(a + depth * 0.5, gy - depth + tilt), (b + depth * 0.5, gy - depth - tilt), (b, gy - th), (a, gy - th)]
+        shapes.append(('p', top, ICE))
+        shapes.append(('p', [(a, gy - th), (b, gy - th), (b, gy), (a, gy)], ICE_DK))
+        det.append(('s', [(a + depth * 0.5 + pw * 0.1, gy - depth * 0.75 + tilt, u * 0.012), (b + depth * 0.2, gy - depth * 0.75 - tilt, u * 0.012)], WHITE))
+        if stage == 'freeze':
+            f = smooth(seg(t, 0.1 + 0.08 * abs(i - panes / 2), 0.5 + 0.08 * abs(i - panes / 2)))
+            shapes[-2] = ('p', top, mixc(WATER, ICE, f))
+    return opacity(group(n, shapes, e * 0.7 * g, details=det, alpha=0.9), out_a * g)
+
+
+def fx_ice_crack(t, n, u, e, kw):
+    """White crack lines racing out across a sheet of ice from the centre, branching; they erase from the centre out."""
+    rnd = random.Random(kw.get('seed', 11)); col = rgb(kw.get('color', '#ffffff'))
+    cx, cy = n / 2, n / 2
+    paths = []
+    for i in range(7):
+        a = 2 * math.pi * i / 7 + rnd.uniform(-0.3, 0.3); L = u * rnd.uniform(0.7, 1.0)
+        pts = [(cx, cy)]
+        for k in range(1, 7):
+            f = k / 6; aa = a + rnd.uniform(-0.35, 0.35)
+            pts.append((cx + math.cos(aa) * L * f, cy + math.sin(aa) * L * f * 0.8))
+        paths.append((0.0, pts))
+        j = rnd.randint(2, 4); ba = a + rnd.choice([-1, 1]) * rnd.uniform(0.5, 0.9); bl = L * 0.35
+        b0 = pts[j]; paths.append((j / 6, [b0, (b0[0] + math.cos(ba) * bl * 0.5, b0[1] + math.sin(ba) * bl * 0.4), (b0[0] + math.cos(ba) * bl, b0[1] + math.sin(ba) * bl * 0.8)]))
+    shapes = []
+    crack = bump(seg(t, 0.0, 0.08)) * 0.6                     # anticipation: a small star-burst at the centre first
+    if crack > 0.02: shapes.append(('p', star_pts(cx, cy, 5, u * 0.09 * crack, u * 0.03 * crack), col))
+    head_all = out_cubic(seg(t, 0.06, 0.45)); tail_all = in_quad(seg(t, 0.7, 0.98))
+    for d0, pts in paths:
+        head = seg(head_all, d0, 1.0); tail = seg(tail_all, d0 * 0.5, 1.0)
+        w = u * 0.035 * (1 if d0 == 0 else 0.7)
+        wp = [(x, y, w * (1 - 0.6 * k / (len(pts) - 1))) for k, (x, y) in enumerate(pts)]
+        part = sub_path(wp, tail, head)
+        if len(part) >= 2: shapes.append(('s', part, col))
+    if not shapes: return new(n)
+    return group(n, shapes, e * 0.55, shade=False, alpha=fade(t, 0.94, 1.0))
+
+
+def fx_sliding_rock(t, n, u, e, kw):
+    """Rocks gliding over the playa, each carving a groove trail. path: 'away' (from the bottom toward the horizon at
+    the canvas middle, shrinking) or a list of [x, y] points in canvas fractions (0..1). count: rocks (spread across).
+    sprite: rock | fridge. trail: draw the groove (default True). Rocks creak back, glide (ease in-out), then stop."""
+    path = kw.get('path', 'away'); cnt = int(kw.get('count', 1)); trail = kw.get('trail', True)
+    sprite = kw.get('sprite', 'rock'); rnd = random.Random(kw.get('seed', 21))
+    lay_t, lay_r = [], []
+    g_in = smooth(seg(t, 0.0, 0.08)); out_a = fade(t, 0.92, 1.0)
+    for i in range(cnt):
+        off = (i - (cnt - 1) / 2) / max(1, cnt - 1) if cnt > 1 else 0.0
+        if path == 'away':
+            p0 = (n / 2 + off * u * 1.5, n / 2 + u * (0.8 - 0.25 * abs(off))); p1 = (n / 2 + off * u * 0.55, n / 2 - u * 0.15)
+            k0, k1 = 1.0, 0.45
+        else:
+            pts = [(x * n, y * n) for x, y in path]
+            p0 = (pts[0][0] + off * u * 0.4, pts[0][1] + off * u * 0.3); p1 = (pts[-1][0] + off * u * 0.4, pts[-1][1] + off * u * 0.3)
+            k0 = k1 = 1.0
+        d0 = 0.06 * abs(off) + rnd.uniform(0, 0.08)
+        p = seg(t, 0.06 + d0, 0.86)
+        mv = smooth(p) - 0.04 * bump(seg(p, 0.0, 0.18))          # creak back, then glide
+        x = lerp(p0[0], p1[0], mv); y = lerp(p0[1], p1[1], mv); k = lerp(k0, k1, mv) * (0.5 if cnt > 2 else 1.0)
+        rx = u * 0.32 * k; ry = u * 0.24 * k
+        wob = 3 * math.sin(t * 40 + i) * bump(p)
+        if trail and mv > 0.01:     # groove: darker clay with a light rim, narrowing toward the horizon
+            m = 16; tp, rim = [], []
+            for j in range(m + 1):
+                f = mv * j / m; kk = lerp(k0, k1, f) * (0.5 if cnt > 2 else 1.0)
+                tx, ty = lerp(p0[0], p1[0], f), lerp(p0[1], p1[1], f) + u * 0.12 * kk
+                tp.append((tx, ty, u * 0.34 * kk)); rim.append((tx, ty - u * 0.06 * kk, u * 0.06 * kk))
+            lay_t.append(('s', tp, (150, 118, 86))); lay_t.append(('s', rim, (226, 198, 160)))
+        sq = 1 + 0.08 * bump(seg(p, 0.0, 0.18))                      # a little squash on the creak
+        if sprite == 'fridge':
+            body = [(x - rx * 0.7, y - ry * 3.2), (x + rx * 0.7, y - ry * 3.2), (x + rx * 0.7, y + ry * 0.6), (x - rx * 0.7, y + ry * 0.6)]
+            lay_r.append(('p', [rot(a, b, x, y, wob) for a, b in body], (236, 240, 244)))
+        else:
+            lay_r.append(('p', [rot(a, b, x, y, wob) for a, b in rock_poly(x, y, rx * sq, ry / sq, seed=i + 3)], ROCKC))
+    im = new(n)
+    if lay_t: comp(im, group(n, lay_t, 0, shade=False, alpha=0.85 * out_a * g_in))
+    if lay_r: comp(im, group(n, lay_r, e, alpha=out_a * g_in))
+    return im
+
+
+def fx_gps_ping(t, n, u, e, kw):
+    """Tracker ping: a green dot pops in and pulses while radar rings expand from it (3 rings, twice)."""
+    col = rgb(kw.get('color', '#46d66e')); cx, cy = n / 2, n / 2
+    k = pop(t, 0.05, 0.25, pre=0.35, dip=0.2, s=2.0) * shrink(t, 0.82, 0.97)
+    shapes = []
+    for c in range(2):
+        for r_i in range(3):
+            st = 0.12 + c * 0.32 + r_i * 0.08
+            p = seg(t, st, st + 0.36)
+            if not 0 < p < 1: continue
+            rr = u * (0.15 + 0.85 * out_cubic(p)); w = u * 0.07 * (1 - smooth(p)) * (1 - 0.2 * r_i)
+            if w > 0.3: shapes.append(('s', [(cx + rr * math.cos(a), cy + rr * math.sin(a), w) for a in (2 * math.pi * j / 64 for j in range(65))], col))
+    dot = u * 0.16 * k * (1 + 0.12 * math.sin(t * 2 * math.pi * 4) * bump(seg(t, 0.25, 0.8)))
+    im = new(n)
+    if shapes: comp(im, group(n, shapes, e * 0.6, shade=False, alpha=fade(t, 0.92, 1.0)))
+    if dot > 0.3: comp(im, group(n, [('c', cx, cy, dot, col)], ink_w(e, k), details=[('c', cx - dot * 0.3, cy - dot * 0.3, dot * 0.3, light(col, 0.6))]))
+    return im
+
+
+def fx_year_badge(t, n, u, e, kw):
+    """A UI tag for the top third: white Poppins Bold on a plum pill. label (e.g. '1948', 'MONTH 1'). Pops in with a
+    squash, bobs gently, shrinks out."""
+    from PIL import ImageFont
+    label = str(kw.get('label', '1948')); col = rgb(kw.get('color', '#5c2a6b'))
+    cx, cy = n / 2, n / 2
+    k = pop(t, 0.06, 0.22, pre=0.3, dip=0.18, s=1.8) * shrink(t, 0.84, 0.98)
+    if k <= 0.01: return new(n)
+    sx = 1 + 0.12 * bump(seg(t, 0.06, 0.16)); sy = 2 - sx
+    fp = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'engine', 'fonts', 'Poppins-Bold.ttf')
+    fpx = int(u * 0.3 * S)
+    f = ImageFont.truetype(fp, fpx); tw = f.getlength(label) / S
+    if tw > u * 1.55: f = ImageFont.truetype(fp, int(fpx * u * 1.55 / tw)); tw = u * 1.55
+    w = (tw + u * 0.36) * k * sx; h = u * 0.42 * k * sy
+    bob = u * 0.025 * math.sin(2 * math.pi * 1.5 * seg(t, 0.22, 0.84))
+    pill = [(cx + (w / 2 - h / 2) * (1 if math.cos(a) > 0 else -1) + h / 2 * math.cos(a), cy + bob + h / 2 * math.sin(a))
+            for a in (2 * math.pi * j / 48 for j in range(48))]
+    lay = group(n, [('p', pill, col)], ink_w(e, k), details=[('s', [(cx - w / 2 + h * 0.4, cy + bob - h * 0.3, h * 0.08), (cx + w / 2 - h * 0.6, cy + bob - h * 0.3, h * 0.08)], light(col, 0.25))])
+    txt = Image.new('RGBA', lay.size, (0, 0, 0, 0))
+    ImageDraw.Draw(txt).text((cx * S, (cy + bob) * S + u * 0.02 * S), label, font=f, fill=WHITE, anchor='mm')
+    tk = txt.resize((max(1, int(txt.width * k * sx)), max(1, int(txt.height * k * sy))), Image.LANCZOS)
+    lay.alpha_composite(tk, (int(cx * S - tk.width / 2), int((cy + bob) * S - tk.height / 2 + (1 - k * sy) * 0)))
+    return lay
+
+
+def fx_dust_storm(t, n, u, e, kw):
+    """A brown wall of dust rolls across (direction=right|left), churning, buries the frame, then settles to the
+    ground and clears. Fills the whole canvas at the peak (place it full-frame)."""
+    rnd = random.Random(kw.get('seed', 31)); col = rgb(kw.get('color', '#c9a275'))
+    sgn = -1 if kw.get('direction', 'right') == 'left' else 1
+    front = lerp(-0.25 * n, 1.35 * n, smooth(seg(t, 0.06, 0.6)))           # front x in travel coordinates
+    top = n * (0.08 + 0.85 * smooth(seg(t, 0.72, 0.97)))                    # the cloud top sinks while it settles
+    wisp = bump(seg(t, 0.0, 0.12))                                          # anticipation: a few wisps run ahead
+    X = (lambda x: x) if sgn > 0 else (lambda x: n - x)
+    shapes, caps = [], []
+    if front > 0:
+        body = [(X(-10), top + n * 0.1), (X(min(front, n + 10)), top + n * 0.1), (X(min(front, n + 10)), n + 10), (X(-10), n + 10)]
+        shapes.append(('p', body, col))
+    for i in range(14):                                                     # churning billows along the front and top
+        a = i / 13
+        y = lerp(top + n * 0.05, n * 0.98, a)
+        r = n * (0.11 + 0.05 * math.sin(i * 2.1 + t * 18))
+        x = front + n * 0.06 * math.sin(a * 5 + t * 14) - r * 0.4
+        if x > -r: shapes.append(('c', X(x), y, r, col)); caps.append(('c', X(x - r * 0.25), y - r * 0.3, r * 0.45, light(col, 0.18)))
+    for i in range(int(n / 60) + 4):
+        x = (i / (n / 60 + 3)) * min(front, n + 10)
+        r = n * (0.09 + 0.03 * math.sin(i * 1.3 + t * 11))
+        y = top + n * 0.08 + n * 0.025 * math.sin(i + t * 16)
+        if r > 1 and x < front: shapes.append(('c', X(x), y, r, col)); caps.append(('c', X(x - r * 0.2), y - r * 0.35, r * 0.4, light(col, 0.18)))
+    if wisp > 0.02:
+        for i in range(3):
+            x = n * (0.05 + 0.12 * i) * wisp; y = n * (0.85 - 0.08 * i)
+            shapes.append(('e', X(x), y, n * 0.06 * wisp, n * 0.025 * wisp, col))
+    specks = []
+    for i in range(40):                                                     # grit streaking through the cloud
+        x = (rnd.uniform(0, 1) * n + t * n * 3 * (0.6 + rnd.uniform(0, 0.8))) % (n * 1.2) - n * 0.1
+        y = rnd.uniform(top + n * 0.1, n)
+        if x < front - n * 0.05: specks.append(('s', [(X(x), y, n * 0.006), (X(x - n * 0.04), y + n * 0.004, n * 0.003)], mixc(col, INK, 0.45)))
+    if not shapes: return new(n)
+    lay = group(n, shapes, e, details=caps + specks)
+    return opacity(lay, 0.95 * fade(t, 0.92, 1.0))
+
+
+def fx_flash_flood(t, n, u, e, kw):
+    """A muddy wall of water rushes in (direction=right|left) with a foaming crest, fills the bottom of the frame with
+    a choppy brown flood, then recedes. Ground = canvas bottom; place it full-frame."""
+    col = rgb(kw.get('color', '#8a6a45')); sgn = -1 if kw.get('direction', 'right') == 'left' else 1
+    X = (lambda x: x) if sgn > 0 else (lambda x: n - x)
+    front = lerp(-0.2 * n, 1.25 * n, smooth(seg(t, 0.08, 0.55)))
+    level = n * (1 - 0.42 * smooth(seg(t, 0.1, 0.5)) + 0.42 * smooth(seg(t, 0.78, 0.98)))   # water surface y
+    crest = n * 0.16 * bump(seg(t, 0.08, 0.6))
+    trickle = bump(seg(t, 0.0, 0.12))                                       # anticipation: a thin trickle first
+    surf, foam = [], []
+    m = 40
+    for j in range(m + 1):
+        x = -10 + (front + 10) * j / m
+        dist = (front - x) / n
+        hump = crest * math.exp(-((dist - 0.06) / 0.07) ** 2)                 # the tall wave just behind the front
+        y = level - hump + n * 0.012 * math.sin(j * 1.1 + t * 40)
+        surf.append((X(x), y))
+    shapes, det = [], []
+    if front > 0 and level < n:
+        shapes.append(('p', surf + [(X(front), n + 10), (X(-10), n + 10)], col))
+        det.append(('p', [(x, y + n * 0.03) for x, y in surf] + [(x, y + n * 0.06) for x, y in surf[::-1]], light(col, 0.18)))
+        for j in range(0, m, 3):                                             # foam streaks riding the surface
+            x, y = surf[j]
+            det.append(('s', [(x - sgn * n * 0.03, y + n * 0.008, n * 0.008), (x + sgn * n * 0.01, y - n * 0.004, n * 0.012)], FOAM))
+        if crest > 1:                                                        # curling white crest at the front
+            cxp = front - n * 0.04
+            for i in range(5):
+                a = i / 4
+                foam.append(('c', X(cxp - n * 0.05 * a), level - crest * (0.95 - 0.35 * a) + n * 0.01 * math.sin(t * 30 + i), n * (0.035 - 0.004 * i) * min(1, crest / (n * 0.08)), FOAM))
+    if trickle > 0.02 and front < n * 0.2:
+        shapes.append(('e', X(n * 0.05 * trickle), n * 0.98, n * 0.08 * trickle, n * 0.015 * trickle, col))
+    if not shapes: return new(n)
+    lay = group(n, shapes, e, details=det)
+    if foam: comp(lay, group(n, foam, e * 0.7))
+    return opacity(lay, fade(t, 0.92, 1.0))
+
+
+def fx_rain(t, n, u, e, kw):
+    """Slanted rain streaks falling over the whole canvas, with little splash ticks at the bottom. angle (deg from
+    vertical, default 15), density (default 1). Builds up, pours, eases off."""
+    rnd = random.Random(kw.get('seed', 41)); col = rgb(kw.get('color', '#9fd0ff'))
+    ang = math.radians(kw.get('angle', 15)); cnt = int(70 * kw.get('density', 1.0))
+    amt = smooth(seg(t, 0.0, 0.2)) * (1 - smooth(seg(t, 0.8, 1.0)))
+    L = n * 0.09; w = n * 0.007; sp = 2.6
+    shapes, splashes = [], []
+    for i in range(cnt):
+        if rnd.uniform(0, 1) > amt: rnd.uniform(0, 1); rnd.uniform(0, 1); continue
+        x0 = rnd.uniform(-0.2, 1.1) * n; ph = rnd.uniform(0, 1)
+        f = (ph + t * sp * (0.85 + 0.3 * (i % 3) / 2)) % 1
+        y = -L + f * (n * 1.0 + L); x = x0 + math.tan(ang) * y
+        shapes.append(('s', [(x - math.sin(ang) * L, y - math.cos(ang) * L, w * 0.4), (x, y, w)], col))
+        if f > 0.93:
+            s = bump(seg(f, 0.93, 1.0))
+            splashes.append(('e', x, n * 0.985, n * 0.018 * s, n * 0.006 * s, col))
+    if not shapes: return new(n)
+    return group(n, shapes + splashes, e * 0.35, shade=False, alpha=0.9 * fade(t, 0.95, 1.0))
+
 NAMES = {
     'explosion': (fx_explosion, 'puffy fire cloud + white flash core + sparks, cools to smoke and rises. color, core, smoke'),
     'impact_star': (fx_impact_star, 'spiky hit star + impact ticks. color, inner, points, angle'),
@@ -865,6 +1237,14 @@ NAMES = {
     'lean_arc': (fx_lean_arc, 'lean-angle diagram: vertical ref, leaning line, arc + tick; pivot at bottom centre. angle (deg), side=left|right, color, ref'),
     'wobble_lines': (fx_wobble_lines, 'wobbling motion arcs beside a wheel at the centre. color, sides=both|left|right'),
     'whoosh': (fx_whoosh, 'tapered speed swoosh with two trailers. color, angle (travel direction, deg)'),
+    'ice_pane': (fx_ice_pane, 'the ice mechanism: stage=water|freeze|panes|drift, view=top|side, direction=left|right|up|down, seed'),
+    'ice_crack': (fx_ice_crack, 'white crack lines racing out from the centre and branching. color, seed'),
+    'sliding_rock': (fx_sliding_rock, "rocks gliding with a groove trail. path='away' or [[x, y], ...] canvas fractions, count, sprite=rock|fridge, trail"),
+    'gps_ping': (fx_gps_ping, 'green tracker dot with expanding radar rings. color'),
+    'year_badge': (fx_year_badge, "plum pill UI tag with white Poppins Bold text. label, color"),
+    'dust_storm': (fx_dust_storm, 'brown wall of dust rolls across, buries the frame, settles. direction=right|left, color'),
+    'flash_flood': (fx_flash_flood, 'muddy wall of water with a foam crest, floods the bottom, recedes. direction=right|left, color'),
+    'rain': (fx_rain, 'slanted rain streaks with splash ticks. angle, density, color'),
 }
 
 

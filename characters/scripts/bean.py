@@ -213,6 +213,9 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
                 for sg in (-1, 1): dd.polygon([P(cx, chin + 6 * u), P(cx + sg * 0.5 * Ta, chin - 4 * u), P(cx + sg * 0.35 * Ta, chin + 12 * u)], fill=col)
     C.clip_layer(clothes, torso)
     C.outline(torso, cx, tcy, w0)
+    if seated:   # knees poking forward over the seat edge, in front of the belly: reads as sitting, not stacking
+        from ink import stamp as _stamp
+        _stamp(C, [('e', cx + sg * 30 * u, torso_bot - 1 * u, 13 * u, 9.5 * u, leg_c) for sg in (-1, 1)], 0.8 * w0)
     # ---- head
     head_col = hexrgb('#fbf8f4') if white_head else skin_c
     C.fill_shaded(head, head_col, head_sh, 0.30 * a, 0.09 * a, cx, hy)
@@ -242,8 +245,8 @@ def character(build='adult', skin='#ffe2c2', shirt='#f08a2c', pants='#3b5b9a', e
         if hp: draw_prop(C, prop, hands[0], u, side=0, two=tuple(hands))      # new props: under the forearms
     for pts, ps in front:
         sgn = 1 if pts[0][0] > cx else -1
-        if hp and prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)   # the hand grips over it
         C.stroke(bow(pts[0], pts[1], -sgn * 1.5 * u, 8) + bow(pts[1], pts[2], sgn * 1.0 * u, 8)[1:], 5.2 * u, arm_c)
+        if hp and prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)   # arm, prop, then the gripping hand
         C.dot(*pts[2], 5.5 * u)
         if not hp and prop and ps == 'hold' and not both_hold: draw_prop(C, prop, pts[2], u, side=sgn)
     if prop and both_hold and not hp:
@@ -401,12 +404,12 @@ def seat_top(build='adult'):
 
 def seat_drop(build='adult'):
     B = BUILDS[build]; HH = 2 * B['b']
-    return (seat_top(build) + 0.07 * HH) - (975 - B['legs'] * HH)
+    return (seat_top(build) + 0.04 * HH) - (975 - B['legs'] * HH)
 
 def seat_legs(C, cx, hip_y, torso_bot, u, leg_c, facing=0.0):
     """Front-view sitting: thighs point at the camera (foreshortened under the torso), knees out, shins straight down."""
     for sgn in (-1, 1):
-        hip = (cx + sgn * 15 * u, hip_y); kn = (cx + sgn * 30 * u, torso_bot + 2 * u); ft = (cx + sgn * 30 * u, 975 - 3.5 * u)
+        hip = (cx + sgn * 15 * u, hip_y); kn = (cx + sgn * 30 * u, torso_bot); ft = (cx + sgn * 30 * u, 975 - 3.5 * u)
         path = bow(hip, kn, sgn * 1 * u, 8) + bow(kn, ft, -sgn * 1.5 * u, 12)[1:]
         C.stroke(path, 5.8 * u, leg_c)
         C.stroke([ft, (ft[0] + sgn * 12 * u + facing * 8 * u, ft[1] + 0.5 * u)], 7.5 * u, INK)

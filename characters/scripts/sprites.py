@@ -215,7 +215,7 @@ def tour_sign_free(t=0.0, k=1.0, text_='ALIEN ROCK TOURS|NIGHT ONLY', **kw):
         g = bump(seg(t, 0.76, 1.0))
         for side in (-1, 1):
             x0 = cx + side * (0.3 * 440 + 330)
-            stamp(out, [('c', x0 + dx, gy - 20 - 14 * g, (26 + 14 * g) * g, DUST) for dx in (-50, 0, 50)], 5 * g, shade=True)
+            stamp(out, [('c', x0 + dx, gy - 26 - 22 * g, (34 + 22 * g) * g, DUST) for dx in (-80, -30, 20, 70)], 6 * g, shade=True)
     lift = 98 * math.sin(math.radians(ang))     # a falling half ends up resting on its board edge, not in the ground
     for side, h in halves:
         px, py = cx + side * 0.3 * 440, gy
@@ -235,12 +235,12 @@ def flying_bills(t=0.0, k=1.0, count=7, direction='right', seed=3, **kw):
         d0 = 0.04 + 0.05 * i
         p = seg(t, d0, d0 + 0.5)
         if p <= 0 or p >= 1: continue
-        g = smooth(seg(p, 0, 0.12)) * (1 - smooth(seg(p, 0.85, 1.0)))
+        g = smooth(seg(p, 0, 0.05)) * (1 - smooth(seg(p, 0.85, 1.0)))
         x = ox + sgn * (820 * p ** 1.2 + 40 * math.sin(p * 9 + i))
         y = oy - (480 + rnd.uniform(-80, 80)) * math.sin(p * 1.6) + 40 * math.sin(p * 12 + i * 2)
         spin = rnd.uniform(200, 500) * p * sgn + rnd.uniform(-30, 30)
         flip = math.cos(p * rnd.uniform(8, 14) + i)
-        bw, bh = 160 * g, 74 * g
+        bw, bh = 190 * g, 88 * g
         if bw < 4: continue
         fw = max(8, bw * (0.35 + 0.65 * abs(flip)))
         stamp(C, [('p', rpoly(x, y, fw, bh, 4, ang=spin), GREEN)], E * 0.8 * g,
