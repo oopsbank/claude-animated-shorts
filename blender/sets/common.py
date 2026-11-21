@@ -221,7 +221,7 @@ def softbox(loc, target, size=4.0, power=400, col=(1.0, 0.95, 0.88)):
     o.rotation_euler = (Vector(target) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler(); o.visible_camera = False
     return o
 
-def contact_blob(loc, sx, sy, rz=0, strength=0.92):
+def contact_blob(loc, sx, sy, rz=0, strength=0.95):
     """Soft dark ambient-occlusion pad on the ground under a prop (vehicles, rocks): the stylised contact shadow."""
     m = bpy.data.materials.get('_blob')
     if not m:
@@ -231,7 +231,7 @@ def contact_blob(loc, sx, sy, rz=0, strength=0.92):
         tc = n.new('ShaderNodeTexCoord'); g = n.new('ShaderNodeTexGradient'); g.gradient_type = 'SPHERICAL'
         l.new(tc.outputs['Object'], g.inputs['Vector'])
         r = n.new('ShaderNodeMapRange'); r.name = 'k'; r.inputs['To Max'].default_value = strength; l.new(g.outputs['Fac'], r.inputs['Value'])
-        pw = n.new('ShaderNodeMath'); pw.operation = 'POWER'; pw.inputs[1].default_value = 0.9; l.new(r.outputs['Result'], pw.inputs[0])
+        pw = n.new('ShaderNodeMath'); pw.operation = 'POWER'; pw.inputs[1].default_value = 0.35; l.new(r.outputs['Result'], pw.inputs[0])
         mx = n.new('ShaderNodeMixShader'); l.new(pw.outputs[0], mx.inputs['Fac']); l.new(tr.outputs[0], mx.inputs[1]); l.new(dk.outputs[0], mx.inputs[2])
         l.new(mx.outputs[0], o.inputs['Surface'])
     o = plane(2, (loc[0], loc[1], loc[2] + 0.004), m); o.scale = (sx / 2, sy / 2, 1); o.rotation_euler.z = math.radians(rz)
