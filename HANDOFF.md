@@ -55,6 +55,7 @@ This is the state of the project, written by the first Producer session before i
 | What | File |
 |---|---|
 | Areas, contracts, **stage gates (preflight, storyboard)**, branches, captions, self-check loop | `PIPELINE.md` |
+| Channel logo and brand notes | `channel/` |
 | Competitor study: Segment Zero (characters inside 3D space, lighting, overlays) | `references/reports/segment_zero_2026-11.md` |
 | Where defects are born and caught (study) | `references/reports/defect_origins_v1.md` |
 | Per-area checklists and the reviewer protocol | `QA.md` |

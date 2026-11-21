@@ -103,7 +103,7 @@ Most defects in the first video were born in the shot list and caught only after
 A missing plate is a G1 ERROR: it becomes a sets backlog item before anything is voiced.
 
 ## Publishing (channel conventions)
-The channel is **Some Crazy Things**. Its publishing log is `projects/channel/PUBLISHING.md` on branch `claude/sleepy-lovelace-n8psvk` (the earlier shorts). Always ask the Director before publishing.
+The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its publishing log is `projects/channel/PUBLISHING.md` on branch `claude/sleepy-lovelace-n8psvk` (the earlier shorts). Always ask the Director before publishing.
 - **Thumbnail:** run `tools/thumbnail.py` on a caption-free engine frame. Zoom inside the engine (a camera `zoom` in a copy of shots.json), never by upscaling the frame. The house style is a 3-4 line headline in the top third: white, with the keyword line in yellow or red, a thick plum outline and a shadow. The character and the action sit below it. Save it as `videos/<slug>/thumbnail.png`.
 - **Cover as the first 3 frames:** `tools/add_cover.sh video.mp4 thumbnail.png videos/<slug>/<slug>_captions_cover_1080x1920.mp4` puts the thumbnail in the first 0.1 s and delays the audio by 0.1 s. Only this captioned cut with the cover is posted.
 - **Upload-Post** (`api.upload-post.com`, the proxy injects the key), profile `somecrazythings`:
