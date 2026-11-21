@@ -47,6 +47,8 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 | Pre-render checks | `tools/preflight.py`, `tools/storyboard.py` |
 | Thumbnail and cover | `tools/thumbnail.py`, `tools/add_cover.sh` |
 | Channel logo and brand | `channel/` |
+| How Ricks Clips and Segment Zero make shorts (start here for style) | `references/reports/channels_2026-11.md` |
+| Competitor titles, for originality checks | `references/titles.md` |
 | Style studies (deep reference: read only the section you need) | `references/STYLE_BIBLE.md`, `references/reports/*.md` |
 | Characters: API and rules | `characters/README.md`, `characters/RULES.md`, `stickman/DRAWING_RULES.md` |
 | Sets, plates, depth maps, racing lines | `blender/README.md`, `blender/sets/*/` |

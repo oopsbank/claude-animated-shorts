@@ -4,7 +4,7 @@ Take the highest-priority open item in **your area**. When it is done, delete it
 P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bike-countersteer) is final: its leftovers are in `videos/bike-countersteer/NOTES.md`.
 
 ## scripts (`scripts/`)
-- [ ] P1 Put the reference channel's full title list in `references/` (titles only), so topic originality is checked, not guessed.
+- [ ] P1 Shot grammar for every new script (`references/reports/channels_2026-11.md` §6): at least one extreme close-up, one POV or prop insert, one Dutch or low angle, one crowd or depth-layered shot, and one visual-metaphor set piece for the mechanism. Add a count of these to `tools/preflight.py`.
 - [ ] P2 `scripts/TOPICS.md`: re-review topics 6-7 (fixed after round 4) or replace 8-10 from the reserves before the next pick.
 
 ## sets (`blender/sets/`)
@@ -52,12 +52,14 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P3 `path_line`: a thicker "actual" stroke and a longer hold on the kink.
 
 ## engine (`engine/`)
-- [ ] P2 Depth-tested compositing: give each character a depth (its ground point in the plate's depth map) and draw nearer plate pixels over it, so characters stand behind posts, sit inside cabs and sink into snow (Segment Zero study).
+- [ ] P2 Caption style test (a Director decision): both leading channels use sentence case, white, 1-2 words, no keyword colour. Ours are caps with yellow keywords. Render one shot both ways for the Director.
+- [ ] P1 Depth-tested compositing (the biggest gap in the channel study): give each character a depth (its ground point in the plate's depth map) and draw nearer plate pixels over it, so characters stand behind posts, sit inside cabs and sink into snow (Segment Zero study).
 - [ ] P2 Depth of field for far characters, from the plate depth.
 - [ ] P2 Arm in-betweens with anticipation and overshoot once `character()` has them. Today arm poses are 1-frame swaps, so a held point reads stiff (acting 6).
 - [ ] P2 Crossfades between very different character sizes ghost a giant head: prefer a cut or a matched position there.
 - [ ] P2 Walks with foot locking via `characters/scripts/walk.py`. Today x moves are hop-steps.
-- [ ] P2 Character tint from the plate JSON `tint`, plus a rim light from `light_dir`.
+- [ ] P1 Scene light on characters: tint from the plate JSON `tint`, plus a rim light from `light_dir`, so characters sit in the set's light.
+- [ ] P2 Characters sitting or leaning on props (chairs, counters, cab windows), and near characters cut by the frame edge.
 - [ ] P2 Composite fx with `line=3.2*char_scale` so fx outlines match the characters.
 - [ ] P3 Smear frames or motion blur for fast prop and limb moves, and for wheels.
 - [ ] P3 Our own retention overlay (a small chapter-dot row in our palette) and a faint watermark from `channel/logo/`. Design our own.

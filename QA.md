@@ -16,7 +16,7 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
 - [ ] Every fact has a source URL at the top of `SCRIPT.md`. Mark anything uncertain.
 - [ ] It follows the formula: hook, setting, 3-6 escalation beats, a mystery beat, "You see,", the mechanism with an everyday analogy, and an ironic payoff.
 - [ ] 170-240 words (about 3.7 words/s gives 45-65 s). Plain spoken English.
-- [ ] The story, characters and jokes are original, with no overlap with the reference channel's videos (check titles in `references/` and the channel list).
+- [ ] The story, characters and jokes are original: no topic angle or title overlaps `references/titles.md`.
 - [ ] Every sentence has a visual in `shots.json`, and each shot uses an existing set, cam and light, or adds the set to `BACKLOG.md`.
 - [ ] Reviewer scores: hook, clarity, humour, accuracy and visual potential.
 
