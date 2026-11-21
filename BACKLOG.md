@@ -35,7 +35,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P3 Foreground occluder props near the camera (window frames, logs, railings) for the engine to depth-test against.
 
 ## characters (`characters/`, bean-head cast)
-- [ ] P1 Video 2 (`sailing-stones`): hat `antennae` (a headband with two springy green antennae balls, for the guide and his tourists); arm_pose `sleep` (arms folded, head tipped, eyes shut) with a `seated` option for the van seat; held props `gps_box`, `screwdriver`, `tripod`, `mug`, `flashlight`, `cash_fan`, `camera`, `leaf_blower`, `binoculars`, `paintbrush`. Cast ids and colours are in `scripts/sailing-stones/build.py` (CAST).
+- [ ] P1 Video 2 (`sailing-stones`): hat `antennae` (a headband with two springy green antennae balls, for the guide and his tourists); arm_pose `sleep` (arms folded, head tipped, eyes shut) with a `seated` option for the van seat; held props `gps_box`, `screwdriver`, `tripod`, `mug`, `flashlight`, `cash_fan`, `camera`, `leaf_blower`, `binoculars`, `paintbrush`, `crate`. Cast ids and colours are in `scripts/sailing-stones/build.py` (CAST).
 - [ ] P1 (for the engine) In `character()`:
   - `lid=` (0..1, with 0.5 = half-shut) so the engine can drop its blink overlay;
   - arm in-betweens (`arm_pose=('hang', 'point', 0.4)` or elbow/hand offsets) so gestures ease and overshoot;

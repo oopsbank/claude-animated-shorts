@@ -3,9 +3,9 @@
 - **Slug:** `sailing-stones`
 - **Topic:** M4 in `scripts/TOPICS.md` v7, picked by the Director on 2026-11-21.
 - **Approval:** waiting for the Director. Do not voice before approval.
-- **Format:** story engine (`QA.md` › scripts). Line 1: two people doing something that looks wrong (hiding trackers in rocks and waiting for them to run away). The mocking rival is an original "alien rock tours" guide whose way wins at every stage in his own voice (sold out → "Aliens with leaf blowers." → doubled prices, "Aliens don't do fences." → "See you in ten years, nerds!"). 3 stages, each with a visual surprise: 1948 (a whirlwind passes over the rock and it doesn't budge) → the sixties (the fenced rock escapes) → 2011 (the trackers). The mechanism comes late (shots 23-30) with one analogy (a window shoving a fridge across a wet kitchen floor). The rival fails on screen: while he snores, an ice pane shoves a rock over his alien sign, and the last line is his shameless pivot: ICE TOURS, forty bucks.
-- **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2: 7/10, swipe at ~30 s (repeats), FAIL; its 3 fixes plus a shorter pond line are applied in v3 (not re-reviewed: 2-round cap).
-- **Length:** 233 words (+3 spoken in "nineteen forty-eight" and "twenty eleven"). Calibrated on video 1 (231 words gave 63.2 s of real voice), that is about 64-65 s.
+- **Format:** story engine (`QA.md` › scripts). Line 1: two people doing something that looks wrong (hiding trackers in rocks and waiting for them to run away). The mocking rival is an original "alien rock tours" guide whose way wins at every stage in his own voice (sold out → "Aliens with leaf blowers." → doubled prices, "Aliens jump fences, genius." → "See you in ten years, nerds!"). 3 stages, each with a visual surprise: 1948 (a whirlwind passes over the rock and it doesn't budge) → the sixties (the fenced rock escapes) → 2011 (the trackers). The mechanism comes late (shots 22-28) with one analogy (a window shoving a fridge across a wet kitchen floor). The rival fails on screen: while he snores, an ice pane shoves a rock over his alien sign, and the last line is his shameless pivot: ICE TOURS, forty bucks.
+- **Reviews:** script review round 1: 8/8/7/7/9/8, PASS (fixes applied). Engagement review v1: 7/10, swipe at ~23 s (the 1948 stretch), so FAIL; v2: 7/10, swipe at ~30 s (repeats), FAIL. v3: 7/10, swipe at ~25-30 s (history stages without the cousins, the alien joke three times), FAIL. v4 applies round 3's fixes (the cousins return at ~30 s, a new alien jab, a shorter 1948 stage) and merges the pond/ice lines (mechanism ~13 s); not re-reviewed.
+- **Length:** 231 words (+3 spoken in "nineteen forty-eight" and "twenty eleven"). Calibrated on video 1 (231 words gave 63.2 s of real voice), that is about 64-65 s.
 
 ## Facts and sources (everything said in the voice-over)
 
@@ -49,28 +49,27 @@ Fiction, made up for the story: the "alien rock tours" guide, his tourists, his 
 8. Twenty bucks a ticket."
 9. And his tours sell out.
 10. In 1948, geologists blamed whirlwinds.
-11. They never caught one pushing a rock.
+11. Never caught one in the act.
 12. "Whirlwinds?" snorts the guide. "Aliens with leaf blowers."
 13. In the sixties, a geologist named thirty rocks
 14. and fenced some in. One escaped anyway.
-15. Seven years of watching. Zero witnesses.
-16. The guide doubles his prices. "Aliens don't do fences."
-17. So in 2011, the cousins set up trackers and cameras,
+15. Seven years. Zero witnesses. Then two cousins got stubborn.
+16. The guide doubles his prices. "Aliens jump fences, genius."
+17. In 2011, they set up trackers and cameras,
 18. ready to wait ten years.
 19. "See you in ten years, nerds!" yells the guide.
 20. Two years later, dozens of rocks start sliding
 21. right there, in broad daylight.
-22. Rain left a shallow pond
-23. that froze overnight, millimetres thick.
-24. The late-morning sun cracked it into huge floating panes.
-25. A light breeze pushed the panes,
-26. and the panes pushed the rocks,
-27. a few metres a minute.
-28. Like a giant window sliding across a wet kitchen floor
-29. and shoving the fridge.
-30. And the guide? Snoring in his van,
-31. while an ice pane shoves a rock over his alien sign.
-32. Next day, his new sign reads: ICE TOURS. Forty bucks.
+22. Overnight, a shallow rain pond froze millimetres thick,
+23. and the morning sun cracked it into floating panes.
+24. A light breeze pushed the panes,
+25. and the panes pushed the rocks,
+26. a few metres a minute.
+27. Like a giant window sliding across a wet kitchen floor
+28. and shoving the fridge.
+29. And the guide? Snoring in his van,
+30. while an ice pane shoves a rock over his alien sign.
+31. Next day, his new sign reads: ICE TOURS. Forty bucks.
 
 ## Notes for voicing (after approval)
 - Say "1948" as "nineteen forty-eight" and "2011" as "twenty eleven".
