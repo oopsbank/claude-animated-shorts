@@ -1,0 +1,54 @@
+{
+ "note": "curious -> absurd-comic -> reveal; loop ending (the last line runs into line 1)",
+ "sections": [
+  {
+   "style": "hook",
+   "from": "s01"
+  },
+  {
+   "style": "mystery",
+   "from": "s03"
+  },
+  {
+   "style": "body",
+   "from": "s05"
+  },
+  {
+   "style": "mystery",
+   "from": "s14"
+  },
+  {
+   "style": "body",
+   "from": "s15"
+  },
+  {
+   "style": "explain",
+   "from": "s17"
+  },
+  {
+   "style": "body",
+   "from": "s19"
+  },
+  {
+   "style": "payoff",
+   "from": "s21"
+  }
+ ],
+ "overlays": [
+  {
+   "style": "alien",
+   "shots": [
+    "s09",
+    "s12",
+    "s16"
+   ]
+  }
+ ],
+ "end": "loop",
+ "reveal_riser": false,
+ "levels": {
+  "body": -10.0,
+  "hook": -9.5,
+  "payoff": -11.0
+ }
+}

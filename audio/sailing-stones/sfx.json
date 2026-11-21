@@ -1,0 +1,168 @@
+[
+ {
+  "cue": "ka_ching",
+  "shot": "s07",
+  "at_word": 4,
+  "at": "end",
+  "offset": 0.02,
+  "level": -14,
+  "note": "price beat: Twenty bucks"
+ },
+ {
+  "cue": "ka_ching",
+  "shot": "s09",
+  "at_word": 6,
+  "at": "end",
+  "offset": 0.02,
+  "level": -13,
+  "note": "price beat: Thirty bucks"
+ },
+ {
+  "cue": "ka_ching",
+  "shot": "s12",
+  "at_word": 6,
+  "at": "end",
+  "offset": 0.02,
+  "level": -12,
+  "note": "price beat: Forty bucks"
+ },
+ {
+  "cue": "ka_ching",
+  "shot": "s16",
+  "at_word": 11,
+  "at": "end",
+  "offset": 0.02,
+  "level": -11,
+  "note": "price beat: Fifty bucks (the biggest)"
+ },
+ {
+  "cue": "ka_ching",
+  "shot": "s22",
+  "at_word": 7,
+  "at": "end",
+  "offset": 0.02,
+  "level": -17,
+  "note": "five bucks: a small, deflated ka-ching",
+  "len": 0.5
+ },
+ {
+  "cue": "live_ping",
+  "shot": "s13",
+  "at_word": 5,
+  "level": -15,
+  "note": "he livestreams"
+ },
+ {
+  "cue": "live_ping",
+  "shot": "s14",
+  "at_word": 12,
+  "level": -16,
+  "pan": 0.4,
+  "note": "a lone ping in the gap before 'Even': LIVE 3 watching",
+  "offset": -0.3
+ },
+ {
+  "cue": "live_flurry",
+  "shot": "s19",
+  "at_word": 1,
+  "level": -16,
+  "note": "the counter shoots up to 1.2M"
+ },
+ {
+  "cue": "sign_crash",
+  "shot": "s20",
+  "at_word": 5,
+  "level": -15,
+  "note": "Gary goes straight through the NIGHT ONLY sign",
+  "len": 0.4
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s14",
+  "at_word": 7,
+  "level": -16,
+  "note": "frost creeping on 'freeze'"
+ },
+ {
+  "mute": "s20:impact_star"
+ },
+ {
+  "mute": "s14:ice_pane"
+ },
+ {
+  "mute": "s09:sparkle"
+ },
+ {
+  "mute": "s12:sparkle"
+ },
+ {
+  "mute": "s16:sparkle"
+ },
+ {
+  "mute": "s17:whoosh"
+ },
+ {
+  "mute": "s07:sparkle"
+ },
+ {
+  "mute": "s18:sparkle"
+ },
+ {
+  "mute": "s22:sparkle"
+ },
+ {
+  "mute": "s19:exclaim"
+ },
+ {
+  "mute": "s20:ice_pane"
+ },
+ {
+  "mute": "s15:gps_ping"
+ },
+ {
+  "mute": "s17:ice_pane"
+ },
+ {
+  "cue": "ice_pane",
+  "shot": "s17",
+  "at_word": 8,
+  "level": -16,
+  "note": "huge panes (one pane, not two over the rock)"
+ },
+ {
+  "mute": "s11:splash"
+ },
+ {
+  "mute": "s08:dust_puff"
+ },
+ {
+  "mute": "s17:ice_crack"
+ },
+ {
+  "mute": "s10:year_badge"
+ },
+ {
+  "mute": "s01:sparkle"
+ },
+ {
+  "mute": "s13:year_badge"
+ },
+ {
+  "mute": "s08:year_badge"
+ },
+ {
+  "mute": "s10:splash"
+ },
+ {
+  "mute": "s17:sliding_rock"
+ },
+ {
+  "mute": "s20:sliding_rock"
+ },
+ {
+  "mute": "s06:whoosh"
+ },
+ {
+  "mute": "s20:transition"
+ }
+]

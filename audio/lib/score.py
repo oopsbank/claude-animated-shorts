@@ -7,6 +7,7 @@ from dsp import SR, ns, rng, lp, hp, bp, fades, phase, pan, st, place, integrate
 import instruments as I
 
 BPM = 112
+REVEAL_RISER = True          # music.json "reveal_riser": false drops the riser into an explain section
 Q = 60.0 / BPM
 F = I.m2f
 
@@ -21,9 +22,10 @@ HOOK_MOTIF = [(0.0, 74, 0.5), (0.5, 79, 0.5), (1.0, 83, 0.75), (2.0, 81, 0.5), (
 
 # balance inside the band (LU, each track's own integrated level)
 BAL = {"kick": -2.0, "clap": -7.0, "hat": -14.0, "bass": -3.0, "arp": -5.0, "pad": -8.0, "glock": -9.0,
-       "vibes": -6.0, "tick": -15.0, "sting": 0.0, "riser": -17.0}
+       "vibes": -6.0, "tick": -15.0, "sting": 0.0, "riser": -17.0,
+       "alien": -6.0}
 SEND = {"kick": 0.02, "clap": 0.12, "hat": 0.05, "bass": 0.0, "arp": 0.18, "pad": 0.25, "glock": 0.3, "vibes": 0.25,
-        "tick": 0.2, "sting": 0.3, "riser": 0.1}
+        "tick": 0.2, "sting": 0.3, "riser": 0.1, "alien": 0.35}
 
 
 def kick(vel, r):
@@ -129,7 +131,7 @@ class Score:
         """thin out under the punchline: pad + one pluck per bar, so the last line lands dry"""
         for t, k in self.grid(a, b):
             root, ch = CH[PROG["payoff"][k % 2]]
-            self.add("pad", I.pad([F(m) for m in ch], min(4 * Q, b - t) + 0.1, 0.35, self.r(), att=0.3, rel=0.25), t)
+            self.add("pad", I.pad([F(m) for m in ch], min(4 * Q, b - t) + 0.1, 0.35, self.r(), att=0.8, rel=0.25), t)
             self.add("bass", I.pluck(F(root), 0.6, self.r(), 1.2, 0.2, 0.12), t, -0.05)
 
     def sting(self, t):
@@ -143,6 +145,23 @@ class Score:
         self.add("sting", kick(1.0, self.r()) * 0.9, t)
         self.add("sting", I.cymbal(0.25, self.r(), 2.5, 0.7), t)
         self.add("sting", I.pad([F(m) for m in ch + [67]], 1.2, 0.5, self.r(), att=0.05, rel=1.2), t)
+
+    def alien(self, a, b):
+        """theremin-like lead: sine + a little 2nd harmonic, wide vibrato, portamento between whole-tone steps"""
+        notes = [76, 84, 80, 72, 78, 86, 82, 74]                # whole-tone-ish 'ooo-eee-ooo'
+        step = 2 * Q
+        k, t = 0, a
+        while t < b - 0.3:
+            d = min(step, b - t)
+            m0, m1 = notes[k % len(notes)], notes[(k + 1) % len(notes)]
+            tt_ = np.arange(ns(d + 0.15)) / SR
+            glide = np.clip((tt_ - 0.6 * d) / (0.35 * d), 0, 1)
+            f = F(m0) * (F(m1) / F(m0)) ** glide * 2 ** (0.35 * np.sin(2 * np.pi * 6.0 * tt_) * np.clip(tt_ / 0.3, 0, 1) / 12)
+            ph = phase(f)
+            env = np.clip(tt_ / 0.08, 0, 1) * np.clip((d + 0.15 - tt_) / 0.15, 0, 1)
+            self.add("alien", (np.sin(ph) + 0.15 * np.sin(2 * ph)) * env * 0.6, t, 0.15 * (-1) ** k)
+            t += step
+            k += 1
 
     def riser(self, t_end, dur=1.0):
         from sfx_x import riser
@@ -164,33 +183,49 @@ class Score:
         return hp(dry + 0.8 * convolve_st(wet, hall), 35, 2)
 
 
-def build(sec, n, seed=2026):
-    """sec: dict name -> (a, b) times; 'sting' -> t. Returns (stereo music, map rows)."""
+DESC = {
+    "hook": "hook: pluck arpeggio I-V-vi-IV, glock motif, kick + clap (no hats)",
+    "body": "body: full groove, hats + pad, 112 bpm",
+    "mystery": "mystery/curious: drums out, sus pad vi-IV-ii-Vsus + ticking glock",
+    "explain": "explain/reveal: light vibes arpeggio IV-I/3-ii-V, bass; soft kick + brushes from bar 2",
+    "payoff": "payoff: thins to pad + bass so the punchline lands dry",
+}
+
+
+def build(secs, n, sting=None, overlays=(), loop_end=False, seed=2026):
+    """secs: ordered [(style, a, b)] (styles may repeat); sting: time or None; overlays: [(style, a, b)];
+    loop_end: no sting, a riser into the end so the restart (the hook) lands like a downbeat.
+    Returns (stereo music, map rows)."""
     s = Score(n, seed)
     rows = []
-    if "hook" in sec:
-        a, b = sec["hook"]
-        s.drive(a, b, PROG["hook"], motif=True, full=False)
-        rows.append((a, "hook: pluck arpeggio I-V-vi-IV, glock motif, kick + clap (no hats), from the first word"))
-    if "body" in sec:
-        a, b = sec["body"]
-        s.drive(a, b, PROG["body"], motif=False, full=True)
-        rows.append((a, "body: full groove, hats + pad join, 112 bpm"))
-    if "mystery" in sec:
-        a, b = sec["mystery"]
-        s.mystery(a, b)
-        rows.append((a, "mystery: drums drop out, sus pad vi-IV-ii-Vsus + ticking glock"))
-    if "explain" in sec:
-        a, b = sec["explain"]
-        s.riser(a, 0.9)
-        s.explain(a, b)
-        rows.append((a - 0.9, "riser into the pivot"))
-        rows.append((a, "'You see,': light vibes arpeggio IV-I/3-ii-V, bass; soft kick + brushes from bar 2"))
-    if "payoff" in sec:
-        a, b = sec["payoff"]
-        s.payoff(a, b)
-        rows.append((a, "payoff: thins to pad + bass so the punchline lands dry"))
-    if "sting" in sec:
-        s.sting(sec["sting"])
-        rows.append((sec["sting"], "sting: G major chord, glock, kick, soft cymbal right after the last word, rings out"))
+    prev = None
+    for style, a, b in secs:
+        if style == "hook":
+            s.drive(a, b, PROG["hook"], motif=True, full=False)
+        elif style == "body":
+            s.drive(a, b, PROG["body"], motif=False, full=True)
+        elif style == "mystery":
+            s.mystery(a, b)
+        elif style == "explain":
+            if prev != "explain" and REVEAL_RISER:
+                s.riser(a, 0.9)
+                rows.append((a - 0.9, "riser into the reveal"))
+            s.explain(a, b)
+        elif style == "payoff":
+            s.payoff(a, b)
+        else:
+            raise ValueError(f"unknown music style {style}")
+        rows.append((a, DESC[style]))
+        prev = style
+    for style, a, b in overlays:
+        if style == "alien":
+            s.alien(a, b)
+            rows.append((a, "alien overlay: theremin-like sine glides 'ooo-eee-ooo' over the fantasy cutaway"))
+    if sting is not None and not loop_end:
+        s.sting(sting)
+        rows.append((sting, "sting: G major chord, glock, kick, soft cymbal right after the last word, rings out"))
+    if loop_end:
+        d = max(0.15, min(0.7, n / SR - float(loop_end)))     # the riser starts only after the last word
+        s.riser(n / SR, d)
+        rows.append((n / SR - d, "loop end: no sting; riser into the last frame so the restart lands on the hook"))
     return s.render(), rows

@@ -11,9 +11,11 @@ sfx.json (optional, hand-placed topic cues):
     [{"cue": "bike_bell", "word": 12, "offset": -0.05, "level": -11, "pan": 0.3, "note": "kid rings the bell"},
      {"cue": "lean", "shot": "s04", "at_word": 2}]
   word = global index into words.json, or shot + at_word (index inside that shot, like shots.json beats).
+  "at": "end" places the cue at the word's END (+ offset), e.g. a ka-ching right after "bucks".
   cue names: see lib/sfx_x.py GEN. level = LU vs the voice (max momentary), default per cue.
-     {"mute": "s17:speed_lines"}      <- silence an automatic fx cue of one shot
-Automatic cues from shots.json: an ambience bed per set, a whoosh on each set/cam change, and every fx entry
+     {"mute": "s17:speed_lines"}      <- silence an automatic fx cue of one shot ("s20:transition": its whoosh)
+Automatic cues from shots.json: an ambience bed per set, a whoosh on each change of set (not on cam changes, and
+none within 0.5 s of a hand-placed cue), and every fx entry
 (camera shakes get no automatic sound: add a cue if the shake is an impact).
 
 Mix: voice high-passed + gently compressed (no EQ colour, no pitch); music ducked -3 dB under words (keyed by
@@ -89,8 +91,30 @@ def sections(words, end):
         sec["explain"] = (t(piv), t(pay) if pay is not None and pay > piv else words[-1]["start"])
     if pay is not None and (piv is None or pay > piv):
         sec["payoff"] = (t(pay), words[-1]["start"])
-    sec["sting"] = words[-1]["end"] - 0.04       # after the punchline word, so it lands dry and is never masked
-    return {k: v for k, v in sec.items() if k == "sting" or v[1] - v[0] > 0.2}
+    sting = words[-1]["end"] - 0.04       # after the punchline word, so it lands dry and is never masked
+    order = ["hook", "body", "mystery", "explain", "payoff"]
+    secs = [(k, *sec[k]) for k in order if k in sec and sec[k][1] - sec[k][0] > 0.2]
+    return secs, sting
+
+
+def music_plan(plan, shots, words, end):
+    """music.json: {"sections": [{"style": "hook", "from": "s01"}, ...], "overlays": [{"style": "alien",
+    "shots": ["s09"]}], "end": "loop"|"sting"}. "from" is a shot id (its first word) or {"word": i}."""
+    first = shot_word_index(shots, words)
+    t_of = lambda ref: 0.0 if ref in ("s01", 0) else words[first[ref] if isinstance(ref, str) else ref["word"]]["start"]
+    st_ = [(c["style"], t_of(c["from"])) for c in plan["sections"]]
+    secs = [(sty, a, st_[i + 1][1] if i + 1 < len(st_) else end) for i, (sty, a) in enumerate(st_)]
+    ids = [s["id"] for s in shots]
+    ov = []
+    for o in plan.get("overlays", []):
+        for sid in o["shots"]:
+            j = ids.index(sid)
+            a = words[first[sid]]["start"] - 0.05
+            b = words[first[ids[j + 1]]]["start"] - 0.1 if j + 1 < len(ids) else end
+            ov.append((o["style"], a, b))
+    loop = plan.get("end") == "loop"
+    sting = None if loop else words[-1]["end"] - 0.04
+    return secs, sting, ov, loop
 
 
 def tokens(text):
@@ -164,31 +188,31 @@ def duck_curve(words, n, depth=DUCK_DB, pre=0.08, post=0.12, att=0.07, rel=0.45,
     return np.interp(np.arange(n) / SR, np.arange(nc) / ctrl, depth * env)
 
 
-def section_curve(m, v, sec, n, v_int):
+def section_curve(m, v, secs, sting, n, v_int):
     gains, pts = {}, []
-    for name, ab in sec.items():
-        if name == "sting":
-            continue
-        a, b = ab
+    for name, a, b in secs:
         seg = slice(ns(a), ns(b))
         Lm, Lv = integrated(m[:, seg]), integrated(st(v[seg]))
         if not np.isfinite(Lv):
             Lv = v_int
-        gains[name] = (Lv + MUSIC_LU[name] - Lm) if np.isfinite(Lm) else 0.0
-        pts.append((a, gains[name]))
-    ts = sec["sting"]
-    Lm = integrated(m[:, ns(ts): ns(ts + 1.5)])
-    gains["sting"] = (v_int + MUSIC_LU["sting"] - Lm) if np.isfinite(Lm) else 0.0
-    pts.append((ts - 0.02, gains["sting"]))
+        g = (Lv + MUSIC_LU[name] - Lm) if np.isfinite(Lm) else 0.0
+        gains[f"{name}@{a:.1f}s"] = g
+        pts.append((a, g))
+    if sting is not None:
+        Lm = integrated(m[:, ns(sting): ns(sting + 1.5)])
+        gains["sting"] = (v_int + MUSIC_LU["sting"] - Lm) if np.isfinite(Lm) else 0.0
+        pts.append((sting - 0.02, gains["sting"]))
     pts.sort()
     # piecewise ramps that start AT each section's first word: a cut takes 0.25 s; a raise takes 1.2 s, so the
     # previous section's ringing tails and reverb are not boosted under the new line's first words
     t = np.arange(n) / SR
     c = np.full(n, pts[0][1])
     for (a, g0), (b, g1) in zip(pts, pts[1:]):
-        r = 1.2 if g1 > g0 else 0.25
-        u = np.clip((t - b) / r, 0, 1)
-        c = np.where(t >= b, g0 + (g1 - g0) * (0.5 - 0.5 * np.cos(np.pi * u)), c)
+        # a raise starts AT the section (1.2 s, so old tails are not boosted); a cut ENDS at it (0.25 s), so the new
+        # section's first downbeat already plays at its own, lower gain (it used to hit at the old gain)
+        r, b0 = (1.2, b) if g1 > g0 else (0.25, b - 0.25)
+        u = np.clip((t - b0) / r, 0, 1)
+        c = np.where(t >= b0, g0 + (g1 - g0) * (0.5 - 0.5 * np.cos(np.pi * u)), c)
     return c, gains
 
 
@@ -234,7 +258,7 @@ def sfx_events(words, shots, cues, sec):
         prev = None
         for s in shots:
             i0 = first[s["id"]]
-            if prev is not None and (s.get("set"), s.get("cam")) != (prev.get("set"), prev.get("cam")):
+            if prev is not None and s.get("set") != prev.get("set") and f"{s['id']}:transition" not in muted:
                 ev.append(dict(t=wt(i0) - 0.06, cue="whoosh", off=-0.2, what=f"transition {prev['id']}->{s['id']} ({s.get('set')}/{s.get('cam')})"))
             for fx in s.get("fx", []):
                 name = fx["name"]
@@ -253,8 +277,19 @@ def sfx_events(words, shots, cues, sec):
             i = shot_word_index(shots, words)[c["shot"]] + c.get("at_word", 0)
         else:
             i = 0
-        ev.append(dict(t=wt(i) + c.get("offset", 0.0), cue=c["cue"], level=c.get("level"), pan=c.get("pan", 0.0),
+        t0 = words[max(0, min(len(words) - 1, i))]["end"] if c.get("at") == "end" else wt(i)
+        ev.append(dict(t=t0 + c.get("offset", 0.0), cue=c["cue"], hand=True, len=c.get("len"), level=c.get("level"), pan=c.get("pan", 0.0),
                        what=c.get("note", c["cue"]) + f" (word {i} '{words[min(i, len(words) - 1)]['word']}')"))
+    # an automatic transition whoosh never steps on a hand-placed story cue (it smeared every price ka-ching)
+    hand = [e["t"] for e in ev if e.get("hand")]
+    ev = [e for e in ev if not (e["what"].startswith("transition") and any(abs(e["t"] - h) < 0.5 for h in hand))]
+    # never two whooshes within 0.6 s (a transition whoosh + a shot's own whoosh fx doubled up): keep the shot's own
+    wh = sorted([e for e in ev if "whoosh" in e["cue"] or e["cue"] == "speed_lines"], key=lambda e: e["t"])
+    drop = set()
+    for e1, e2 in zip(wh, wh[1:]):
+        if abs(e2["t"] - e1["t"]) < 0.6:
+            drop.add(id(e1) if e1["what"].startswith("transition") else id(e2))
+    ev = [e for e in ev if id(e) not in drop]
     return sorted(ev, key=lambda e: e["t"])
 
 
@@ -262,9 +297,13 @@ def render_sfx(ev, words, shots, n, v_int, seed):
     R = rng(seed)
     out = np.zeros((2, n))
     rows = []
+    long_duck = dbg(duck_curve(words, n, depth=-6.0))
+    short_duck = dbg(duck_curve(words, n, depth=-4.0, att=0.03, rel=0.25))
     for k, e in enumerate(ev):
         gen, lvl0, desc = X.GEN[e["cue"]]
         x = gen(rng(int(R.integers(1 << 30))))
+        if e.get("len"):                                  # sfx.json "len": cut the cue's tail (with a 0.1 s fade)
+            x = fades(x[..., : ns(e["len"])], 0.0, 0.1)
         xs = pan(x, e.get("pan", 0.0)) if np.ndim(x) == 1 else x
         lvl = e.get("level") if e.get("level") is not None else lvl0
         M = momentary(xs).max()
@@ -272,6 +311,11 @@ def render_sfx(ev, words, shots, n, v_int, seed):
         t = e["t"] + e.get("off", 0.0)
         if e["cue"] == "riser":
             t -= x.shape[-1] / SR
+        if True:                                          # every event ducks under speech (-4 dB, long ones -6)
+            i0 = max(0, ns(t))
+            seg = slice(i0, min(n, i0 + xs.shape[-1]))
+            dk = long_duck if xs.shape[-1] > ns(1.5) else short_duck
+            xs = xs * np.pad(dk[seg], (0, max(0, xs.shape[-1] - (seg.stop - seg.start))), mode="edge")[None, : xs.shape[-1]]
         place(out, xs, t, g)
         rows.append((t, e["cue"], desc, e["what"], lvl, e.get("pan", 0.0)))
     beds = []
@@ -310,7 +354,7 @@ def ffmpeg_ebur(path):
     return r.stderr[i:].strip() if i >= 0 else r.stderr[-800:]
 
 
-def section_rows(v, m, s, words, sec):
+def section_rows(v, m, s, words, secs, sting):
     Mv, Mb = momentary(v), momentary(m + s)
     tc = np.arange(len(Mv)) * 0.01 + 0.2
     speak = np.zeros(len(tc), bool)
@@ -318,8 +362,9 @@ def section_rows(v, m, s, words, sec):
         speak |= (tc >= w["start"] + 0.03) & (tc <= w["end"] - 0.03)
     speak &= Mv > lufs(v) - 10
     rows = []
-    items = [(k, *sec[k]) for k in ("hook", "body", "mystery", "explain", "payoff") if k in sec]
-    items.append(("sting+tail", sec["sting"], v.shape[1] / SR))
+    items = [(f"{k} {a:.1f}", a, b) for k, a, b in secs]
+    if sting is not None:
+        items.append(("sting+tail", sting, v.shape[1] / SR))
     for name, a, b in items:
         seg = slice(ns(a), ns(b))
         k = speak & (tc >= a) & (tc < b) & (Mb > -70)
@@ -345,6 +390,8 @@ def main():
     ap.add_argument("--frames", type=int)
     ap.add_argument("--sfx", help="topic cue list (default out_dir/sfx.json if present)")
     ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--music", help="music plan (default out_dir/music.json if present; else automatic sections)")
+    ap.add_argument("--ring", type=float, default=None, help=f"s after the last word when no --frames (default {RING})")
     ap.add_argument("--title", default=None)
     a = ap.parse_args()
     od = a.out_dir
@@ -355,7 +402,8 @@ def main():
     cues = json.load(open(cues_path)) if os.path.exists(cues_path) else []
     title = a.title or shots_doc.get("title") or os.path.basename(os.path.abspath(od))
 
-    frames = a.frames or int(math.ceil((words[-1]["end"] + RING) * FPS - 1e-9))
+    ring = RING if a.ring is None else a.ring
+    frames = a.frames or int(math.ceil((words[-1]["end"] + ring) * FPS - 1e-9))
     n = frames * SR // FPS
     dur = n / SR
     if words[-1]["end"] > dur:
@@ -370,21 +418,28 @@ def main():
     v_int = lufs(v_st)
 
     # music
-    sec = sections(words, dur)
-    m, mrows = SC.build(sec, n, seed=a.seed)
+    plan_path = a.music or os.path.join(od, "music.json")
+    if os.path.exists(plan_path):
+        plan = json.load(open(plan_path))
+        secs, sting, ov, loop = music_plan(plan, shots, words, dur)
+        SC.REVEAL_RISER = plan.get("reveal_riser", True)
+        MUSIC_LU.update(plan.get("levels", {}))          # per-video section targets, LU vs the voice
+    else:
+        (secs, sting), ov, loop = sections(words, dur), [], False
+    m, mrows = SC.build(secs, n, sting=sting, overlays=ov, loop_end=(words[-1]["end"] if loop else False), seed=a.seed)
     duck = duck_curve(words, n)
     # sentence-final words trail off quietly: an extra dip under each one keeps them on top
     finals = [words[s_[-1]] for s_ in sentences(words)]
     duck += duck_curve(finals, n, depth=FINAL_DIP_DB, pre=0.05, post=0.1, merge=0.0)
     m_d = m * dbg(duck)[None, :]
-    curve, mgains = section_curve(m_d, v, sec, n, v_int)
+    curve, mgains = section_curve(m_d, v, secs, sting, n, v_int)
     m = m_d * dbg(curve)[None, :]
-    m = fades(m, 0.0, 0.25)
+    m = fades(m, 0.0, 0.03 if loop else 0.25)        # a loop end must not fade into the restart
 
     # sfx
-    ev = sfx_events(words, shots, cues, sec)
+    ev = sfx_events(words, shots, cues, None)
     s, srows, beds = render_sfx(ev, words, shots, n, v_int, a.seed + 1)
-    s = fades(s, 0.0, 0.25)
+    s = fades(s, 0.0, 0.03 if loop else 0.25)
 
     # master: gain to target, limit, correct
     pre = v_st + m + s
@@ -408,7 +463,7 @@ def main():
     TP = true_peak(y)
     LRA = lra(y)
     vs, ms, ss = (x * dbg(G) for x in (v_st, m, s))
-    rows = section_rows(vs, ms, ss, words, sec)
+    rows = section_rows(vs, ms, ss, words, secs, sting)
     eb = ffmpeg_ebur(os.path.join(od, "mix.wav"))
     pw = pacing(words)
     L = []
@@ -436,7 +491,7 @@ def main():
         L.append(f"| {r_[0]} | {r_[1]:.2f}-{r_[2]:.2f} | {r_[3]:.1f} | {r_[4]:.1f} | {r_[5]:.1f} | {r_[6]:.1f} | {r_[7]:.1f} | {r_[8]:.1f} | {r_[9]:.1f} |")
     L.append("\n## Music map (original, G major, 112 bpm)")
     L.append(f"Music under the voice: -3 dB duck keyed from words.json, section targets (LU vs voice): "
-             + ", ".join(f"{k} {v_}" for k, v_ in MUSIC_LU.items() if k in mgains) + ". Applied section gains (dB): "
+             + ", ".join(f"{k} {v_}" for k, v_ in MUSIC_LU.items() if any(g.startswith(k) for g in mgains)) + ". Applied section gains (dB): "
              + ", ".join(f"{k} {v_:+.1f}" for k, v_ in mgains.items()) + ".\n")
     L.append("| time s | frame | music |\n|---|---|---|")
     for t, what in sorted(mrows):

@@ -28,3 +28,11 @@ Why Liam: of the premade male English voices on the account, he is the one built
 ## Quota (free tier, 10,000 characters per month)
 - Before the test: 0/10,000. After the test: see BACKLOG/commit notes; the counter can lag.
 - A 170-240 word script is about 1,000-1,400 characters, so there is room for about 6 full takes a month. Generate **once**, when the script is final.
+
+## Takes so far
+| video | characters | raw take | processing | final |
+|---|---|---|---|---|
+| bike-countersteer | 1,251 | 73 s span | pause tightening | 62.8 s, 3.66 words/s |
+| sailing-stones | 1,390 | 96 s span (a slow, "acted" take) | `--breath-before "month one" "year one" "year two" --breath 0.42 --gap-scale 0.9 --target 65.5` (1.24x stretch) | 65.6 s, 3.60 words/s |
+
+Quota after both: 2,641/10,000 (November). The dialogue-heavy script came out much slower at the same settings. For the next dialogue-heavy script, consider `speed` 1.15 so the stretch stays small.

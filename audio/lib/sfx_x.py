@@ -2,7 +2,7 @@
 # Every generator takes an rng and returns mono (n,) or stereo (2, n) float audio at 48 kHz; levels are set by the mixer.
 # GEN maps cue names (used by shots.json fx names and audio/<slug>/sfx.json) to generators.
 import numpy as np
-from dsp import SR, TAU, ns, tt, rng, lp, hp, bp, colored, smooth_noise, fades, phase, modal, pan, st
+from dsp import SR, TAU, ns, tt, rng, lp, hp, bp, colored, smooth_noise, fades, phase, modal, pan, st, place
 import sfx_gen as G
 import instruments as I
 
@@ -186,6 +186,187 @@ def amb_room(dur, r):
     return st(lp(colored(n, r, 1.0), 400, 2) * 0.5 + hp(colored(n, r, 0.0), 6000) * 0.02)
 
 
+# ---------------------------------------------------------------- desert / ice / money / livestream (sailing-stones)
+def gps_ping(r):
+    """tracker ping: soft sonar blip + a quieter echo"""
+    y = np.zeros(ns(0.8))
+    for k, (d, a) in enumerate([(0.0, 1.0), (0.22, 0.35)]):
+        t = tt(0.35)
+        b = np.sin(TAU * 1760 * t) * np.exp(-t / 0.09) * (1 - np.exp(-t / 0.003))
+        b += 0.3 * np.sin(TAU * 3520 * t) * np.exp(-t / 0.04)
+        G._place_mono(y, b * a, d)
+    return y
+
+
+def card_pop(r):
+    """a title/year card slapping onto the screen: paper flick + small thump"""
+    y = np.zeros(ns(0.4))
+    G._place_mono(y, G.whoosh(0.18, r, peak=0.1, f_lo=900, f_hi=5000, width=0.6, tail=0.04, air=0.3) * 0.7, 0.0)
+    t = tt(0.25)
+    G._place_mono(y, np.sin(phase(160 * (1 + 0.6 * np.exp(-t / 0.01)))) * np.exp(-t / 0.04) * 0.9, 0.1)
+    G._place_mono(y, bp(r.standard_normal(len(t)), 1500, 6000, 1) * np.exp(-t / 0.006) * 0.5, 0.1)
+    return y
+
+
+def dust_storm(r, dur=3.2):
+    """a wall of dust rolling over: wind roar swelling in, sand hiss and grit, a few gust whooshes (stereo)"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    env = np.clip(t / 0.8, 0, 1) ** 1.5 * np.clip((dur - t) / 1.2, 0, 1)
+    out = G.breeze(dur, r, 1.6, gust=0.6, bright=1400) * env[None, :]
+    hiss = hp(colored(n, r, 0.3), 2500) * (0.5 + 0.5 * smooth_noise(n, r, 3.0) ** 2)
+    grit = np.zeros(n)
+    k = 0
+    while k < 260:
+        G._place_mono(grit, hp(r.standard_normal(ns(0.004)), 3000) * r.uniform(0.2, 1.0), r.uniform(0, dur - 0.01))
+        k += 1
+    out += st((0.35 * hiss + 0.5 * grit) * env)
+    for g in (0.3, 1.2, 2.0):
+        w = G.whoosh(0.9, r, peak=0.35, f_lo=200, f_hi=1200, width=1.0, tail=0.3, air=0.1) * 0.8
+        place(out, pan(w, r.uniform(-0.6, 0.6)), g)
+    return out
+
+
+def flash_flood(r, dur=3.0):
+    """brown wall of water: low roar + churning rush + debris knocks + a splash on arrival (stereo)"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    env = np.clip(t / 0.35, 0, 1) * np.clip((dur - t) / 1.0, 0, 1)
+    roar = lp(colored(n, r, 1.4), 500, 2) * (0.8 + 0.2 * smooth_noise(n, r, 2.0))
+    rush = G.shape(colored(n, r, 0.6), lambda T, F: np.exp(-0.5 * (np.log2(np.maximum(F[:, None], 20) / 1100) / 1.1) ** 2), 1024, 256)
+    rush *= 0.6 + 0.4 * smooth_noise(n, r, 6.0) ** 2
+    bub = G.bubbles(dur, r, 140.0, 250, 1800, (0.005, 0.02), np.ones(n))
+    y = (1.3 * roar + 0.8 * rush + 0.35 * bub) * env
+    out = np.stack([y, np.roll(y, ns(0.011))])
+    for k in range(4):
+        place(out, pan(impact(r, 0.6) * 0.25, r.uniform(-0.7, 0.7)), r.uniform(0.4, dur - 0.6))
+    place(out, st(splash(r)[: ns(1.2)] * 0.7), 0.05)
+    return out
+
+
+def rain(r, dur=2.8):
+    """rain on a shallow pond: dense drop plinks + hiss"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    env = np.clip(t / 0.4, 0, 1) * np.clip((dur - t) / 0.8, 0, 1)
+    drops = G.bubbles(dur, r, 260.0 * np.ones(n), 1500, 5500, (0.002, 0.008), env, rise=(8, 25))
+    hiss = hp(colored(n, r, 0.2), 3000) * env
+    return np.stack([drops * 0.8 + 0.25 * hiss, np.roll(drops, ns(0.007)) * 0.8 + 0.25 * np.roll(hiss, 97)])
+
+
+def _ice_tick(r, f0=None):
+    """one crack in thin ice: a sharp click + the dispersive 'pew' (high to low chirp) that ice sheets sing"""
+    d = r.uniform(0.05, 0.12)
+    t = tt(d)
+    f0 = f0 or r.uniform(4500, 8000)
+    f = 600 + (f0 - 600) * np.exp(-t / (d / 3))
+    y = np.sin(phase(f)) * np.exp(-t / (d / 2.5))
+    y += hp(r.standard_normal(len(t)), 2500) * np.exp(-t / 0.0015) * 0.8
+    return y
+
+
+def ice_crack(r, dur=1.3):
+    """thin ice crackling: a burst of cracks thinning out, two bigger ones with a low knock"""
+    y = np.zeros(ns(dur + 0.2))
+    tm = 0.0
+    while tm < dur:
+        G._place_mono(y, _ice_tick(r) * r.uniform(0.3, 0.9), tm)
+        tm += r.exponential(0.035 + 0.12 * tm / dur)
+    for tb in (0.0, 0.45):
+        G._place_mono(y, _ice_tick(r, 9000) * 1.2, tb)
+        t = tt(0.2)
+        G._place_mono(y, np.sin(phase(180 * (1 + 0.4 * np.exp(-t / 0.01)))) * np.exp(-t / 0.05) * 0.6, tb)
+    return fades(y, 0.0, 0.1)
+
+
+def ice_pane(r, dur=1.6):
+    """a pane of ice grinding and shoving: high stick-slip scrape + crunch ticks"""
+    c = G.creak(dur, r, 60, 140, [(1300, 10, 1.0), (2300, 12, 0.7), (3900, 14, 0.45), (6100, 16, 0.25)],
+                [(0, 0), (0.2, 1), (0.8, 0.9), (1, 0)], rough=0.3, noise=0.2)
+    t = tt(dur)
+    scrape = bp(r.standard_normal(len(t)), 1200, 7000, 1) * np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 1.5
+    scrape *= 0.5 + 0.5 * smooth_noise(len(t), r, 12) ** 2
+    y = c / (np.abs(c).max() + 1e-9) + 0.25 * scrape
+    for k in range(5):
+        G._place_mono(y, _ice_tick(r) * 0.4, r.uniform(0.05, dur - 0.15))
+    return fades(y, 0.02, 0.15)
+
+
+def sliding_rock(r, dur=1.4):
+    """a heavy rock dragging over wet mud/ice: low gritty scrape + rumble, no squeal"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    env = np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 1.2
+    grind = bp(colored(n, r, 0.8), 120, 1600, 2) * (0.6 + 0.4 * smooth_noise(n, r, 15) ** 2)
+    rumble = lp(colored(n, r, 1.6), 140, 2)
+    grit = np.zeros(n)
+    for k in range(60):
+        G._place_mono(grit, bp(r.standard_normal(ns(0.006)), 1500, 5000, 1) * r.uniform(0.1, 0.6), r.uniform(0, dur - 0.01))
+    return fades((grind + 0.9 * rumble + 0.6 * grit) * env, 0.02, 0.1)
+
+
+def ka_ching(r):
+    """cash register: drawer slide-clunk, the bell 'ka-CHING', a few coins"""
+    y = np.zeros(ns(1.6))
+    t = tt(0.12)
+    G._place_mono(y, (np.sin(phase(140 * (1 + 0.5 * np.exp(-t / 0.01)))) * np.exp(-t / 0.03)
+                      + bp(r.standard_normal(len(t)), 800, 5000, 1) * np.exp(-t / 0.008) * 0.8) * 0.8, 0.0)   # 'ka'
+    bell = modal(1.4, [(2637, 1.0, 0.45), (3951, 0.6, 0.35), (5274, 0.35, 0.22), (7040, 0.2, 0.12)], r)
+    bell += modal(1.4, [(2650, 0.5, 0.4), (3968, 0.3, 0.3)], r)                       # a slightly detuned 2nd bell
+    G._place_mono(y, bell * 1.1, 0.07)                                                  # 'CHING'
+    G._place_mono(y, G.whoosh(0.25, r, peak=0.05, f_lo=1200, f_hi=4000, width=0.6, tail=0.08, air=0.2) * 0.4, 0.05)
+    for k in range(4):
+        G._place_mono(y, G.clink(r, r.uniform(3500, 6000)) * 0.35, 0.18 + 0.05 * k + r.uniform(0, 0.02))
+    return fades(y, 0.0, 0.2)
+
+
+def sign_crash(r):
+    """a wooden sign splitting and slapping flat: crack, splinters, a flat wood slap, rattling bits"""
+    y = np.zeros(ns(1.8))
+    G._place_mono(y, G.wood_crack(r) * 0.9, 0.0)
+    G._place_mono(y, impact(r, 0.8) * 0.6, 0.0)
+    t = tt(0.4)
+    slap = bp(r.standard_normal(len(t)), 300, 4000, 1) * np.exp(-t / 0.02) + np.sin(phase(110 + 0 * t)) * np.exp(-t / 0.06)
+    G._place_mono(y, slap * 0.9, 0.42)
+    for k in range(5):
+        G._place_mono(y, modal(0.15, [(r.uniform(400, 900), 0.8, 0.02), (r.uniform(1200, 2400), 0.5, 0.012)], r) * 0.35,
+                      0.5 + 0.07 * k + r.uniform(0, 0.03))
+    return fades(y, 0.0, 0.2)
+
+
+def live_ping(r, n_pings=1):
+    """livestream notification: soft two-note chime (E6 -> B6), optionally a flurry of them"""
+    y = np.zeros(ns(0.5 + 0.11 * n_pings))
+    for k in range(n_pings):
+        a = 1.0 if k == 0 else r.uniform(0.35, 0.7)
+        m0 = 88 + int(r.integers(-2, 3)) * (k > 0)
+        for j, m in enumerate((m0, m0 + 7)):
+            t = tt(0.3)
+            G._place_mono(y, np.sin(TAU * I.m2f(m) * t) * np.exp(-t / 0.08) * (1 - np.exp(-t / 0.002)) * a, 0.11 * k + 0.07 * j)
+    return y
+
+
+def live_flurry(r):
+    return live_ping(r, 7)
+
+
+def amb_desert(dur, r):
+    """open playa: low wide wind, very sparse, almost silent (stereo)"""
+    out = G.breeze(dur, r, 0.6, gust=0.08, bright=600)
+    return out
+
+
+def amb_alien(dur, r):
+    """fantasy cutaway room tone: a soft detuned sci-fi hum with a slow warble (stereo)"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    w = 1 + 0.004 * np.sin(TAU * 0.7 * t)
+    y = sum(a * np.sin(TAU * f * w * t + k) for k, (f, a) in enumerate([(110, 1.0), (110.7, 0.8), (220.4, 0.35), (330, 0.15)]))
+    y *= 0.8 + 0.2 * np.sin(TAU * 0.23 * t)
+    return np.stack([y, np.roll(y, ns(0.013))]) * 0.5 + 0.05 * st(hp(colored(n, r, 0.5), 5000))
+
+
+
 # cue name -> (generator, default level LU vs the voice, short description)
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
@@ -206,7 +387,7 @@ GEN = {
     "question": (question, -16, "rising two-note pizzicato 'hmm?'"),
     "boing": (boing, -13, "spring boing"),
     "sweat_drop": (drip, -16, "drip blip"),
-    "splash": (splash, -10, "splash"),
+    "splash": (splash, -14, "splash"),
     "riser": (riser, -16, "noise riser ending on the cue time"),
     "bike_bell": (bike_bell, -11, "bicycle thumb bell, ring-ring"),
     "freewheel": (freewheel, -16, "coasting freewheel ratchet"),
@@ -214,8 +395,21 @@ GEN = {
     "crash": (crash, -9, "bike crash: thump, frame clatter, spinning wheel"),
     "lean": (lean, -15, "swoop of the bike leaning into a turn"),
     "pedal": (pedal, -18, "chain rattle on pedal strokes"),
+    "gps_ping": (gps_ping, -16, "tracker ping: sonar blip + echo"),
+    "year_badge": (card_pop, -16, "title card pop: paper flick + thump"),
+    "card_pop": (card_pop, -16, "title card pop: paper flick + thump"),
+    "dust_storm": (dust_storm, -15, "dust storm rolling in: wind roar, sand hiss, gusts"),
+    "flash_flood": (flash_flood, -15, "flash flood: water roar, rush, debris, splash"),
+    "rain": (rain, -16, "rain on a shallow pond"),
+    "ice_crack": (ice_crack, -14, "thin ice crackling, dispersive 'pew' cracks"),
+    "ice_pane": (ice_pane, -15, "ice pane grinding / shoving"),
+    "sliding_rock": (sliding_rock, -15, "rock scraping over wet mud and ice"),
+    "ka_ching": (ka_ching, -10, "cash register ka-ching"),
+    "sign_crash": (sign_crash, -9, "wooden sign splitting and slapping flat"),
+    "live_ping": (live_ping, -15, "livestream notification chime"),
+    "live_flurry": (live_flurry, -14, "a flurry of livestream notification chimes"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
-SILENT = {"music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line"}
-BEDS = {"road": amb_road, "track": amb_road, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
+SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line"}
+BEDS = {"road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
         "room": amb_room}

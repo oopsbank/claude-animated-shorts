@@ -44,6 +44,11 @@ LEAD, TAIL = 0.04, 0.20                   # s of silence kept before the first /
 MAX_GAP = {".": 0.20, "!": 0.20, "?": 0.22, ",": 0.12, ";": 0.14, ":": 0.14, "-": 0.12, "": 0.10}
 XFADE = 0.008
 BREATH = 0.32                             # kept after a closing quote and before "You see," / "Wait,"
+MARKS = None                              # --breath-before phrases: they get the long breath
+MARK_BREATH = 1.4                         # breath before a --breath-before phrase, x BREATH
+GAP_SCALE = 1.0                           # --gap-scale: multiplies every gap limit and the breath
+TARGET = None                             # --target: final voice length in s (rubberband time-stretch, max 1.25x)
+BREATH_BEFORE = re.compile(r"(you see|wait)\b")   # --breath-before adds phrases (e.g. "Month one", "Year one")
 FLOOR_DB = 45.0                           # word edges: 10 ms RMS above (speech peak level - FLOOR_DB)
 
 
@@ -186,7 +191,7 @@ def gap_limit(word):
     p = re.sub(r"[\"'”’)\]]+$", "", word)[-1:]
     if p in "—–":
         p = "-"
-    return MAX_GAP.get(p, MAX_GAP[""])
+    return MAX_GAP.get(p, MAX_GAP[""]) * GAP_SCALE
 
 
 def cut(x, a, b):
@@ -207,7 +212,9 @@ def tighten(words, x):
         e, s = words[i]["end"], words[i + 1]["start"]
         lim = gap_limit(words[i]["word"])
         nxt = " ".join(w["word"] for w in words[i + 1:i + 3]).lower()
-        if re.search(r"[.!?,][\"”’]$", words[i]["word"]) or re.match(r"(you see|wait)\b", nxt):
+        if MARKS and MARKS.match(nxt):
+            lim = BREATH * MARK_BREATH   # before a time marker / pivot ("Year one", "You see,"): the longest breath
+        elif re.search(r"[.!?,][\"”’]$", words[i]["word"]) or BREATH_BEFORE.match(nxt):
             lim = BREATH                                    # end of a quote, or a breath before the pivot / mystery
         elif lim >= 0.2:
             lim += 0.03 * math.sin(i * 2.399)               # sentence gaps vary 0.17-0.23 s, not one fixed value
@@ -221,8 +228,9 @@ def tighten(words, x):
         p = np.concatenate([[0], np.cumsum(10 ** (db[a:b] / 10))])
         j = int(np.argmin(p[k:] - p[:-k])) if b - a > k else 0
         c0 = a + j
+        n0 = len(x)
         x = cut(x, c0, c0 + k)
-        dt = k / SR
+        dt = (n0 - len(x)) / SR        # the crossfade removes XFADE more than k: shift by what was really removed
         for w in words[i + 1:]:
             w["start"] -= dt
             w["end"] -= dt
@@ -264,6 +272,31 @@ def pacing(words):
             "mean_gap_s": round(float(np.mean(gaps)) if gaps else 0, 3)}
 
 
+def stretch(x, tempo, tmpdir):
+    """pitch- and formant-preserving time-stretch (ffmpeg rubberband, short window for speech); time scales by 1/tempo"""
+    pad = int(0.5 * SR)                                  # rubberband drops the last ~30 ms: pad, stretch, cut back
+    raw = np.concatenate([x, np.zeros(pad)]).astype(np.float32).tobytes()
+    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af",
+                          f"rubberband=tempo={tempo:.5f}:pitchq=quality:formant=preserved:transients=mixed:"
+                          "detector=soft:window=short", "-f", "f32le", "-"], input=raw, check=True,
+                         capture_output=True).stdout
+    y = np.frombuffer(out, np.float32).astype(np.float64)[: int(round(len(x) / tempo))]
+    print(f"time-stretch {tempo:.3f}x: {len(x) / SR:.2f} s -> {len(y) / SR:.2f} s")
+    return y
+
+
+def check_alignment(words, x):
+    """every word must sit on sound, at the start AND the end of the file (a drift once silenced the last word)"""
+    db = rms_db(x)
+    thr = np.percentile(db[db > -70], 95) - FLOOR_DB
+    bad = [(i, w["word"], round(w["start"], 2)) for i, w in enumerate(words)
+           if db[int(w["start"] * SR): max(int(w["end"] * SR), int(w["start"] * SR) + 1)].max() < thr]
+    if bad:
+        raise SystemExit(f"ALIGNMENT ERROR: {len(bad)} words on silence: {bad[:6]}")
+    if words[-1]["end"] > len(x) / SR + 0.005:
+        raise SystemExit(f"ALIGNMENT ERROR: last word ends {words[-1]['end']:.3f} s, after the audio ({len(x) / SR:.3f} s)")
+
+
 def process(resp, out_dir):
     x = decode_mp3(base64.b64decode(resp["audio_base64"]), out_dir)
     al = resp.get("alignment") or resp["normalized_alignment"]   # original spelling, as in the script
@@ -272,15 +305,27 @@ def process(resp, out_dir):
     refine(words, x)
     before = pacing(words)
     x, cuts = tighten(words, x)
+    tempo = 1.0
+    if TARGET:
+        cur = (words[-1]["end"] + TAIL) - max(0.0, words[0]["start"] - LEAD)
+        tempo = cur / TARGET
+        if tempo > 1.25:
+            raise SystemExit(f"needs a {tempo:.2f}x stretch: over the 1.25x quality limit")
+        if abs(tempo - 1) > 0.005:
+            x = stretch(x, tempo, out_dir)
+            for w in words:
+                w["start"] /= tempo
+                w["end"] /= tempo
     x = trim(words, x)
     peak = float(np.max(np.abs(x)))
     if peak > 0.98:
         x *= 0.98 / peak
+    check_alignment(words, x)
     write_wav24(os.path.join(out_dir, "voice.wav"), x)
     wj = [{"word": w["word"], "start": round(w["start"], 3), "end": round(w["end"], 3)} for w in words]
     with open(os.path.join(out_dir, "words.json"), "w") as f:
         json.dump(wj, f, indent=1, ensure_ascii=False)
-    rep = {"voice_id": VOICE_ID, "model_id": MODEL_ID, "settings": SETTINGS, "duration_s": round(len(x) / SR, 3),
+    rep = {"tempo": round(tempo, 4), "gap_scale": GAP_SCALE, "voice_id": VOICE_ID, "model_id": MODEL_ID, "settings": SETTINGS, "duration_s": round(len(x) / SR, 3),
            "pacing_api_raw": raw, "pacing_refined": before, "pacing_final": pacing(wj), "pause_cuts": cuts}
     with open(os.path.join(out_dir, "voice_report.json"), "w") as f:
         json.dump(rep, f, indent=1)
@@ -289,6 +334,7 @@ def process(resp, out_dir):
 
 
 def main():
+    global MARKS, BREATH, GAP_SCALE, TARGET
     ap = argparse.ArgumentParser()
     ap.add_argument("script", nargs="?", help="SCRIPT.md (or a .txt with the plain voice-over)")
     ap.add_argument("out_dir")
@@ -296,7 +342,20 @@ def main():
     ap.add_argument("--go", action="store_true", help="really call the API (spends characters)")
     ap.add_argument("--force", action="store_true", help="ignore a cached _tts_response.json (spends characters)")
     ap.add_argument("--from-response", help="process an existing API response JSON, no API call")
+    ap.add_argument("--breath-before", action="append", default=[],
+                    help="phrase that gets a breath before it (repeatable), e.g. 'month one'")
+    ap.add_argument("--breath", type=float, help=f"breath length in s (default {BREATH})")
+    ap.add_argument("--gap-scale", type=float, help="multiply every pause limit (e.g. 0.85 for a slow take)")
+    ap.add_argument("--target", type=float, help="final voice length in s: time-stretch the take to it (<= 1.25x)")
     a = ap.parse_args()
+    if a.breath_before:
+        MARKS = re.compile(r"(" + "|".join(re.escape(p.lower()) for p in a.breath_before) + r")\b")
+    if a.breath:
+        BREATH = a.breath
+    if a.gap_scale:
+        GAP_SCALE = a.gap_scale
+    if a.target:
+        TARGET = a.target
     os.makedirs(a.out_dir, exist_ok=True)
     cache = os.path.join(a.out_dir, "_tts_response.json")
 

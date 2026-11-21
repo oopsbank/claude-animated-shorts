@@ -88,3 +88,8 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P2 Mystery and payoff sections sit 11 LU under the speech (reference 5-10). Check by ear.
 - [ ] P2 A motorbike engine/rev SFX for riding shots.
 - [ ] P3 A listening pass by the Director (all checks so far are numbers and waveforms).
+- [x] P1 sailing-stones voice + mix: `audio/sailing-stones/` (Liam, voiced ONCE, 1,390 characters; quota 2,641/10,000). 65.7 s = **1971 frames** (`length.json`), 3.60 words/s, -14.0 LUFS, -1.2 dBTP, breaths per the voicing notes, loop ending. Preflight: 0 length/word errors. Audio review round 7 (sonnet): **8.0, PASS** (rounds 1-6: 7.2-7.8).
+- [ ] P1 Producer: bike-countersteer `words.json` was corrected (it drifted up to 0.26 s late by the end; the audio is unchanged). Re-render video 1's captions and lip sync only if the Director wants it.
+- [ ] P2 sailing-stones: listen to the 1.24x time-stretched voice on the draft for flutter or "phasey" artefacts (the checks so far are numbers and waveforms). If it flutters, try `--gap-scale 0.8` with a lower `--target` stretch, or ask for a second take next month.
+- [ ] P2 sailing-stones: when the engine's picture differs, re-run `build_mix.py audio/sailing-stones --shots scripts/sailing-stones/shots.json --ring 0.35` (free); `music.json` and `sfx.json` hold the plan.
+- [ ] P3 A snore/zzz SFX for sleeping gags (`zzz` is silent for now).

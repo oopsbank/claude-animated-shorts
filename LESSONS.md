@@ -64,6 +64,11 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Snap word edges to the waveform: the API's end time before a comma includes the pause.
 - Start a music sting at the punchline word's **end**. Dip the music 3 dB under quiet sentence ends. Ramp rising section gains over ~1.2 s. Cue sounds from the story: a camera shake is not an automatic impact.
 - Limit to -1.2 dBTP: later steps and codecs overshoot -1.0.
+- A pause cut with a crossfade removes the gap **plus** the crossfade: shift later words by the samples really removed. The 8 ms-per-cut drift put video 1's words up to 0.26 s late and the last word of video 2 on silence. `tts.py` now refuses to write when any word sits on silence; check the END of the file, not just the first seconds.
+- A slow TTS take (video 2: 96 s raw for 235 words) is fixed in post, not re-voiced: tighten pauses, then use a formant-preserving rubberband stretch (`tts.py --target`, at most 1.25x; pad before stretching, because rubberband drops the last ~30 ms). Timestamps scale exactly by 1/tempo.
+- SFX clutter is what holds the audio score down. Whoosh only on a change of *place*, never two whooshes within 0.6 s, never a transition whoosh within 0.5 s of a story cue, and duck every SFX under speech (-4 dB; -6 dB for long beds like storms and floods).
+- A section's music gain *cut* must finish before its first downbeat (the old gain made the first kick hit over the voice); a *raise* starts at it.
+- Text-only reviewers plateau around 7.6-7.8 on "comedy timing" and "SFX" and start contradicting each other. Declutter structurally rather than cue by cue, and keep picture sync (an SFX lands when the picture shows the event) over a reviewer's wish to move it.
 
 ## Process and QA
 - Fresh LLM reviewers disagree by about ±1 on the same script, so "all five ≥ 9" is noise-bound: 8 rounds plateaued at 7-9. Gate scripts on the panel median ≥ 8, no swipe before 50 s and facts ≥ 9, then let real retention data judge.
