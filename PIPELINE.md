@@ -111,7 +111,10 @@ The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its p
     - Facebook page "Some Crazy Things" `6b018635ece6dfde5f438054`.
     - No Instagram yet.
   - `createPost(input: {channelId, text, assets: {videos: [{url, thumbnailUrl}]}, mode: shareNow|customScheduled|addToQueue, dueAt, metadata: {youtube: {title, privacy, madeForKids: false, categoryId}}, saveToDraft})`.
-  - **The video and thumbnail must be at public URLs** that stay up until the post goes out; Buffer has no file upload. TikTok pulls from a URL and may need a verified domain.
+  - **The video must be at a public URL** that stays up until the post goes out; Buffer has no file upload. Put final files in the public repo **`oopsbank/some-crazy-things-media`** (GitHub Pages: `https://oopsbank.github.io/some-crazy-things-media/<file>`), finished files only.
+  - **Custom thumbnails are refused** ("social networks do not accept custom video thumbnail images"). On YouTube the cover-as-first-3-frames is what we have. On Instagram and TikTok, set `assets[].video.metadata.thumbnailOffset: 0` (ms) to pick the cover frame.
+  - TikTok pulls from a URL and may need a verified domain.
+  - Tested 2026-11-21: a YouTube **draft** was created (`6b019df9d5eabfb8cc337d28`, status draft), so Buffer accepted the Pages URL.
   - Test with `saveToDraft: true` first.
   - Fallback: the Director posts by hand.
 - Posting by hand (Upload-Post was removed on 2026-11-21). Prepare the cover cut, `thumbnail.png`, a title, a YouTube description and an Instagram/Facebook caption under 255 bytes (Facebook cuts longer ones), and record them in `videos/<slug>/NOTES.md`.
