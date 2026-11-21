@@ -1,6 +1,12 @@
 # QA checklists
 
-Every task ends with these checks: first the automatic checks, then your own look, then an independent reviewer. A criterion passes at **7/10 or higher**, and all automatic checks must pass.
+Every task ends with these checks: first the automatic checks, then your own look, then an independent reviewer.
+
+**The standard for EVERYTHING is 9/10 or higher** (the Director, 2026-11-21): scripts, sets, plates, characters, props, fx, the engine, audio, storyboards, drafts, thumbnails.
+- Every criterion must score ≥ 9, and all automatic checks must pass.
+- Fix and re-review with fresh reviewers until it passes. There is no round cap.
+- Report progress to the Producer every 3 rounds, so the Director can step in.
+- Reviewers never see earlier drafts or the target score.
 
 ## Reviewer protocol
 Spawn a fresh agent. Give it:
@@ -38,7 +44,7 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
   2. a curious adult on YouTube Shorts;
   3. a regular viewer of the leading channels, who compares directly with their story engine.
 
-  Plus one **comedy reviewer** (are the gags actually funny?) and one **fact checker** (is every claim true and sourced?).
+  Plus one **comedy reviewer** (are the gags actually funny, in the Director's preferred **absurd** style: absurd escalation and imagined cutaways, framed as a character's fantasy, never as fact?) and one **fact checker** (is every claim true and sourced?).
   - **Pass: ALL five reviewers give ≥ 9/10** (the 3 engagement reviewers, comedy and facts), and no swipe point before 50 s. The Director, 2026-11-21: "fix until everyone is 9 or above".
   - **No round cap:** keep rewriting until the panel passes. Every round uses fresh reviewers with no view of earlier drafts or of the target score, so the scores don't inflate. Report progress to the Producer every 3 rounds.
   - Story-engine conventions (for example "You see," as line 2) are tools, not rules: drop one if the panel says it hurts.

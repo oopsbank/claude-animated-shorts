@@ -70,6 +70,21 @@ Ordered by impact per unit of cost. "Area" is who does it.
 | AI image generation for backgrounds | Fast detailed backgrounds | Not available here; style drift and gibberish text (Segment Zero shows signs of this); no control of geometry and depth | No. |
 | Paid stylised asset packs | Denser sets faster | Needs the Director's budget and licence check | Ask if wanted. |
 
+## 3b. Props and sets up close (720p crops from the four uploaded videos, 2026-11-21)
+What their 3D objects look like, and how that differs from our flat low-poly with Freestyle ink:
+- **Stylised PBR, not flat toon.** Smooth rounded shapes with **bevelled edges that catch a highlight**. Glossy painted metal (the locomotive's teal boiler), **gold metallic trim**, varnished wood, glass lanterns with warm emission and glow. There are soft gradients across every surface, not flat fills.
+- **Little or no ink on 3D props.** The locomotive, the bowler hat, the coil and the cabin read by light and shape. The ink belongs to the 2D characters. (The older `outlines.md` found thin lines on some sets; keep any line subtle.)
+- **Geometric detail where the story looks:** a rope wound around a tube, rivets, planks, gold bands, hay. Fur and grass are particles (a hay bale, a meadow).
+- **Soft contact shadows and ambient occlusion** in every crevice; warm key with cool fill; **DOF** behind.
+
+**Recipe for our Blender stack:** Cycles stills, so the cost is fine.
+1. Principled BSDF, roughness 0.3-0.5 for paint and wood; metallic 1 for gold trim (#d9a441); clearcoat 0.3-0.5 for a toy-like gloss.
+2. A **Bevel node** in the normal (radius 1-3 cm), or modifier bevels, so every edge gets a highlight.
+3. A soft key light (a large area light or the sun with angle 5-10°), a sky fill, AO from Cycles; emission ×3 on lamps plus our warm bloom.
+4. Turn Freestyle **off** for props, or keep it very thin (≤ 1 px, 50% alpha). Keep it only for silhouettes far away.
+5. Hair-particle grass and hay where needed; procedural rope, rivets and planks for hero props.
+6. Check: a look test of one hero prop next to a reference crop, scored by the panel (≥ 9) before a whole set is built.
+
 ## 4. Plan (BACKLOG)
 - **P1:**
   - vignette and split toning in the grade (A1-A2);

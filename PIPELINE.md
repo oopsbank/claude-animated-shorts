@@ -116,7 +116,7 @@ The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its p
 2. **Build** the smallest thing that does the task.
 3. **Check it yourself** against the QA checklist for your area. Run the automatic checks, render previews, and look at zoomed crops.
 4. **Get an independent review.** Spawn a fresh reviewer agent with the previews, the relevant rules and the reference frames. Ask for a score per criterion out of 10 and a numbered fix list. It must not have seen your work in progress.
-5. **Fix and repeat** until every criterion is 7 or higher and the automatic checks pass. Stop after 4 rounds and record what is still missing in `BACKLOG.md`.
+5. **Fix and repeat** until every criterion is **9 or higher** and the automatic checks pass: the Director's standard for everything. There is no round cap. Use fresh reviewers each round, and report to the Producer every 3 rounds.
 6. **Learn.** Every mistake you found and fixed becomes a one-line rule in `LESSONS.md` (general) or your area's rules file (specific). Phrase it as an instruction for next time.
 7. **Update `BACKLOG.md`**: delete what you finished (name it in the commit), and add what you discovered. Then commit and push.
 
