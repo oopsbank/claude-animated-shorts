@@ -42,13 +42,13 @@ def broom_insert(pose='broom_upright', w=1080, h=1920, sleeve='#2f6fb3', skin='#
         root = (x - 0.16 * w, h + 60); wrist = (x - 0.07 * w, y + 6 * u / 2.36)
         if alpha < 255:
             g = Canvas.__new__(Canvas); g.im = Image.new('RGBA', C.im.size, (0, 0, 0, 0)); g.d = ImageDraw.Draw(g.im)
-            g.stroke([root, wrist], 26 * u / 2.36, mix(arm_c, (255, 255, 255), 0.5)); g.im.putalpha(g.im.getchannel('A').point(lambda v: v * alpha // 255))
+            g.stroke([root, wrist], 26 * u / 2.36 + 2 * 6, mix(INK, (255, 255, 255), 0.3)); g.stroke([root, wrist], 26 * u / 2.36, mix(arm_c, (255, 255, 255), 0.35)); g.im.putalpha(g.im.getchannel('A').point(lambda v: v * alpha // 255))
             C.im.alpha_composite(g.im); C.d = ImageDraw.Draw(C.im); _hand(C, x, y, u, skin, alpha); return
         C.stroke([root, wrist], 26 * u / 2.36 + 2 * 8, INK); C.stroke([root, wrist], 26 * u / 2.36, arm_c)
         _hand(C, x, y, u, skin)
     if P['flick']:                                        # a ghost hand where the flick started, then speed lines
         sgn = P['flick']; gx = hx - sgn * 0.22 * w
-        arm(gx, hy, alpha=150)
+        arm(gx, hy, alpha=200)
         for i, dy in enumerate((-0.02, 0.005, 0.03)):
             x0 = hx - sgn * (0.10 + 0.03 * i) * w; x1 = gx + sgn * 0.02 * w
             C.d.line([(x0 * S, (hy + dy * h) * S), (x1 * S, (hy + dy * h) * S)], fill=mix(INK, (255, 255, 255), 0.35), width=int(9 * S))

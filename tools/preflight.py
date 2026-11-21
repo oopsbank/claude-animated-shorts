@@ -112,8 +112,8 @@ def main():
                     add('WARN', sid, f"{c.get('id')} points_at '{t}' is not a plate target: they will point off-screen")
         RV.layout_shot(s2, meta)
         for c in cs:
-            if abs(float(c.get('x', 0.5)) - float(before.get(c.get('id'), 0.5))) > 1e-3:
-                add('ERROR', sid, f"{c.get('id')} x {before[c.get('id')]} overlaps another body: the engine moves it to {c['x']}; set x yourself")
+            if abs(float(c.get('x', 0.5)) - float(before.get(c.get('id'), 0.5))) > 0.005:
+                add('ERROR', sid, f"{c.get('id')} x {before[c.get('id')]} overlaps another body or the frame edge: the engine moves it to {c['x']}; set x yourself")
             if c.get('_depth'):
                 add('WARN', sid, f"{c.get('id')} stepped back to {c['_depth']}x (two-shot too wide for {s['cam']}): use a closer cam or fewer people")
         heights = {}
@@ -149,6 +149,8 @@ def main():
     out = [f"# Preflight: {doc.get('title', a.shots)}", '',
            f"{len(shots)} shots, {n} words, {spans[-1]['f1'] / FPS:.1f} s ({'real' if a.words else 'stand-in'} timings). "
            f"**{err} errors, {warn} warnings.**", '', '| level | shot | finding |', '|---|---|---|']
+    noted = {s.get('id') for s in shots if s.get('note')}
+    rows = [(('WARN (noted)' if l == 'WARN' and sid in noted else l), sid, m) for l, sid, m in rows]
     out += [f'| {l} | {s} | {m} |' for l, s, m in sorted(rows, key=lambda r: (r[0] != 'ERROR', r[1]))]
     md = '\n'.join(out) + '\n'
     if a.out: open(a.out, 'w').write(md)

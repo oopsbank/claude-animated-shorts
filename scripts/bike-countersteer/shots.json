@@ -135,7 +135,7 @@
    "characters": [
     {
      "id": "instructor",
-     "x": 0.3,
+     "x": 0.308,
      "beats": [
       {
        "expr": "neutral",
@@ -161,11 +161,15 @@
     },
     {
      "id": "dale",
-     "x": 0.7,
+     "x": 0.768,
      "beats": [
       {
        "expr": "nervous",
-       "at_word": 7
+       "at_word": 7,
+       "arm_pose": [
+        "chin",
+        "hang"
+       ]
       }
      ],
      "build": "stout",
@@ -184,8 +188,10 @@
    "fx": [
     {
      "name": "question_mark",
-     "x": 0.66,
+     "x": 0.768,
      "y": 0.38,
+     "on": "dale",
+     "size": 0.45,
      "at_word": 7
     }
    ],
@@ -217,6 +223,7 @@
      "name": "exclaim",
      "x": 0.55,
      "y": 0.3,
+     "size": 0.45,
      "at_word": 9
     },
     {
@@ -265,6 +272,7 @@
       }
      ],
      "talk": true,
+     "scale": 1.15,
      "build": "adult",
      "skin": "#c98e63",
      "shirt": "#2f6fb3",
@@ -326,14 +334,12 @@
      "x": 0.5,
      "beats": [
       {
-       "expr": "grin",
        "at_word": 1,
        "arm_pose": "ride"
       },
       {
        "body_lean": -28,
        "bike_lean": 3,
-       "expr": "smug",
        "at_word": 7
       }
      ],
@@ -490,12 +496,14 @@
      "name": "sweat_drop",
      "x": 0.58,
      "y": 0.32,
+     "size": 0.45,
      "at_word": 2
     },
     {
      "name": "music_note",
      "x": 0.3,
      "y": 0.4,
+     "size": 0.45,
      "at_word": 15
     }
    ],
@@ -585,7 +593,11 @@
       },
       {
        "expr": "nervous",
-       "at_word": 9
+       "at_word": 9,
+       "arm_pose": [
+        "chin",
+        "hang"
+       ]
       }
      ],
      "build": "stout",
@@ -606,6 +618,9 @@
      "name": "sweat_drop",
      "x": 0.62,
      "y": 0.3,
+     "on": "dale",
+     "dx": 0.12,
+     "size": 0.45,
      "at_word": 9
     }
    ],
@@ -654,6 +669,9 @@
      "name": "question_mark",
      "x": 0.65,
      "y": 0.25,
+     "on": "dale",
+     "dx": 0.14,
+     "size": 0.5,
      "at_word": 10
     }
    ],
@@ -888,12 +906,12 @@
    "id": "s15",
    "text": "Riders do it without noticing, but the fixed bars stopped Dale's hands from doing it.",
    "set": "track",
-   "cam": "track_wide",
+   "cam": "track_med",
    "light": "golden",
-   "size": "wide",
+   "size": "medium",
    "camera": {
     "move": "push_in",
-    "amount": 0.1
+    "amount": 0.06
    },
    "characters": [
     {
@@ -969,10 +987,11 @@
    "camera": {
     "move": "hold"
    },
+   "note": "pit_med is the only cam with the chalkboard, so the two-shot steps back to 0.86x; the engine grade lifts the dark golden plate (g0.64).",
    "characters": [
     {
      "id": "instructor",
-     "x": 0.52,
+     "x": 0.678,
      "beats": [
       {
        "expr": "stern",
@@ -1007,7 +1026,7 @@
     },
     {
      "id": "dale",
-     "x": 0.2,
+     "x": 0.248,
      "beats": [
       {
        "expr": "nervous",
@@ -1019,7 +1038,11 @@
       },
       {
        "expr": "shock",
-       "at_word": 8
+       "at_word": 8,
+       "arm_pose": [
+        "hip",
+        "hip"
+       ]
       }
      ],
      "build": "stout",
@@ -1038,8 +1061,11 @@
    "fx": [
     {
      "name": "exclaim",
-     "x": 0.3,
+     "x": 0.248,
      "y": 0.3,
+     "on": "dale",
+     "anchor": "above",
+     "size": 0.45,
      "at_word": 8
     }
    ],
@@ -1096,6 +1122,7 @@
      "name": "exclaim",
      "x": 0.62,
      "y": 0.28,
+     "size": 0.45,
      "at_word": 3
     },
     {
@@ -1142,14 +1169,23 @@
       },
       {
        "expr": "nervous",
-       "at_word": 5
+       "at_word": 5,
+       "arm_pose": [
+        "hold",
+        "chin"
+       ]
       },
       {
        "expr": "smile",
-       "at_word": 13
+       "at_word": 13,
+       "arm_pose": [
+        "hold",
+        "hip"
+       ]
       }
      ],
      "hat": null,
+     "scale": 1.2,
      "build": "stout",
      "skin": "#ffe2c2",
      "shirt": "#d9452f",

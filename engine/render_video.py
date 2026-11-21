@@ -374,6 +374,7 @@ def place_fx(base, k, f, chars):
             c = next((c for c in chars if c['id'] == e['on']), None)
             if c and c['bbox']:
                 if e.get('anchor', 'head') == 'head': x, y = c['head'][0] + float(e.get('dx', 0)) * W, c['head'][1] - size * 0.15
+                elif e['anchor'] == 'above': x, y = c['head'][0] + float(e.get('dx', 0)) * W, c['head'][1] - size * 0.5   # symbol clear of the head
                 elif e['anchor'] == 'bars': x, y = (c['bbox'][0] + c['bbox'][2]) / 2, c['bbox'][1] + 0.42 * (c['bbox'][3] - c['bbox'][1])
                 else: x, y = (c['bbox'][0] + c['bbox'][2]) / 2, c['ground_y']
         cy = {'dust_puff': 0.72, 'splash': 0.72, 'lean_arc': 1.0}.get(e['name'], 0.5)             # ground-anchored effects
