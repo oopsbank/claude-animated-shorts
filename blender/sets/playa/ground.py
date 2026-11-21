@@ -2,7 +2,7 @@
 import bpy, math
 import common as C
 
-def clay_mat(name="clay", scale=3.2, c0=(0.31, 0.215, 0.135), c1=(0.47, 0.35, 0.23), crack=(0.24, 0.16, 0.10), width=0.035):
+def clay_mat(name="clay", scale=3.2, c0=(0.31, 0.215, 0.135), c1=(0.47, 0.35, 0.23), crack=(0.33, 0.235, 0.16), width=0.02):
     """Cracked lake-bed clay: Voronoi cells (polygons) with dark crack lines, raised curled edges via bump,
     a soft large-scale tint wobble. Object coordinates, so cells stay the same size across the plane."""
     m = bpy.data.materials.new(name); m.use_nodes = True; n = m.node_tree.nodes; l = m.node_tree.links
@@ -33,33 +33,51 @@ def clay_mat(name="clay", scale=3.2, c0=(0.31, 0.215, 0.135), c1=(0.47, 0.35, 0.
     l.new(sq.outputs[0], bmp.inputs['Height']); l.new(bmp.outputs['Normal'], P.inputs['Normal'])
     return m
 
-def trail(start, heading, length, width=0.28, wobble=0.6, seed=0, depth=0.08):
-    """A shallow groove the rock dragged: a dark smooth furrow with raised lips, curving gently.
-    `start` is at the rock; the trail runs back along `heading` (degrees, 0 = +X)."""
+def trail_mat():
+    """Painted furrow on a flat strip (v across 0..1): soft dark floor, thin pale rims, faded edges. A flat decal reads
+    as a groove from any angle; real geometry at playa scale read as a pipe or a plank at low cameras."""
+    m = bpy.data.materials.get('trail')
+    if m: return m
+    m = bpy.data.materials.new('trail'); m.use_nodes = True; n = m.node_tree.nodes; l = m.node_tree.links; n.clear()
+    out = n.new('ShaderNodeOutputMaterial'); P = n.new('ShaderNodeBsdfPrincipled'); tr = n.new('ShaderNodeBsdfTransparent')
+    P.inputs['Roughness'].default_value = 0.75
+    uv = n.new('ShaderNodeUVMap'); sep = n.new('ShaderNodeSeparateXYZ'); l.new(uv.outputs['UV'], sep.inputs['Vector'])
+    pp = n.new('ShaderNodeMath'); pp.operation = 'PINGPONG'; pp.inputs[1].default_value = 0.5; l.new(sep.outputs['Y'], pp.inputs[0])   # 0 at edges, 0.5 centre
+    col = n.new('ShaderNodeValToRGB'); e = col.color_ramp.elements
+    e[0].position = 0.0; e[0].color = (0.62, 0.48, 0.33, 1); e[1].position = 0.5; e[1].color = (0.09, 0.055, 0.035, 1)
+    k = e.new(0.12); k.color = (0.66, 0.52, 0.36, 1); k = e.new(0.22); k.color = (0.20, 0.13, 0.08, 1)
+    l.new(pp.outputs[0], col.inputs['Fac']); l.new(col.outputs['Color'], P.inputs['Base Color'])
+    al = n.new('ShaderNodeMapRange'); al.inputs['From Min'].default_value = 0.0; al.inputs['From Max'].default_value = 0.08
+    l.new(pp.outputs[0], al.inputs['Value'])
+    fade = n.new('ShaderNodeAttribute'); fade.attribute_name = 'fade'
+    mm = n.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; l.new(al.outputs['Result'], mm.inputs[0]); l.new(fade.outputs['Fac'], mm.inputs[1])
+    mx = n.new('ShaderNodeMixShader'); l.new(mm.outputs[0], mx.inputs['Fac']); l.new(tr.outputs[0], mx.inputs[1]); l.new(P.outputs[0], mx.inputs[2])
+    l.new(mx.outputs[0], out.inputs['Surface'])
+    return m
+
+def trail(start, heading, length, width=0.5, wobble=0.6, seed=0, depth=None):
+    """The groove a sliding rock left: a flat painted strip from `start` (at the rock) running back along `heading`
+    (degrees, 0 = +X), curving gently, fading out at the far end."""
     import bmesh, random
     from mathutils import Vector
     rnd = random.Random(seed); n = max(8, int(length * 6)); pts = []
     h = math.radians(heading); bend = rnd.uniform(-1, 1) * wobble
     for i in range(n + 1):
         u = i / n; a = h + bend * math.sin(u * math.pi * 0.9) * 0.6
-        if i == 0: p = Vector((start[0], start[1], 0))
-        else: p = pts[-1] + Vector((math.cos(a), math.sin(a), 0)) * (length / n)
-        pts.append(p)
-    me = bpy.data.meshes.new('trail'); bm = bmesh.new()
+        pts.append(Vector((start[0], start[1], 0)) if i == 0 else pts[-1] + Vector((math.cos(a), math.sin(a), 0)) * (length / n))
+    me = bpy.data.meshes.new('trail'); bm = bmesh.new(); uvl = bm.loops.layers.uv.new()
     rows = []
-    prof = [(-1.6, 0.0), (-1.15, 0.45), (-0.75, 0.2), (0, 0.05), (0.75, 0.2), (1.15, 0.45), (1.6, 0.0)]   # metres = value * depth: a berm with a sunken floor
     for i, p in enumerate(pts):
         t = (pts[min(i + 1, n)] - pts[max(i - 1, 0)]).normalized(); nr = Vector((-t.y, t.x, 0))
-        fade = min(1.0, (n - i) / (n * 0.25))
-        rows.append([bm.verts.new(p + nr * (x * width / 2) + Vector((0, 0, z * depth * fade + 0.003))) for x, z in prof])
+        rows.append((bm.verts.new(p + nr * width / 2 + Vector((0, 0, 0.004))), bm.verts.new(p - nr * width / 2 + Vector((0, 0, 0.004)))))
     for i in range(n):
-        for j in range(len(prof) - 1):
-            f = bm.faces.new((rows[i][j], rows[i + 1][j], rows[i + 1][j + 1], rows[i][j + 1])); f.material_index = 1 if j in (2, 3) else 0
-    bm.to_mesh(me); bm.free(); o = bpy.data.objects.new('trail', me); C.sc().collection.objects.link(o)
-    for pl in o.data.polygons: pl.use_smooth = True
-    m = bpy.data.materials.get('trail') or C.pbr('trail', (0.05, 0.028, 0.02), rough=0.9, coat=0.0, bevel=0.0)
-    lip = bpy.data.materials.get('clay') or C.pbr('trail_lip', (0.42, 0.31, 0.20), rough=0.95, coat=0.0, bevel=0.0)   # berms in the ground's own clay
-    o.data.materials.append(lip); o.data.materials.append(m); C.no_ink(o); return o
+        f = bm.faces.new((rows[i][0], rows[i + 1][0], rows[i + 1][1], rows[i][1]))
+        for loop, uvv in zip(f.loops, ((i / n, 0), ((i + 1) / n, 0), ((i + 1) / n, 1), (i / n, 1))): loop[uvl].uv = uvv
+    bm.to_mesh(me); bm.free()
+    fa = me.attributes.new('fade', 'FLOAT', 'POINT')
+    for k, v in enumerate(me.vertices): fa.data[k].value = min(1.0, (n - k // 2) / (n * 0.3)) * min(1.0, (k // 2) / 2 + 0.5)
+    o = bpy.data.objects.new('trail', me); C.sc().collection.objects.link(o)
+    C.assign(o, trail_mat()); C.no_ink(o); o.visible_shadow = False; return o
 
 def mountains(radius=260, n=26, seed=7, col=(0.22, 0.10, 0.16), h=(25, 60), cx=0, cy=0, arc=(0, 360)):
     """Ring of low, eroded desert mountains: squashed noisy cones in dark brown/purple, faceted, no ink."""
@@ -70,12 +88,13 @@ def mountains(radius=260, n=26, seed=7, col=(0.22, 0.10, 0.16), h=(25, 60), cx=0
     for k in range(n):
         a = math.radians(arc[0] + (arc[1] - arc[0]) * (k + rnd.uniform(-0.3, 0.3)) / n)
         r = radius * rnd.uniform(0.85, 1.15); hh = rnd.uniform(*h)
-        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=1, location=(cx + r * math.cos(a), cy + r * math.sin(a), 0))
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=4, radius=1, location=(cx + r * math.cos(a), cy + r * math.sin(a), 0))
         o = bpy.context.object; off = Vector((rnd.uniform(0, 50), rnd.uniform(0, 50), 0))
         for v in o.data.vertices:
             c = v.co.copy(); z = max(c.z, 0)
             v.co = Vector((c.x * (1 + 0.25 * mn.noise(c * 2 + off)), c.y * (1 + 0.25 * mn.noise(c * 2 + off)), z * (1 + 0.5 * mn.noise(c * 3 + off))))
         o.scale = (hh * rnd.uniform(1.8, 3.0), hh * 1.6, hh); o.rotation_euler.z = a
+        for pl in o.data.polygons: pl.use_smooth = True
         C.assign(o, m); C.no_ink(o); objs.append(o)
     return objs
 

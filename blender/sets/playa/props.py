@@ -65,7 +65,8 @@ def tour_van(loc=(0, 0, 0), rz=0, lights_on=False):
     o.append(C.rbox((0.05, 0.5, 0.06), (L / 2 - 0.80, 0.35, 1.52), chrome, r=0.02))               # wiper
     # bumpers, grille, lamps
     for x in (L / 2 + 0.04, -L / 2 - 0.04): o.append(C.rbox((0.18, Wd + 0.06, 0.22), (x, 0, 0.48), chrome, r=0.07))
-    o.append(C.rbox((0.06, 0.9, 0.36), (L / 2 + 0.01, 0, 0.88), chrome, r=0.03))
+    o.append(C.rbox((0.06, 0.9, 0.36), (L / 2 + 0.01, 0, 0.88), C.pbr('grille', (0.03, 0.015, 0.04), rough=0.4, coat=0.3), r=0.03))
+    for z in (0.78, 0.88, 0.98): o.append(C.rbox((0.04, 0.86, 0.035), (L / 2 + 0.045, 0, z), chrome, r=0.012))
     lamp = C.pbr('van_lamp', (1.0, 0.86, 0.55), rough=0.1, coat=0.0, bevel=0.0, emit=6.0 if lights_on else 0.4)
     for sy in (0.72, -0.72):
         o.append(C.rcyl(0.15, 0.08, (L / 2 + 0.01, sy, 0.95), lamp, rot=(0, 90, 0), verts=20, r=0.01))
@@ -115,6 +116,8 @@ def tour_van(loc=(0, 0, 0), rz=0, lights_on=False):
     for sy in (1, -1):
         o.append(decal(alien, 0.5, 0.5, (-1.45, sy * (Wd / 2 + 0.012), 0.95), (90, 0, 0 if sy < 0 else 180), f'van_alien{sy}'))
     o.append(C.contact_blob((0, 0, 0), L + 1.4, Wd + 1.2))
+    for x in (1.45, -1.45):
+        for sy in (1, -1): o.append(C.contact_blob((x, sy * (Wd / 2 - 0.12), 0.001), 1.1, 0.7, strength=1.0))   # tyre AO
     for x in o:
         if x.name not in bpy.data.collections['noink'].objects: C.no_ink(x)
     return group(o, loc, rz)
