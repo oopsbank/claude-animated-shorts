@@ -251,7 +251,7 @@
   },
   {
    "id": "s04",
-   "text": "Nearby, an antenna-wearing guide mocks the cousins.",
+   "text": "A tour guide in alien antennae laughs at them.",
    "set": "playa",
    "cam": "overlook_med",
    "light": "day",
@@ -260,7 +260,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 4,
+      "at_word": 6,
       "to": {
        "zoom": 1.12
       },
@@ -283,7 +283,8 @@
       },
       {
        "expr": "smug",
-       "at_word": 4,
+       "lean": -8,
+       "at_word": 6,
        "arm_pose": [
         "point",
         "hip"
@@ -425,62 +426,7 @@
   },
   {
    "id": "s06",
-   "text": "Sixty years, zero witnesses!",
-   "set": "inserts",
-   "cam": "logbook",
-   "light": "day",
-   "size": "close",
-   "grammar": [
-    "insert"
-   ],
-   "camera": {
-    "move": "glide",
-    "glides": [
-     {
-      "at_word": 2,
-      "to": {
-       "zoom": 1.25,
-       "x": 0.45
-      },
-      "dur": 4
-     }
-    ]
-   },
-   "note": "Prop insert (sepia logbook): a fenced rock with its trail leading out of the stakes, then \"60 YEARS\" and a big \"0\" in the witnesses column.",
-   "characters": [],
-   "fx": [
-    {
-     "name": "sliding_rock",
-     "x": 0.4,
-     "y": 0.55,
-     "path": [
-      [
-       0.4,
-       0.55
-      ],
-      [
-       0.55,
-       0.45
-      ]
-     ],
-     "dur": 0.8,
-     "at_word": 0
-    },
-    {
-     "name": "exclaim",
-     "x": 0.5,
-     "y": 0.4,
-     "size": 0.45,
-     "at_word": 2
-    }
-   ],
-   "props": [
-    "logbook:FENCED ROCKS: DORIS, HUGO, PEARL · WITNESSES: 0"
-   ]
-  },
-  {
-   "id": "s07",
-   "text": "It's aliens, pal. Twenty bucks.\"",
+   "text": "It's aliens, pal. Twenty bucks a ticket.\"",
    "set": "inserts",
    "cam": "ticket",
    "light": "day",
@@ -492,6 +438,7 @@
     "move": "push_in",
     "amount": 0.08
    },
+   "note": "POV ticket insert; at \"ticket\" a hand tears the stub.",
    "characters": [],
    "fx": [
     {
@@ -506,7 +453,7 @@
    ]
   },
   {
-   "id": "s08",
+   "id": "s07",
    "text": "And his night tours sell out.",
    "set": "playa",
    "cam": "overlook_med",
@@ -631,7 +578,7 @@
    ]
   },
   {
-   "id": "s09",
+   "id": "s08",
    "text": "Month one: a dust storm buries their camera.",
    "set": "playa",
    "cam": "playa_wide",
@@ -736,7 +683,7 @@
    ]
   },
   {
-   "id": "s10",
+   "id": "s09",
    "text": "\"Rocks one, nerds zero,\" says the guide. \"Thirty bucks.\"",
    "set": "playa",
    "cam": "overlook_med",
@@ -805,7 +752,7 @@
    ]
   },
   {
-   "id": "s11",
+   "id": "s10",
    "text": "Year one: a flash flood carries off their tent, cousins included.",
    "set": "playa",
    "cam": "playa_wide",
@@ -906,7 +853,7 @@
    ]
   },
   {
-   "id": "s12",
+   "id": "s11",
    "text": "They paddle home on a cooler.",
    "set": "playa",
    "cam": "rock_low",
@@ -988,7 +935,7 @@
    ]
   },
   {
-   "id": "s13",
+   "id": "s12",
    "text": "\"Aliens only drive at night,\" snorts the guide. \"Forty bucks.\"",
    "set": "playa",
    "cam": "overlook_med",
@@ -1058,7 +1005,7 @@
    ]
   },
   {
-   "id": "s14",
+   "id": "s13",
    "text": "Year two, last try: rain floods the lake bed, and cold nights freeze it over.",
    "set": "playa",
    "cam": "playa_top",
@@ -1109,7 +1056,7 @@
    ]
   },
   {
-   "id": "s15",
+   "id": "s14",
    "text": "One sunny morning, the ice crackles.",
    "set": "playa",
    "cam": "rock_low",
@@ -1154,7 +1101,7 @@
    ]
   },
   {
-   "id": "s16",
+   "id": "s15",
    "text": "Dozens of rocks start sliding, trackers included.",
    "set": "playa",
    "cam": "playa_med",
@@ -1263,8 +1210,8 @@
    ]
   },
   {
-   "id": "s17",
-   "text": "They crouch. \"It's the ice!\"",
+   "id": "s16",
+   "text": "\"It's the ice!\" yell the cousins.",
    "set": "playa",
    "cam": "rock_low",
    "light": "frost",
@@ -1276,7 +1223,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 2,
+      "at_word": 0,
       "to": {
        "zoom": 1.4,
        "y": 0.6
@@ -1293,19 +1240,19 @@
      "beats": [
       {
        "lean": 20,
-       "expr": "neutral",
+       "expr": "shock",
        "at_word": 0,
        "arm_pose": [
-        "hold",
+        "point",
         "hang"
        ]
       },
       {
-       "lean": 20,
-       "expr": "shock",
-       "at_word": 2,
+       "lean": 10,
+       "expr": "grin",
+       "at_word": 3,
        "arm_pose": [
-        "point",
+        "wave",
         "hang"
        ]
       }
@@ -1325,8 +1272,8 @@
      "beats": [
       {
        "lean": 20,
-       "expr": "neutral",
-       "at_word": 1,
+       "expr": "shock",
+       "at_word": 0,
        "arm_pose": [
         "hold",
         "hold"
@@ -1335,7 +1282,7 @@
       {
        "lean": 10,
        "expr": "grin",
-       "at_word": 4,
+       "at_word": 5,
        "arm_pose": [
         "wave",
         "wave"
@@ -1367,7 +1314,7 @@
      "x": 0.5,
      "y": 0.25,
      "size": 0.45,
-     "at_word": 4
+     "at_word": 2
     }
    ],
    "props": [
@@ -1375,8 +1322,8 @@
    ]
   },
   {
-   "id": "s18",
-   "text": "Sun cracked the phone-thin ice into huge panes;",
+   "id": "s17",
+   "text": "Sun cracks the phone-thin ice into huge panes;",
    "set": "playa",
    "cam": "playa_top",
    "light": "frost",
@@ -1426,8 +1373,8 @@
    ]
   },
   {
-   "id": "s19",
-   "text": "a light breeze pushes them into rocks.",
+   "id": "s18",
+   "text": "a light breeze shoves them into rocks.",
    "set": "playa",
    "cam": "playa_top",
    "light": "frost",
@@ -1488,8 +1435,8 @@
    "props": []
   },
   {
-   "id": "s20",
-   "text": "Like a glass tabletop on wet tiles: even your fridge would leave.",
+   "id": "s19",
+   "text": "Glass tabletop, wet tiles: one nudge and even a fridge goes.",
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
@@ -1571,7 +1518,7 @@
      "x": 0.35,
      "y": 0.55,
      "angle": 0,
-     "at_word": 2
+     "at_word": 5
     },
     {
      "name": "sliding_rock",
@@ -1590,13 +1537,13 @@
      ],
      "dur": 1.2,
      "trail": true,
-     "at_word": 11
+     "at_word": 10
     },
     {
      "name": "splash",
      "x": 0.45,
      "y": 0.85,
-     "at_word": 11
+     "at_word": 10
     }
    ],
    "props": [
@@ -1606,7 +1553,7 @@
    ]
   },
   {
-   "id": "s21",
+   "id": "s20",
    "text": "Then the guide rolls up with a vanload of alien-tour fans.",
    "set": "playa",
    "cam": "overlook_med",
@@ -1708,7 +1655,7 @@
    ]
   },
   {
-   "id": "s22",
+   "id": "s21",
    "text": "They watch rocks slowly drive themselves in broad daylight, film it, and demand refunds.",
    "set": "playa",
    "cam": "overlook_med",
@@ -1869,8 +1816,8 @@
    ]
   },
   {
-   "id": "s23",
-   "text": "And an ice pane shoves a rock through his NIGHT ONLY sign.",
+   "id": "s22",
+   "text": "And an ice pane drives a rock straight through his NIGHT ONLY sign.",
    "set": "playa",
    "cam": "rock_low",
    "light": "frost",
@@ -1886,7 +1833,7 @@
       "dur": 8
      },
      {
-      "at_word": 7,
+      "at_word": 8,
       "to": {
        "zoom": 1.35,
        "y": 0.55
@@ -1919,13 +1866,13 @@
      "name": "impact_star",
      "x": 0.55,
      "y": 0.55,
-     "at_word": 7
+     "at_word": 8
     },
     {
      "name": "splash",
      "x": 0.55,
      "y": 0.82,
-     "at_word": 11
+     "at_word": 12
     }
    ],
    "props": [
@@ -1934,7 +1881,7 @@
    ]
   },
   {
-   "id": "s24",
+   "id": "s23",
    "text": "\"Nerds one, aliens zero,\" say the cousins.",
    "set": "playa",
    "cam": "overlook_med",
@@ -2043,8 +1990,8 @@
    ]
   },
   {
-   "id": "s25",
-   "text": "Now he sells ice tours, five bucks, cousins get four, and starts every one the same way:",
+   "id": "s24",
+   "text": "Now he sells rare ice tours, five bucks, keeps one, and starts every one the same way:",
    "set": "playa",
    "cam": "playa_med",
    "light": "day",
@@ -2053,7 +2000,7 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 5,
+      "at_word": 6,
       "to": {
        "zoom": 1.15
       },
@@ -2137,7 +2084,7 @@
      "name": "sparkle",
      "x": 0.6,
      "y": 0.3,
-     "at_word": 5
+     "at_word": 6
     }
    ],
    "props": [
