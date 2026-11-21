@@ -1,3 +1,40 @@
+# Topics v7: solved mysteries (Producer, 2026-11-21)
+
+The Director asked for "mystery decoded" topics: a real mystery that people argued about for years, then a real explanation. Same story engine as v6:
+- line 1 is the eerie fact or a person facing it;
+- a mocking sceptic or a wrong theory wins first;
+- 3 stages;
+- a late mechanism with one analogy;
+- a reveal plus a gag or loop.
+
+Checked against `references/titles.md` (no overlap). **The Screenwriter verifies every fact against primary sources before G1.** Each video is 62-66 s (225-240 words).
+
+| # | Working title | Line 1 (hook) | Wrong theory → stages | The real answer / analogy | Reveal and gag | Visual | Sets |
+|---|---|---|---|---|---|---|---|
+| M1 | **The Wave Scientists Said Couldn't Exist** | "For centuries, sailors swore a wall of water came out of nowhere, and scientists laughed." | "A 30-metre wave? Once in 10,000 years." Stages: old sailors' tales → a ship snapped in half → New Year's Day 1995, a laser on a North Sea gas platform. | Waves of different sizes and speeds sometimes line up and stack into one giant (rogue waves). Analogy: people walking at different speeds who bunch up for a moment in a corridor. | The Draupner platform's sensor records a wave about 26 m tall among 12 m seas. Gag: an old sailor in a bar, "Told you." | 10 | stormy sea + a gas platform, a ship, a bar |
+| M2 | **The Glacier That Bleeds** | "In 1911, an explorer found an Antarctic glacier bleeding bright red into the snow." | "It's red algae," says the expedition, and it sticks for decades. Stages: the 1911 sketch → samples with no algae → radar under the ice. | Salty, iron-rich water trapped under the glacier for ages; it rusts the moment it meets the air. Analogy: a wet nail turning orange. | The "blood" is rust; under the glacier lives an ecosystem that never saw daylight. Gag: a penguin refuses to drink it. | 9 | Antarctic glacier (Taylor Valley), an X-ray of the ice |
+| M3 | **The Island That Never Was** | "A ship sailed straight across an island that's been on maps for 130 years." | The captain: "Every chart shows it, steer around!" Stages: old charts → modern maps, even satellite maps → the 2012 research voyage. | A 19th-century whaler's report was copied from map to map without anyone checking. Analogy: the telephone game. | Under the "island" the sea is about 1,400 m deep. Gag: a scientist plants a flag on the water and it sinks. | 8 | ship's bridge, chart table (map insert), open ocean |
+| M4 | **The Rocks That Walk Across the Desert** | "In Death Valley, rocks heavier than a man slide across the desert, and nobody ever saw one move." | Aliens? Pranksters? Hurricane winds? Stages: tracks found → decades of theories → two researchers put GPS in the rocks. | On rare winter mornings a thin pane of ice forms, breaks, and a light breeze pushes the panes, which push the rocks. Analogy: ice sheets on a pond sliding into the shore. | In 2013-14 they filmed the rocks moving a few metres a minute. Gag: the "alien" tourists missed it by sleeping in. | 9 | dry lake bed (playa), a time-lapse camera |
+| M5 | **The Day It Rained Meat** | "In 1876, chunks of raw meat fell from a clear blue sky over a Kentucky farm." | A meteor? "Flakes of nostoc"? Two men even taste it. Stages: the shower → newspapers → a doctor's lab. | The leading answer: vultures. When they are startled in flight they throw up to lighten the load. Analogy: dropping your shopping bags to run for the bus. | A flock of vultures overhead, and the townsfolk who tasted it. Gag: the tasters' faces. | 8 | 1870s farm, newspaper insert, a lab |
+| M6 | **The Ghost Lights of Marfa** | "Every night outside a Texas town, mysterious lights dance on the horizon, and a festival celebrates them." | Ghosts, swamp gas, UFOs. Stages: the legend → tourists → 2004, physics students with spectrometers. | Most of the lights are car headlights on a distant highway, bent and flickered by layers of warm and cold air. Analogy: a road shimmering on a hot day. | The lights blink in time with the traffic counter. Gag: a truck honks and the "ghost" honks back. | 8 | desert night, a viewing platform, a highway |
+
+**Ranking (mystery pull + visuals + a clean, verifiable answer):** M1, M3, M2, M4, M5, M6.
+
+**Caveats:**
+- M5's vulture answer is "the leading explanation", not proven: say "most likely".
+- M6: "most of the lights".
+- M4 and M1 are fully measured.
+
+**Sources to verify:**
+- M1: the Draupner wave (Statoil platform data, 1 Jan 1995; Haver 2004; ECMWF and NOAA pages on rogue waves).
+- M2: Mikucki et al. 2009 (*Science*); Mikucki et al. 2015 (*Nature Communications*, radar); Taylor 1911 expedition notes.
+- M3: Seton et al. 2013 (*Eos*) on Sandy Island; University of Sydney, 2012 *Southern Surveyor* voyage.
+- M4: Norris et al. 2014 (*PLOS ONE*), sliding rocks at Racetrack Playa.
+- M5: contemporary reports (*Scientific American* 1876; *New York Times*, March 1876); Kastenbine's analysis.
+- M6: the 2004 UT Dallas Society of Physics Students study; Stephens & Bunnell's work on the Marfa lights.
+
+---
+
 # Topics v6: story-engine shortlist (Producer, 2026-11-21)
 
 Built for the leaders' story engine (`references/reports/retention_2026-11.md` §8): a person doing something that looks wrong, a mocking rival who wins first, 3 stages, a late mechanism with one analogy, then a spectacular reversal and a gag or loop. Checked against `references/titles.md` (no overlap). **Every fact must be verified against a primary source by the Screenwriter before G1**; the sources below are where to start. The v1-v5 list further down is kept as reserves (household mechanisms, weaker as stories).
