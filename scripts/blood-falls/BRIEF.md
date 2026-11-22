@@ -1,4 +1,4 @@
-# Brief: video 3, "rogue-wave" (channel content, new neon-stickman look)
+# Brief: video 3, "blood-falls" (channel content, new neon-stickman look)
 
 Decided by the Director on 2026-11-22.
 
@@ -11,6 +11,6 @@ Take only the **animation style** of reference short xBqCZDzFmog (@MindsetEvolvi
 - Flat 2D throughout; a new simple 2D renderer is acceptable (the 3D plate engine is not required).
 
 ## What stays: our channel's content and rules
-- A surprising **true** story, explained: topic M1 in `scripts/TOPICS.md`, "The Wave Scientists Said Couldn't Exist" (rogue waves, the Draupner wave of 1 January 1995), score 10.
+- A surprising **true** story, explained: topic M2 in `scripts/TOPICS.md`, "The Glacier That Bleeds" (Blood Falls, Taylor Glacier, Antarctica; found in 1911), score 9. Chosen by the Director.
 - Voice-over narrator, 225-240 words, 62-66 s, the leaders' story engine (`QA.md` › scripts), facts sourced and >= 9, ABSURD comedy, "sentence" captions, a picture change every <= 1.5 s, a mid-action hook, an ending on a gag or a loop.
 - Original title, checked against `references/titles.md`.
