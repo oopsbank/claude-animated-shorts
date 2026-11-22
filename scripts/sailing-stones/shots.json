@@ -943,13 +943,19 @@
    "light": "golden",
    "size": "medium",
    "camera": {
-    "move": "follow",
-    "direction": "right",
-    "zoom": 1.5,
-    "y": 0.55,
+    "move": "glide",
     "glides": [
      {
-      "at_word": 6,
+      "at_word": 0,
+      "to": {
+       "zoom": 1.62,
+       "x": 0.53,
+       "y": 0.56
+      },
+      "dur": 34
+     },
+     {
+      "at_word": 7,
       "to": {
        "zoom": 1.8,
        "x": 0.52,
@@ -957,7 +963,9 @@
       },
       "dur": 6
      }
-    ]
+    ],
+    "zoom": 1.5,
+    "y": 0.55
    },
    "note": "Both cousins on a floating cooler, paddling with a frying pan; Gary sits at the front as figurehead; punch-in on Gary at \"steers\".",
    "characters": [
@@ -1590,10 +1598,10 @@
      {
       "at_word": 1,
       "to": {
-       "zoom": 1.12,
+       "zoom": 1.15,
        "roll": -6
       },
-      "dur": 20
+      "dur": 45
      },
      {
       "at_word": 7,
