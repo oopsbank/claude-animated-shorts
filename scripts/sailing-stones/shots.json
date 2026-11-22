@@ -784,7 +784,9 @@
     "timelapse_cam",
     {
      "name": "gary_buried",
-     "scale": 2.0
+     "scale": 2.0,
+     "enter": true,
+     "at_word": 5
     }
    ]
   },

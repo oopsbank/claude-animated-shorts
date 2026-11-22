@@ -80,7 +80,7 @@ SHOTS = [
       set='playa', cam='playa_wide', light='golden', size='wide', camera=dict(move='shake', amount=0.012, glides=[dict(at_word=8, to=dict(zoom=1.5, x=0.6, y=0.75), dur=6)]),
       note='The storm rolls over the camp; at "Gary" punch-in on one googly eye poking out of the dust.',
       characters=[C('kip', 0.40, [B('Month', arm=('hold', 'hold'), expr='neutral'), B('dust', arm=('wave', 'wave'), lean=-14, expr='shock')]), C('lou', 0.58, [B('storm', arm=('hold', 'hold'), lean=-16, expr='pained')])],
-      fx=[F('year_badge', 'Month', 0.5, 0.14, label='MONTH 1'), F('dust_storm', 'dust', 0.5, 0.5, dur=1.3), F('dust_puff', 'Gary.', 0.6, 0.74, direction='both')], props=['tent', 'timelapse_cam', dict(name='gary_buried', scale=2.0)]),
+      fx=[F('year_badge', 'Month', 0.5, 0.14, label='MONTH 1'), F('dust_storm', 'dust', 0.5, 0.5, dur=1.3), F('dust_puff', 'Gary.', 0.6, 0.74, direction='both')], props=['tent', 'timelapse_cam', dict(name='gary_buried', scale=2.0, word='buries', enter=True)]),
  dict(text="\"Leaf-blowing aliens,\" says the guide. \"Thirty bucks.\"",
       set='inserts', cam='alien_cam', light='day', size='medium', grammar=['pov'], camera=dict(move='push_in', amount=0.08),
       note='FANTASY CUTAWAY in his head (thought-bubble frame + cheesy green "ALIEN CAM" filter, so it reads as fantasy): tiny aliens in hi-vis vests leaf-blowing a boulder; his price card flips to $30 in the corner.',
