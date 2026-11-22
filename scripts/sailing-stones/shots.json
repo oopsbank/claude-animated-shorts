@@ -669,7 +669,12 @@
    ],
    "props": [
     "tour_sign:ALIEN ROCK TOURS · NIGHT ONLY · SOLD OUT"
-   ]
+   ],
+   "lift": {
+    "gamma": 0.78,
+    "contrast": 1.08,
+    "sat": 1.12
+   }
   },
   {
    "id": "s08",
@@ -1177,7 +1182,12 @@
    "props": [
     "tour_van",
     "banner:FINAL FAIL · LIVE"
-   ]
+   ],
+   "lift": {
+    "gamma": 1.08,
+    "contrast": 1.2,
+    "sat": 1.2
+   }
   },
   {
    "id": "s14",
@@ -1297,7 +1307,12 @@
     "rock_trail_hero",
     "pond_water",
     "livestream_counter:3"
-   ]
+   ],
+   "lift": {
+    "gamma": 0.78,
+    "contrast": 1.08,
+    "sat": 1.12
+   }
   },
   {
    "id": "s15",
@@ -1531,7 +1546,12 @@
      ],
      "at_word": 13
     }
-   ]
+   ],
+   "lift": {
+    "gamma": 1.08,
+    "contrast": 1.2,
+    "sat": 1.2
+   }
   },
   {
    "id": "s16",
@@ -1632,37 +1652,11 @@
      "at_word": 2
     },
     {
-     "name": "ice_pane",
-     "x": 0.38,
-     "y": 0.45,
-     "stage": "panes",
-     "size": 1.3,
+     "name": "pane_push_top",
+     "x": 0.5,
+     "y": 0.42,
+     "size": 1.0,
      "at_word": 8
-    },
-    {
-     "name": "whoosh",
-     "x": 0.14,
-     "y": 0.3,
-     "angle": 0,
-     "size": 0.5,
-     "at_word": 11
-    },
-    {
-     "name": "ice_pane",
-     "x": 0.38,
-     "y": 0.45,
-     "stage": "drift",
-     "direction": "right",
-     "size": 1.3,
-     "at_word": 12
-    },
-    {
-     "name": "speed_lines",
-     "x": 0.08,
-     "y": 0.45,
-     "size": 0.25,
-     "dur": 1.6,
-     "at_word": 12
     }
    ],
    "props": [
@@ -1677,7 +1671,12 @@
      "enter": true,
      "at_word": 4
     }
-   ]
+   ],
+   "lift": {
+    "gamma": 1.08,
+    "contrast": 1.2,
+    "sat": 1.2
+   }
   },
   {
    "id": "s18",
@@ -1746,7 +1745,12 @@
      "color2": "#ffe14f"
     },
     "ice_sheet"
-   ]
+   ],
+   "lift": {
+    "gamma": 1.08,
+    "contrast": 1.2,
+    "sat": 1.2
+   }
   },
   {
    "id": "s19",
@@ -1882,7 +1886,12 @@
      "scale": 0.95,
      "at_word": 5
     }
-   ]
+   ],
+   "lift": {
+    "gamma": 1.08,
+    "contrast": 1.2,
+    "sat": 1.2
+   }
   },
   {
    "id": "s21",

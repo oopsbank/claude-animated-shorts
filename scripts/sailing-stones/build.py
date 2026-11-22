@@ -11,7 +11,7 @@ ARMS = {'hang', 'wave', 'point', 'hold', 'hip', 'chin'}
 NEW_ARMS = {'sleep'}                                   # requested from characters (BACKLOG)
 FX_OK = {'explosion', 'impact_star', 'dust_puff', 'speed_lines', 'sweat_drop', 'anger_vein', 'glow_eyes',
          'sparkle', 'splash', 'question_mark', 'exclaim', 'music_note', 'whoosh'}
-FX_NEW = {'ice_pane', 'ice_crack', 'sliding_rock', 'gps_ping', 'zzz', 'year_badge', 'dust_storm', 'rain', 'heat_haze', 'flash_flood'}   # requested from fx (BACKLOG)
+FX_NEW = {'pane_push_top', 'ice_pane', 'ice_crack', 'sliding_rock', 'gps_ping', 'zzz', 'year_badge', 'dust_storm', 'rain', 'heat_haze', 'flash_flood'}   # requested from fx (BACKLOG)
 SETS = {'playa': {'cams': {'playa_wide', 'playa_med', 'rock_low', 'playa_top', 'overlook_med'},
                   'lights': {'day', 'golden', 'night', 'frost'}},
         'inserts': {'cams': {'gps_screen', 'logbook', 'ticket', 'alien_cam'}, 'lights': {'day'}}}
@@ -127,8 +127,7 @@ SHOTS = [
  dict(text="The sun breaks the phone-thin ice into huge panes; a light breeze shoves them into rocks.",
       set='playa', cam='playa_top', light='frost', size='medium', grammar=['metaphor'], camera=glide(G('phone-thin', 6, zoom=1.4, y=0.72), G('huge', 6, zoom=1.0, y=0.5)),
       note='Smash cut from the fantasy to the SAME framing, real: crack lines race across the sheet; a phone silhouette for scale at "phone-thin"; panes and a rock drift screen-right with the wind lines (top view, so direction is unambiguous), the trail drawing on.',
-      characters=[], fx=[F('ice_crack', 'breaks', 0.5, 0.45), F('ice_pane', 'panes;', 0.38, 0.45, stage='panes', size=1.3), F('whoosh', 'breeze', 0.14, 0.3, angle=0, size=0.5),
-                         F('ice_pane', 'shoves', 0.38, 0.45, stage='drift', direction='right', size=1.3), F('speed_lines', 'shoves', 0.08, 0.45, size=0.25, dur=1.6)],
+      characters=[], fx=[F('ice_crack', 'breaks', 0.5, 0.45), F('pane_push_top', 'panes;', 0.5, 0.42, size=1.0)],
       props=['ice_sheet', dict(name='phone_silhouette', x=0.32, y=0.66, scale=2.0, layer='front', word='phone-thin', until_word='panes;', enter=True)]),
  dict(text="Same game. No aliens.",
       set='playa', cam='playa_med', light='frost', size='medium', grammar=['metaphor'], camera=dict(move='push_in', amount=0.06),
@@ -168,6 +167,7 @@ def idx(text, w, sid):
     if norm(w) not in ws: sys.exit(f'{sid}: anchor word {w!r} not in text')
     return ws.index(norm(w))
 
+LIFT = {'frost': dict(gamma=1.08, contrast=1.2, sat=1.2), 'night': dict(gamma=0.78, contrast=1.08, sat=1.12)}
 errors, out = [], []
 for i, s in enumerate(SHOTS, 1):
     sid = f's{i:02d}'; s = json.loads(json.dumps(s))
@@ -192,6 +192,7 @@ for i, s in enumerate(SHOTS, 1):
     for p in s.get('props', []):          # engine prop dicts (engine/README.md): an anchor word -> at_word
         if isinstance(p, dict) and 'word' in p: p['at_word'] = idx(s['text'], p.pop('word'), sid)
         if isinstance(p, dict) and isinstance(p.get('until_word'), str): p['until_word'] = idx(s['text'], p['until_word'], sid)
+    if 'lift' not in s and s['light'] in LIFT: s['lift'] = LIFT[s['light']]     # engine lift for the dim/washed plates
     out.append(dict(id=sid, **s))
 
 hook = SHOTS[0]['text']; n_hook = len(words(hook))

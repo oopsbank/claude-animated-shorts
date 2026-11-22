@@ -15,6 +15,7 @@ import captions as CAP  # noqa: E402
 import grade as GRADE  # noqa: E402
 import parallax as PX  # noqa: E402
 import props as PROPS  # noqa: E402
+import mech as MECH  # noqa: E402
 from anim import W, H, FPS, smooth, clamp, lerp  # noqa: E402
 
 PLATE_DEFAULTS = {'horizon_y': H * 0.4, 'light_dir': 'left', 'tint': '#fff8f0'}
@@ -455,7 +456,7 @@ def sepia_card(im, t, label=None, tilt=0.0):
 
 
 FULL_FX = {'dust_storm', 'flash_flood', 'rain'}                       # placed full-frame
-LONG_FX = FULL_FX | {'ice_pane', 'air_hockey_overlay'}               # last from their word to the end of the shot
+LONG_FX = FULL_FX | {'ice_pane', 'air_hockey_overlay'} | set(MECH.NAMES)               # last from their word to the end of the shot
 
 
 def place_fx(base, k, f, chars, screen=False):
@@ -507,7 +508,7 @@ def place_fx(base, k, f, chars, screen=False):
             e = dict(e, x=cxp / W, y=cyp / H)
             kw['path'] = [((px - cxp) / size + 0.5, (py - cyp) / size + 0.5) for px, py in zip(xs, ys)]
         try:
-            im = (mod.render if mod else stub_fx)(e['name'], t, size, **kw)
+            im = MECH.render(e['name'], t, size, **{kk: v for kk, v in kw.items() if kk != 'line'}) if e['name'] in MECH.NAMES else (mod.render if mod else stub_fx)(e['name'], t, size, **kw)
         except KeyError:
             im = stub_fx(e['name'], t, size)
         if e.get('card'): im = sepia_card(im, t, e.get('card_label'), e.get('card_tilt', 0))
@@ -613,6 +614,23 @@ def prop_t(k, f, e):
     return clamp((f - a) / dur)
 
 
+_lift_lut = {}
+
+
+def lift_img(img, lift):
+    """Per-shot look lift for dim or washed-out plates (shots.json "lift": {"gamma": <1 brightens, "contrast": >1,
+    "sat": >1}), applied after the auto grade and before the finish."""
+    key = (lift.get('gamma', 1.0), lift.get('contrast', 1.0))
+    if key not in _lift_lut:
+        v = np.arange(256) / 255.0; v = v ** key[0]; v = np.clip((v - 0.5) * key[1] + 0.5, 0, 1)
+        _lift_lut[key] = [int(round(x * 255)) for x in v] * 3
+    img = img.point(_lift_lut[key])
+    if abs(lift.get('sat', 1.0) - 1) > 1e-3:
+        from PIL import ImageEnhance
+        img = ImageEnhance.Color(img).enhance(lift['sat'])
+    return img
+
+
 def render_shot(k, f):
     shot = G['shots'][k]; pkey = shot['_plate']
     ins = shot.get('_insert'); crop_any = False
@@ -635,6 +653,8 @@ def render_shot(k, f):
     img, to_screen, cam = camera_xform(base.convert('RGB'), G['cams'][k].at(f))
     gk = f'{k}:insert' if (ins and ins[0] <= f < ins[1]) else str(k)          # cut-ins have their own plate grade
     if G['grades'].get(gk): img = GRADE.apply(img, G['grades'][gk])
+    lift = shot.get('lift')
+    if lift and not (ins and ins[0] <= f < ins[1] and not lift.get('insert', True)): img = lift_img(img, lift)
     if os.environ.get('ENGINE_FINISH', '1') == '1':      # vignette + warm/cool split (+ sepia flashbacks), every frame
         img = GRADE.finish(img, sepia=(shot.get('grade') == 'sepia' and not (ins and ins[0] <= f < ins[1])))
     if any(e.get('screen') for e in shot.get('fx', [])):
