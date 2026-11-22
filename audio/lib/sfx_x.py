@@ -367,6 +367,25 @@ def amb_alien(dur, r):
 
 
 
+# ---------------------------------------------------------------- polar / under-ice (blood-falls)
+def amb_polar(dur, r):
+    """polar wind: a low howling breeze with slow gusts, no birds (Antarctica)"""
+    n = ns(dur)
+    out = G.breeze(dur, r, 1.0, gust=0.3, bright=600)
+    t = np.arange(n) / SR
+    howl = bp(colored(n, r, 1.0), 260, 520, 2) * (0.5 + 0.5 * smooth_noise(n, r, 0.15)) * 0.35
+    return out + st(howl * (0.8 + 0.2 * np.sin(TAU * 0.07 * t)))
+
+
+def amb_under(dur, r):
+    """under the ice: a deep muffled rumble, a slow pressure swell and sparse low bubbles (stereo)"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    rum = lp(colored(n, r, 1.6), 140, 2) * (0.75 + 0.25 * np.sin(TAU * 0.11 * t))
+    bub = lp(G.bubbles(dur, r, 1.2, f_lo=200, f_hi=900), 1200, 2) * 0.25
+    return st(rum) + np.stack([bub, np.roll(bub, ns(0.02))])
+
+
 # cue name -> (generator, default level LU vs the voice, short description)
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
@@ -412,5 +431,5 @@ GEN = {
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
-BEDS = {"road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
+BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
         "room": amb_room}

@@ -1,0 +1,195 @@
+[
+ {
+  "cue": "impact",
+  "shot": "s01",
+  "at_word": 0,
+  "level": -17,
+  "note": "title THE GLACIER IS BLEEDING slams in",
+  "offset": 0.12
+ },
+ {
+  "cue": "impact",
+  "shot": "s02",
+  "at_word": 19,
+  "level": -15,
+  "note": "BLOOD FALLS sign drops and plants",
+  "offset": -0.2
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s03",
+  "at_word": 6,
+  "level": -17,
+  "note": "frost creeps, icicles grow on \"Nothing\""
+ },
+ {
+  "cue": "impact",
+  "shot": "s03",
+  "at_word": 9,
+  "level": -14,
+  "note": "hook: \"Yet the red kept coming\" punch-in + shake"
+ },
+ {
+  "cue": "impact",
+  "shot": "s04",
+  "at_word": 7,
+  "level": -13,
+  "note": "MYSTERY SOLVED stamp slams"
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s05",
+  "at_word": 0,
+  "level": -15,
+  "note": "the stamp cracks apart",
+  "offset": 0.45,
+  "len": 0.7
+ },
+ {
+  "cue": "impact",
+  "shot": "s05",
+  "at_word": 8,
+  "level": -14,
+  "note": "red X on the algae: no algae",
+  "offset": 0.3
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 1 badge"
+ },
+ {
+  "cue": "riser",
+  "shot": "s07",
+  "at_word": 7,
+  "level": -17,
+  "note": "the room darkens into \"what is?\""
+ },
+ {
+  "cue": "impact",
+  "shot": "s07",
+  "at_word": 7,
+  "level": -15,
+  "note": "the big ? slams in"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s08",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 2 badge"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s08",
+  "at_word": 5,
+  "level": -19,
+  "note": "microbes pop into the drop"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s09",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 3 badge"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s09",
+  "at_word": 14,
+  "level": -18,
+  "note": "\"clear\" sparkle"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s10",
+  "at_word": 0,
+  "level": -16,
+  "note": "the survey plane passes",
+  "offset": 0.2
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s10",
+  "at_word": 2,
+  "level": -15,
+  "note": "radar scan pulses"
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s11a",
+  "at_word": 8,
+  "level": -14,
+  "note": "the hidden pool lights up"
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s11b",
+  "at_word": 0,
+  "level": -15,
+  "note": "cracks spread under his boots"
+ },
+ {
+  "cue": "impact",
+  "shot": "s13",
+  "at_word": 6,
+  "level": -15,
+  "note": "the crack opens: \"Until it escapes\"",
+  "offset": 0.15
+ },
+ {
+  "cue": "riser",
+  "shot": "s13",
+  "at_word": 8,
+  "level": -17,
+  "note": "the iron rushes up the crack"
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s14a",
+  "at_word": 4,
+  "level": -16,
+  "note": "the brine squeezes out"
+ },
+ {
+  "cue": "impact",
+  "shot": "s14a",
+  "at_word": 14,
+  "level": -14,
+  "note": "\"rusts\": orange flash down the stream"
+ },
+ {
+  "cue": "impact",
+  "shot": "s15",
+  "at_word": 2,
+  "level": -15,
+  "note": "NOT BLEEDING. slams in"
+ },
+ {
+  "cue": "impact",
+  "shot": "s15",
+  "at_word": 5,
+  "level": -13,
+  "note": "RUSTING. slams in"
+ },
+ {
+  "cue": "pop",
+  "shot": "s16a",
+  "at_word": 4,
+  "level": -15,
+  "note": "the RED ALGAE bubble pops on \"Never\""
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s16a",
+  "at_word": 6,
+  "level": -15,
+  "note": "iris dive under the ice",
+  "offset": -0.2
+ },
+ {
+  "mute": "s16a:transition"
+ }
+]

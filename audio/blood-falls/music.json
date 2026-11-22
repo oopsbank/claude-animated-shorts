@@ -1,0 +1,36 @@
+{
+ "note": "serious mystery tone, no comedy: mystery (sus pad, ticking glock, no drums) for the setup and the hidden sea, explain (vibes arpeggio) for the clues and the rust reveal, payoff thins out for the punchline; loop end into s01",
+ "sections": [
+  {
+   "style": "mystery",
+   "from": "s01"
+  },
+  {
+   "style": "explain",
+   "from": "s06"
+  },
+  {
+   "style": "mystery",
+   "from": "s10"
+  },
+  {
+   "style": "explain",
+   "from": "s14a"
+  },
+  {
+   "style": "payoff",
+   "from": "s15"
+  },
+  {
+   "style": "mystery",
+   "from": "s16a"
+  }
+ ],
+ "end": "loop",
+ "reveal_riser": false,
+ "levels": {
+  "mystery": -10.5,
+  "explain": -10.5,
+  "payoff": -11.0
+ }
+}

@@ -1,0 +1,101 @@
+{
+ "title": "The Glacier That Bleeds",
+ "note": "Minimal shot list exported from flat2d/blood_falls_2.py SHOT_LIST for audio/build_mix.py (word counts + sets). The picture is rendered by flat2d/render.py, not the engine.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "polar",
+   "text": "In 1911, geologist Griffith Taylor walked up to an Antarctic glacier and found it bleeding."
+  },
+  {
+   "id": "s02",
+   "set": "polar",
+   "text": "You see, a bright red stain was pouring out of the ice onto clean white snow. They named it Blood Falls."
+  },
+  {
+   "id": "s03",
+   "set": "polar",
+   "text": "The air there averages minus seventeen. Nothing should flow. Yet the red kept coming."
+  },
+  {
+   "id": "s04",
+   "set": "polar",
+   "text": "Explorers had an answer: \"It's red algae. Mystery solved.\""
+  },
+  {
+   "id": "s05",
+   "set": "lab",
+   "text": "But when scientists finally tested it, there was no algae."
+  },
+  {
+   "id": "s06",
+   "set": "lab",
+   "text": "Clue one. Just salt, saltier than the sea, and lots of iron."
+  },
+  {
+   "id": "s07",
+   "set": "lab",
+   "text": "So if plants aren't making it red, what is?"
+  },
+  {
+   "id": "s08",
+   "set": "under",
+   "text": "Clue two. The water was alive with microbes. No sunlight, no oxygen. They breathe iron and sulfur instead."
+  },
+  {
+   "id": "s09",
+   "set": "polar",
+   "text": "Clue three. Right where it comes out, the water isn't red at all. It's clear."
+  },
+  {
+   "id": "s10",
+   "set": "polar",
+   "text": "Then scientists scanned under the glacier from the air."
+  },
+  {
+   "id": "s11a",
+   "set": "under",
+   "text": "Under four hundred metres of ice sat a hidden pool of ancient seawater,"
+  },
+  {
+   "id": "s11b",
+   "set": "polar",
+   "text": "sealed for over a million years."
+  },
+  {
+   "id": "s12",
+   "set": "under",
+   "text": "Salt, and heat released as it freezes, keep it liquid."
+  },
+  {
+   "id": "s13",
+   "set": "under",
+   "text": "Down there, the iron stays invisible. Until it escapes."
+  },
+  {
+   "id": "s14a",
+   "set": "polar",
+   "text": "But the moment it squeezes out into the air, the iron meets oxygen and rusts."
+  },
+  {
+   "id": "s14b",
+   "set": "interior",
+   "text": "Like a wet nail turning orange."
+  },
+  {
+   "id": "s15",
+   "set": "polar",
+   "text": "The glacier isn't bleeding. It's rusting."
+  },
+  {
+   "id": "s16a",
+   "set": "under",
+   "text": "And the red algae? Never there. Just a sealed world of microbes,"
+  },
+  {
+   "id": "s16b",
+   "set": "polar",
+   "text": "still painting the snow red, like in 1911."
+  }
+ ]
+}

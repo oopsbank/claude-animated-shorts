@@ -174,9 +174,8 @@ def draw_stamp(img, t, t_slam, t_crack=None):
 
 
 # ---------------------------------------------------------------- s01: walk in, stop, point
-def s01(u, D, cue):
-    img = Image.new('RGBA', (W, H))
-    cam = anim.lerp(-16, 16, smooth(u / D))
+def s01_world(img, u, D, cam, grow=None):
+    """The s01 set (also the loop-back framing of s16b): moraine, glacier tongue, the falls, sledge."""
     backdrop(img, u, cam, [(0, (34, 52, 116)), (.3, (70, 112, 190)), (.52, (246, 190, 172)), (.6, (255, 214, 182))],
              (860, 960, (255, 196, 150)), ((198, 186, 220), (156, 150, 200), (246, 240, 250)),
              ((168, 182, 226), (110, 128, 196), (250, 250, 255)), (255, 222, 210))
@@ -200,12 +199,18 @@ def s01(u, D, cue):
     yg = lambda x: 1540 + 12 * math.sin(x / 140)
     snow_ground(img, yg, seed=6)
     rocks(img, 3, [(140, 1600, 44), (980, 1660, 56), (60, 1830, 70), (1040, 1890, 80), (470, 1590, 26)])
-    grow = .86 + .14 * smooth(u / D)                                   # the red fan creeps outward
+    grow = .86 + .14 * smooth(u / D) if grow is None else grow       # the red fan creeps outward
     sf.red_fan(img, (left[-1][0] + 60, 1548), (420 * grow, 150 * grow))
     falls_glow(img, left[-1][0] + 80, 1560, u)
     mist(img, 1, (left[-1][0] - 40, 1440, left[-1][0] + 220, 1580), u)
     props.footprints(img, [(40 + i * 46, 1900 - i * 34) for i in range(5)], s=1.1)
     sledge(img, 660, 1690)
+
+
+def s01(u, D, cue):
+    img = Image.new('RGBA', (W, H))
+    cam = anim.lerp(-16, 16, smooth(u / D))
+    s01_world(img, u, D, cam)
     # geologist: walk in (foot-locked), stop with follow-through, turn, anticipate, point with overshoot
     s = .98; t_walk = .825; X_END = 420
     if u <= t_walk:
@@ -354,7 +359,7 @@ def s02(u, D, cue):
     shake_head = .28 * math.sin((u - t0 - 1.3) * 9) * (seg(u, t0 + 1.3, t0 + 1.5) * (1 - seg(u, t0 + 2.2, t0 + 2.5)))
     look = .25 + shake_head + .45 * out_back(seg(u, t_sg, t_sg + .3)) if w_ > 0 else .25
     hop += 18 * math.sin(math.pi * seg(u, t_sg, t_sg + .22)) if t_sg < u < t_sg + .22 else 0
-    g = geologist(img, u, pose, expr, 330 - 70 * step, 1830, .84, look=look, lean=lean, hop=hop)
+    g = geologist(img, u, pose, expr, 380 - 70 * step, 1830, .84, look=look, lean=lean, hop=hop)
     sign(img, 800, 1770, u - (cue(19) - .4), 1.2 * math.sin(u * 1.3))
     fx = cam * -.6
     foreground_frame(img, [[(-20 + fx, 1940), (-20 + fx, 1800), (90 + fx, 1770), (230 + fx, 1830), (330 + fx, 1940)]],
@@ -539,8 +544,8 @@ def s04(u, D, cue):
     gl = geologist(img, u, lead, 'determined' if u < t_ans else 'happy', 540, 1830, .76, hop=hop_all, label_on=False,
                    axe=False, color=EXP_ORANGE, look=.2, lean=2 * smooth(seg(u, t_ans, t_ans + .4)) - 3 * math.sin(math.pi * seg(u, t_ans - .25, t_ans + .05)) + 1.2 * math.sin(u * 1.4))
     gs.append(gl)
-    hx, hy = gl['head']; label(img, 'EXPLORERS', hx, hy - gl['R'] * 1.32 - 88, EXP_ORANGE, size=50)
     speech_bubble(img, 690, 640, 240, (gl['hands']['R'][0] + 20, gl['hands']['R'][1] - 30), pop(u, t_ans, .32, 1.8), u)
+    hx, hy = gl['head']; label(img, 'EXPLORERS', hx - 90, hy - gl['R'] * 1.32 - 88, EXP_ORANGE, size=50)   # on top of the tail
     fx = cam * -.6
     foreground_frame(img, [[(860 + fx, 1940), (950 + fx, 1850), (1100 + fx, 1830), (1100 + fx, 1940)]], color=(150, 140, 190), alpha=.85)
     snow_particles(img, 41, n=(60, 26, 8), wind=(5, 1), t=u)
@@ -818,4 +823,6 @@ def _clue_badge(txt):
 
 
 SHOTS = {'s01': s01, 's02': s02, 's03': s03, 's04': s04, 's05': s05, 's06': s06}
-LINE_OF = {k: i + 1 for i, k in enumerate(SHOTS)}                       # shot sNN carries voice-over line NN
+SLUG = 'blood-falls'
+
+from blood_falls_2 import *  # noqa: E402,F401,F403  (s07-s16, SHOT_LIST, END)

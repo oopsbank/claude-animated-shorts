@@ -137,10 +137,42 @@ def blink(t, period=3.1, phase=0.0, dur=0.1):
 def breath(t, period=2.6, amp=0.006, phase=0.0):
     return 1 + amp * math.sin(2 * math.pi * (t + phase) / period)
 
+# ---------------------------------------------------------------- secondary action in holds (v4)
+NOW = 0.0          # global film time, set by the renderer per frame (speech beats key off it)
+BEATS = []         # global start times of stressed voice-over words (len >= 5 letters)
+
+def secondary(pose, t, phase=0.0, amt=1.0):
+    """Secondary action at the rig, layered on any pose (NOTES v3 open note):
+    - the head leads: a slow look drift; the body follows 0.35 s later (returned lean);
+    - the shoulders rise on each in-breath (upper arms open a little, in step with `breath`);
+    - the hands move on speech: a damped forearm beat on every stressed voice-over word.
+    Returns (pose, d_look, d_lean, d_hop)."""
+    if amt <= 0: return pose, 0.0, 0.0, 0.0
+    ph = phase * 2.3
+    w = 2 * math.pi / 3.9
+    d_look = amt * (.11 * math.sin(w * NOW + ph) + .04 * math.sin(2 * math.pi * NOW / 1.7 + 2 * ph))
+    d_lean = amt * 1.5 * math.sin(w * (NOW - .35) + ph)
+    br = math.sin(2 * math.pi * (t + phase) / 2.6)
+    sh = amt * 3.0 * br                                         # shoulder rise with the breath
+    beat = 0.0
+    for b in BEATS:
+        if 0 <= NOW - b < .7: beat += damp(NOW - b, 1.0, 6.0, 13.0)
+    bt = amt * 9.0 * beat
+    p = dict(pose)
+    try:
+        p = add(p, armL=(sh * .6 - bt * .3, sh + bt * .5), armR=(-sh * .6 + bt * .3, -sh - bt))
+    except KeyError:
+        pass
+    return p, d_look, d_lean, amt * (1.2 * max(0.0, br) + 1.5 * abs(beat))
+
+
 def actor(img, expr, pose, cx, gy, s, t=0.0, look=0.0, lean=0.0, hop=0.0, blink_ok=True, bphase=0.0,
-          aura=None, aura_alpha=.5, rim=None, rim_dir=(1, -.4), rim_w=9, **kw):
-    """Draw a stickman with a moving hold (breathing + blinks), lean (deg, + = toward screen right) and
-    hop (px). Returns kit.place geometry + 'hands' {'L'/'R': (x, y, ang)} in frame px."""
+          aura=None, aura_alpha=.5, rim=None, rim_dir=(1, -.4), rim_w=9, idle=1.0, **kw):
+    """Draw a stickman with a moving hold (breathing + blinks + `secondary` action), lean (deg, + = toward
+    screen right) and hop (px). Returns kit.place geometry + 'hands' {'L'/'R': (x, y, ang)} in frame px."""
+    if isinstance(pose, str): pose = dict(POSES[pose])
+    pose, dl, dn, dh = secondary(pose, t, bphase, idle)
+    look = max(-1.0, min(1.0, look + dl)); lean += dn; hop += dh
     e = expr
     if blink_ok and blink(t, phase=bphase) and expr not in ('blink',):
         e = 'blink'

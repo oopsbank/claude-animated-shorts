@@ -20,18 +20,33 @@ import blood_falls as bf
 FPS = 30; LEAD = 0.10
 
 
+def tag_lines(ws):
+    """words.json from tts.py has no line index: tag each word with its SCRIPT.md voice-over line."""
+    if all('line' in w for w in ws): return ws
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    txt = open(os.path.join(root, 'scripts', bf.SLUG, 'SCRIPT.md')).read().split('## Voice-over')[1].split('\n## ')[0]
+    k = 0
+    for li, m in enumerate(re.finditer(r'^\d+\. (.+)$', txt, re.M), 1):
+        for _ in m.group(1).split():
+            ws[k]['line'] = li; k += 1
+    assert k == len(ws), f'SCRIPT.md has {k} words, words.json {len(ws)}'
+    return ws
+
+
 def load(words_path):
-    ws = json.load(open(words_path))
+    """Shots from bf.SHOT_LIST [(name, line, first word of the line)]: a shot starts LEAD s before its first
+    word (s01 at 0) and runs to the next shot; the last one runs to the film end (bf.END or last word + .6)."""
+    ws = tag_lines(json.load(open(words_path)))
     lines = {}
     for i, w in enumerate(ws): lines.setdefault(w['line'], []).append(w)
     shots = []
-    names = list(bf.SHOTS)
-    for k, name in enumerate(names):
-        li = bf.LINE_OF[name]
-        t0 = 0.0 if k == 0 else lines[li][0]['start'] - LEAD
-        nxt = lines.get(li + 1)
-        t1 = nxt[0]['start'] - LEAD if nxt else lines[li][-1]['end'] + .6
-        shots.append((name, t0, t1, li))
+    for k, (name, li, w0) in enumerate(bf.SHOT_LIST):
+        t0 = 0.0 if k == 0 else lines[li][w0]['start'] - LEAD
+        if k + 1 < len(bf.SHOT_LIST):
+            _, l2, w2 = bf.SHOT_LIST[k + 1]; t1 = lines[l2][w2]['start'] - LEAD
+        else:
+            t1 = getattr(bf, 'END', None) or lines[li][-1]['end'] + .6
+        shots.append((name, t0, t1, li, w0))
     return ws, lines, shots
 
 
@@ -64,10 +79,40 @@ def draw_caption(img, text, base, scale=1.0):
     ImageDraw.Draw(img).text((x, base), text, font=f, fill='white', anchor='ls', stroke_width=max(2, int(size * .1)), stroke_fill='black')
 
 
+def bodies(faces):
+    """(torso, legs) boxes under each face box (face_box pads R by 1.15; a stickman is ~10 R tall)."""
+    out = []
+    for x0, y0, x1, y1 in faces:
+        R = (x1 - x0) / 2 / 1.15; hx, hy = (x0 + x1) / 2, (y0 + y1) / 2
+        out.append(((hx - R * .8, hy + R, hx + R * .8, hy + R * 6.2), (hx - R * 1.2, hy + R * 6.2, hx + R * 1.2, hy + R * 10)))
+    return out
+
+
+def place_band(img, info, w=0.42 * kit.W, search=0.15, step=6, k=0.012):
+    size = int(0.037 * kit.H); base = 0.70 * kit.H
+    x0, x1 = (kit.W - w) / 2 - 30, (kit.W + w) / 2 + 30
+    hit = lambda a, b, box: a < box[3] and b > box[1] and x0 < box[2] and x1 > box[0]
+    faces = list(info.get('faces', [])) + list(info.get('avoid', []))
+    for x0_, y0_, x1_, y1_ in info.get('faces', []):                  # the role label floats above each head
+        faces.append(((x0_ + x1_) / 2 - 190, y0_ - 150, (x0_ + x1_) / 2 + 190, y0_ - 10))
+    bods = bodies(info.get('faces', []))
+    best = None
+    for hard in (faces + [t_ for t_, l_ in bods], faces):                # torsos are off limits too, unless no band is free
+      for dy in range(-int(search * kit.H), int(search * kit.H) + 1, step):
+        b = base + dy; a_, b_ = b - size, b + size * .32
+        if any(hit(a_, b_, f) for f in hard): continue
+        cost = kit.busy(img, (x0, a_, x1, b_)) + k * abs(dy)
+        cost += sum(60 for t_, l_ in bods if hit(a_, b_, t_)) + sum(14 for t_, l_ in bods if hit(a_, b_, l_))
+        if best is None or cost < best[0]: best = (cost, b)
+      if best: break
+    return best[1] if best else base
+
+
 class Film:
     def __init__(self, words_path, band_cache=None):
         self.ws, self.lines, self.shots = load(words_path)
         self.caps = groups(self.ws)
+        anim.BEATS = [w['start'] for w in self.ws if len(re.sub(r'[^\w]', '', w['word'])) >= 5]
         self.band_cache = band_cache; self.bands = {}
         if band_cache and os.path.exists(band_cache): self.bands = json.load(open(band_cache))
 
@@ -77,25 +122,29 @@ class Film:
         return self.shots[-1]
 
     def raw(self, T):
-        name, t0, t1, li = self.shot_at(T)
+        name, t0, t1, li, w0 = self.shot_at(T)
         lw = self.lines[li]
-        cue = lambda i: lw[min(i, len(lw) - 1)]['start'] - t0
+        cue = lambda i: lw[min(i, len(lw) - 1)]['start'] - t0          # i = word index in the voice-over LINE
+        anim.NOW = T
         return bf.SHOTS[name](T - t0, t1 - t0, cue), name
 
     def band(self, name):
+        """Caption baseline per shot: the cleanest band within +-10% of 70% on a late frame of the shot.
+        Faces are never covered; torsos and legs (body boxes under each face) cost extra, so the caption
+        moves off a body when a cleaner band is near (NOTES v3 open note)."""
         if name not in self.bands:
             s = [x for x in self.shots if x[0] == name][0]
             (img, info), _ = self.raw(s[2] - .35)
-            if name == 's01': b = 0.70 * kit.H                               # NOTES: s01 keeps the fixed 70% line
-            else: b = kit.clean_band(img, 0.42 * kit.W, int(0.037 * kit.H), avoid=info['faces'])
-            self.bands[name] = b
+            f = kit.font(int(round(0.037 * kit.H)), bold=True)
+            ws = [kit.text_w(g['text'], f) for g in self.caps if s[1] <= g['start'] < s[2]]
+            self.bands[name] = place_band(img, info, w=max(ws + [0.2 * kit.W]))
         return self.bands[name]
 
     def frame(self, T):
         (img, info), name = self.raw(T)
         base = self.band(name)
         t0 = self.shot_at(T)[1]; u = T - t0
-        if t0 > 0 and u < .2:                                    # cut: a 6-frame punch-in settle + a 3-frame light flash
+        if t0 > 0 and u < .2 and name not in getattr(bf, 'NO_PUNCH', ()):                                    # cut: a 6-frame punch-in settle + a 3-frame light flash
             img = anim.camera(img, 1 + .045 * (1 - anim.ease_out(u / .2)))
             if u < .1:
                 img.alpha_composite(Image.new('RGBA', img.size, (255, 255, 255, int(70 * (1 - u / .1)))))
@@ -157,7 +206,8 @@ if __name__ == '__main__':
     t1 = float(t1) if t1 else film.shots[-1][2]
     frames_dir = out + '.frames'; os.makedirs(frames_dir, exist_ok=True)
     cache = out + '.bands.json'
-    for name, *_ in film.shots: film.band(name)                             # caption bands, once per shot
+    for name, *_ in film.shots: film.band(name)
+    print({k: round(v / kit.H, 3) for k, v in film.bands.items()})                             # caption bands, once per shot
     json.dump(film.bands, open(cache, 'w'))
     n = int(round((t1 - t0) * FPS))
     jobs = [(f, t0 + f / FPS, frames_dir, size) for f in range(n)]
