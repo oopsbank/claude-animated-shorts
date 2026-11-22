@@ -51,6 +51,16 @@ The output folder gets `frames/f_NNNNN.jpg`, `video.mp4`, and `track.json`. The 
   - `action`: `hop` | `jolt` | `shake` | `lean`.
 - **FX fields:** `name`, `at_word` (the effect peaks on the word), `x`, `y`, `size` (a fraction of the width), `dur` (s), `on: <char id>` + `anchor: head|feet` + `dx`, and `kick: true`. Every other key goes to `fx.render()`. Set `ENGINE_FX=/path/fx.py` to test another fx module. Unknown names fall back to a stub star.
 
+## Video 2 wiring (sailing-stones)
+- **Prop sprites** (`props.py`, from `characters/scripts/sprites.py`): string entries in `props` are sprites on the sets in `SPRITE_SETS` (playa, inserts), so video 1 frames stay identical; dict entries work anywhere: `{"name", "x", "y" (anchor, frame fractions), "scale", "layer": back|front, "at_word", "until_word", "dur", "path": [[x, y], ...], "t", "flip", "kw"}`. Placement defaults are in `props.DEFAULTS` per (name, cam); a plate JSON `"<name>_xy"` (px) wins for string entries. Props the plate shows (`props.BAKED`) and props a character holds in the shot are skipped. Scale = the character-card scale at that ground row (perspective from `horizon_y`).
+- **Plate variants:** a `fantasy:<tag>` prop (or `"variant": tag`) picks `<set>__<cam>__<light>__<tag>.png` when it exists.
+- **Antennae** (`hat: "antennae"`): `antennae` on the character or a beat (`up`|`droop`|0..1) eases in over 10 f from the beat's word; the balls spring (damped, ~11 f period) after every body beat and hop.
+- **Seated:** `seated: "cooler"` goes straight to bean (soles stay on the ground line); the `cooler` sprite is skipped in that shot.
+- **Environment fx:** `dust_storm`, `flash_flood`, `rain` are drawn full-frame (an H-sized square, centred). These and `ice_pane` / `air_hockey_overlay` start on their word and last to the end of the shot unless `dur` is given. `air_hockey_overlay` listed in `props` becomes an fx.
+- **`ice_pane` chaining:** several `ice_pane` entries in a shot play as one: each stage but the last holds its full sheet (t 0.91, before its fade) until the next starts.
+- **`sliding_rock` `path`:** written in frame fractions in shots.json; the engine converts them to the fx canvas and sizes the canvas to fit the path.
+- **Sepia:** `"grade": "sepia"` on a shot (flashbacks) goes through `GRADE.finish(sepia=True)`.
+
 ## Stand-ins (until other areas ship)
 - **Plates:** missing plates fall back to `engine/test/plates/village__{M,A}__day` by shot size. The stand-ins are on with `ENGINE_STANDIN=1`, the default; set it to 0 to fail hard instead.
 - **Riders:** a character with `rig` uses `bikes.ride()`. Its beats drive `lean` / `body_lean` / `bike_lean`, `knee_out`, and an optional `steer`. With no explicit `steer`, the engine adds an **automatic countersteer**: before each lean change of more than 5°, the bars flick the other way (up to 10°, peaking 5 f before the lean lands), and a held lean steers gently into the turn. Cards are cached per 1° bucket. The sticker comes from a `helmet_sticker:` entry in `props`.

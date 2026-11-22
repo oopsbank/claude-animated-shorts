@@ -1172,7 +1172,8 @@
      "x": 0.5,
      "y": 0.5,
      "stage": "freeze",
-     "at_word": 7
+     "at_word": 7,
+     "size": 1.0
     }
    ],
    "props": [
@@ -1421,7 +1422,8 @@
      "x": 0.5,
      "y": 0.5,
      "stage": "panes",
-     "at_word": 8
+     "at_word": 8,
+     "size": 1.0
     },
     {
      "name": "whoosh",
@@ -1436,7 +1438,8 @@
      "y": 0.5,
      "stage": "drift",
      "direction": "right",
-     "at_word": 12
+     "at_word": 12,
+     "size": 1.0
     },
     {
      "name": "sliding_rock",
@@ -1668,6 +1671,10 @@
        ]
       },
       {
+       "at_word": 2,
+       "antennae": "droop"
+      },
+      {
        "expr": "neutral",
        "at_word": 3,
        "arm_pose": [
@@ -1677,7 +1684,7 @@
       }
      ],
      "talk": true,
-     "antennae": "droop",
+     "antennae": "up",
      "build": "stout",
      "skin": "#ffd9b8",
      "shirt": "#7a3fb0",
@@ -1716,7 +1723,15 @@
    ],
    "fx": [],
    "props": [
-    "gary_rock"
+    "gary_rock",
+    {
+     "name": "flying_bills",
+     "x": 0.85,
+     "y": 0.45,
+     "at_word": 2,
+     "dur": 2.5,
+     "layer": "back"
+    }
    ]
   },
   {
