@@ -24,6 +24,11 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
   - frost: playa_top is washed out;
   - the camp is small in playa_wide and rock_low;
   - in playa_med, the mast and chairs sit behind a centred character.
+- [ ] P2 `playa` (built, `blender/sets/playa/build.py`; 5 cams x 4 lights + depth; targets rock, tour_sign, camp_rocks, tent). Reviews: 6.6 → 6.8 → 6.9 (low res), 6.8 on the final full-size plates. Frozen at the plateau, to be judged in the G2 storyboard. Open fixes:
+  - night: warm practicals too weak against the cool ground (tent glow, lantern pools); the playa_top night pond is a flat navy (add a moon reflection or a pale shore);
+  - overlook_med: the van, alien and sign sit small at the edges with no mid-ground layer, and the gravel foreground is plain;
+  - frost: a flat blue wash with no clear light direction (playa_top frost is the weakest);
+  - playa_wide and rock_low: the camp and its 15-rock row are small behind the character.
 - [ ] P2 `inserts` (built, `blender/sets/inserts/build.py`, PIL). Frozen after 8 rounds at 6.8 → 6.8 → 7.0 → 7.2 → 7.3 → 7.4 → 7.5 → 7.3 (plateau). Open notes:
   - air hockey: the scoreboard and crowd crowd the bubble top;
   - leaf blowers: the desert reads muddy under the green filter;
