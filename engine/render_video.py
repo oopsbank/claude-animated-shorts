@@ -14,6 +14,7 @@ import anim  # noqa: E402
 import captions as CAP  # noqa: E402
 import grade as GRADE  # noqa: E402
 import parallax as PX  # noqa: E402
+import props as PROPS  # noqa: E402
 from anim import W, H, FPS, smooth, clamp, lerp  # noqa: E402
 
 PLATE_DEFAULTS = {'horizon_y': H * 0.4, 'light_dir': 'left', 'tint': '#fff8f0'}
@@ -124,6 +125,16 @@ def setup(shots_path, words_path, plate_dirs):
                 if sp['f0'] <= fr < sp['f1']:
                     s['_auto_fx'].append({'name': 'steer_arrow', 'direction': 'right' if d > 0 else 'left', '_frame': fr,
                                           'on': c.get('id'), 'anchor': 'bars', 'size': 0.3, 'dur': 0.8})
+        # air_hockey_overlay listed as a prop is an fx (it flickers over the real ice)
+        for pr in s.get('props', []):
+            if (pr if isinstance(pr, str) else pr.get('name', '')).startswith('air_hockey_overlay') and not any(e['name'] == 'air_hockey_overlay' for e in s.get('fx', [])):
+                s.setdefault('fx', []).append(dict({'name': 'air_hockey_overlay', 'at_word': 0, 'x': 0.5, 'y': 0.8, 'size': 1.0, 'aspect': 0.32},
+                                                   **({} if isinstance(pr, str) else {kk: v for kk, v in pr.items() if kk != 'name'})))
+        # ice_pane stages chain in one framing: each stage but the last holds its full sheet (t 0.91, before its fade)
+        # until the next stage starts, and the last plays to the end of the shot
+        ip = [e for e in s.get('fx', []) if e['name'] == 'ice_pane']
+        for a_, b_ in zip(ip, ip[1:]):
+            a_['_hold_until'] = anim.beat_frame((sp['w0'], sp['w1']), words, b_.get('at_word', 0))[1]
         kicks = []
         for e in s.get('fx', []):
             if e.get('kick'): kicks.append(anim.beat_frame((sp['w0'], sp['w1']), words, e.get('at_word', 0))[1])
@@ -134,6 +145,8 @@ def setup(shots_path, words_path, plate_dirs):
             xs = [float(c.get('x', 0.5)) for c in s['characters']]
             cam['focus'] = [sum(xs) / len(xs), (pm['ground_y'] - 0.62 * fig) / H]
         G['cams'][k] = anim.Camera(cam, sp, words, kicks)
+        s['_props'] = PROPS.plan(s)
+        s['_ant'] = [antennae_keys(c, sp, words) for c in s.get('characters', [])]
         G['mouths'][k] = [rig.mouth_track(words[sp['w0']:sp['w1']], sp['f0'] - 30, sp['f1'] + 30) if c.get('talk') else {}
                           for c in s.get('characters', [])]
     n = spans[-1]['f1'] if spans else 0
@@ -146,6 +159,34 @@ def setup(shots_path, words_path, plate_dirs):
 
 
 BIKES = ('bicycle', 'motorbike', 'nobs_bike')
+ANT = {'up': 0.0, 'droop': 1.0}
+
+
+def antennae_keys(c, sp, words):
+    """Antennae droop keys [(frame, value)] for hat='antennae': the spec's start value, then each beat's "antennae"
+    ('up'|'droop'|0..1) eased in over 10 f from its word. Spring sway kicks [(frame, amp)] on every beat and hop."""
+    if c.get('hat') != 'antennae': return None
+    v0 = c.get('antennae', 'up'); v0 = ANT.get(v0, v0)
+    keys = [(-10 ** 9, float(v0))]; kicks = []
+    for b in sorted(c.get('beats', []), key=lambda b: b.get('at_word', 0)):
+        land, wf = anim.beat_frame((sp['w0'], sp['w1']), words, b.get('at_word', 0))
+        if 'antennae' in b:
+            v = b['antennae']; keys.append((wf, float(ANT.get(v, v))))
+        if land > sp['f0'] + 1 and any(kk in b for kk in ('pose', 'arm_pose', 'lean', 'x', 'action', 'antennae')):
+            kicks.append((land, 9.0 if ('x' in b or b.get('action')) else 6.0))
+    return {'keys': keys, 'kicks': kicks}
+
+
+def antennae_at(ak, f, sign=1.0):
+    """(droop 0..1, sway deg) at frame f: smooth 10 f ease between keys; damped spring after each kick."""
+    v = ak['keys'][0][1]
+    for fr, val in ak['keys'][1:]:
+        if f >= fr: v = lerp(v, val, smooth((f - fr) / 10.0))
+    sw = 0.0
+    for fr, amp in ak['kicks']:
+        d = f - fr
+        if 0 <= d < 30: sw += amp * math.exp(-d / 9.0) * math.sin(d * 2 * math.pi / 11.0)
+    return round(v, 1), sign * round(sw / 2) * 2
 
 
 def layout_shot(shot, meta):
@@ -327,6 +368,9 @@ def place_characters(base, k, f, meta):
             g = {'crown': 0}; breath = 1.0; sx, sy = 500 * s, 975 * s
             bb0 = im.getchannel('A').getbbox(); g['crown'] = bb0[1] if bb0 else 0
         else:
+            ak = shot.get('_ant', [None] * (i + 1))[i]
+            if ak:                         # antennae droop eases in; the balls spring after beats and hops
+                dv, sw = antennae_at(ak, f); spec = dict(spec, antennae=dv, antennae_sway=sw)
             im, g = rig.card(spec, st['pose'], st['expr'], st['facing'], s, st['lid'], mouth, prop=st.get('prop'))
             breath = 1 + 0.004 * math.sin(2 * math.pi * (f / FPS) / 2.8 + i)            # rule 28, anchored at the soles
             if abs(breath - 1) > 1e-4:
@@ -376,6 +420,10 @@ def place_characters(base, k, f, meta):
     return out
 
 
+FULL_FX = {'dust_storm', 'flash_flood', 'rain'}                       # placed full-frame
+LONG_FX = FULL_FX | {'ice_pane', 'air_hockey_overlay'}               # last from their word to the end of the shot
+
+
 def place_fx(base, k, f, chars):
     shot = G['shots'][k]; sp = G['spans'][k]; mod = G['fx']; out = []
     for e in shot.get('fx', []) + shot.get('_auto_fx', []):
@@ -386,15 +434,22 @@ def place_fx(base, k, f, chars):
             ins_ = shot.get('_insert')
             if ins_ and ins_[0] <= land < ins_[1]: end = ins_[1]
             start = land; dur = max(8, end - land + 6)
+        elif e['name'] in LONG_FX and 'dur' not in e:     # environment fx start on their word and fill the shot
+            start = wf - int(round(float(e.get('peak', 0.0)) * FPS))
+            end = e.get('_hold_until', sp['f1'] + 2)
+            dur = max(8, int(round((end - start) / (0.91 if '_hold_until' in e else 1.0))))
         else:
             dur = max(4, int(round(float(e.get('dur', 0.8)) * FPS)))
-            peak = float(e.get('peak', 0.3))
+            peak = float(e.get('peak', 0.0 if e['name'] in LONG_FX else 0.3))
             start = wf - int(round(peak * dur))         # the effect peaks on the word onset
-        if not start <= f < start + dur: continue
+        hold = e.get('_hold_until')
+        if not (start <= f < start + dur or (hold is not None and start <= f < hold)): continue
         ins_ = shot.get('_insert')
         if e['name'] == 'path_line' and ins_ and ins_[0] <= land < ins_[1] and f >= ins_[1]: continue   # the diagram ends with its cut-in
         t = (f - start + 0.5) / dur
+        if hold is not None: t = min(t, 0.91)                # chained stage: hold the full sheet, the next takes over
         size = int(float(e.get('size', 0.9 if e['name'] == 'path_line' else 0.35)) * W)
+        if e['name'] in FULL_FX: size = H; e = dict(e, x=0.5, y=0.5)          # full-frame: the square covers the frame
         kw = {kk: v for kk, v in e.items() if kk not in ('name', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor', 'dx') and not kk.startswith('_')}
         if e['name'] == 'path_line':          # racing lines named in the plate JSON follow the real road (sets: paths.py)
             ins_ = shot.get('_insert'); pl = ins_[2] if (ins_ and ins_[0] <= f < ins_[1]) else shot['_plate']
@@ -406,6 +461,12 @@ def place_fx(base, k, f, chars):
                     if isinstance(kw.get(kk), str) and kw[kk] in ppaths:
                         kw[kk] = [((px * W - o_x - size / 2) / u_, (py * H - size / 2) / u_) for px, py in ppaths[kw[kk]]]
         if mod and 'line' not in kw and chars: kw['line'] = 10 * chars[0].get('scale', 0.5)   # fx area: line = 10 x card scale
+        if e['name'] == 'sliding_rock' and isinstance(kw.get('path'), list):     # shots.json: frame fractions -> canvas
+            pts = kw['path']; xs = [p_[0] * W for p_ in pts]; ys = [p_[1] * H for p_ in pts]
+            cxp, cyp = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
+            size = int(max(size, 1.5 * max(max(xs) - min(xs), max(ys) - min(ys)) + 0.2 * W))
+            e = dict(e, x=cxp / W, y=cyp / H)
+            kw['path'] = [((px - cxp) / size + 0.5, (py - cyp) / size + 0.5) for px, py in zip(xs, ys)]
         try:
             im = (mod.render if mod else stub_fx)(e['name'], t, size, **kw)
         except KeyError:
@@ -498,6 +559,17 @@ def ride_warper(pkey, plate, meta):
     return cache[pkey]
 
 
+def prop_t(k, f, e):
+    """A prop sprite's t at frame f (None = hidden): from its at_word over dur s (default the rest of the shot)."""
+    sp = G['spans'][k]; sw = (sp['w0'], sp['w1'])
+    a = anim.beat_frame(sw, G['words'], e['at_word'])[1] if 'at_word' in e else sp['f0']
+    if 'until_word' in e and f >= anim.beat_frame(sw, G['words'], e['until_word'])[1]: return None
+    if e.get('enter') and f < a: return None
+    if 't' in e: return float(e['t'])
+    dur = float(e['dur']) * FPS if 'dur' in e else max(1, sp['f1'] - a)
+    return clamp((f - a) / dur)
+
+
 def render_shot(k, f):
     shot = G['shots'][k]; pkey = shot['_plate']
     ins = shot.get('_insert'); crop_any = False
@@ -512,7 +584,9 @@ def render_shot(k, f):
         im = G['rig'].bike_card(kind, s, view=shot.get('bike_view', '3q'))
         bb = im.getchannel('A').getbbox()
         if bb: base.alpha_composite(im, (int(sx_ * W - 500 * s), int(meta['ground_y'] - bb[3])))
+    if shot.get('_props'): PROPS.draw(base, shot['_props'], 'back', f, lambda e: prop_t(k, f, e), meta, W, H)
     chars = place_characters(base, k, f, meta)
+    if shot.get('_props'): PROPS.draw(base, shot['_props'], 'front', f, lambda e: prop_t(k, f, e), meta, W, H)
     fxs = place_fx(base, k, f, chars)
     img, to_screen, cam = camera_xform(base.convert('RGB'), G['cams'][k].at(f))
     gk = f'{k}:insert' if (ins and ins[0] <= f < ins[1]) else str(k)          # cut-ins have their own plate grade
