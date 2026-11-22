@@ -7,7 +7,7 @@
 - [x] **no frozen spans >= 12 f**: PASS [] (median frame diff 1.11 grey levels)
 - [x] **no character clipped at the frame edge**: PASS 0 frames; first: []
 - [x] **feet on the ground line (+-4 px)**: PASS 0 frames; worst: []
-- [ ] **planted feet move <= 2 px**: FAIL 4 frames; first: [(1230, 'kip', 'foot_l', 13.5), (1230, 'kip', 'foot_r', -16.0), (1230, 'lou', 'foot_l', 16.0), (1230, 'lou', 'foot_r', -13.5)]
+- [x] **planted feet move <= 2 px**: PASS 0 frames; first: []
 - [x] **beats land 0-3 f before their word**: PASS 26 beats; off: []
 - [x] **captions land 0-2 f before their word**: PASS 146 captions; off: []
 - [x] **no caption during silences > 0.4 s**: PASS 0 frames; first: []
@@ -58,7 +58,7 @@ f_01110.jpg lum=0.45 p98=0.85 sat=0.45 cool=0.94 edge=0.01 FAIL cool,edge
 f_01140.jpg lum=0.43 p98=0.99 sat=0.39 cool=0.35 edge=0.08 FAIL cool
 f_01170.jpg lum=0.43 p98=0.89 sat=0.40 cool=0.34 edge=0.04 FAIL edge
 f_01200.jpg lum=0.34 p98=0.79 sat=0.56 cool=0.54 edge=0.04 FAIL lum,p98,sat,cool,edge
-f_01230.jpg lum=0.46 p98=0.86 sat=0.45 cool=0.94 edge=0.01 FAIL cool,edge
+f_01230.jpg lum=0.41 p98=0.87 sat=0.43 cool=0.39 edge=0.03 FAIL cool,edge
 f_01260.jpg lum=0.51 p98=0.92 sat=0.48 cool=0.39 edge=0.04 FAIL cool
 f_01290.jpg lum=0.45 p98=0.91 sat=0.46 cool=0.18 edge=0.05 PASS
 f_01320.jpg lum=0.51 p98=0.91 sat=0.47 cool=0.37 edge=0.06 FAIL cool
