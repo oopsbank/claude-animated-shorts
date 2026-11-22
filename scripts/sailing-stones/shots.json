@@ -215,10 +215,18 @@
     "move": "glide",
     "glides": [
      {
+      "at_word": 0,
+      "to": {
+       "zoom": 1.12,
+       "x": 0.47
+      },
+      "dur": 30
+     },
+     {
       "at_word": 9,
       "to": {
-       "zoom": 1.2,
-       "x": 0.45
+       "zoom": 1.3,
+       "x": 0.42
       },
       "dur": 8
      }
@@ -236,6 +244,15 @@
        "arm_pose": [
         "hold",
         "hang"
+       ]
+      },
+      {
+       "expr": "shock",
+       "lean": -6,
+       "at_word": 12,
+       "arm_pose": [
+        "hold",
+        "point"
        ]
       }
      ],
@@ -256,6 +273,14 @@
        "arm_pose": [
         "chin",
         "hang"
+       ]
+      },
+      {
+       "expr": "grin",
+       "at_word": 13,
+       "arm_pose": [
+        "wave",
+        "wave"
        ]
       }
      ],
@@ -295,9 +320,17 @@
     "move": "glide",
     "glides": [
      {
+      "at_word": 0,
+      "to": {
+       "zoom": 1.28,
+       "x": 0.38
+      },
+      "dur": 28
+     },
+     {
       "at_word": 5,
       "to": {
-       "zoom": 1.4,
+       "zoom": 1.45,
        "x": 0.36,
        "y": 0.5
       },
@@ -801,8 +834,25 @@
     "pov"
    ],
    "camera": {
-    "move": "push_in",
-    "amount": 0.08
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 0,
+      "to": {
+       "zoom": 1.2
+      },
+      "dur": 36
+     },
+     {
+      "at_word": 5,
+      "to": {
+       "zoom": 1.45,
+       "x": 0.72,
+       "y": 0.72
+      },
+      "dur": 6
+     }
+    ]
    },
    "note": "FANTASY CUTAWAY in his head (thought-bubble frame + cheesy green \"ALIEN CAM\" filter, so it reads as fantasy): tiny aliens in hi-vis vests leaf-blowing a boulder; his price card flips to $30 in the corner.",
    "characters": [],
@@ -1051,8 +1101,25 @@
     "pov"
    ],
    "camera": {
-    "move": "push_in",
-    "amount": 0.1
+    "move": "glide",
+    "glides": [
+     {
+      "at_word": 1,
+      "to": {
+       "zoom": 1.2
+      },
+      "dur": 36
+     },
+     {
+      "at_word": 5,
+      "to": {
+       "zoom": 1.45,
+       "x": 0.72,
+       "y": 0.72
+      },
+      "dur": 6
+     }
+    ]
    },
    "note": "FANTASY CUTAWAY (thought bubble + ALIEN CAM filter): a stadium of cheering aliens, rocks in tiny racing helmets and numbered bibs crossing a finish line; price card $40; his real antennae poke into the bubble edge.",
    "characters": [],
@@ -1224,9 +1291,16 @@
     "move": "glide",
     "glides": [
      {
+      "at_word": 0,
+      "to": {
+       "zoom": 1.15
+      },
+      "dur": 40
+     },
+     {
       "at_word": 7,
       "to": {
-       "zoom": 1.2
+       "zoom": 1.35
       },
       "dur": 6
      },
@@ -1240,7 +1314,7 @@
      {
       "at_word": 16,
       "to": {
-       "zoom": 1.12
+       "zoom": 1.25
       },
       "dur": 24
      }
@@ -1424,6 +1498,14 @@
        "at_word": 0,
        "arm_pose": [
         "hang",
+        "hang"
+       ]
+      },
+      {
+       "expr": "shock",
+       "at_word": 6,
+       "arm_pose": [
+        "chin",
         "hang"
        ]
       },
@@ -1944,13 +2026,13 @@
     "move": "glide",
     "glides": [
      {
-      "at_word": 3,
+      "at_word": 2,
       "to": {
-       "zoom": 1.6,
-       "x": 0.62,
-       "y": 0.4
+       "zoom": 1.75,
+       "x": 0.64,
+       "y": 0.36
       },
-      "dur": 6
+      "dur": 8
      },
      {
       "at_word": 6,
@@ -1961,7 +2043,8 @@
       "dur": 6
      }
     ],
-    "zoom": 1.3
+    "zoom": 1.35,
+    "x": 0.6
    },
    "note": "The concession, deadpan: close on his face as both antenna balls sag (his refund cash fluttering away behind him on the breeze, unspoken); at \"Gary\" Kip holds Gary up beside him, one googly eye askew.",
    "characters": [
@@ -2010,8 +2093,17 @@
      "x": 0.24,
      "beats": [
       {
-       "prop": "gary_rock",
        "expr": "smug",
+       "at_word": 0,
+       "arm_pose": [
+        "hip",
+        "hang"
+       ]
+      },
+      {
+       "prop": "gary_rock",
+       "expr": "grin",
+       "lean": 6,
        "at_word": 6,
        "arm_pose": [
         "hold",
