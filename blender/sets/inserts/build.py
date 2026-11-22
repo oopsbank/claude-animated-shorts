@@ -52,7 +52,8 @@ def alien(d, x, y, s=1.0, body=LIME, vest=None, arm=None, cheer=False, face=1):
     for sx in (-1, 1):
         poly(d, [(hx + sx * 6 * s, hy + 2 * s), (hx + sx * 34 * s, hy - 14 * s), (hx + sx * 32 * s, hy + 6 * s), (hx + sx * 12 * s, hy + 16 * s)], INK, 0, None)
         ell(d, hx + sx * 24 * s, hy - 6 * s, 4 * s, 4 * s, (255, 255, 255), 0, None)
-    if face: d.arc(S(hx - 12 * s, hy + 12 * s, hx + 12 * s, hy + 32 * s), 20, 160, fill=INK, width=lw(4 * s))
+    if face == 2: ell(d, hx, hy + 24 * s, 10 * s, 12 * s, (120, 30, 50), 4 * s)            # open mouth, yelling
+    elif face: d.arc(S(hx - 12 * s, hy + 12 * s, hx + 12 * s, hy + 32 * s), 20, 160, fill=INK, width=lw(4 * s))
     return hx, hy
 
 def rock(d, cx, cy, rx, ry, seed=0, col=(62, 52, 58)):
@@ -114,11 +115,11 @@ def panel_leaf_blower(d):
     puff(d, 560, 1250, 46); puff(d, 900, 1250, 34)
     # three tiny aliens in hi-vis vests, blasting it with leaf blowers
     for (x, y, s, a) in ((200, 1180, 0.85, -4), (340, 1300, 1.05, -12), (170, 1420, 1.2, -22)):
-        hx, hy = alien(d, x, y, s, vest=(255, 140, 30))
-        tip = leaf_blower(d, x + 30 * s, y - 70 * s, a, s)
-        for k in range(3):   # air blasts
-            t0 = (tip[0] + 10, tip[1] + (k - 1) * 14)
-            line(d, [t0, (t0[0] + 90, t0[1] - 20 + (k - 1) * 20)], (255, 255, 255), 6)
+        hx, hy = alien(d, x, y, s, vest=(255, 140, 30), face=2 if s > 1 else 1)
+        tip = leaf_blower(d, x + 30 * s, y - 70 * s, a, s * 1.6)
+        for k in range(4):   # air blasts
+            t0 = (tip[0] + 10, tip[1] + (k - 1.5) * 18)
+            line(d, [t0, (t0[0] + 160, t0[1] - 30 + (k - 1.5) * 30)], (255, 255, 255), 8)
     text_c(d, (540, 420), 'PROPULSION DEPT.', font(46, True), SUN, stroke=6)
 
 def panel_rock_racing(d):
@@ -139,7 +140,7 @@ def panel_rock_racing(d):
     for k in range(4): line(d, [(BX0, 1040 + k * 150), (BX1, 1000 + k * 165)], (255, 255, 255), 6)   # lanes
     for k in range(10):   # chequered finish line on the right
         for j in range(2): poly(d, [(870 + j * 30, 960 + k * 56), (900 + j * 30, 960 + k * 56), (900 + j * 30, 1016 + k * 56), (870 + j * 30, 1016 + k * 56)], (255, 255, 255) if (k + j) % 2 else INK, 0, None)
-    for n, (x, y, sz) in enumerate(((700, 1080, 95), (520, 1220, 110), (330, 1350, 120)), 1):   # the racers
+    for n, (x, y, sz) in enumerate(((720, 1040, 90), (540, 1150, 100), (330, 1250, 110)), 1):   # the racers
         for k in range(4): line(d, [(x - sz - 40 - k * 30, y - 40 + k * 22), (x - sz - 140 - k * 30, y - 40 + k * 22)], (255, 255, 255), 6)
         rock(d, x, y, sz, sz * 0.7, seed=20 + n, col=[(70, 58, 62), (88, 70, 64), (60, 56, 70)][n - 1])
         helmet(d, x + sz * 0.05, y - sz * 0.55, sz * 0.48, [ORANGE, BLUE, PINK][n - 1])
@@ -159,25 +160,26 @@ def panel_air_hockey(d):
     text_c(d, (410, 460), '3', font(90, True), (80, 255, 200)); text_c(d, (540, 455), ':', font(80, True), (255, 255, 255)); text_c(d, (670, 460), '2', font(90, True), (255, 90, 170))
     # the neon rink in perspective
     rink = [(150, 760), (930, 760), (1060, 1500), (20, 1500)]
-    poly(d, rink, (40, 70, 140), 8, (120, 240, 255))
+    poly(d, rink, (70, 130, 210), 8, (120, 240, 255))
+    poly(d, [(200, 790), (880, 790), (900, 900), (180, 900)], (100, 165, 235), 0, None)   # ice sheen
     line(d, [(85, 1130), (995, 1130)], (255, 90, 170), 8)                                      # centre line
     d.ellipse(S(400, 1060, 680, 1200), outline=(255, 90, 170), width=lw(8))
     for (gx, gy, gw) in ((540, 770, 150), (540, 1490, 240)): poly(d, [(gx - gw, gy - 14), (gx + gw, gy - 14), (gx + gw, gy + 14), (gx - gw, gy + 14)], (120, 240, 255), 4)   # goals
     # the boulder puck flying, with a neon streak
     for k in range(5): line(d, [(300 - k * 30, 1300 + k * 18), (470 - k * 20, 1240 + k * 12)], (120, 240, 255), 7)
-    rock(d, 560, 1215, 120, 72, seed=31)
+    rock(d, 540, 1200, 150, 90, seed=31)
     # two alien players with mallets
-    for (x, y, s, col) in ((800, 960, 1.0, (80, 255, 200)), (250, 1390, 1.15, (255, 90, 170))):
+    for (x, y, s, col) in ((330, 960, 1.0, (80, 255, 200)), (250, 1290, 1.15, (255, 90, 170))):
         alien(d, x, y, s)
         ell(d, x + 70 * s, y - 40 * s, 40 * s, 22 * s, col, 5); ell(d, x + 70 * s, y - 58 * s, 16 * s, 16 * s, shade(col, 0.8), 4)
     # the referee: a rock in a striped shirt with a whistle
-    rx, ry = 860, 1330
-    rock(d, rx, ry, 95, 110, seed=40, col=(96, 84, 88))
+    rx, ry = 820, 1150
+    rock(d, rx, ry, 120, 135, seed=40, col=(96, 84, 88))
     for k in range(5):
-        x0 = rx - 75 + k * 32; poly(d, [(x0, ry - 30), (x0 + 16, ry - 30), (x0 + 16, ry + 55), (x0, ry + 55)], INK if k % 2 == 0 else (250, 250, 250), 0, None)
-    d.rectangle(S(rx - 80, ry - 32, rx + 80, ry + 58), outline=INK, width=lw(5))
-    for sx in (-1, 1): ell(d, rx + sx * 26, ry - 70, 12, 12, (255, 255, 255), 4); ell(d, rx + sx * 26, ry - 68, 5, 5, INK, 0, None)
-    ell(d, rx + 30, ry - 40, 16, 10, (210, 210, 220), 4); line(d, [(rx + 20, ry - 40), (rx - 10, ry - 20)], INK, 3)
+        x0 = rx - 95 + k * 40; poly(d, [(x0, ry - 30), (x0 + 20, ry - 30), (x0 + 20, ry + 70), (x0, ry + 70)], INK if k % 2 == 0 else (250, 250, 250), 0, None)
+    d.rectangle(S(rx - 100, ry - 32, rx + 100, ry + 72), outline=INK, width=lw(6))
+    for sx in (-1, 1): ell(d, rx + sx * 32, ry - 82, 16, 16, (255, 255, 255), 5); ell(d, rx + sx * 32, ry - 79, 7, 7, INK, 0, None)
+    ell(d, rx + 34, ry - 48, 22, 13, SUN, 5); line(d, [(rx + 20, ry - 40), (rx - 10, ry - 20)], INK, 3)
     for k in range(3): line(d, [(rx + 52 + k * 6, ry - 56 - k * 14), (rx + 80 + k * 10, ry - 66 - k * 20)], (255, 255, 255), 5)   # tweet!
     text_c(d, (540, 625), 'GALACTIC AIR HOCKEY FINAL', font(40, True), (255, 255, 255), stroke=5)
 
@@ -207,17 +209,17 @@ def alien_cam(panel_fn, tag):
     vg = vg.filter(ImageFilter.GaussianBlur(160)).resize(scene.size)
     scene = Image.composite(scene, ImageChops.multiply(scene, Image.new('RGB', scene.size, (120, 150, 120))), vg)
     do = ImageDraw.Draw(scene)
-    for (x, y, sx, sy) in ((150, 390, 1, 1), (930, 390, -1, 1), (150, 1430, 1, -1), (930, 1430, -1, -1)):   # viewfinder brackets
+    for (x, y, sx, sy) in ((170, 400, 1, 1), (910, 400, -1, 1), (230, 1300, 1, -1), (850, 1300, -1, -1)):   # viewfinder brackets
         line(do, [(x, y + sy * 70), (x, y), (x + sx * 70, y)], (235, 255, 235), 8)
-    ell(do, 190, 1395, 13, 13, (255, 50, 50), 0, None); text_c(do, (215, 1450), 'REC', font(34, True), (235, 255, 235), anchor='lm')
-    poly(do, [(400, 1425), (680, 1425), (680, 1475), (400, 1475)], (30, 90, 40), 3, (235, 255, 235))
-    text_c(do, (540, 1450), 'ALIEN CAM', font(32, True), (180, 255, 170))
-    text_c(do, (900, 1450), '00:41:27', font(30, True), (235, 255, 235), anchor='rm')
+    ell(do, 190, 1395, 13, 13, (255, 50, 50), 0, None); text_c(do, (315, 1340), 'REC', font(34, True), (235, 255, 235), anchor='lm')
+    poly(do, [(420, 1315), (660, 1315), (660, 1365), (420, 1365)], (30, 90, 40), 3, (235, 255, 235))
+    text_c(do, (540, 1340), 'ALIEN CAM', font(32, True), (180, 255, 170))
+    text_c(do, (800, 1340), '00:41:27', font(30, True), (235, 255, 235), anchor='rm')
     m = bubble_mask(); bg.paste(scene, (0, 0), m)
     # bubble rim (ink + cream) and the trailing thought dots toward the thinker (bottom left)
-    edge = m.filter(ImageFilter.MaxFilter(2 * 7 * SS + 1)); ring = ImageChops.subtract(edge, m)
+    edge = m.filter(ImageFilter.MaxFilter(2 * 10 * SS + 1)); ring = ImageChops.subtract(edge, m)
     bg.paste(Image.new('RGB', bg.size, CREAM), (0, 0), ring)
-    edge2 = edge.filter(ImageFilter.MaxFilter(2 * 4 * SS + 1)); ring2 = ImageChops.subtract(edge2, edge)
+    edge2 = edge.filter(ImageFilter.MaxFilter(2 * 6 * SS + 1)); ring2 = ImageChops.subtract(edge2, edge)
     bg.paste(Image.new('RGB', bg.size, INK), (0, 0), ring2)
     db = ImageDraw.Draw(bg)
     for (x, y, r) in ((240, 1620, 48), (160, 1730, 32), (105, 1810, 20)): ell(db, x, y, r, r, CREAM, 8)
@@ -234,7 +236,7 @@ def livestream(out_dir):
     # the video: the real frost plate (rocks sliding on sunlit ice), cropped to the phone's top area
     src = None
     for cand in ('playa__playa_wide__frost.png', 'playa__rock_low__frost.png'):
-        p = os.path.join(ROOT, 'blender/sets/playa/plates', cand)
+        p = os.path.join(os.environ.get('PLAYA_PLATES', os.path.join(ROOT, 'blender/sets/playa/plates')), cand)
         if os.path.exists(p): src = Image.open(p).convert('RGB'); break
     vx0, vy0, vx1, vy1 = px0 + 24, py0 + 110, px1 - 24, py0 + 1020
     vw, vh = (vx1 - vx0) * SS, (vy1 - vy0) * SS
@@ -256,13 +258,13 @@ def livestream(out_dir):
     text_c(d, (px0 + 150, ay - 14), 'AlienRockTours', font(34, True), INK, anchor='lm')
     text_c(d, (px0 + 150, ay + 24), 'ice?? who ordered ice', font(26), (120, 110, 130), anchor='lm')
     # comments flooding in
-    cy = ay + 80
+    cy = ay + 70
     for name, msg, col in (('rocklover', 'ICE??', BLUE), ('dusty_d', 'REFUND', ORANGE), ('m00nwalk', 'its literally ice', TEAL),
-                           ('qq_77', 'REFUND', PINK), ('gramz', 'where are the aliens', PURPLE)):
+                           ('qq_77', 'REFUND', PINK)):
         ell(d, px0 + 70, cy + 22, 24, 24, col, 4)
-        text_c(d, (px0 + 110, cy + 6), name, font(24, True), (120, 110, 130), anchor='lm')
-        f = font(40 if msg in ('ICE??', 'REFUND') else 32, True)
-        text_c(d, (px0 + 110, cy + 44), msg, f, INK, anchor='lm'); cy += 84
+        text_c(d, (px0 + 110, cy + 4), name, font(26, True), (120, 110, 130), anchor='lm')
+        f = font(48 if msg in ('ICE??', 'REFUND') else 36, True)
+        text_c(d, (px0 + 110, cy + 44), msg, f, INK, anchor='lm'); cy += 92
     d.rounded_rectangle(S(px0 + 40, py1 - 110, px1 - 40, py1 - 40), radius=35 * SS, fill=(236, 230, 240))
     text_c(d, (px0 + 80, py1 - 75), 'Add a comment...', font(30), (150, 140, 160), anchor='lm')
     return im.resize((W, H), Image.LANCZOS)
@@ -284,7 +286,9 @@ def wood_sign(lines, strike=None, w=760, h=380):
     for y in (h * 0.36, h * 0.68): line(d, [(16, y), (w - 16, y)], (96, 56, 30), 4)
     sz = [90, 120]; ys = [h * 0.30, h * 0.70]
     for i, t in enumerate(lines):
-        text_c(d, (w / 2, ys[i]), t, font(sz[i] * (0.9 if len(t) > 12 else 1), True), (250, 236, 200))
+        fs_ = sz[i]
+        while d.textbbox((0, 0), t, font=font(fs_, True))[2] > (w - 70) * SS: fs_ -= 4
+        sz[i] = fs_; text_c(d, (w / 2, ys[i]), t, font(fs_, True), (250, 236, 200))
         if strike == i:
             f = font(sz[i], True); first = t.split(' ')[0]; bb = d.textbbox((0, 0), t, font=f); fb = d.textbbox((0, 0), first, font=f)
             x0 = w / 2 - (bb[2] - bb[0]) / SS / 2; x1 = x0 + (fb[2] - fb[0]) / SS

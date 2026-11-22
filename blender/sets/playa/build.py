@@ -42,7 +42,7 @@ PR.weather_mast((4.2, 8.6, 0), rz=30)
 PR.lantern((0.1, 6.3, 0.49))
 C.point((-2.6, 8.4, 0.6), (1.0, 0.55, 0.22), power=45, radius=0.5)                 # glow inside the tent (night)
 C.point((4.2, 8.6, 3.1), (1.0, 0.15, 0.1), power=4, radius=0.05)                    # red beacon on the mast
-C.point((HERO[0] - 3.0, HERO[1] + 1.5, 1.6), (1.0, 0.6, 0.3), power=60, radius=0.3)  # a headlamp left on near the hero rock
+C.point((HERO[0] - 7.0, HERO[1] - 2.0, 0.4), (1.0, 0.6, 0.3), power=70, radius=0.6)  # warm spill from a lantern off-frame
 for k in range(15):   # the row of 15 tagged rocks, each with a short trail behind
     x = -7.0 + k
     s = 0.2 + 0.05 * ((k * 7) % 4)
@@ -81,6 +81,12 @@ for cx, cy in ((-2.2, -4.8), (-1.6, -6.2), (3.6, -2.6)):
     C.rbox((0.4, 0.4, 0.04), (OVER[0] + cx, OVER[1] + cy, 0.17), cone, r=0.01)
     C.rcyl(0.11, 0.07, (OVER[0] + cx, OVER[1] + cy, 0.5), C.pbr('cone_band', (0.9, 0.9, 0.88), rough=0.3, coat=0.5), verts=20, r=0.0)
 BANNER, BANNER_POSTS, _ = PR.sign_posts('FINAL FAIL · LIVE', (OVER[0] - 0.8, OVER[1] + 3.6), rz=0, w=3.4, h=0.8, style='banner', post_h=3.0)
+for wy in (-0.85, 0.85):   # the van's tyre tracks across the gravel, and two stray tumbleweeds
+    a = math.radians(-24); G.trail((OVER[0] - 4.6 - 1.45 * math.cos(a) - wy * math.sin(a), OVER[1] - 0.6 - 1.45 * math.sin(a) + wy * math.cos(a)), -24 + 180 + 25, 14, width=0.32, wobble=0.6, seed=9)
+for tx, ty, r in ((-2.6, -6.6, 0.32), (3.3, -7.4, 0.24)):
+    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=r, location=(OVER[0] + tx, OVER[1] + ty, 0.15 + r * 0.9))
+    tw = bpy.context.object; w_ = tw.modifiers.new('wire', 'WIREFRAME'); w_.thickness = 0.03
+    C.assign(tw, C.pbr('tumble', PR.lin('#b08a55'), rough=0.8, coat=0.0, bevel=0.0)); C.no_ink(tw)
 # warm practicals: van headlamps and a lantern on the sign post
 C.point((OVER[0] - 4.6 + 2.7 * math.cos(math.radians(-24)), OVER[1] - 0.6 + 2.7 * math.sin(math.radians(-24)), 1.0), (1.0, 0.70, 0.38), power=90, radius=0.3)
 PR.lantern((OVER[0] + 2.0, OVER[1] - 1.7, 0.15))
