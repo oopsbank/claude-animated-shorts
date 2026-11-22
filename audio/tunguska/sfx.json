@@ -1,0 +1,244 @@
+[
+ {
+  "cue": "whoosh_fast",
+  "shot": "s01a",
+  "at_word": 0,
+  "level": -16,
+  "note": "the fireball streaks in (already in frame)",
+  "offset": -0.05
+ },
+ {
+  "cue": "deep_boom",
+  "shot": "s01a",
+  "at_word": 3,
+  "level": -6,
+  "note": "THE BLAST: white flash, fireball, shock ring",
+  "offset": -0.08
+ },
+ {
+  "cue": "impact",
+  "shot": "s01a",
+  "at_word": 5,
+  "level": -15,
+  "note": "1,000x HIROSHIMA slams",
+  "offset": -0.05
+ },
+ {
+  "cue": "impact",
+  "shot": "s01b",
+  "at_word": 2,
+  "level": -14,
+  "note": "NO CRATER slams",
+  "offset": -0.1
+ },
+ {
+  "cue": "boom",
+  "shot": "s03",
+  "at_word": 6,
+  "level": -11,
+  "note": "the shockwave hits the trading post",
+  "offset": -0.15
+ },
+ {
+  "cue": "glass_shatter",
+  "shot": "s03",
+  "at_word": 6,
+  "level": -14,
+  "note": "the window bursts",
+  "offset": -0.1
+ },
+ {
+  "cue": "puff",
+  "shot": "s03",
+  "at_word": 9,
+  "level": -15,
+  "note": "he lands off the porch",
+  "offset": -0.2
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s04a",
+  "at_word": 0,
+  "level": -15,
+  "note": "1927 card"
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s04a",
+  "at_word": 10,
+  "level": -17,
+  "note": "meteorite target"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s05",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 1 badge"
+ },
+ {
+  "cue": "impact",
+  "shot": "s05",
+  "at_word": 4,
+  "level": -15,
+  "note": "red X over the crater outline"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 2 badge"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s06",
+  "at_word": 7,
+  "level": -17,
+  "note": "arrows shoot outward"
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s06",
+  "at_word": 10,
+  "level": -16,
+  "note": "ONE SPOT pin"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 3 badge"
+ },
+ {
+  "cue": "riser",
+  "shot": "s08",
+  "at_word": 1,
+  "level": -17,
+  "note": "into the riddle",
+  "offset": -0.6
+ },
+ {
+  "cue": "impact",
+  "shot": "s08",
+  "at_word": 1,
+  "level": -14,
+  "note": "the big ? slams"
+ },
+ {
+  "cue": "pop",
+  "shot": "s09",
+  "at_word": 3,
+  "level": -16,
+  "note": "COMET bubble"
+ },
+ {
+  "cue": "pop",
+  "shot": "s09",
+  "at_word": 4,
+  "level": -16,
+  "note": "ANTIMATTER bubble"
+ },
+ {
+  "cue": "pop",
+  "shot": "s09",
+  "at_word": 8,
+  "level": -16,
+  "note": "ALIEN SHIP bubble"
+ },
+ {
+  "cue": "riser",
+  "shot": "s10",
+  "at_word": 10,
+  "level": -15,
+  "note": "the rock dives and heats",
+  "offset": -1.2
+ },
+ {
+  "cue": "deep_boom",
+  "shot": "s10",
+  "at_word": 10,
+  "level": -8,
+  "note": "the burst 8 km up",
+  "offset": -0.05
+ },
+ {
+  "cue": "impact",
+  "shot": "s11",
+  "at_word": 1,
+  "level": -15,
+  "note": "IT NEVER HIT THE GROUND slams"
+ },
+ {
+  "cue": "boom",
+  "shot": "s11",
+  "at_word": 7,
+  "level": -11,
+  "note": "the blast wave hits the trees",
+  "offset": -0.1
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s12a",
+  "at_word": 6,
+  "level": -18,
+  "note": "arrows straight down"
+ },
+ {
+  "cue": "whoosh_fast",
+  "shot": "s12a",
+  "at_word": 11,
+  "level": -16,
+  "note": "branches fly off"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s12b",
+  "at_word": 19,
+  "level": -17,
+  "note": "sideways blast"
+ },
+ {
+  "cue": "puff",
+  "shot": "s12b",
+  "at_word": 21,
+  "level": -14,
+  "note": "trees knocked flat",
+  "offset": 0.15
+ },
+ {
+  "cue": "blower",
+  "shot": "s13",
+  "at_word": 3,
+  "level": -19,
+  "note": "the hairdryer runs",
+  "offset": -0.1
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s13",
+  "at_word": 10,
+  "level": -19,
+  "note": "STAYS UP"
+ },
+ {
+  "cue": "impact",
+  "shot": "s14b",
+  "at_word": 13,
+  "level": -14,
+  "note": "NO CRATER slams (loop)",
+  "offset": -0.08
+ },
+ {
+  "cue": "riser",
+  "shot": "s14b",
+  "at_word": 27,
+  "level": -17,
+  "note": "tilt up into the opening sky (loop)",
+  "offset": -0.9
+ },
+ {
+  "mute": "s14b:transition"
+ }
+]

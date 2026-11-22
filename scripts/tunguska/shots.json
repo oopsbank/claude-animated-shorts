@@ -1,0 +1,96 @@
+{
+ "title": "The Explosion With No Crater",
+ "note": "Minimal shot list exported from flat2d/tunguska.py SHOT_LIST for audio/build_mix.py (word counts + sets). The picture is rendered by flat2d/render.py --film tunguska.",
+ "shots": [
+  {
+   "id": "s01a",
+   "set": "taiga",
+   "text": "In 1908, a blast a thousand times stronger than Hiroshima hit Siberia."
+  },
+  {
+   "id": "s01b",
+   "set": "taiga",
+   "text": "It left no crater."
+  },
+  {
+   "id": "s02",
+   "set": "taiga",
+   "text": "You see, it flattened eighty million trees across a forest bigger than London."
+  },
+  {
+   "id": "s03",
+   "set": "village",
+   "text": "Sixty kilometres away, a man was thrown off his porch, his shirt burning hot."
+  },
+  {
+   "id": "s04a",
+   "set": "taiga",
+   "text": "Nineteen years later, scientist Leonid Kulik went hunting for the meteorite."
+  },
+  {
+   "id": "s04b",
+   "set": "taiga",
+   "text": "He was sure: find the crater, find the iron."
+  },
+  {
+   "id": "s05",
+   "set": "taiga",
+   "text": "Clue one. There was no crater. No hole. No rock."
+  },
+  {
+   "id": "s06",
+   "set": "room",
+   "text": "Clue two. The fallen trees all pointed outward, away from one spot."
+  },
+  {
+   "id": "s07",
+   "set": "taiga",
+   "text": "Clue three. Right at the centre, the trees were still standing. Stripped bare, like telegraph poles."
+  },
+  {
+   "id": "s08",
+   "set": "inserts",
+   "text": "So what explodes, flattens a forest, and leaves the middle standing?"
+  },
+  {
+   "id": "s09",
+   "set": "taiga",
+   "text": "People guessed a comet, antimatter, even a crashed alien ship."
+  },
+  {
+   "id": "s10",
+   "set": "inserts",
+   "text": "The answer: a space rock the size of a building burst apart about eight kilometres up."
+  },
+  {
+   "id": "s11",
+   "set": "taiga",
+   "text": "It never hit the ground. Only its blast did."
+  },
+  {
+   "id": "s12a",
+   "set": "room",
+   "text": "Under the blast, the shockwave came straight down, so trees just lost their branches."
+  },
+  {
+   "id": "s12b",
+   "set": "room",
+   "text": "Further out, it hit them sideways and knocked them flat."
+  },
+  {
+   "id": "s13",
+   "set": "room",
+   "text": "Like a hairdryer pointed down at grass: right underneath it stays up, everything around gets blown outward."
+  },
+  {
+   "id": "s14a",
+   "set": "taiga",
+   "text": "Kulik never found his iron. The rock never touched the ground."
+  },
+  {
+   "id": "s14b",
+   "set": "taiga",
+   "text": "It left no crater. Just a ring of fallen trees around bare ones, pointing at the sky."
+  }
+ ]
+}

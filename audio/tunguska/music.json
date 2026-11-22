@@ -1,0 +1,36 @@
+{
+ "note": "serious mystery, no comedy: mystery (sus pad, ticking glock) for the event and the hunt, explain for the clues, mystery for the riddle and the guesses, explain for the answer and the mechanism, payoff for the analogy, mystery again into a loop end",
+ "sections": [
+  {
+   "style": "mystery",
+   "from": "s01a"
+  },
+  {
+   "style": "explain",
+   "from": "s05"
+  },
+  {
+   "style": "mystery",
+   "from": "s08"
+  },
+  {
+   "style": "explain",
+   "from": "s10"
+  },
+  {
+   "style": "payoff",
+   "from": "s13"
+  },
+  {
+   "style": "mystery",
+   "from": "s14a"
+  }
+ ],
+ "end": "loop",
+ "reveal_riser": false,
+ "levels": {
+  "mystery": -10.5,
+  "explain": -10.5,
+  "payoff": -11.0
+ }
+}

@@ -1,6 +1,6 @@
 """One captioned still per shot (the review gate's input), at a chosen point of each shot.
 
-usage: .venv/bin/python flat2d/stills.py WORDS.json OUTDIR [--size 540x960] [--at 0.7] [shot ...]
+usage: .venv/bin/python flat2d/stills.py WORDS.json OUTDIR [--film tunguska] [--size 540x960] [--at 0.7] [shot ...]
 --at: fraction of the shot length (default 0.7: the shot's main action has landed). Also writes sheet.png.
 """
 import os, sys
@@ -11,7 +11,7 @@ import render
 a = sys.argv[1:]; words, out = a[0], a[1]
 opt = lambda k, d: a[a.index(k) + 1] if k in a else d
 size = tuple(int(v) for v in opt('--size', '540x960').split('x')); at = float(opt('--at', .7))
-only = [x for x in a[2:] if not x.startswith('--') and not x.replace('.', '').replace('x', '').isdigit()]
+only = [x for i, x in enumerate(a[2:], 2) if not x.startswith('--') and not a[i - 1].startswith('--')]
 os.makedirs(out, exist_ok=True)
 film = render.Film(words)
 ims = []

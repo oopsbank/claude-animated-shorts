@@ -387,6 +387,50 @@ def amb_under(dur, r):
 
 
 # cue name -> (generator, default level LU vs the voice, short description)
+
+# ---------------------------------------------------------------- tunguska (video 4)
+def deep_boom(r):
+    """a huge distant airburst: a sub-bass thump, a long rolling rumble and a slow crackle tail (stereo)"""
+    t = tt(4.5)
+    n = len(t)
+    low = np.sin(phase(34 * (1 + 0.6 * np.exp(-t / 0.08)))) * np.exp(-t / 0.9)
+    crack = bp(r.standard_normal(n), 300, 3000, 2) * np.exp(-t / 0.06) * 0.6
+    rumble = lp(colored(n, r, 1.8), 120, 2) * (1 - np.exp(-t / 0.05)) * np.exp(-t / 1.4) * (0.7 + 0.3 * smooth_noise(n, r, 1.5))
+    out = fades(1.6 * low + crack + 1.6 * rumble, 0.0, 0.8)
+    return out
+
+
+def glass_shatter(r):
+    """a window pane bursting: a crack and bright tinkling shards"""
+    t = tt(0.9)
+    n = len(t)
+    hit = bp(r.standard_normal(n), 1500, 9000, 2) * np.exp(-t / 0.03)
+    out = hit.copy()
+    for k in range(14):
+        a = int(r.uniform(0.02, 0.6) * SR); f = r.uniform(2500, 6500)
+        seg_ = np.sin(TAU * f * t[: n - a]) * np.exp(-t[: n - a] / 0.04) * r.uniform(0.15, 0.4)
+        out[a:] += seg_
+    return fades(out, 0.0, 0.1)
+
+
+def blower(r, dur=4.6):
+    """a hairdryer running: a fan whine plus airflow hiss, fading in and out"""
+    t = tt(dur)
+    n = len(t)
+    whine = np.sin(phase(np.full(n, 520.0))) * 0.08 + np.sin(phase(np.full(n, 1040.0))) * 0.03
+    air = bp(colored(n, r, 0.3), 400, 5000, 2) * 0.5
+    env = np.minimum(1, t / 0.4) * np.minimum(1, (dur - t) / 0.5)
+    return (whine + air) * env
+
+
+def amb_taiga(dur, r):
+    """taiga: a soft wind through conifers, low and wide, no birds"""
+    n = ns(dur)
+    out = G.breeze(dur, r, 0.8, gust=0.25, bright=900)
+    hiss = hp(colored(n, r, 0.6), 1500) * 0.05 * (0.6 + 0.4 * smooth_noise(n, r, 0.3))
+    return out + st(hiss)
+
+
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
     "whoosh_fast": (whoosh_fast, -16, "fast swish / speed lines"),
@@ -425,6 +469,9 @@ GEN = {
     "pane_push_top": (ice_pane, -15, "engine s17 mechanism: the wind shoves a pane into a rock (same grind as ice_pane)"),
     "sliding_rock": (sliding_rock, -15, "rock scraping over wet mud and ice"),
     "ka_ching": (ka_ching, -10, "cash register ka-ching"),
+    "deep_boom": (deep_boom, -7, "huge distant airburst: sub thump + long rumble"),
+    "glass_shatter": (glass_shatter, -15, "a window pane bursting"),
+    "blower": (blower, -17, "a hairdryer running"),
     "sign_crash": (sign_crash, -9, "wooden sign splitting and slapping flat"),
     "live_ping": (live_ping, -15, "livestream notification chime"),
     "live_flurry": (live_flurry, -14, "a flurry of livestream notification chimes"),
@@ -432,4 +479,4 @@ GEN = {
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
-        "room": amb_room}
+        "room": amb_room, "taiga": amb_taiga}

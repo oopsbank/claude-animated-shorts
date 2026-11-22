@@ -1,6 +1,6 @@
 """Render flat2d shots to video: timeline from words.json, house "sentence" captions, parallel frames.
 
-usage: .venv/bin/python flat2d/render.py WORDS.json OUT.mp4 [--t0 0 --t1 24.2] [--size 540x960] [--fps 30]
+usage: .venv/bin/python flat2d/render.py WORDS.json OUT.mp4 [--film tunguska] [--t0 0 --t1 24.2] [--size 540x960] [--fps 30]
                                           [--sheet DIR] [--strip NAME:T:N ...] [--frames-only]
 - Shot sNN (flat2d/blood_falls.SHOTS) carries voice-over line NN; it starts 0.1 s before the line's first
   word (s01 at 0) and runs to the next shot.
@@ -14,8 +14,12 @@ import json, math, os, re, subprocess, sys, shutil
 from multiprocessing import Pool
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from PIL import Image, ImageDraw
+import importlib
 import kit, anim
-import blood_falls as bf
+# the film module (shots, SHOT_LIST, END, SLUG): FLAT2D_FILM=tunguska or --film tunguska (default blood_falls)
+_FILM = sys.argv[sys.argv.index('--film') + 1] if '--film' in sys.argv else os.environ.get('FLAT2D_FILM', 'blood_falls')
+os.environ['FLAT2D_FILM'] = _FILM
+bf = importlib.import_module(_FILM)
 
 FPS = 30; LEAD = 0.10
 
