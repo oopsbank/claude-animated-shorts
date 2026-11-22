@@ -544,7 +544,7 @@ def s04(u, D, cue):
     gl = geologist(img, u, lead, 'determined' if u < t_ans else 'happy', 540, 1830, .76, hop=hop_all, label_on=False,
                    axe=False, color=EXP_ORANGE, look=.2, lean=2 * smooth(seg(u, t_ans, t_ans + .4)) - 3 * math.sin(math.pi * seg(u, t_ans - .25, t_ans + .05)) + 1.2 * math.sin(u * 1.4))
     gs.append(gl)
-    speech_bubble(img, 690, 640, 240, (gl['hands']['R'][0] + 20, gl['hands']['R'][1] - 30), pop(u, t_ans, .32, 1.8), u)
+    speech_bubble(img, 700, 620, 215, (gl['hands']['R'][0] + 20, gl['hands']['R'][1] - 30), pop(u, t_ans, .32, 1.8), u)
     hx, hy = gl['head']; label(img, 'EXPLORERS', hx - 90, hy - gl['R'] * 1.32 - 88, EXP_ORANGE, size=50)   # on top of the tail
     fx = cam * -.6
     foreground_frame(img, [[(860 + fx, 1940), (950 + fx, 1850), (1100 + fx, 1830), (1100 + fx, 1940)]], color=(150, 140, 190), alpha=.85)

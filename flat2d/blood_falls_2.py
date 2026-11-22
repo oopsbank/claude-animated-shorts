@@ -627,6 +627,7 @@ def pool_room(img, u, dark=0.0, crack=0.0):
 def s12(u, D, cue):
     img = Image.new('RGBA', (W, H))
     ceil = pool_room(img, u)
+    radial(img, 540, 1100, 700, (120, 255, 226), .25 + .05 * math.sin(u * 2.5))           # the brine glows
     t_salt, t_heat, t_free, t_liq = cue(0) - .1, cue(2) - .1, cue(6) - .1, cue(7) - .1
     d = ImageDraw.Draw(img)
     # needle crystals grow on the ceiling (it freezes) and each one sends heat (red waves) back into the water
@@ -726,7 +727,7 @@ def s14a(u, D, cue):
     if u > t_rust:                                                        # "rusts": an orange flash down the stream
         radial(img, ox + 30, 1250, 520, (255, 140, 50), .5 * math.exp(-(u - t_rust) * 4))
     pose = chain(u, [(0, STAND), (t_rust - .3, add(STAND, armL=(-8, -10), armR=(8, 10))), (t_rust + .1, dict(POSES['cheer'], armL=(110, 140), armR=(-110, -140)), lambda f: out_back(f, 1.8))])
-    g = scientist(img, u, pose, 'surprised' if u > t_rust else 'thinking', 870, 1880, .88, look=-.6, lean=2 * math.sin(u * 1.2),
+    g = scientist(img, u, pose, 'surprised' if u > t_rust else 'thinking', 820, 1880, .88, look=-.6, lean=2 * math.sin(u * 1.2),
                   rim=(255, 190, 140), rim_dir=(-1, -.3))
     snow_particles(img, 63, n=(50, 20, 6), wind=(5, 1), t=u)
     sx, sy = shake(u, t_rust, 10)
