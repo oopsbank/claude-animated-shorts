@@ -57,7 +57,12 @@ Hooks (SCRIPT.md map): 0 s bolide + flash; 4.8 s NO CRATER; 11.2 s the trader th
 Changes after R1 (from its fix list, gate already passed): s10 still moved before the burst, the rock is ~1.7x bigger with a longer trail, a faint 8 KM guide line from the start, the scale inset moved off the ANSWER chip; s02 London outline solid with a fill and a bigger label; s14a IRON pill in the crossed-out thought (still at 0.5 so it shows); s03 stronger heat glow on the trader's shirt. Not done: s14b Kulik stays tiny (it is a wide shot by design).
 
 ## Motion QA (`flat2d/motion_qa.py`)
-See the result line below (filled in after the render).
+Run on the 1962 rendered frames: `motion_qa.py FRAMES 4.27 5.56 9.10 13.50 17.41 19.87 22.95 26.87 31.87 35.43 38.79 43.20 45.55 49.57 52.20 57.53 60.66 --impacts 1.02 11.12 41.36 44.79` → **PASS**.
+- Frozen: the longest frozen span is 1 frame (0.03 s); no span near the 0.4 s limit.
+- Designed beats passed as `--impacts`: the s01a blast flash (1.02 s), the shockwave hitting the trading post (11.12 s), the burst 8 km up (41.36 s), the blast wave reaching the trees in s11 (44.79 s). Each is a white flash + shake on the word.
+- First run FAILed on two non-designed pops: the s04b thought bubble (17.7 s) and the s09 COMET bubble (36.1 s) popped in too hard; both now ease in over 0.5 s with a small 6% swell, and the re-rendered ranges pass.
+- Characters in holds go through `anim.actor` (breath, blinks, `anim.secondary`). Acting and feel are the Director's call on the preview.
+- After the 2 s sheet check, the s03 60 KM chip was moved off the TRADER label (s03 re-rendered).
 
 ## Sound
 Serious mystery, no comedy stings. `mystery` (sus pad, ticking glock) for the event and the hunt, `explain` for the clues, `mystery` for the riddle and the guesses, `explain` for the answer, `payoff` (thin) for the hairdryer analogy, `mystery` into a loop end (a riser into the last frame, no sting). New cues in `audio/lib/sfx_x.py`: `deep_boom` (sub thump + 4 s rolling rumble) for the blast and the burst, `glass_shatter` (the trader's window), `blower` (the hairdryer), and an `amb_taiga` bed (wind in conifers, no birds; set `taiga`). Other cues: a fast whoosh on the bolide, impacts on the title slams, boom on the shockwave at the trading post and the blast wave in s11, card pops on 1927 and the CLUE badges, pings on the meteorite target and ONE SPOT, pops on the three guesses, risers into the ? and the burst, whooshes on the arrows, a puff when the trees fall flat.

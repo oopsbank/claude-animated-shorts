@@ -461,8 +461,8 @@ def s03(u, D, cue):
     s = pop(u, cue(0), .3, 1.8)
     if s > .01:
         d = ImageDraw.Draw(img); k = smooth(seg(u, cue(0), cue(2)))
-        T.dashed(d, (560, 880), (560 - (560 - 170) * k, 880 - 20 * k), (255, 255, 255), 7, 26, 16, phase=u * 60)
-        put_chip(img, '60 KM', (232, 118, 36), 360, 800, s, size=66, angle=-3)
+        T.dashed(d, (470, 860), (470 - (470 - 170) * k, 860 + 60 * k), (255, 255, 255), 7, 26, 16, phase=u * 60)
+        put_chip(img, '60 KM', (232, 118, 36), 250, 700, s, size=66, angle=-3)
     return img, {'faces': [face_box(g)]}
 
 
@@ -549,7 +549,7 @@ def s04b(u, D, cue):
               'thinking' if u < cue(17) else 'determined', 560, 1850, .74, look=.3,
               rim=(255, 170, 90), rim_dir=(-1, -.2), aura_a=.32)
     hx, hy = g['head']
-    s = pop(u, cue(13) - .15, .35, 1.6)
+    s = smooth(seg(u, cue(13) - .3, cue(13) + .25)) * (1 + .06 * math.sin(math.pi * seg(u, cue(13) + .05, cue(13) + .45)))
     lay = thought(img, 560, 520, 430, 230, (hx + 40, hy - 160), 1.0)
     if lay is not None:
         dl = ImageDraw.Draw(lay)
@@ -840,7 +840,7 @@ def s09(u, D, cue):
         pose = chain(u, [(0, STAND), (t_ - .2, add(STAND, armR=(-14, -14))), (t_ + .15, dict(POSES['point'], armR=(-130, -150)), lambda f: out_back(f, 1.8))])
         g = towns(img, u, pose, 'thinking' if u < t_ else 'surprised', x + cam * .2, 1880, .5, shirt, look=look * -1, bphase=i * .9)
         faces.append(face_box(g))
-        s = pop(u, t_, .35, 1.7)
+        s = smooth(seg(u, t_ - .2, t_ + .3)) * (1 + .06 * math.sin(math.pi * seg(u, t_ + .1, t_ + .5)))
         hx, hy = g['head']
         bx, by = [(250, 560), (540, 960), (830, 560)][i]
         lay = thought(img, bx, by, 210, 170, (hx, hy - 120), 1.0)
