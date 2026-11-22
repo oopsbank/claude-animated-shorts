@@ -1,0 +1,228 @@
+{
+ "tempo": 1.0519,
+ "gap_scale": 1.0,
+ "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+ "model_id": "eleven_multilingual_v2",
+ "settings": {
+  "stability": 0.5,
+  "similarity_boost": 0.75,
+  "style": 0.2,
+  "use_speaker_boost": true,
+  "speed": 1.1
+ },
+ "duration_s": 65.01,
+ "pacing_api_raw": {
+  "words": 216,
+  "speech_span_s": 81.641,
+  "words_per_s": 2.646,
+  "gaps_over_0.25_s": 27,
+  "gaps_over_0.25_total_s": 15.65,
+  "max_gap_s": 1.01,
+  "mean_gap_s": 0.124
+ },
+ "pacing_refined": {
+  "words": 216,
+  "speech_span_s": 81.374,
+  "words_per_s": 2.654,
+  "gaps_over_0.25_s": 28,
+  "gaps_over_0.25_total_s": 17.956,
+  "max_gap_s": 1.118,
+  "mean_gap_s": 0.123
+ },
+ "pacing_final": {
+  "words": 216,
+  "speech_span_s": 64.786,
+  "words_per_s": 3.334,
+  "gaps_over_0.25_s": 1,
+  "gaps_over_0.25_total_s": 0.297,
+  "max_gap_s": 0.297,
+  "mean_gap_s": 0.058
+ },
+ "pause_cuts": [
+  [
+   0.982,
+   0.13,
+   "1908,"
+  ],
+  [
+   3.692,
+   0.067,
+   "Hiroshima"
+  ],
+  [
+   4.728,
+   0.495,
+   "Siberia."
+  ],
+  [
+   6.546,
+   0.416,
+   "crater."
+  ],
+  [
+   10.723,
+   0.606,
+   "London."
+  ],
+  [
+   14.599,
+   0.071,
+   "porch,"
+  ],
+  [
+   15.981,
+   0.446,
+   "hot."
+  ],
+  [
+   17.684,
+   0.092,
+   "later,"
+  ],
+  [
+   20.623,
+   0.237,
+   "meteorite."
+  ],
+  [
+   21.755,
+   0.434,
+   "sure:"
+  ],
+  [
+   23.074,
+   0.061,
+   "crater,"
+  ],
+  [
+   24.006,
+   0.468,
+   "iron."
+  ],
+  [
+   25.127,
+   0.297,
+   "one."
+  ],
+  [
+   26.518,
+   0.241,
+   "crater."
+  ],
+  [
+   27.464,
+   0.243,
+   "hole."
+  ],
+  [
+   28.484,
+   0.535,
+   "rock."
+  ],
+  [
+   29.747,
+   0.283,
+   "two."
+  ],
+  [
+   33.392,
+   0.517,
+   "spot."
+  ],
+  [
+   34.666,
+   0.484,
+   "three."
+  ],
+  [
+   37.476,
+   0.141,
+   "standing."
+  ],
+  [
+   38.731,
+   0.084,
+   "like"
+  ],
+  [
+   39.82,
+   0.444,
+   "poles."
+  ],
+  [
+   41.502,
+   0.064,
+   "explodes,"
+  ],
+  [
+   42.62,
+   0.094,
+   "forest,"
+  ],
+  [
+   44.187,
+   0.502,
+   "standing?"
+  ],
+  [
+   45.972,
+   0.078,
+   "comet,"
+  ],
+  [
+   46.744,
+   0.177,
+   "antimatter,"
+  ],
+  [
+   48.462,
+   0.898,
+   "ship."
+  ],
+  [
+   54.007,
+   0.395,
+   "up."
+  ],
+  [
+   56.892,
+   0.635,
+   "did."
+  ],
+  [
+   61.807,
+   0.435,
+   "branches."
+  ],
+  [
+   64.975,
+   0.679,
+   "flat."
+  ],
+  [
+   67.753,
+   0.605,
+   "grass:"
+  ],
+  [
+   71.866,
+   0.507,
+   "outward."
+  ],
+  [
+   74.065,
+   0.436,
+   "iron."
+  ],
+  [
+   76.16,
+   0.571,
+   "ground."
+  ],
+  [
+   77.902,
+   0.354,
+   "crater."
+  ]
+ ]
+}
