@@ -26,7 +26,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
     - Screenwriter `session_01CUE841LfyxuYFPbEVjdLVm` is idle; keep it for script fixes, then archive.
   - Sound: done (65.7 s, 1,390 characters, review 8.0; merged). The voice was sped up 1.24x, so the Director should listen (`videos/sailing-stones/preview_*.mp3`).
   - Assets: done and merged 2026-11-22 (wardrobe frozen ~7, fx frozen ~5.8; judge them in the storyboard). The session is archived.
-  - Animator `session_01CUE841fgjSkF1r1GptHY2h` (`claude/area-engine`): engine wiring, then the G2 storyboard, then the G5 draft.
+  - Animator `session_01CUE841fgjSkF1r1GptHY2h` (`claude/area-engine-v2`; the old `claude/area-engine` holds unrelated video 1 history, never force-push it): engine wiring, then the G2 storyboard, then the G5 draft.
   - Claude usage shows a **weekly-limit warning** (2026-11-22): keep reviewers on sonnet and previews low-res.
   - **One-time restart at 13:00 on 2026-11-22** (Asia/Ho_Chi_Minh, `trig_01AyDYT1m754M2mKKN89QVQC`, the Director asked for exactly one): it wakes stalled crew sessions with their full instructions, then disables itself. The 01:30 wake-up has already fired. No other scheduled tasks.
 - **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session. It must apply, from the start:
