@@ -29,7 +29,8 @@ if os.environ.get('ENGINE_STANDIN', '1') == '1' and os.path.exists(os.path.join(
 # ---------------------------------------------------------------- loading
 def find_plate(shot, dirs):
     if shot.get('plate'):
-        cands = [shot['plate']] + [os.path.join(d, shot['plate']) for d in dirs]
+        cands = [shot['plate'], os.path.join(ROOT, 'blender', 'sets', shot.get('set', ''), 'plates', shot['plate'])]
+        cands += [os.path.join(d, shot['plate']) for d in dirs]
     else:
         name = f"{shot['set']}__{shot['cam']}__{shot['light']}"
         # plate variants: "variant": tag on the shot, or a "fantasy:<tag>" prop -> <set>__<cam>__<light>__<tag>

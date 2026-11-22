@@ -227,7 +227,7 @@
    "characters": [
     {
      "id": "kip",
-     "x": 0.46,
+     "x": 0.43,
      "beats": [
       {
        "prop": "mug",
@@ -248,7 +248,7 @@
     },
     {
      "id": "lou",
-     "x": 0.56,
+     "x": 0.585,
      "beats": [
       {
        "at_word": 0,
@@ -537,7 +537,7 @@
    "characters": [
     {
      "id": "tour1",
-     "x": 0.2,
+     "x": 0.17,
      "beats": [
       {
        "prop": "flashlight",
@@ -549,7 +549,7 @@
        ]
       }
      ],
-     "scale": 0.8,
+     "scale": 0.75,
      "build": "adult",
      "skin": "#f6d2b0",
      "shirt": "#3fb37f",
@@ -560,7 +560,7 @@
     },
     {
      "id": "tour2",
-     "x": 0.4,
+     "x": 0.39,
      "beats": [
       {
        "expr": "grin",
@@ -571,7 +571,7 @@
        ]
       }
      ],
-     "scale": 0.8,
+     "scale": 0.75,
      "build": "kid",
      "skin": "#b87a55",
      "shirt": "#e85d8a",
@@ -582,7 +582,7 @@
     },
     {
      "id": "guide",
-     "x": 0.6,
+     "x": 0.61,
      "beats": [
       {
        "prop": "ticket",
@@ -603,7 +603,7 @@
        ]
       }
      ],
-     "scale": 0.8,
+     "scale": 0.75,
      "build": "stout",
      "skin": "#ffd9b8",
      "shirt": "#7a3fb0",
@@ -618,7 +618,7 @@
     },
     {
      "id": "tour3",
-     "x": 0.8,
+     "x": 0.83,
      "beats": [
       {
        "prop": "camera",
@@ -630,7 +630,7 @@
        ]
       }
      ],
-     "scale": 0.8,
+     "scale": 0.75,
      "build": "stout",
      "skin": "#ffe2c2",
      "shirt": "#2fb3c9",
@@ -819,7 +819,7 @@
    "characters": [
     {
      "id": "kip",
-     "x": 0.45,
+     "x": 0.43,
      "beats": [
       {
        "prop": "mug",
@@ -849,7 +849,7 @@
     },
     {
      "id": "lou",
-     "x": 0.56,
+     "x": 0.58,
      "beats": [
       {
        "expr": "shock",
@@ -1052,7 +1052,7 @@
    "characters": [
     {
      "id": "guide",
-     "x": 0.34,
+     "x": 0.315,
      "beats": [
       {
        "prop": "selfie_stick",
@@ -1088,7 +1088,7 @@
     },
     {
      "id": "tour1",
-     "x": 0.62,
+     "x": 0.585,
      "beats": [
       {
        "prop": "phone",
@@ -1111,7 +1111,7 @@
     },
     {
      "id": "tour3",
-     "x": 0.82,
+     "x": 0.84,
      "beats": [
       {
        "prop": "phone",
