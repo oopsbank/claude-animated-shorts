@@ -90,7 +90,14 @@ Mix: −14.05 LUFS integrated, −1.20 dBTP, voice 10.3-13.3 LU over the bed per
 - `tests/preview_full_540.mp4`: the same render scaled to 540x960 with the mix, no cover.
 - `thumbnail.png` is unchanged (a caption-free s02 frame, t = 8.9 s, zoom 1.15, with THIS GLACIER / IS BLEEDING / SINCE 1911).
 
-## Publishing text (not posted)
+## Posted 2026-11-22 ~22:28 (Asia/Ho_Chi_Minh), with the Director's OK ("đăng lên giờ luôn"), via Buffer
+- File: `https://oopsbank.github.io/some-crazy-things-media/blood-falls_1080x1920.mp4` (= `blood-falls_final_1080x1920.mp4`).
+- YouTube (post 6b03098fc72676f5e93bf293): https://www.youtube.com/shorts/BAbJMhSUEj8
+- Facebook reel (post 6b030997846b0ee9079789cf): https://www.facebook.com/reel/1948691089847779/
+- TikTok (post 6b0309a2cc364169c16455d6): https://tiktok.com/@somecrazythingzz/video/7711017636938730770
+- Known flaw in the posted cover/thumbnail: the GEOLOGIST label is cut at the left edge.
+
+## Publishing text (posted)
 **Title:** This Glacier Has Been "Bleeding" Since 1911 🩸 #shorts
 
 **YouTube description:**
