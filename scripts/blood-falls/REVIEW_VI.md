@@ -25,7 +25,7 @@ Không chấm điểm (theo yêu cầu của Đạo diễn). Thời gian ước 
 
 ## 2. Bảng hình: trên màn hình hiện gì
 
-Phong cách: người que trắng viền đen, nhãn chữ màu trên đầu, nền 2D phẳng màu tự do hợp cảnh, đổi hình mỗi ≤ 1,5 giây. Phụ đề kiểu "sentence" ở 70% chiều cao.
+Phong cách: người que trắng viền đen, nhãn chữ màu trên đầu, nền 2D phẳng màu tự do hợp cảnh, hoạt hình chuyển động liên tục suốt video (không có khung hình đứng yên). Phụ đề kiểu "sentence" ở 70% chiều cao.
 
 | Cảnh | Thời gian | Lời (#) | Trên màn hình |
 |---|---|---|---|
