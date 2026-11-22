@@ -37,7 +37,7 @@ f_00480.jpg lum=0.49 p98=0.82 sat=0.42 cool=0.42 edge=0.05 FAIL p98,cool
 f_00510.jpg lum=0.40 p98=0.86 sat=0.45 cool=0.51 edge=0.04 FAIL lum,cool,edge
 f_00540.jpg lum=0.41 p98=0.89 sat=0.44 cool=0.46 edge=0.04 FAIL cool,edge
 f_00570.jpg lum=0.41 p98=0.90 sat=0.44 cool=0.46 edge=0.05 FAIL cool
-f_00600.jpg lum=0.40 p98=0.88 sat=0.56 cool=0.16 edge=0.04 FAIL sat,edge
+f_00600.jpg lum=0.40 p98=0.88 sat=0.56 cool=0.16 edge=0.03 FAIL sat,edge
 f_00630.jpg lum=0.51 p98=0.87 sat=0.58 cool=0.10 edge=0.02 FAIL sat,edge
 f_00660.jpg lum=0.26 p98=0.70 sat=0.69 cool=0.06 edge=0.05 FAIL lum,p98,sat
 f_00690.jpg lum=0.43 p98=0.87 sat=0.50 cool=0.31 edge=0.10 FAIL sat
