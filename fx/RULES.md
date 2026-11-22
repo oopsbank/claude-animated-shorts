@@ -16,3 +16,7 @@ These are fx-specific lessons from review. Follow them for every new effect, and
 12. **Look at a dense sheet** (t = 1/12 .. 11/12) on day and night, not just the 5-frame strip. Exit pops and frozen holds only show there.
 13. **Diagram effects (arrows, paths, angle marks)** draw on along their length and exit by erasing along the path plus a short fade. Never flatten them. A 'blocked' sign must leave the blocked thing visible.
 14. **When two reviewers ask for opposite fixes, pick the drawing convention and write it down.** For example, an angle mark is a small wedge at the pivot. Don't flip it back and forth.
+15. **Environment effects (ice, dust storm, flood, rain) enter by spreading or rolling in and leave by receding,** with only the last ~8% as an alpha fade. They are still empty at both ends. Never hold a full-frame cover for more than about a third of the effect's life, and keep the sky or the focal subject visible.
+16. **A mechanism shows its cause hitting the effect.** A drifting sheet of panes alone read as a "crumble". Add the wind (chunky curved dashes) and the hero contact (a pane reaches a rock, the rock squashes, and a groove starts at the contact point).
+17. **Rings and cracks keep their weight and pop off.** Thinning a ring to a hairline reads as a blurred glow. Erasing cracks from the centre left floating fragments; thin them all together instead.
+

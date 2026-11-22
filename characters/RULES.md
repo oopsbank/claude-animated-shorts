@@ -43,3 +43,11 @@ The spec is `references/reports/characters.md` §2. The anatomy and animation ru
 28. **From behind, a motorbike must never read as a bicycle.** Give it fat tyres (rear ≈ 6× the bicycle's), a wide engine block visible between the legs, wide pegs with the feet on them, a big tail light, a number plate, an exhaust can with a dark end, and tank and seat bulk. Check it in rear view, not only in side view.
 29. **The key analogy gets an insert card.** A prop that carries the explanation (the broom on the palm) gets a full-frame close-up (`inserts.py`) with the object at 70% or more of the frame height. A 1.6-head broom in a medium shot was barely visible.
 30. **Close-up inserts may show a skin hand** (palm, thumb, finger bumps). At that size the cast's dark dot hand read as a plate or a puck.
+
+## Video 2 props and poses
+31. **Show small props against the background, not on the belly.** A prop held in front of the torso read as "pasted on" in seven review rounds (grips 5-6/10). Raise one-hand props beside the head (`held.SHOW`). Draw the forearm first, reaching the prop's edge from outside without crossing the prop's face, then the prop, then the dot hand (with a cuff ring) on top.
+32. **Two-hand props sit at the chest with a hand on each side edge,** and the elbows outside the prop. A long one-hand prop on a two-hand beat (the frying pan) goes in one hand, and the other hand rests.
+33. **A seated front view needs legs:** the thighs angle out from under the belly to knees on the seat's front edge, and the shins hang down a pale seat front. A torso on a box with the legs hidden reads as "stacked". Knee blobs read as balls.
+34. **A drooping antenna swings down an arc and hangs clear of the cheeks.** Hanging beside the cheeks read as earmuffs. Give the headband a colour no cap in the cast uses.
+35. **Keep every prop inside the 600-wide card.** Props held out to the side were clipped at the card edge. Poles stay close to the body, and pennants stay short.
+

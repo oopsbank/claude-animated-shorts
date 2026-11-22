@@ -60,7 +60,13 @@ def strip(name, ts=TS, size=TILE, **kw):
 
 
 VARIANTS = {'steer_arrow_blocked': ('steer_arrow', {'direction': 'blocked'}),
-            'path_line_kink': ('path_line', {'planned': 'tight_left', 'actual': 'kink_right_then_left'})}
+            'path_line_kink': ('path_line', {'planned': 'tight_left', 'actual': 'kink_right_then_left'}),
+            'ice_pane_freeze': ('ice_pane', {'stage': 'freeze'}), 'ice_pane_panes': ('ice_pane', {'stage': 'panes'}),
+            'ice_pane_drift': ('ice_pane', {'stage': 'drift', 'direction': 'right'}),
+            'ice_pane_side': ('ice_pane', {'stage': 'drift', 'view': 'side'}),
+            'sliding_rock_away5': ('sliding_rock', {'count': 5, 'path': 'away'}),
+            'sliding_rock_fridge': ('sliding_rock', {'sprite': 'fridge', 'path': [[0.25, 0.6], [0.75, 0.55]]}),
+            'year_badge_long': ('year_badge', {'label': 'YEAR 2 · LAST TRY'})}
 
 
 def checks(name, frames=60, size=200):
