@@ -44,6 +44,13 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Keep raw renders and the depth pass, so grade and haze fixes are a `--repost` instead of a re-render.
 - Every riding cam needs a depth map (`build.py --depth`): a rider over a still plate looks like riding on the spot. The engine dollies into it; keep the travel ≤ 3 m, or ≤ 1.2 m on cams close to tall objects, or edges ghost.
 - A top-down route must use the set's own racing lines (projected from the geometry, `paths.py`), never a generic shape.
+- Stylised-PBR props (`common.pbr`/`soften`): clearcoat paint only looks glossy if glossy rays see a sky. Use the preset key `sky_refl` (the default ambient is a flat colour), plus a `softbox` placed to streak the flanks.
+- Aim the key with `sun_from` (a world vector toward the sun), not `az`. Light from the side or back of a prop gives a warm/cool split and visible long shadows. Front light reads "flat midday" to every reviewer.
+- A mesh groove at playa scale reads as a pipe or a plank at low cameras. Paint the trail on a flat strip instead (`ground.trail`: a dark floor, pale rims and faded ends).
+- Haze depth must be rendered after per-light scene changes. One depth pass per cam left a ghost of a hidden banner (`common.main` now re-renders it when a cam has `per_light`).
+- Hide per-light props by moving them under the ground (`playa/build.py show()`), so Freestyle, the depth pass and the haze all agree.
+- A practical light right above a mirror (pond, ice) shows up as a white disc in the reflection. Set `visible_glossy = False` on it.
+- A prop look test alone plateaued at about 7/10 with reviewers (19 rounds). Shot context (mountains, haze, a stand-in character, DOF) added more than another material tweak. Judge props in their plates.
 
 ## Shot lists and staging (caught by `tools/preflight.py`)
 - Define left and right from one point of view: the rider's own. A front view mirrors them, so show any left/right cue, lean or steering mechanism from behind or above; a demo by a character facing the camera is shot over the shoulder.
@@ -81,6 +88,8 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 
 ## Process and QA
 - Don't push a look metric all the way to the reference number by grading alone: forcing our warm/cool split to the leaders' value made frames dull and blue (our dark pixels are warm because of plum ink and red costumes, not the grade). Use a gentle finish (vignette 0.14, split ±0.02) and fix the rest in lighting and sets.
+
+## Process and QA
 - Fresh LLM reviewers disagree by about ±1 on the same script, so "all five ≥ 9" is noise-bound: 8 rounds plateaued at 7-9. Gate scripts on the panel median ≥ 8, no swipe before 50 s and facts ≥ 9, then let real retention data judge.
 - `tools/preflight.py` must report every missing plate, not exit on the first one: `find_plate` raises SystemExit, so catch it (fixed 2026-11-21).
 - The 5-reviewer script panel with no round cap burned one session's whole 5-hour limit in 9 rounds (53 sub-agents) and stalled it for 4 h. Run panel reviewers and gag writers on `model: "sonnet"` with short prompts, all in parallel, and keep the main model for the rewrite itself.
