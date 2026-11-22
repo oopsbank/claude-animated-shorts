@@ -18,7 +18,7 @@ Không chấm điểm (theo yêu cầu của Đạo diễn). Thời gian ước 
 | 10 | Then scientists scanned under the glacier from the air. | Rồi các nhà khoa học quét xuyên sông băng từ trên không. |
 | 11 | Under four hundred metres of ice, they found a hidden pool of ancient seawater, sealed off for over a million years. | Dưới 400 mét băng, họ tìm thấy một hồ nước biển cổ đại bị giấu kín, bị niêm phong hơn một triệu năm. |
 | 12 | Salt, and heat released as it freezes, keep it liquid. | Muối, cùng nhiệt toả ra khi nó đóng băng, giữ cho nó ở dạng lỏng. |
-| 13 | Down there, the iron stays dissolved and colourless. | Ở dưới đó, sắt vẫn tan trong nước và không màu. |
+| 13 | Down there, the iron stays invisible. Until it escapes. | Ở dưới đó, sắt vẫn vô hình. Cho đến khi nó thoát ra. |
 | 14 | But the moment it squeezes out into the open air, the iron meets oxygen, and it rusts. Like a wet nail turning orange overnight. | Nhưng ngay khi nó bị ép ra ngoài không khí, sắt gặp oxy và gỉ. Như cây đinh ướt chuyển màu cam sau một đêm. |
 | 15 | The glacier isn't bleeding. It's rusting. | Sông băng không chảy máu. Nó đang gỉ sét. |
 | 16 | And the red algae? Never there. Just a sealed world of microbes, still alive under the ice, still painting the snow red, like in 1911. | Còn tảo đỏ? Chưa bao giờ có. Chỉ có một thế giới vi sinh bị niêm phong, vẫn sống dưới lớp băng, vẫn tô đỏ tuyết, như năm 1911. |
@@ -45,6 +45,21 @@ Phong cách: người que trắng viền đen, nhãn chữ màu trên đầu, n�
 | s14 | 48.2–54.7 | 14 | Dòng nước ép lên qua khe, gặp không khí: hạt O₂ xanh chạm vào, nước chuyển cam-đỏ (chuyển màu rõ). Cắt cảnh: cây đinh ướt trên bàn chuyển cam qua timelapse. |
 | s15 | 54.7–56.3 | 15 | Toàn cảnh thác đỏ. Chữ lớn: **"NOT BLEEDING. RUSTING."** |
 | s16 | 56.3–63.0 | 16 | Bong bóng tảo từ s04 vỡ "pop". Zoom xuống dưới băng: thế giới vi sinh phát sáng. Kéo ra toàn cảnh, cắt về đúng khung hình s01 (người que 1911 đứng trước thác) để tạo vòng lặp. |
+
+## 3. Hook mỗi ~10 giây
+| Giây | Hook |
+|---|---|
+| 0 | Sông băng đang chảy máu |
+| ~10 | Âm 17 độ, không gì chảy được, vậy mà màu đỏ vẫn tuôn |
+| ~17 | "Xong bí ẩn"… nhưng chẳng có tảo nào |
+| ~24 | "Vậy thì là gì?" |
+| ~30 | Sự sống không cần ánh sáng, không cần oxy |
+| ~33 | Nước chảy ra lại trong suốt |
+| ~40 | Một vùng biển bị giấu kín cả triệu năm |
+| ~47 | "Cho đến khi nó thoát ra." |
+| ~50 | Gặp không khí là gỉ ngay |
+| ~55 | "Nó không chảy máu. Nó đang gỉ sét." |
+| ~60 | Vòng lại năm 1911 |
 
 ## Còn mở
 - Cần kiểm lại 2 số liệu trước khi lồng tiếng: "400 m băng" và việc khảo sát "từ trên không" (Mikucki 2015, đo điện từ trên không).

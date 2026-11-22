@@ -12,7 +12,7 @@ Take only the **animation style** of reference short xBqCZDzFmog (@MindsetEvolvi
 
 ## What stays: our channel's content and rules
 - A surprising **true** story, explained: topic M2 in `scripts/TOPICS.md`, "The Glacier That Bleeds" (Blood Falls, Taylor Glacier, Antarctica; found in 1911), score 9. Chosen by the Director.
-- Voice-over narrator, 225-240 words, 62-66 s, the leaders' story engine (`QA.md` › scripts), facts sourced (no facts score), **NO comedy** (the Director, 2026-11-22: "bỏ hài đi"; a serious, gripping mystery tone; no gags, jokes or absurd cutaways), "sentence" captions, continuous animation throughout (the Director, 2026-11-22, replacing the old 'picture change every <= 1.5 s' rule): something on screen is always moving — characters act, fx and backgrounds drift, the camera glides — with no frozen frames; cuts happen where the story needs them, not on a timer, a mid-action hook, an ending on a gag or a loop.
+- Voice-over narrator, 225-240 words, 62-66 s, the leaders' story engine (`QA.md` › scripts), facts sourced (no facts score), **NO comedy** (the Director, 2026-11-22: "bỏ hài đi"; a serious, gripping mystery tone; no gags, jokes or absurd cutaways), "sentence" captions, continuous animation throughout (the Director, 2026-11-22, replacing the old 'picture change every <= 1.5 s' rule): something on screen is always moving — characters act, fx and backgrounds drift, the camera glides — with no frozen frames; cuts happen where the story needs them, not on a timer, a mid-action hook, a hook every ~10 s, an ending on a gag or a loop.
 - Original title, checked against `references/titles.md`.
 
 ## Tone (the Director, 2026-11-22)

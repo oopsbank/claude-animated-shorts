@@ -22,7 +22,22 @@ Status: Producer draft v2 (the Director: the 'no algae' finding comes right afte
 10. Then scientists scanned under the glacier from the air.
 11. Under four hundred metres of ice, they found a hidden pool of ancient seawater, sealed off for over a million years.
 12. Salt, and heat released as it freezes, keep it liquid.
-13. Down there, the iron stays dissolved and colourless.
+13. Down there, the iron stays invisible. Until it escapes.
 14. But the moment it squeezes out into the open air, the iron meets oxygen, and it rusts. Like a wet nail turning orange overnight.
 15. The glacier isn't bleeding. It's rusting.
 16. And the red algae? Never there. Just a sealed world of microbes, still alive under the ice, still painting the snow red, like in 1911.
+
+## Hook map (a hook every ~10 s)
+| ~Time | Line | Hook |
+|---|---|---|
+| 0 s | 1 | A glacier found bleeding |
+| ~10 s | 3 | -17 degrees, nothing should flow, yet the red keeps coming |
+| ~17 s | 5 | "Mystery solved"… but there was no algae |
+| ~24 s | 7 | "So what is?" |
+| ~30 s | 8 | Life with no sunlight and no oxygen |
+| ~33 s | 9 | The water comes out clear |
+| ~40 s | 11 | A hidden sea sealed for a million years |
+| ~47 s | 13 | "Until it escapes." |
+| ~50 s | 14 | It rusts the moment it meets air |
+| ~55 s | 15 | "It isn't bleeding. It's rusting." |
+| ~60 s | 16 | Loop back to 1911 |

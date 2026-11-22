@@ -19,6 +19,7 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
 ## scripts
 - [ ] `tools/preflight.py` has 0 ERROR, and `tools/storyboard.py` was reviewed (PIPELINE › Stage gates, G1-G2), before the voice-over.
 - [ ] The hook is sentence 1, states a paradox as fact, and has 10-16 words.
+- [ ] **A hook every ~10 s** (the Director, 2026-11-22): at about 0, 10, 20, 30, 40, 50 and 60 s there is a new question, twist, reveal or striking image. Mark them in `SCRIPT.md` (a hook map).
 - [ ] Every fact has a source URL at the top of `SCRIPT.md`. Mark anything uncertain.
 - [ ] It follows the leaders' story engine (`references/reports/retention_2026-11.md` §8):
   - line 1: a person doing something that looks wrong (past tense, a fact);

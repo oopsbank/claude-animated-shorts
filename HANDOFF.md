@@ -27,7 +27,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **All crew sessions are archived.** No scheduled tasks are active (the one-time 13:00 restart fired and disabled itself; the nightly 1st AD task stays disabled).
 - **Next video:** start at `PIPELINE.md` › Stage gates, with fresh sessions. It must apply, from the start:
   - the leaders' story engine (`QA.md` › scripts; `references/reports/retention_2026-11.md` §8);
-  - continuous animation throughout (the Director, 2026-11-22, replacing the old 'picture change every <= 1.5 s' rule): something on screen is always moving — characters act, fx and backgrounds drift, the camera glides — with no frozen frames; cuts happen where the story needs them, not on a timer; and a mid-action hook;
+  - continuous animation throughout (the Director, 2026-11-22, replacing the old 'picture change every <= 1.5 s' rule): something on screen is always moving — characters act, fx and backgrounds drift, the camera glides — with no frozen frames; cuts happen where the story needs them, not on a timer; a mid-action hook, then a hook every ~10 s (the Director, 2026-11-22);
   - the shot grammar (`replication_playbook_2026-11.md` §3E);
   - "sentence" captions;
   - an ending on a gag or a loop.
