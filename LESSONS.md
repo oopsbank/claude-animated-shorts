@@ -30,6 +30,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Never splice-render a few shots into a full render: `--frames` rewrites `track.json` for those frames only and `qa.py` then misses the rest. Finish the shot-list changes first, or stop the render and restart it whole (CPU is cheap, usage is not).
 - A `follow` camera with no rider in the shot doesn't move: give character-free or static shots a slow glide, or qa.py flags frozen spans (s10, s14's ending, s16's opening).
 - Check that a camera field is actually read before tuning it: the base `camera.x`/`y` were ignored (only the auto `focus` was used), so six shots' framing notes did nothing for 2 review rounds.
+- A cut-in with no `until_word` must run to the shot's last frame: its end got the same 2-frame lead as its start, so the cousins were drawn over the top-view plate for 2 frames (planted-feet QA caught it).
 - A rolled camera has a zoom floor (roll -6° needs ~1.18 to hide the border): a push below it is clamped to nothing. Glide above the floor.
 - Seated cards (`seated=`) sit ~6 px above the ground line: re-plant them on their lowest opaque row, like a lean.
 - A deliberate punch-in that cuts edge characters needs `crop: true` on the shot, or qa.py counts every frame of it as clipped.

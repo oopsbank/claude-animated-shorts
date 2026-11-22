@@ -109,7 +109,7 @@ def setup(shots_path, words_path, plate_dirs):
                 q = find_plate(alt, plate_dirs)
                 if q not in G['plates']: G['plates'][q] = load_plate(q)
                 a0 = anim.beat_frame((sp['w0'], sp['w1']), words, ins.get('at_word', 0))[1]
-                a1 = anim.beat_frame((sp['w0'], sp['w1']), words, ins['until_word'])[1] if 'until_word' in ins else sp['f1']
+                a1 = anim.beat_frame((sp['w0'], sp['w1']), words, ins['until_word'])[1] if 'until_word' in ins else sp['f1'] + anim.LEAD   # no until_word: to the shot's end
                 s['_insert'] = (a0 - anim.LEAD, a1 - anim.LEAD, q)
         resolve_points_at(s, G['plates'][p][1])
         layout_shot(s, G['plates'][p][1])
