@@ -71,6 +71,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Text-only reviewers plateau around 7.6-7.8 on "comedy timing" and "SFX" and start contradicting each other. Declutter structurally rather than cue by cue, and keep picture sync (an SFX lands when the picture shows the event) over a reviewer's wish to move it.
 
 ## Process and QA
+- Don't push a look metric all the way to the reference number by grading alone: forcing our warm/cool split to the leaders' value made frames dull and blue (our dark pixels are warm because of plum ink and red costumes, not the grade). Use a gentle finish (vignette 0.14, split ±0.02) and fix the rest in lighting and sets.
 - Fresh LLM reviewers disagree by about ±1 on the same script, so "all five ≥ 9" is noise-bound: 8 rounds plateaued at 7-9. Gate scripts on the panel median ≥ 8, no swipe before 50 s and facts ≥ 9, then let real retention data judge.
 - `tools/preflight.py` must report every missing plate, not exit on the first one: `find_plate` raises SystemExit, so catch it (fixed 2026-11-21).
 - The 5-reviewer script panel with no round cap burned one session's whole 5-hour limit in 9 rounds (53 sub-agents) and stalled it for 4 h. Run panel reviewers and gag writers on `model: "sonnet"` with short prompts, all in parallel, and keep the main model for the rewrite itself.

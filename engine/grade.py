@@ -75,3 +75,31 @@ def apply(img, p):
     img = img.convert('RGB').point(_luts[key])
     if abs(p.get('sat', 1.0) - 1.0) > 0.01: img = ImageEnhance.Color(img).enhance(p['sat'])
     return img
+
+
+# ---------------------------------------------------------------- finish (every frame, after the per-shot grade)
+# Measured against the leading channels (references/reports/replication_playbook_2026-11.md §1): they have a vignette
+# (corner/centre luminance ≈ 0.78-0.84; ours was 0.99) and warm highlights over neutral/cool shadows (ours was
+# inverted: shadows warmer than lights). `sepia` is the per-shot flashback look (shots.json "grade": "sepia").
+_vig = {}
+
+
+def _vignette(h, w, strength=0.22):
+    k = (h, w, strength)
+    if k not in _vig:
+        y, x = np.mgrid[0:h, 0:w].astype(np.float32)
+        r = np.sqrt(((x - w / 2) / (w / 2)) ** 2 + ((y - h / 2) / (h / 2)) ** 2) / np.sqrt(2)
+        _vig[k] = (1 - strength * np.clip((r - 0.30) / 0.70, 0, 1) ** 1.6)[..., None]
+    return _vig[k]
+
+
+def finish(img, sepia=False, vignette=0.14, warm_hi=0.02, cool_lo=0.02):
+    a = np.asarray(img.convert('RGB')).astype(np.float32) / 255
+    L = a @ LUM
+    wh = np.clip((L - 0.55) / 0.30, 0, 1)[..., None]; ws = (1 - np.clip((L - 0.15) / 0.30, 0, 1))[..., None]
+    a = a + wh * np.array([warm_hi, 0.0, -warm_hi], np.float32) + ws * np.array([-cool_lo, 0.0, cool_lo], np.float32)
+    if sepia:
+        Ls = (a @ LUM)[..., None]
+        a = 0.25 * a + 0.75 * (Ls * np.array([1.08, 0.95, 0.74], np.float32))
+    a = a * _vignette(a.shape[0], a.shape[1], vignette)
+    return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))

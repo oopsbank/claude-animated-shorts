@@ -488,6 +488,8 @@ def render_shot(k, f):
     img, to_screen, cam = camera_xform(base.convert('RGB'), G['cams'][k].at(f))
     gk = f'{k}:insert' if (ins and ins[0] <= f < ins[1]) else str(k)          # cut-ins have their own plate grade
     if G['grades'].get(gk): img = GRADE.apply(img, G['grades'][gk])
+    if os.environ.get('ENGINE_FINISH', '1') == '1':      # vignette + warm/cool split (+ sepia flashbacks), every frame
+        img = GRADE.finish(img, sepia=(shot.get('grade') == 'sepia' and not (ins and ins[0] <= f < ins[1])))
     for c in chars:
         if c['bbox']:
             x0, y0, x1, y1 = c['bbox']; pts = [to_screen(x, y) for x in (x0, x1) for y in (y0, y1)]
