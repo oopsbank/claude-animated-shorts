@@ -4,9 +4,9 @@ Decided by the Director on 2026-11-22.
 
 ## What changes: the LOOK only
 Take only the **animation style** of reference short xBqCZDzFmog (@MindsetEvolving): never its content, traits, challenge, shots or title.
-- White stickmen with a thin outline (`stickman/`, `stickman/DRAWING_RULES.md`; off hold for this video).
+- **White stickmen with a BLACK outline** (the Director, 2026-11-22) (`stickman/`, `stickman/DRAWING_RULES.md`; off hold for this video).
 - Each key character has a **coloured glow aura** and, where useful, a small **coloured label** above the head (a role, e.g. SAILOR, SCIENTIST).
-- **Dark background** with subtle depth layers (faint dotted/particle layers, haze), neon accents, minimal props drawn flat.
+- **Background colours are free** (the Director, 2026-11-22: not necessarily dark or black-and-white). Use whatever colours fit the scene (e.g. white-blue Antarctic ice, the red falls, a grey lab), flat 2D with subtle depth layers and minimal props. Glow auras are optional accents, not a requirement.
 - A **bold white title card** at the top for the hook; small UI elements (meters, counters) are welcome.
 - Flat 2D throughout; a new simple 2D renderer is acceptable (the 3D plate engine is not required).
 
