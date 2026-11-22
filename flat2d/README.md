@@ -7,7 +7,8 @@ Pillow + numpy helpers for 1080x1920 "rich flat 2D" scenes (the Director's look 
   - **Terrain:** `peak_range` (faceted lit/shadow planes and snow caps), `ice_cliff` (faceted glacier wall, crevasse seams, strata, icicles), `snow_ground`, `rocks`.
   - **Post:** `snow_particles` (3 depth planes, driven by `t`), `dust`, `grain` (paper and grain), `vignette`, `foreground_frame` (out-of-focus silhouettes).
   - **Characters:** `stick` (white stickman `#f6f6f2`, black outline), `place` (contact shadow, coloured aura, **rim light** on the light side; returns head geometry).
-  - **Text and UI:** `label` (role pill), `title` (house headline), `caption` (PIPELINE "sentence" style), `pill`.
+  - **Text and UI:** `label` (role pill), `title` (house headline), `caption` (PIPELINE "sentence" style; `nudge=True` moves it to the cleanest band near 70%), `pill`.
+  - **Caption placement for the engine:** `busy(img, box)` is the edge energy under a box. `clean_band(img, w, size, avoid=faces)` returns the least-busy baseline within ±7% of 70%, at a small cost per px of travel. It is the no-plate answer to captions over busy areas.
 - `props.py`:
   - **Wardrobe and tools:** fur hat, ice axe, footprints.
   - **Lab:** microscope, flasks/tubes/bottles (glowing).

@@ -45,6 +45,8 @@ OUTFITS = {                                  # presets for shots.json "outfit"
 HATS = ('helmet', 'sailor', 'cap', 'tophat', 'captain', 'cowboy', 'chef', 'hardhat', 'crown')
 PROPS = ('bag', 'rock', 'phone', 'lantern', 'sword', 'paper', 'cup')
 MOUTHS = ('closed', 'small', 'open', 'wide', 'O', 'smile_talk')
+HAIRS = ('wild', 'tuft')
+GOGGLE_FRAME = '#e8892a'; HAIR_COL = '#8e94a4'
 HAT_CLEAR = 50                                 # every hat stays above hy - HAT_CLEAR over the face (brows reach hy-49)
 SHOE = (58, 48, 46); GOLD = (238, 192, 64); BELT = (52, 40, 36)
 
@@ -189,13 +191,15 @@ def hand_anchors(pose='stand', fixed=False, prop=None, prop_hand='R'):
 
 def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixed=False,
          shirt=None, coat=None, uniform=None, apron=None, pants=None, outfit=None,
-         prop=None, prop_hand='R', mouth=None):
+         prop=None, prop_hand='R', mouth=None, goggles=None, hair=None):
     # pose: a name from POSES, or a dict of joint angles (for animation); dict keys '_name' / '_side' set the style.
     # fixed=True keeps the hip at x=300 (no auto-centring) so animated frames don't jitter sideways.
     # Outfits: shirt / coat / uniform / apron / pants take a colour ('#rrggbb') or True for the default colour;
     #   outfit='chef' etc. applies a preset from OUTFITS (explicit keywords win).
     # prop: a name from PROPS held in prop_hand ('R' or 'L'), or a dict {'L': 'bag', 'R': 'sword'}.
     # mouth: a name from MOUTHS; replaces the expression's mouth (lip sync) and keeps its eyes and brows.
+    # goggles: lab goggles pushed up on the forehead (True or a frame colour); never over the eyes.
+    # hair: a name from HAIRS ('wild' = scientist tufts at the sides and top), True for 'wild', or (name, colour).
     name, P, side = _pose(pose)
     if side and look == 0.0: look = 0.7      # side-on body: face turns toward the direction of travel
     if outfit:
@@ -394,6 +398,26 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
         # drawn before the head so a coloured sleeve root hides under it (no knot at the shoulder)
         stamp(LA[10:], T + 2 * OUT, INK); fill(LA, T, ARM_B)
     hx, hy = head
+    if hair:                                  # hair tufts sit behind the head outline (only the tips show)
+        hn, hc = (hair if isinstance(hair, (tuple, list)) else ('wild' if hair is True else hair, HAIR_COL))
+        if hn not in HAIRS: raise ValueError(f'unknown hair {hn!r}; use one of {HAIRS}')
+        hc = hexrgb(hc) if isinstance(hc, str) else tuple(hc)
+        if hn == 'wild':                      # two side puffs above the ears + a spiky crown
+            spikes = []
+            for i in range(15):
+                a = math.radians(200 + i * 140 / 14); rr = R + (30 if i % 2 else 8)
+                spikes.append((hx + math.cos(a) * rr * 1.04, hy + math.sin(a) * rr))
+            tufts = [spikes]
+            for e in (-1, 1):
+                tufts.append([(hx + e * (R - 18), hy - 70), (hx + e * (R + 34), hy - 64), (hx + e * (R + 22), hy - 44),
+                              (hx + e * (R + 42), hy - 28), (hx + e * (R + 20), hy - 14), (hx + e * (R + 30), hy + 4),
+                              (hx + e * (R - 14), hy - 6)])
+        else:                                  # 'tuft': one swept quiff on top
+            tufts = [[(hx - 60, hy - 70), (hx - 40, hy - R - 34), (hx - 4, hy - R - 18), (hx + 30, hy - R - 46),
+                      (hx + 40, hy - R - 10), (hx + 70, hy - 60)]]
+        for tp in tufts:
+            q = [(x * S, y * S) for x, y in tp]
+            d.line(q + q[:1], fill=INK, width=int(2 * OUT * S), joint='curve'); d.polygon(q, fill=hc)
     d.ellipse([(hx - R - OUT) * S, (hy - R - OUT) * S, (hx + R + OUT) * S, (hy + R + OUT) * S], fill=INK)
     d.ellipse([(hx - R) * S, (hy - R) * S, (hx + R) * S, (hy + R) * S], fill=C)
     m = Image.new('L', im.size, 0); ImageDraw.Draw(m).ellipse([(hx - R) * S, (hy - R) * S, (hx + R) * S, (hy + R) * S], fill=255)
@@ -497,6 +521,18 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
         if ol: d.line(q + q[:1], fill=INK, width=int(OUT * S), joint='curve')
     def hline(pts, col, w): d.line(hp(pts), fill=col, width=int(w * S), joint='curve')
     lk = max(-1.0, min(1.0, look))
+    if goggles:                               # lab goggles up on the forehead: strap across, two lenses above the brows
+        gf = hexrgb(GOGGLE_FRAME if goggles is True else goggles); gy = -78
+        hw = math.sqrt(max(0.0, R * R - gy * gy)) - 1
+        hline([(-hw, gy + 4), (-hw * .5, gy - 2), (hw * .5, gy - 2), (hw, gy + 4)], INK, 15)
+        hline([(-hw, gy + 4), (-hw * .5, gy - 2), (hw * .5, gy - 2), (hw, gy + 4)], tone(gf, 0.35), 9)
+        gx = lk * 20
+        for e in (-1, 1):
+            u = gx + e * 30
+            q = hp(_rrect(u - 26, gy - 20, u + 26, gy + 16, 12)); d.polygon(q, fill=gf); d.line(q + q[:1], fill=INK, width=int(OUT * S), joint='curve')
+            q = hp(_rrect(u - 18, gy - 13, u + 18, gy + 9, 8)); d.polygon(q, fill=(150, 220, 246)); d.line(q + q[:1], fill=INK, width=int(2 * S), joint='curve')
+            hline([(u - 10, gy - 6), (u - 2, gy - 10)], (255, 255, 255), 4)
+        hline([(gx - 4, gy - 2), (gx + 4, gy - 2)], INK, 8)
     if hat == 'helmet':
         G = (78, 112, 64); Gd = (52, 78, 44); band_c = (70, 52, 56)
         top = hy - R - 30; rim = hy - 34

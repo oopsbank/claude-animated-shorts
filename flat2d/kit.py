@@ -324,11 +324,16 @@ def contact_shadow(img, cx, gy, w, color=(70, 90, 140), alpha=0.55, h=None):
 # ---------------------------------------------------------------- characters
 def stick(expr='neutral', pose='stand', look=0.0, **kw):
     """White stickman card (black outline), house colour."""
-    return stickman.draw(expr=expr, pose=pose, color='#f6f6f2', look=look, **kw)
+    card = stickman.draw(expr=expr, pose=pose, color='#f6f6f2', look=look, **kw)
+    if kw.get('hair'):  # hair tufts stick out above the head: take the head geometry from a hairless card
+        bare = dict(kw); bare.pop('hair')
+        card.info['head'] = head_of(stickman.draw(expr=expr, pose=pose, color='#f6f6f2', look=look, **bare))
+    return card
 
 
 def head_of(card):
     """Head centre (card px) from the alpha: the top row of the head + radius."""
+    if 'head' in card.info: return card.info['head']
     a = np.asarray(card.split()[3]) > 0
     rows = np.where(a.any(1))[0]
     top = rows[0]
@@ -404,14 +409,42 @@ def title(img, lines, y, size=96, gap=1.12, stroke=(40, 18, 44), sw=10, shadow=8
     return y
 
 
-def caption(img, text, avoid=()):
+def busy(img, box):
+    """Mean edge energy (0-255 scale) of the luminance inside box: how much detail a caption would sit on."""
+    x0, y0, x1, y1 = [int(round(v)) for v in box]
+    g = np.asarray(img.crop((x0, y0, x1, y1)).convert('L'), np.float32)
+    if g.size == 0: return 0.0
+    return float(np.abs(np.diff(g, axis=0)).mean() + np.abs(np.diff(g, axis=1)).mean())
+
+
+def clean_band(img, w, size, base=None, search=0.07, step=6, avoid=(), k=0.012):
+    """Nudge to the cleanest band near 70%: the caption baseline within +-search*H of `base` whose box
+    (text width w + margin, cap height + descender) sits on the least detail, with a small cost for
+    leaving 70% (k per px). Bands that touch a face box in `avoid` are skipped. For the engine's caption
+    placement: run it on the frame under each caption (or once per shot) instead of drawing a plate."""
+    H_ = img.height; base = 0.70 * H_ if base is None else base
+    x0, x1 = (img.width - w) / 2 - 30, (img.width + w) / 2 + 30
+    best = None
+    for dy in range(-int(search * H_), int(search * H_) + 1, step):
+        b = base + dy; y0, y1 = b - size * 1.0, b + size * .32
+        if any(y0 < ay1 and y1 > ay0 and x0 < ax1 and x1 > ax0 for ax0, ay0, ax1, ay1 in avoid): continue
+        cost = busy(img, (x0, y0, x1, y1)) + k * abs(dy)
+        if best is None or cost < best[0]: best = (cost, b)
+    return best[1] if best else base
+
+
+def caption(img, text, avoid=(), nudge=False):
     """PIPELINE.md > Captions, 'sentence' style: Poppins Bold 3.7% H, white, 10% black outline, soft
-    shadow, centred, baseline at 70% H; nudged down off any face box in `avoid` [(x0,y0,x1,y1)]."""
+    shadow, centred, baseline at 70% H; nudged down off any face box in `avoid` [(x0,y0,x1,y1)].
+    nudge=True picks the cleanest band near 70% instead (clean_band). Returns the baseline y."""
     size = int(round(0.037 * img.height)); f = font(size, bold=True)
     w = text_w(text, f); base = 0.70 * img.height
-    for x0, y0, x1, y1 in avoid:
-        if base > y0 and base - size < y1 and (img.width - w) / 2 < x1 and (img.width + w) / 2 > x0:
-            base = y1 + size + 10
+    if nudge:
+        base = clean_band(img, w, size, avoid=avoid)
+    else:
+        for x0, y0, x1, y1 in avoid:
+            if base > y0 and base - size < y1 and (img.width - w) / 2 < x1 and (img.width + w) / 2 > x0:
+                base = y1 + size + 10
     x = (img.width - w) / 2
     sh = layer(img.width, img.height)
     ImageDraw.Draw(sh).text((x + 3, base + 5), text, font=f, fill=(0, 0, 0, 200), anchor='ls',
@@ -419,6 +452,7 @@ def caption(img, text, avoid=()):
     img.alpha_composite(soft_layer(sh, 7))
     ImageDraw.Draw(img).text((x, base), text, font=f, fill='white', anchor='ls',
                              stroke_width=int(size * .1), stroke_fill='black')
+    return base
 
 
 def pill(img, text, cx, cy, fill, size=44, fg='white', pad=26):

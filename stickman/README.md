@@ -7,6 +7,7 @@ An original solid-colour stickman, about 5 heads tall. It has a tube body, smoot
   - Expressions: neutral, happy, angry, surprised, worried, scared, sad, smug, thinking, determined.
   - Poses: stand, wave, walk, run, point, shrug, think, cheer.
   - Hats: helmet, sailor.
+  - Character marks (off by default): `goggles=True` (or a frame colour) puts lab goggles up on the forehead, never over the eyes. `hair='wild'` / `'tuft'` (or `(name, '#rrggbb')`) adds grey tufts behind the head. The blood-falls scientist wears both.
 - `scripts/sheets.py <outdir>`: rebuilds the reference sheets and the per-expression PNGs in this folder.
 
 **Before drawing or changing anything, read [`DRAWING_RULES.md`](DRAWING_RULES.md).** It lists the user's corrections: one flat colour, merged silhouette, continuous strokes, symmetric front view, each arm from its own shoulder, and foreshortening.
