@@ -19,7 +19,8 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
   - Also: `thumbnail.png`. The proposed title and captions are in `videos/bike-countersteer/NOTES.md`.
   - The draft history and open nice-to-haves are in the same NOTES file.
   - **The Director decided (2026-11-21) not to remake it.** It has the pacing and story weaknesses found in the retention study, so the lessons go into the next video. Posting it is the Director's call.
-- **Video 2: "sailing-stones"**: the script is final (v17, merged) and the Director said to produce it to a finished video (each stage's overall score ≥ 8).
+- **Video 2: "sailing-stones": POSTED 2026-11-22** (draft v1, G5 frozen at 7.1) on YouTube, TikTok and Facebook via Buffer; links in `videos/sailing-stones/NOTES.md`. The Animator session can be archived unless the Director wants a v2.
+- Earlier notes on video 2: the script is final (v17, merged) and the Director said to produce it to a finished video (each stage's overall score ≥ 8).
   - Crew sessions:
     - Sound `session_01CUE8441Kj9vhQtH74MvcqK` (voice + mix, `claude/area-audio`);
     - Production Designer: done and archived 2026-11-22. Final `playa` (5 cams × 4 lights + depth) and `inserts` plates merged; frozen at playa 6.9, inserts 7.4, open fixes in BACKLOG › sets;

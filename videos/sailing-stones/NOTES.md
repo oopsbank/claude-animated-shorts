@@ -28,5 +28,5 @@
 - Title: The Rocks That Move By Themselves 🪨
 - YouTube (post 6b02b716d5eabfb8cc98c205): https://www.youtube.com/watch?v=rnOdH-Jw-1s
 - Facebook reel (post 6b02b72cc72676f5e919b768): https://facebook.com/1395801306957363_122106612303549918
-- TikTok (post 6b02b71dd864a01105b08cf6): sending at the time of writing.
+- TikTok (post 6b02b71dd864a01105b08cf6): https://tiktok.com/@somecrazythingzz/video/7710925952523472180
 - Caption (TikTok/Facebook): "Rocks in Death Valley move by themselves 🤯 Not aliens. Ice. #sailingstones #deathvalley #science #mystery"
