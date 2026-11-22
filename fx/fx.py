@@ -1218,7 +1218,7 @@ def fx_gps_ping(t, n, u, e, kw):
             p = seg(t, st, st + 0.36)
             if not 0 < p < 1: continue
             rr = u * (0.15 + 0.85 * out_cubic(p)); w = u * 0.085 * (1 - 0.5 * smooth(p)) * (1 - 0.2 * r_i) * (1 - smooth(seg(p, 0.8, 1.0)))
-            if w > 0.6: shapes.append(('s', [(cx + rr * math.cos(a), cy + rr * math.sin(a), w) for a in (2 * math.pi * j / 64 for j in range(65))], col))
+            if w > u * 0.025: shapes.append(('s', [(cx + rr * math.cos(a), cy + rr * math.sin(a), w) for a in (2 * math.pi * j / 64 for j in range(65))], col))
     dot = u * 0.16 * k * (1 + 0.12 * math.sin(t * 2 * math.pi * 4) * bump(seg(t, 0.25, 0.8)))
     im = new(n)
     if shapes: comp(im, group(n, shapes, e * 0.8, shade=False, alpha=fade(t, 0.92, 1.0)))
@@ -1296,14 +1296,14 @@ def fx_flash_flood(t, n, u, e, kw):
     X = (lambda x: x) if sgn > 0 else (lambda x: n - x)
     front = lerp(-0.2 * n, 1.25 * n, smooth(seg(t, 0.08, 0.55)))
     level = n * (1 - 0.42 * smooth(seg(t, 0.1, 0.5)) + 0.42 * smooth(seg(t, 0.78, 0.98)))   # water surface y
-    crest = n * 0.24 * (smooth(seg(t, 0.08, 0.2)) * (1 - smooth(seg(t, 0.5, 0.75))))
+    crest = n * 0.17 * (smooth(seg(t, 0.08, 0.2)) * (1 - smooth(seg(t, 0.5, 0.75))))
     trickle = bump(seg(t, 0.0, 0.12))                                       # anticipation: a thin trickle first
     surf, foam = [], []
     m = 40
     for j in range(m + 1):
         x = -10 + (front + 10) * j / m
         dist = (front - x) / n
-        hump = crest * math.exp(-((dist - 0.08) / 0.09) ** 2)                 # the tall wave just behind the front
+        hump = crest * math.exp(-((dist - 0.12) / 0.16) ** 2)                 # the tall wave just behind the front
         y = level - hump + n * 0.012 * math.sin(j * 1.1 + t * 40)
         surf.append((X(x), y))
     shapes, det = [], []
@@ -1314,7 +1314,7 @@ def fx_flash_flood(t, n, u, e, kw):
             x, y = surf[j]
             det.append(('s', [(x - sgn * n * 0.03, y + n * 0.008, n * 0.008), (x + sgn * n * 0.01, y - n * 0.004, n * 0.012)], FOAM))
         if crest > 1:                                                        # a curling white lip over the wave front
-            k_ = min(1, crest / (n * 0.08)); top_y = level - crest * 0.95; cxp = front - n * 0.07
+            k_ = min(1, crest / (n * 0.08)); top_y = level - crest * 0.95; cxp = front - n * 0.12
             lip = [(X(cxp - n * 0.09 * k_), top_y + n * 0.03), (X(cxp - n * 0.02), top_y - n * 0.02 * k_), (X(cxp + n * 0.05 * k_), top_y + n * 0.005),
                    (X(cxp + n * 0.07 * k_), top_y + n * 0.05 * k_), (X(cxp + n * 0.035 * k_), top_y + n * 0.035 * k_), (X(cxp - n * 0.01), top_y + n * 0.05)]
             foam.append(('p', lip, FOAM))
