@@ -8,17 +8,18 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P1 Shot grammar for every new script (`references/reports/channels_2026-11.md` §6): at least one extreme close-up, one POV or prop insert, one Dutch or low angle, one crowd or depth-layered shot, and one visual-metaphor set piece for the mechanism. Add a count of these to `tools/preflight.py`. (`scripts/sailing-stones/build.py` counts them from per-shot `grammar` tags; preflight could read the same tags.)
 - [ ] P2 `scripts/TOPICS.md`: re-review topics 6-7 (fixed after round 4) or replace 8-10 from the reserves before the next pick.
 
-- [ ] P1 `sailing-stones` shots.json, from sets: the three alien_cam panels are separate plates. Set `"plate": "inserts__alien_cam__day__rock_racing_league.png"` on s12 and `"plate": "inserts__alien_cam__day__alien_air_hockey_final.png"` on s16 (s09 uses the default `inserts__alien_cam__day.png` = leaf_blower_aliens). The playa targets are `rock`, `tour_sign`, `camp_rocks` and `tent`.
-
 ## sets (`blender/sets/`)
-- [ ] P1 **Video 2 (`sailing-stones`), set `playa`** (shots in `scripts/sailing-stones/shots.json`; G1 fails on these plates until built). A dry lake bed (Racetrack Playa style, not a copy of a photo): flat, pale tan clay cracked into polygons, low mountains in dark brown/purple all around, a few dark rocks each with a long, shallow groove trail behind it. 4 lights: `day` (high sun, blue sky), `golden` (low warm sun, long rock shadows), `night` (deep blue, stars, one warm van light), `frost` (late-morning sun on a sheet of thin ice/shallow water with mirror reflections of the mountains; for the mechanism). 5 cams, each needs `--depth`:
-  - `playa_wide`: depth-layered wide; a hero rock + trail in the near foreground, playa mid, mountains far; ground space 0.35-0.65 W for two small characters.
-  - `playa_med`: eye-level medium at the cousins' camp: a dome tent, a time-lapse camera on a tripod, a weather-station mast, two folding chairs, a row of ~15 rocks; room for a two-shot. Also used for the 1948/1960s flashbacks (the engine adds a sepia grade).
-  - `rock_low`: low angle at ground level beside one hero rock (fills ~1/3 W) and its trail running away from camera; must hold a 1.7x zoom as an extreme close-up of the rock edge.
-  - `playa_top`: straight top-down on one rock and trail, cracked clay pattern; used with the ice fx (pond → ice → panes → drift). Needs a `targets` entry for the rock.
-  - `overlook_med`: a gravel pull-out at the playa edge: a parked tour van (no brand), a hand-painted sign board on two posts (`common.sign()` text: ALIEN ROCK TOURS; variants $40, SOLD OUT, NIGHT ONLY, and ICE TOURS $40 with ALIEN crossed out), a plywood alien cut-out; `targets` for `tour_sign`. Room for 4 characters at 0.8x.
-- [ ] P1 **Video 2 insert set `inserts`** (one light, `day`; 2D in PIL is fine; our palette, plum ink, no brands): `ticket` (unused in v17 final, skip), `alien_cam` (FANTASY panels in a thought-bubble frame with a cheesy green ALIEN CAM filter, clearly fantasy: `leaf_blower_aliens`, `rock_racing_league` (rocks in tiny helmets and numbered bibs, a cheering alien stadium), `alien_air_hockey_final` (neon rink, a boulder puck, a referee that is itself a rock in a striped shirt with a whistle, a scoreboard); `price_card` overlays $30/$40/$50), `gps_screen` reused as `livestream_screen` (LIVE · 1.2M, comments "ICE??" "REFUND", rocks sliding in sunshine).
-- [ ] P1 Video 2 props on the plates or as engine props (v17 final): `gps_box` (small grey box with an antenna), `gary_rock` (a MID-SIZE rock with googly eyes; also `gary_buried`: one eye poking out of dust), `rock_row_15`, `rock_trail_hero`, `tent`, `tent_floating`, `timelapse_cam`, `cooler` (+ `cooler_trophy` on a plinth), `flood_water`, `pond_water`, `ice_sheet` (the frost light), `fridge_silhouette` and `phone_silhouette` (scale cues), `air_hockey_overlay` (rink lines/goal flickering over the real ice), `tour_van`, `tour_sign` variants (ALIEN ROCK TOURS · NIGHT ONLY · $20 / SOLD OUT; ICE TOURS $5 with ALIEN crossed out), `tour_sign_free` (the NIGHT ONLY sign as a separate sprite that splits and topples), `banner` (FINAL FAIL · LIVE), `livestream_counter`, `flying_bills`. Keep the van and fans at the road edge, never on the playa.
+- [ ] P2 `playa` (built, `blender/sets/playa/build.py`; 5 cams x 4 lights + depth; targets rock, tour_sign, camp_rocks, tent). Review rounds 1-3 (low res): 6.6 → 6.8 → 6.9. Open notes:
+  - overlook_med: the foreground gravel is large and plain;
+  - night: the playa_top pond reads as flat dark water (the engine's rain rings and frost fx carry the shot);
+  - frost: playa_top is washed out;
+  - the camp is small in playa_wide and rock_low;
+  - in playa_med, the mast and chairs sit behind a centred character.
+- [ ] P2 `inserts` (built, `blender/sets/inserts/build.py`, PIL). Frozen after 8 rounds at 6.8 → 6.8 → 7.0 → 7.2 → 7.3 → 7.4 → 7.5 → 7.3 (plateau). Open notes:
+  - air hockey: the scoreboard and crowd crowd the bubble top;
+  - leaf blowers: the desert reads muddy under the green filter;
+  - racing: the trophy is small;
+  - livestream: the comments could be bigger.
 - [ ] P2 Look test (`blender/sets/playa/looktest.py`) stopped at a plateau of about 7/10 (19 rounds, best 7.1; the recipe is in `common.py`: `pbr`, `gold`, `glass`, `soften`/`rbox`/`rcyl`, `rock(facet=)`, `contact_blob`, `softbox`, presets `sky_refl` and `sun_from`). The reviewers' recurring blockers:
   - Contact shadows and AO read weak under vehicles. Try Cycles AO or a baked AO multiply in `pbr`.
   - Rocks and the tracker read matte or plasticky. Try roughness variation and edge wear.

@@ -1,0 +1,19 @@
+{
+ "ground_y": 1060.9,
+ "px_per_m": 138.03,
+ "horizon_y": 881.9,
+ "light_dir": "right",
+ "tint": "#ffbf86",
+ "stand_x": 0.457,
+ "ground_x": 493.0,
+ "set": "playa",
+ "cam": "playa_wide",
+ "light": "golden",
+ "targets": {
+  "rock": [
+   363.6,
+   1308.5
+  ]
+ },
+ "note": "depth-layered: hero rock + trail near, camp mid, mountains far"
+}

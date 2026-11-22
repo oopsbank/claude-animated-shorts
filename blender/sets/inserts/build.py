@@ -129,8 +129,8 @@ def panel_leaf_blower(d):
         for k in range(5):   # air blasts
             t0 = (tip[0] + 10, tip[1] + (k - 2) * 16)
             line(d, [t0, (t0[0] + 230, t0[1] - 40 + (k - 2) * 34)], (255, 255, 255), 10)
-    sx_, sy_ = 880, 1430   # the site supervisor: a rock in a hard hat with a clipboard
-    rock(d, sx_, sy_, 95, 80, seed=61, col=(100, 86, 84))
+    sx_, sy_ = 800, 1380   # the site supervisor: a rock in a hard hat with a clipboard
+    rock(d, sx_, sy_, 115, 95, seed=61, col=(100, 86, 84))
     d.chord(S(sx_ - 70, sy_ - 140, sx_ + 60, sy_ - 40), 180, 360, fill=SUN, outline=INK, width=lw(6)); line(d, [(sx_ - 85, sy_ - 90), (sx_ + 75, sy_ - 90)], INK, 9)
     for ex in (-26, 14): ell(d, sx_ + ex, sy_ - 55, 12, 12, (255, 255, 255), 4); ell(d, sx_ + ex + 3, sy_ - 53, 5, 5, INK, 0, None)
     poly(d, [(sx_ - 130, sy_ - 50), (sx_ - 60, sy_ - 50), (sx_ - 60, sy_ + 40), (sx_ - 130, sy_ + 40)], (250, 246, 230), 5)
@@ -170,10 +170,11 @@ def panel_rock_racing(d):
         rock(d, x, y, sz, sz * 0.7, seed=20 + n, col=[(70, 58, 62), (88, 70, 64), (60, 56, 70)][n - 1])
         helmet(d, x + sz * 0.05, y - sz * 0.55, sz * 0.48, [ORANGE, BLUE, PINK][n - 1])
         bib(d, x, y - sz * 0.02, sz * 0.85, sz * 0.62, n)
-    tx, ty = 930, 1150   # the trophy: a golden rock on a cup
-    poly(d, [(tx - 40, ty + 60), (tx + 40, ty + 60), (tx + 30, ty + 20), (tx - 30, ty + 20)], (120, 70, 30), 5)
-    d.chord(S(tx - 50, ty - 50, tx + 50, ty + 40), 0, 180, fill=SUN, outline=INK, width=lw(5)); line(d, [(tx, ty + 30), (tx, ty + 20)], INK, 8)
-    rock(d, tx, ty - 25, 40, 30, seed=77, col=(240, 180, 40))
+    tx, ty = 200, 1020   # the trophy: a golden rock on a cup
+    poly(d, [(tx - 60, ty + 95), (tx + 60, ty + 95), (tx + 45, ty + 40), (tx - 45, ty + 40)], (120, 70, 30), 6)
+    d.chord(S(tx - 75, ty - 70, tx + 75, ty + 60), 0, 180, fill=SUN, outline=INK, width=lw(6)); line(d, [(tx, ty + 50), (tx, ty + 40)], INK, 10)
+    rock(d, tx, ty - 30, 60, 45, seed=77, col=(240, 180, 40))
+    stars(d, 6, (tx - 90, ty - 120, tx + 90, ty - 40), 5, (255, 250, 200))
     title_plate(d, 'ROCK RACING LEAGUE', 470, (255, 255, 255), ORANGE, 40)
 
 def panel_air_hockey(d):
@@ -181,13 +182,13 @@ def panel_air_hockey(d):
     rnd = random.Random(9)
     for k in range(70):   # crowd silhouettes with glowing eyes
         x = rnd.uniform(BX0, BX1); y = rnd.uniform(560, 700)
-        ell(d, x, y, 26, 30, (60, 34, 90), 0, None); ell(d, x - 8, y, 5, 3, LIME, 0, None); ell(d, x + 8, y, 5, 3, LIME, 0, None)
+        ell(d, x, y, 26, 30, (120, 76, 160), 0, None); ell(d, x - 8, y, 5, 3, LIME, 0, None); ell(d, x + 8, y, 5, 3, LIME, 0, None)
     ell(d, 540, 730, 40, 26, (255, 70, 60), 5)   # goal lamp
     for k in range(6): a = math.radians(200 + k * 28); line(d, [(540 + 52 * math.cos(a), 730 + 34 * math.sin(a)), (540 + 90 * math.cos(a), 730 + 58 * math.sin(a))], (255, 120, 90), 6)
     # scoreboard
-    poly(d, [(250, 360), (830, 360), (830, 545), (250, 545)], (14, 8, 24), 7)
-    text_c(d, (540, 405), 'AIR HOCKEY FINAL', font(34, True), SUN)
-    text_c(d, (430, 480), '3', font(80, True), (80, 255, 200)); text_c(d, (540, 475), ':', font(70, True), (255, 255, 255)); text_c(d, (650, 480), '2', font(80, True), (255, 90, 170))
+    poly(d, [(200, 350), (880, 350), (880, 560), (200, 560)], (14, 8, 24), 8)
+    text_c(d, (540, 400), 'AIR HOCKEY FINAL', font(44, True), SUN)
+    text_c(d, (420, 492), '3', font(100, True), (80, 255, 200)); text_c(d, (540, 487), ':', font(86, True), (255, 255, 255)); text_c(d, (660, 492), '2', font(100, True), (255, 90, 170))
     # the neon rink in perspective
     rink = [(200, 760), (880, 760), (960, 1600), (120, 1600)]
     poly(d, rink, (70, 130, 210), 14, (170, 250, 255))
@@ -196,17 +197,18 @@ def panel_air_hockey(d):
     d.ellipse(S(400, 1060, 680, 1200), outline=(255, 90, 170), width=lw(8))
     for (gx, gy, gw) in ((540, 770, 150), (540, 1560, 230)): poly(d, [(gx - gw, gy - 14), (gx + gw, gy - 14), (gx + gw, gy + 14), (gx - gw, gy + 14)], (120, 240, 255), 4)   # goals
     for k in range(7): line(d, [(320 + k * 70, 1546), (340 + k * 70, 1600)], (170, 250, 255), 4)   # goal net
-    text_c(d, (540, 1450), 'SAVE?!', font(84, True), SUN, stroke=8)
+    text_c(d, (420, 1430), 'SAVE?!', font(84, True), SUN, stroke=8)
     # the boulder puck flying, with a neon streak
     for k in range(5): line(d, [(860 + k * 30, 1300 + k * 18), (800 + k * 20, 1240 + k * 12)], (120, 240, 255), 7)
+    ell(d, 690, 1215, 200, 125, (150, 250, 255), 0, None); ell(d, 690, 1215, 185, 112, (90, 200, 240), 0, None)   # puck glow
     rock(d, 690, 1210, 170, 100, seed=31)
     # two alien players with mallets
     for (x, y, s, col) in ((330, 960, 1.0, (80, 255, 200)), (830, 1500, 1.5, (255, 90, 170))):
         alien(d, x, y, s)
         ell(d, x + 70 * s, y - 40 * s, 40 * s, 22 * s, col, 5); ell(d, x + 70 * s, y - 58 * s, 16 * s, 16 * s, shade(col, 0.8), 4)
     # the referee: a rock in a striped shirt with a whistle
-    rx, ry = 380, 1150
-    rock(d, rx, ry, 120, 135, seed=40, col=(96, 84, 88))
+    rx, ry = 360, 1130
+    rock(d, rx, ry, 135, 150, seed=40, col=(96, 84, 88))
     for k in range(5):
         x0 = rx - 95 + k * 40; poly(d, [(x0, ry - 30), (x0 + 20, ry - 30), (x0 + 20, ry + 70), (x0, ry + 70)], INK if k % 2 == 0 else (250, 250, 250), 0, None)
     d.rectangle(S(rx - 100, ry - 32, rx + 100, ry + 72), outline=INK, width=lw(6))
@@ -289,7 +291,7 @@ def livestream(out_dir):
     d.rounded_rectangle(S(vx0 + 30, vy0 + 30, vx0 + 200, vy0 + 104), radius=16 * SS, fill=(235, 40, 60))
     text_c(d, (vx0 + 115, vy0 + 67), 'LIVE', font(46, True), (255, 255, 255))
     d.rounded_rectangle(S(vx0 + 215, vy0 + 30, vx0 + 480, vy0 + 104), radius=16 * SS, fill=(20, 16, 24, 180))
-    ell(d, vx0 + 250, vy0 + 67, 11, 11, (255, 255, 255), 0, None); text_c(d, (vx0 + 365, vy0 + 67), '1.2M', font(46, True), (255, 255, 255))
+    ell(d, vx0 + 250, vy0 + 67, 11, 11, (255, 80, 90), 0, None); text_c(d, (vx0 + 365, vy0 + 67), '1.2M', font(46, True), (255, 255, 255))
     for k, (hx_, hy_, r) in enumerate(((vx1 - 70, vy1 - 90, 26), (vx1 - 120, vy1 - 190, 20), (vx1 - 60, vy1 - 270, 30), (vx1 - 110, vy1 - 380, 18), (vx1 - 70, vy1 - 470, 22))):   # heart spam
         col = [(255, 70, 110), (255, 140, 60), (255, 70, 110), (160, 110, 255), (255, 70, 110)][k]
         d.ellipse(S(hx_ - r, hy_ - r, hx_, hy_), fill=col); d.ellipse(S(hx_, hy_ - r, hx_ + r, hy_), fill=col)
