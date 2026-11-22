@@ -116,6 +116,8 @@ The channel is **Some Crazy Things** (avatar and brand notes: `channel/`). Its p
   - TikTok pulls from a URL and may need a verified domain.
   - Tested 2026-11-21: a YouTube **draft** was created (`6b019df9d5eabfb8cc337d28`, status draft), so Buffer accepted the Pages URL.
   - Test with `saveToDraft: true` first.
+  - Facebook needs `metadata: {facebook: {type: "reel"}}` (else "Facebook posts require a type"). Post status: `{ post(input:{id}) { status externalLink error { message } } }`.
+  - Posted with `mode: shareNow` on 2026-11-22 (video 2): YouTube, Facebook and TikTok all accepted the Pages URL.
   - Fallback: the Director posts by hand.
 - Posting by hand (Upload-Post was removed on 2026-11-21). Prepare the cover cut, `thumbnail.png`, a title, a YouTube description and an Instagram/Facebook caption under 255 bytes (Facebook cuts longer ones), and record them in `videos/<slug>/NOTES.md`.
 - **Length: 62-66 s, never under 61 s** (the final file, cover frames included). TikTok's Creator Rewards and Snapchat pay only for videos over 1 minute (TikTok needs an eligible account country; Vietnam isn't one in 2026). YouTube Shorts is the platform that pays per view for us: YPP needs 1,000 subscribers + 10 M Shorts views in 90 days.
