@@ -42,7 +42,7 @@ PR.weather_mast((4.2, 8.6, 0), rz=30)
 PR.lantern((0.1, 6.3, 0.49))
 C.point((-2.6, 8.4, 0.6), (1.0, 0.55, 0.22), power=120, radius=0.5)                 # glow inside the tent (night)
 C.point((4.2, 8.6, 3.1), (1.0, 0.15, 0.1), power=4, radius=0.05)                    # red beacon on the mast
-C.point((HERO[0] - 7.0, HERO[1] - 2.0, 0.4), (1.0, 0.6, 0.3), power=70, radius=0.6)  # warm spill from a lantern off-frame
+C.point((HERO[0] + 1.1 * math.sin(math.radians(TRAIL_H)), HERO[1] - 1.1 * math.cos(math.radians(TRAIL_H)), 0.45), (1.0, 0.6, 0.3), power=30, radius=0.2).visible_glossy = False   # no hot spot in the pond  # warm spill from a lantern off-frame
 for k in range(15):   # the row of 15 tagged rocks, each with a short trail behind
     x = -7.0 + k
     s = 0.2 + 0.05 * ((k * 7) % 4)
@@ -114,23 +114,23 @@ CAMS = {
                        haze_range=(4, 480), per_light=per('playa_wide'), note='depth-layered: hero rock + trail near, camp mid, mountains far'),
     'playa_med': dict(loc=(0.3, -1.6, 1.4), target=(0.0, 9.0, 1.0), lens=22, stand=(0.2, 3.4, 0), fstop=5.6,
                       haze_range=(3, 480), per_light=per('playa_med'), note='camp two-shot; also the 1948/1960s flashbacks (engine sepia)'),
-    'rock_low': dict(loc=(hx - 2.9 * dx + 1.7 * dy, hy - 2.9 * dy - 1.7 * dx, 0.34), target=(hx + 9 * dx - 1.5 * dy, hy + 9 * dy + 1.5 * dx, 0.75), lens=24, stand=(hx + 2.6 * dx + 0.9 * dy, hy + 2.6 * dy - 0.9 * dx, 0), fstop=3.2,
+    'rock_low': dict(loc=(hx - 2.9 * dx + 1.35 * dy, hy - 2.9 * dy - 1.35 * dx, 0.34), target=(hx + 9 * dx - 1.6 * dy, hy + 9 * dy + 1.6 * dx, 0.75), lens=24, stand=(hx + 2.6 * dx + 0.9 * dy, hy + 2.6 * dy - 0.9 * dx, 0), fstop=3.2,
                      haze_range=(2, 480), per_light=per('rock_low'), note='ground-level beside the hero rock (left third), its trail running away; holds a 1.7x zoom on the rock edge'),
     'playa_top': dict(loc=(hx + 2.4 * dx, hy + 2.4 * dy, 7.5), target=None, lens=35, roll=TRAIL_H - 90, stand=(hx, hy, 0), fstop=None, top=True,
-                      haze_range=(10, 40), haze_k=0.0, per_light=per('playa_top'), light_overrides={'night': dict(exposure=0.9, sun_e=5.0)}, note='top-down: rock near the bottom, trail running up; px_per_m along the ground'),
-    'overlook_med': dict(loc=(OVER[0] - 0.2, OVER[1] - 8.6, 1.05), target=(OVER[0] - 0.2, OVER[1] + 6.0, 2.2), lens=18, stand=(OVER[0] - 0.4, OVER[1] - 3.6, 0.15), fstop=4.0,
+                      haze_range=(10, 40), haze_k=0.0, per_light=per('playa_top'), light_overrides={'night': dict(exposure=0.35, sun_e=3.0, stars=6.0)}, note='top-down: rock near the bottom, trail running up; px_per_m along the ground'),
+    'overlook_med': dict(loc=(OVER[0] - 0.2, OVER[1] - 8.6, 1.05), target=(OVER[0] - 0.2, OVER[1] + 6.0, 1.8), lens=18, stand=(OVER[0] - 0.4, OVER[1] - 3.6, 0.15), fstop=4.0,
                          haze_range=(3, 480), per_light=per('overlook_med'), note='gravel pull-out: van left, sign right, alien cut-out; room for 4 characters at 0.8x'),
 }
 C.INK_FADE, C.INK_RANGE, C.INK_BORDER, C.INK_FAR_K, C.INK_THICK = (20, 80, 0.5), (4, 60), False, 0.6, 2.4   # only the sign boards carry ink
 DAYK = dict(sky_refl=1.0, grade_sat=1.18)
 LIGHTS = {
     'day': dict(DAYK, az=150, elev=52, sun=(1.0, 0.90, 0.74), sun_e=7.0, sun_soft=10, amb=(0.30, 0.46, 1.0), amb_e=0.75,
-                fill=(0.45, 0.6, 1.0), fill_e=120, exposure=-0.55, haze=(0.78, 0.80, 0.96), haze_k=0.45, prac=0.0, emit=0.15,
+                fill=(0.45, 0.6, 1.0), fill_e=120, exposure=-0.55, haze=(0.78, 0.80, 0.96), haze_k=0.62, prac=0.0, emit=0.15,
                 sky=[(0.0, (0.82, 0.86, 0.98)), (0.12, (0.42, 0.62, 0.95)), (0.5, (0.16, 0.38, 0.88))], cloud_amt=0.35),
     'golden': dict(DAYK, az=120, elev=12, sun=(1.0, 0.52, 0.20), sun_e=17.0, sun_soft=6, amb=(0.30, 0.40, 0.95), amb_e=0.55,
                    fill=(0.5, 0.55, 1.0), fill_e=140, exposure=0.1, haze=(1.0, 0.62, 0.42), haze_k=0.4, prac=0.6, emit=0.6, grade_warm=(1.04, 1.0, 0.92),
                    sky=[(0.0, (1.0, 0.66, 0.32)), (0.08, (1.0, 0.52, 0.30)), (0.26, (0.55, 0.48, 0.78)), (0.6, (0.22, 0.32, 0.72))], clouds=(1.0, 0.6, 0.4)),
-    'night': dict(az=200, elev=50, sun=(0.50, 0.62, 1.0), sun_e=1.6, amb=(0.16, 0.24, 0.66), amb_e=0.55, fill=(0.5, 0.58, 1.0), fill_e=70,
+    'night': dict(az=200, elev=40, sun=(0.50, 0.62, 1.0), sun_e=2.6, amb=(0.16, 0.24, 0.66), amb_e=0.55, fill=(0.5, 0.58, 1.0), fill_e=70,
                   exposure=0.45, prac_k=1, haze=(0.10, 0.12, 0.28), haze_k=0.45, prac=3.0, emit=5.0, sky_refl=1.0, grade_sat=1.1,
                   sky=[(0.0, (0.22, 0.20, 0.42)), (0.1, (0.07, 0.09, 0.26)), (0.45, (0.02, 0.03, 0.12))], stars=3.5, clouds=None, cloud_amt=0),
     'frost': dict(DAYK, az=95, elev=26, sun=(1.0, 0.84, 0.66), sun_e=8.0, sun_soft=6, amb=(0.42, 0.6, 1.0), amb_e=0.8,
