@@ -17,6 +17,9 @@ LLM reviewers only see stills, so they guess at motion and contradict each other
 | Motion | automatic checks (`flat2d/motion_qa.py`, `engine/qa.py`) | PASS/FAIL: no frozen span > 0.4 s, no pops except cuts/impacts, every on-screen character moves during holds (breath, blink, secondary action) |
 | Acting and overall feel | **the Director**, on a low-res motion test | the Director's OK or notes |
 
+- **Script-match check (added 2026-11-22, after blood-falls v4 reached the final render with the CLUE 3 water shown orange while the line says "It's clear"):** the stills reviewer gets each still **next to its voice-over line and its shot-table row**, and answers per shot: does the picture show what the line says, and does anything on screen contradict it? Any contradiction is a FAIL, whatever the scores.
+- **Sequence check:** the reviewer also gets all stills in order on one sheet and flags any run of 3+ shots with the same palette, framing or setting (blood-falls v4: three dark-teal underwater shots at 40-50 s).
+- **Producer pass before the final render:** the Producer reviews the low-res preview's 2 s contact sheet against the script, and the 1080 final is rendered only after that pass.
 - Never ask an LLM reviewer to score motion or acting from stills.
 - After posting, retention data is the real judge.
 
