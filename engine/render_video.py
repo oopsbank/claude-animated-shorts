@@ -365,6 +365,9 @@ def place_characters(base, k, f, meta):
         if spec.get('enter_at_word') is not None:
             wf = anim.beat_frame((G['spans'][k]['w0'], G['spans'][k]['w1']), G['words'], spec['enter_at_word'])[0]
             if f < wf: continue
+        if spec.get('exit_at_word') is not None:        # gone from this word on (e.g. a cut-in cast)
+            wf = anim.beat_frame((G['spans'][k]['w0'], G['spans'][k]['w1']), G['words'], spec['exit_at_word'])[0]
+            if f >= wf: continue
         dk = float(spec.get('_depth', 1.0))                     # stepped back in depth: smaller, ground nearer the horizon
         s = meta['px_per_m'] * float(spec.get('height_m', 1.75)) / (3.5 * 2 * 111) * float(spec.get('scale', 1.0)) * dk
         mouth = G['mouths'][k][i].get(f, 'closed') if spec.get('talk') else None
@@ -474,6 +477,8 @@ def place_fx(base, k, f, chars, screen=False):
             dur = max(4, int(round(float(e.get('dur', 0.8)) * FPS)))
             peak = float(e.get('peak', 0.0 if e['name'] in LONG_FX else 0.3))
             start = wf - int(round(peak * dur))         # the effect peaks on the word onset
+        ins_ = shot.get('_insert')
+        if ins_ and e['name'] != 'path_line' and ins_[0] <= f < ins_[1] and not ins_[0] <= wf < ins_[1]: continue   # a cut-in hides the main shot's fx
         hold = e.get('_hold_until')
         if 't' in e: start, dur, hold = sp['f0'] - 2, sp['f1'] - sp['f0'] + 4, None     # a held state: t fixed, whole shot
         if not (start <= f < start + dur or (hold is not None and start <= f < hold)): continue
@@ -685,6 +690,8 @@ def render_frame(f):
 
 def add_caption(img, meta, f):
     faces = [c['face_screen'] for c in meta.get('chars', []) if c.get('face_screen')]
+    k = shot_of(f)          # "caption_avoid": [[x0, y0, x1, y1], ...] frame fractions the caption must stay off (UI text)
+    faces += [[a * W, b * H, c * W, d * H] for a, b, c, d in G['shots'][k].get('caption_avoid', [])] if k is not None else []
     box = CAP.draw(img, G['captions'], f, faces, W, H) if G['captions'] else None
     return dict(meta, caption=list(box) if box else None)
 

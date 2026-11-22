@@ -37,9 +37,9 @@
       "dur": 10
      }
     ],
-    "zoom": 1.9,
-    "x": 0.42,
-    "y": 0.72
+    "zoom": 1.7,
+    "x": 0.4,
+    "y": 0.66
    },
    "note": "Opens on an extreme close-up of hands pushing the GPS box into a hollowed rock (zoom 1.9); pull-out to the cousins at \"fifteen\", to the camp and the rock row at \"waited\". Matches the last shot for the loop.",
    "characters": [
@@ -152,9 +152,9 @@
      {
       "at_word": 4,
       "to": {
-       "zoom": 1.6,
-       "x": 0.5,
-       "y": 0.6
+       "zoom": 1.4,
+       "x": 0.6,
+       "y": 0.52
       },
       "dur": 4
      }
@@ -291,25 +291,35 @@
      {
       "at_word": 5,
       "to": {
-       "zoom": 1.5
+       "zoom": 1.4,
+       "x": 0.36,
+       "y": 0.5
       },
       "dur": 6
      }
     ],
-    "zoom": 1.15
+    "zoom": 1.15,
+    "x": 0.4
    },
    "characters": [],
    "fx": [
     {
      "name": "question_mark",
-     "x": 0.62,
-     "y": 0.32,
+     "x": 0.5,
+     "y": 0.34,
      "size": 0.45,
      "at_word": 7
     }
    ],
    "props": [
-    "rock_trail_hero"
+    "rock_trail_hero",
+    {
+     "name": "timelapse_cam",
+     "x": 0.5,
+     "y": 0.6,
+     "scale": 0.8,
+     "flip": true
+    }
    ]
   },
   {
@@ -470,9 +480,9 @@
     },
     {
      "name": "dust_puff",
-     "x": 0.27,
+     "x": 0.2,
      "y": 0.3,
-     "size": 0.3,
+     "size": 0.28,
      "dur": 1.6,
      "card": "sepia",
      "card_label": "1948: WIND",
@@ -482,9 +492,9 @@
     },
     {
      "name": "ice_pane",
-     "x": 0.73,
-     "y": 0.33,
-     "size": 0.3,
+     "x": 0.8,
+     "y": 0.3,
+     "size": 0.28,
      "dur": 1.6,
      "stage": "freeze",
      "card": "sepia",
@@ -495,9 +505,9 @@
     },
     {
      "name": "sliding_rock",
-     "x": 0.3,
-     "y": 0.62,
-     "size": 0.3,
+     "x": 0.8,
+     "y": 0.56,
+     "size": 0.28,
      "dur": 1.4,
      "path": "away",
      "card": "sepia",
@@ -805,11 +815,12 @@
    "camera": {
     "move": "follow",
     "direction": "right",
+    "zoom": 1.2,
     "glides": [
      {
       "at_word": 8,
       "to": {
-       "zoom": 1.35
+       "zoom": 1.45
       },
       "dur": 6
      }
@@ -907,12 +918,13 @@
    "camera": {
     "move": "follow",
     "direction": "right",
+    "zoom": 1.25,
     "glides": [
      {
       "at_word": 6,
       "to": {
-       "zoom": 1.4,
-       "x": 0.7
+       "zoom": 1.5,
+       "x": 0.66
       },
       "dur": 6
      }
@@ -1177,21 +1189,88 @@
     ]
    },
    "note": "Top view: rain rings on an ankle-deep pond, frost creeps over it at \"freeze\"; at \"sleeping\" a cut to the camp: two sleeping bags frosted stiff, the cousins' faces poking out, icicles on their noses; at \"Even\" a thought-bubble inset (ALIEN CAM filter) of his three aliens asleep in deck chairs, and his livestream counter \"LIVE · 3 watching\".",
-   "characters": [],
+   "characters": [
+    {
+     "id": "kip",
+     "x": 0.4,
+     "beats": [
+      {
+       "expr": "neutral",
+       "at_word": 0,
+       "arm_pose": [
+        "hang",
+        "hang"
+       ]
+      }
+     ],
+     "blink": true,
+     "enter_at_word": 9,
+     "exit_at_word": 12,
+     "insert": {
+      "cam": "playa_med",
+      "at_word": 9,
+      "until_word": 12
+     },
+     "build": "adult",
+     "skin": "#f1c9a5",
+     "shirt": "#3a8fd1",
+     "pants": "#3b3b4f",
+     "hat": "beanie",
+     "hat_col": "#e8613c",
+     "seed": 21
+    },
+    {
+     "id": "lou",
+     "x": 0.62,
+     "beats": [
+      {
+       "expr": "neutral",
+       "at_word": 0,
+       "arm_pose": [
+        "hang",
+        "hang"
+       ]
+      }
+     ],
+     "blink": true,
+     "enter_at_word": 9,
+     "exit_at_word": 12,
+     "insert": {
+      "cam": "playa_med",
+      "at_word": 9,
+      "until_word": 12
+     },
+     "build": "stout",
+     "skin": "#8d5a3b",
+     "shirt": "#f2b134",
+     "pants": "#2f4b3a",
+     "hat": "cap",
+     "hat_col": "#2f6b4f",
+     "glasses": true,
+     "seed": 22
+    }
+   ],
    "fx": [
     {
      "name": "rain",
      "x": 0.5,
      "y": 0.4,
+     "dur": 2.2,
      "at_word": 0
     },
     {
-     "name": "ice_pane",
+     "name": "ice_crack",
      "x": 0.5,
-     "y": 0.5,
-     "stage": "freeze",
-     "size": 1.3,
+     "y": 0.62,
+     "size": 0.9,
      "at_word": 7
+    },
+    {
+     "name": "sparkle",
+     "x": 0.5,
+     "y": 0.7,
+     "size": 0.3,
+     "at_word": 8
     }
    ],
    "props": [
@@ -1422,24 +1501,18 @@
      {
       "at_word": 4,
       "to": {
-       "zoom": 1.4
+       "zoom": 1.4,
+       "y": 0.72
       },
       "dur": 6
      },
      {
       "at_word": 7,
       "to": {
-       "zoom": 0.9
+       "zoom": 1.0,
+       "y": 0.5
       },
       "dur": 6
-     },
-     {
-      "at_word": 15,
-      "to": {
-       "zoom": 1.3,
-       "x": 0.6
-      },
-      "dur": 8
      }
     ]
    },
@@ -1449,55 +1522,55 @@
     {
      "name": "ice_crack",
      "x": 0.5,
-     "y": 0.5,
+     "y": 0.45,
      "at_word": 2
     },
     {
      "name": "ice_pane",
-     "x": 0.5,
-     "y": 0.5,
+     "x": 0.44,
+     "y": 0.45,
      "stage": "panes",
-     "size": 1.8,
+     "size": 1.05,
      "at_word": 8
     },
     {
      "name": "whoosh",
-     "x": 0.3,
-     "y": 0.5,
+     "x": 0.1,
+     "y": 0.33,
      "angle": 0,
+     "size": 0.35,
      "at_word": 11
     },
     {
      "name": "ice_pane",
-     "x": 0.5,
-     "y": 0.5,
+     "x": 0.44,
+     "y": 0.45,
      "stage": "drift",
      "direction": "right",
-     "size": 1.8,
+     "size": 1.05,
      "at_word": 12
     },
     {
-     "name": "sliding_rock",
-     "x": 0.55,
-     "y": 0.5,
-     "path": [
-      [
-       0.55,
-       0.5
-      ],
-      [
-       0.75,
-       0.5
-      ]
-     ],
-     "dur": 1.5,
-     "trail": true,
-     "at_word": 15
+     "name": "speed_lines",
+     "x": 0.08,
+     "y": 0.45,
+     "size": 0.25,
+     "dur": 1.6,
+     "at_word": 12
     }
    ],
    "props": [
     "ice_sheet",
-    "phone_silhouette"
+    {
+     "name": "phone_silhouette",
+     "x": 0.32,
+     "y": 0.66,
+     "scale": 2.0,
+     "layer": "front",
+     "until_word": 8,
+     "enter": true,
+     "at_word": 4
+    }
    ]
   },
   {
@@ -1518,7 +1591,7 @@
    "characters": [
     {
      "id": "lou",
-     "x": 0.7,
+     "x": 0.62,
      "beats": [
       {
        "prop": "air_hockey_mallet",
@@ -1557,7 +1630,13 @@
     }
    ],
    "props": [
-    "air_hockey_overlay",
+    {
+     "name": "air_hockey_overlay",
+     "x": 0.5,
+     "y": 0.74,
+     "size": 0.92,
+     "aspect": 0.32
+    },
     "ice_sheet"
    ]
   },
@@ -1577,7 +1656,8 @@
      {
       "at_word": 6,
       "to": {
-       "zoom": 1.3
+       "zoom": 1.15,
+       "y": 0.45
       },
       "dur": 6
      }
@@ -1596,6 +1676,14 @@
    ],
    "props": [
     "livestream_screen:LIVE · 1.2M · \"ICE??\" \"REFUND\""
+   ],
+   "caption_avoid": [
+    [
+     0.0,
+     0.6,
+     1.0,
+     1.0
+    ]
    ]
   },
   {
@@ -1630,26 +1718,18 @@
    "fx": [
     {
      "name": "ice_pane",
-     "x": 0.3,
-     "y": 0.66,
+     "x": 0.28,
+     "y": 0.6,
      "size": 0.45,
      "stage": "drift",
      "view": "side",
      "at_word": 1
     },
     {
-     "name": "sliding_rock",
-     "x": 0.45,
-     "y": 0.72,
-     "path": "away",
-     "dur": 1.6,
-     "trail": true,
-     "at_word": 2
-    },
-    {
      "name": "impact_star",
-     "x": 0.55,
-     "y": 0.55,
+     "x": 0.6,
+     "y": 0.62,
+     "size": 0.25,
      "at_word": 5
     }
    ],
@@ -1815,9 +1895,9 @@
      {
       "at_word": 10,
       "to": {
-       "zoom": 1.9,
-       "x": 0.42,
-       "y": 0.72
+       "zoom": 1.7,
+       "x": 0.4,
+       "y": 0.6
       },
       "dur": 10
      }
