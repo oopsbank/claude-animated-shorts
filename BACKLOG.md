@@ -70,7 +70,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 ## engine (`engine/`)
 - [ ] P1 Video 2 (`sailing-stones`): a per-shot `grade: "sepia"` for flashbacks (shots s10-s11), and the `seated` character placement (s29).
 - [ ] P1 Play fly-through clips (image sequences) as shots or transitions, with directional motion blur, plus fast punch-ins and whip pans with blur, so the picture changes every ≤ 1.5 s.
-- [ ] P1 Depth-tested compositing (the biggest gap in the channel study): give each character a depth (its ground point in the plate's depth map) and draw nearer plate pixels over it, so characters stand behind posts, sit inside cabs and sink into snow (Segment Zero study).
+- [~] P1 Depth-tested compositing: DONE in the engine (`occlude()` in render_video.py: plate pixels nearer than the character's ground point are drawn back over it; off on riding shots and with `"no_occlusion": true`). Verify it on the playa plates (rocks and the sign in front of characters).
 - [ ] P2 Depth of field for far characters, from the plate depth.
 - [ ] P2 Arm in-betweens with anticipation and overshoot once `character()` has them. Today arm poses are 1-frame swaps, so a held point reads stiff (acting 6).
 - [ ] P2 Crossfades between very different character sizes ghost a giant head: prefer a cut or a matched position there.

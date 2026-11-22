@@ -251,8 +251,36 @@ def feet_of(alpha, sole_x):
     return {'y': float(yb), 'l': float(L.mean()) if len(L) else None, 'r': float(R.mean()) if len(R) else None}
 
 
+def plate_depth(meta, k):
+    """Camera distance (m) of the shot's plate, cached per worker (sets: build.py --depth)."""
+    pkey = G['shots'][k]['_plate']; cache = G.setdefault('_depth', {})
+    if pkey not in cache:
+        info = meta['depth']; cache.clear()
+        cache[pkey] = PX.load_depth(os.path.join(os.path.dirname(pkey), info['file']), info)
+    return cache[pkey]
+
+
+def occlude(base, clean, im, ox, oy, gx, ground, meta, k, f, margin=0.6):
+    """Depth-tested compositing: plate pixels nearer to the camera than the character's ground point are drawn back
+    over the character (door frames, counters, signs, rocks in front). Off when the shot rides (the plate is warped)."""
+    if ride_distance(k, f, meta) > 1e-3: return
+    dep = plate_depth(meta, k); h, w = dep.shape
+    fx_, fy_ = int(clamp(gx, 0, w - 1)), int(clamp(ground - 3, 0, h - 1))
+    d_char = float(np.median(dep[max(0, fy_ - 2):fy_ + 1, max(0, fx_ - 3):fx_ + 4]))
+    x0, y0 = max(0, ox), max(0, oy); x1, y1 = min(W, ox + im.width), min(min(H, oy + im.height), int(ground) - 4)
+    if x1 <= x0 or y1 <= y0: return
+    near = dep[y0:y1, x0:x1] < (d_char - margin - 0.05 * d_char)
+    if not near.any(): return
+    a = np.asarray(im.getchannel('A'))[y0 - oy:y1 - oy, x0 - ox:x1 - ox] > 8
+    m = near & a
+    if not m.any(): return
+    mask = Image.fromarray((m * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.8))
+    base.paste(clean.crop((x0, y0, x1, y1)), (x0, y0), mask)
+
+
 def place_characters(base, k, f, meta):
     rig = G['rig']; shot = G['shots'][k]; out = []
+    clean = base.copy() if ('depth' in meta and not shot.get('no_occlusion')) else None   # the plate before any character: occluders come from here
     order = sorted(range(len(G['tracks'][k])), key=lambda i: shot['characters'][i].get('z', 0))
     for i in order:
         tr = G['tracks'][k][i]; spec = shot['characters'][i]
@@ -334,6 +362,7 @@ def place_characters(base, k, f, meta):
         col = Image.new('RGBA', sh.size, (52, 50, 78, 255))
         base.paste(col, (int(gx - 2 * r), int(ground - sh.height / 2)), sh)
         base.alpha_composite(im, (ox, oy))
+        if clean is not None and not spec.get('_near') and not st.get('rig'): occlude(base, clean, im, ox, oy, gx, ground, meta, k, f)
         bb = im.getchannel('A').point(lambda v: 255 if v > 40 else 0).getbbox()
         out.append({'id': spec.get('id', f'c{i}'), 'grounded': st['grounded'] and not st['moving'] and not spec.get('_near'), 'moving': st['moving'],
                     'planted': st['grounded'] and not st['moving'] and not st.get('rig') and not spec.get('_near'),   # a riding bike rolls: no foot lock
