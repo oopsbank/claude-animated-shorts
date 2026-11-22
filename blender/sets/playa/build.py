@@ -42,7 +42,7 @@ PR.weather_mast((4.2, 8.6, 0), rz=30)
 PR.lantern((0.1, 6.3, 0.49))
 C.point((-2.6, 8.4, 0.6), (1.0, 0.55, 0.22), power=120, radius=0.5)                 # glow inside the tent (night)
 C.point((4.2, 8.6, 3.1), (1.0, 0.15, 0.1), power=4, radius=0.05)                    # red beacon on the mast
-C.point((HERO[0] + 1.1 * math.sin(math.radians(TRAIL_H)), HERO[1] - 1.1 * math.cos(math.radians(TRAIL_H)), 0.45), (1.0, 0.6, 0.3), power=30, radius=0.2).visible_glossy = False   # no hot spot in the pond  # warm spill from a lantern off-frame
+# (no practical near the hero rock: at 0.45 m it burnt a hot spot into the ground in golden/night)
 for k in range(15):   # the row of 15 tagged rocks, each with a short trail behind
     x = -7.0 + k
     s = 0.2 + 0.05 * ((k * 7) % 4)
@@ -112,13 +112,13 @@ def per(cam): return lambda ln: sheet(ln, cam)
 CAMS = {
     'playa_wide': dict(loc=(hx - 3.0 * dx + 1.2 * dy, hy - 3.0 * dy - 1.2 * dx, 1.3), target=(-0.5, 8.0, 0.4), lens=26, stand=(2.4, 2.8, 0), fstop=None,
                        haze_range=(4, 480), per_light=per('playa_wide'), note='depth-layered: hero rock + trail near, camp mid, mountains far'),
-    'playa_med': dict(loc=(0.3, -1.6, 1.4), target=(0.0, 9.0, 1.0), lens=22, stand=(0.2, 3.4, 0), fstop=5.6,
+    'playa_med': dict(loc=(0.3, -1.6, 1.4), target=(0.0, 9.0, 1.0), lens=22, stand=(0.2, 1.9, 0), fstop=5.6,
                       haze_range=(3, 480), per_light=per('playa_med'), note='camp two-shot; also the 1948/1960s flashbacks (engine sepia)'),
     'rock_low': dict(loc=(hx - 2.9 * dx + 1.35 * dy, hy - 2.9 * dy - 1.35 * dx, 0.34), target=(hx + 9 * dx - 1.6 * dy, hy + 9 * dy + 1.6 * dx, 0.75), lens=24, stand=(hx + 2.6 * dx + 0.9 * dy, hy + 2.6 * dy - 0.9 * dx, 0), fstop=3.2,
                      haze_range=(2, 480), per_light=per('rock_low'), note='ground-level beside the hero rock (left third), its trail running away; holds a 1.7x zoom on the rock edge'),
     'playa_top': dict(loc=(hx + 2.4 * dx, hy + 2.4 * dy, 7.5), target=None, lens=35, roll=TRAIL_H - 90, stand=(hx, hy, 0), fstop=None, top=True,
-                      haze_range=(10, 40), haze_k=0.0, per_light=per('playa_top'), light_overrides={'night': dict(exposure=0.35, sun_e=3.0, stars=6.0)}, note='top-down: rock near the bottom, trail running up; px_per_m along the ground'),
-    'overlook_med': dict(loc=(OVER[0] - 0.2, OVER[1] - 8.6, 1.05), target=(OVER[0] - 0.2, OVER[1] + 6.0, 1.8), lens=18, stand=(OVER[0] - 0.4, OVER[1] - 3.6, 0.15), fstop=4.0,
+                      haze_range=(10, 40), haze_k=0.0, per_light=per('playa_top'), light_overrides={'night': dict(exposure=0.35, sun_e=3.0, stars=6.0), 'frost': dict(grade_sat=1.7, grade_gain=0.95)}, note='top-down: rock near the bottom, trail running up; px_per_m along the ground'),
+    'overlook_med': dict(loc=(OVER[0] - 0.2, OVER[1] - 8.6, 1.05), target=(OVER[0] - 0.2, OVER[1] + 6.0, 1.8), lens=18, stand=(OVER[0] - 0.4, OVER[1] - 5.6, 0.15), fstop=4.0,
                          haze_range=(3, 480), per_light=per('overlook_med'), note='gravel pull-out: van left, sign right, alien cut-out; room for 4 characters at 0.8x'),
 }
 C.INK_FADE, C.INK_RANGE, C.INK_BORDER, C.INK_FAR_K, C.INK_THICK = (20, 80, 0.5), (4, 60), False, 0.6, 2.4   # only the sign boards carry ink
@@ -137,6 +137,6 @@ LIGHTS = {
                   fill=(0.55, 0.7, 1.0), fill_e=140, exposure=-0.6, haze=(0.80, 0.88, 1.0), haze_k=0.4, prac=0.0, emit=0.15,
                   sky=[(0.0, (0.86, 0.92, 1.0)), (0.12, (0.52, 0.72, 0.98)), (0.5, (0.22, 0.46, 0.92))], cloud_amt=0.25, tint='#eaf4ff'),
 }
-TARGETS = {'rock': (HERO[0], HERO[1], 0.3), 'tour_sign': SIGN_C, 'camp_rocks': (0.0, 10.5, 0.2), 'tent': (-2.6, 8.4, 0.8)}
+TARGETS = {'rock': (HERO[0], HERO[1], 0.3), 'tour_sign': SIGN_C, 'camp_rocks': (2.0, 10.6, 0.3), 'tent': (-2.6, 7.55, 0.55)}   # points on visible surfaces (inside a mesh they count as occluded)
 C.PRESETS['frost'] = dict(C.PRESETS['day'])
 C.main('playa', CAMS, LIGHTS, targets=TARGETS)
