@@ -121,7 +121,7 @@ SHOTS = [
       props=['ice_sheet'] + [dict(name='rock', word='dozens', dur=2.6, scale=1.4, kw={'seed': sd}, path=[(x0, 0.62), (x0 + 0.02, 0.555)]) for x0, sd in ((0.44, 3), (0.53, 5), (0.6, 7), (0.2, 9), (0.86, 11))] + [dict(name='gary_rock', x=0.5, y=0.7, word='Gary', dur=2.0, path=[(0.48, 0.71), (0.56, 0.67)])]),
  # --- THE COLLISION: his fantasy vs the real thing (mechanism + the one analogy)
  dict(text="\"Alien air-hockey final!\" cries the guide. \"The referee's a rock! Fifty bucks!\"",
-      set='inserts', cam='alien_cam', light='day', plate='inserts__alien_cam__day__alien_air_hockey_final.png', size='medium', grammar=['pov', 'dutch'], camera=glide(G('air-hockey', 45, zoom=1.15, roll=-6), G("referee's", 6, zoom=1.3, x=0.35, roll=-6), G('Fifty', 6, zoom=1.15, x=0.7, roll=-6), roll=-6),
+      set='inserts', cam='alien_cam', light='day', plate='inserts__alien_cam__day__alien_air_hockey_final.png', size='medium', grammar=['pov', 'dutch'], camera=glide(G('air-hockey', 45, zoom=1.3, roll=-6), G("referee's", 6, zoom=1.42, x=0.35, roll=-6), G('Fifty', 6, zoom=1.3, x=0.7, roll=-6), roll=-6),
       note='FANTASY CUTAWAY (thought bubble + ALIEN CAM filter): a neon alien air-hockey championship, a referee that is itself a rock (with a whistle and a striped shirt), a boulder as the puck, a scoreboard; price card $50.',
       characters=[], fx=[F('whoosh', 'air-hockey', 0.5, 0.5, angle=0), F('sparkle', 'Fifty', 0.8, 0.2)], props=['fantasy:alien_air_hockey_final', 'price_card:$50']),
  dict(text="The sun breaks the phone-thin ice into huge panes; a light breeze shoves them into rocks.",
