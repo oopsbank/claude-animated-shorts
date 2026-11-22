@@ -62,5 +62,5 @@ Phong cách: người que trắng viền đen, nhãn chữ màu trên đầu, n�
 | ~60 | Vòng lại năm 1911 |
 
 ## Còn mở
-- Cần kiểm lại 2 số liệu trước khi lồng tiếng: "400 m băng" và việc khảo sát "từ trên không" (Mikucki 2015, đo điện từ trên không).
+- Đã kiểm (22/11): "400 m băng" đúng (Mikucki 2009); "quét từ trên không" đúng (Mikucki 2015, khảo sát điện từ bằng trực thăng).
 - `shots.json` chưa viết: làm sau khi Đạo diễn duyệt kịch bản, cùng với bộ dựng hình 2D người que.

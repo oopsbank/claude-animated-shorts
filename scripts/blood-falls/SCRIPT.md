@@ -7,7 +7,7 @@ Status: Producer draft v2 (the Director: the 'no algae' finding comes right afte
 - Mikucki et al. 2009, Science: ancient marine brine isolated >= 1.5 Myr, microbes cycling sulfur with Fe(III), no oxygen, no light; brine clear on emerging: https://www.montana.edu/priscu/documents/Publications/MikuckiEtAlScience2009.pdf
 - Badgeley et al. 2017, Journal of Glaciology: radar maps the brine inside the glacier; latent heat from freezing helps keep it liquid: https://www.cambridge.org/core/journals/journal-of-glaciology/article/an-englacial-hydrologic-system-of-brine-within-a-cold-glacier-blood-falls-mcmurdo-dry-valleys-antarctica/B5C197906AD54619AEA26068AD92989A
 - UAF release (2017), "Researchers solve the century-old mystery of Blood Falls": https://uaf.edu/news/archives/news-archives-2010-2021/researchers-solve-the-100-year-old-mystery-of-blood-falls.php
-- Unsure, to verify before voicing: "about 400 m of ice" over the brine (from a reviewer reading of Mikucki 2009); the airborne survey (Mikucki et al. 2015, airborne electromagnetics) as the "scan from the air".
+- Verified 2026-11-22: ~400 m of ice over the brine pool, ~4 km from the snout (Mikucki et al. 2009, above). "Scanned from the air": Mikucki et al. 2015, Nature Communications, helicopter-borne SkyTEM electromagnetic survey of Taylor Valley found brine under Taylor Glacier: https://www.doi.org/10.1038/NCOMMS7831 ; https://home.dartmouth.edu/news/2015/04/scientists-discover-salty-aquifer-previously-unknown-microbial-habitat-under
 
 ## Voice-over (236 words, ~64 s at 3.7 words/s)
 1. In 1911, a geologist named Griffith Taylor walked up to an Antarctic glacier and found it bleeding.
