@@ -83,6 +83,7 @@ def plan(shot):
         if not e.get('sprite') and b in held: continue                                           # in a hand
         if not e.get('sprite') and b == 'cooler' and any(c.get('seated') == 'cooler' for c in shot.get('characters', [])): continue   # bean draws it
         d = dict(DEFAULTS.get(b, {})); d.update(DEFAULTS.get((b, cam), {})); d.update(e); d['_base'] = b
+        d['_auto'] = 'x' not in e                       # placement may come from the plate JSON ("<name>_xy", px)
         out.append(d)
     return out
 
@@ -115,6 +116,8 @@ def draw(base, entries, layer, f, t_of, meta, W, H):
         t = t_of(e)
         if t is None: continue
         x, y = float(e.get('x', 0.5)), float(e.get('y', 0.8))
+        if e.get('_auto') and meta.get(e['_base'] + '_xy'):
+            px_, py_ = meta[e['_base'] + '_xy']; x, y = (px_ / W, py_ / H) if px_ > 1.5 else (px_, py_)
         if e.get('path'):
             pts = e['path']; u = smooth(t) * (len(pts) - 1); i = min(int(u), len(pts) - 2); r = u - i
             x = pts[i][0] + (pts[i + 1][0] - pts[i][0]) * r; y = pts[i][1] + (pts[i + 1][1] - pts[i][1]) * r
