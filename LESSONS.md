@@ -27,6 +27,8 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - A storyboard with one frame per shot hides every shot that changes: show an opening frame for shots with glides, keep the key pick off a cut-in, and never pick the same cut-in twice (s14 showed one moment three times and reviewers scored it as three duplicates).
 - A cut-in must hide the main shot's fx (the s14 ice fx covered the sleeping-cousins cut-in).
 - A mechanism drawn by an fx with its own built-in rock can't push the story's rock: move the fx canvas along the rock's path (`move`), switch its rock off, and draw the hero rock over it (props layer `top`).
+- Never splice-render a few shots into a full render: `--frames` rewrites `track.json` for those frames only and `qa.py` then misses the rest. Finish the shot-list changes first, or stop the render and restart it whole (CPU is cheap, usage is not).
+- A new engine fx name needs an entry in `audio/lib/sfx_x.py` GEN or SILENT, or the mix drops its sound (`pane_push_top` reuses the ice_pane grind).
 - `audio/build_mix.py` needs scipy, which the venv lacked: `uv pip install --python .venv/bin/python scipy`.
 - Storyboard reviews plateau around 7.4 ±0.3 when the remaining notes are frozen assets (fx at 5.8, frost plates, dense inserts): report them to the Producer after round 3 instead of polishing around them.
 

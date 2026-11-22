@@ -104,23 +104,10 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P3 `path_line`: a thicker "actual" stroke and a longer hold on the kink.
 
 ## engine (`engine/`)
-- [ ] P1 Video 2 asset wiring (`claude/area-assets`):
-  - **Character kwargs:** `hat='antennae'` with `antennae='up'|'droop'|0..1` (ease 0→1 on "Fine. It's ice.") and `antennae_sway` (deg, spring wobble on hops); `seated='cooler'` (draws its own cooler) or `'bare'` (place the `cooler` sprite yourself; the seat top is `bean.seat_top(build)`).
-  - **Held props** use arm pose `'hold'`. `('hold', 'hold')` with a one-hand prop puts it in the right hand.
-  - **Sprites** (`characters/scripts/sprites.py`, `sprite(name, t, k)`, anchor in `im.info['anchor']`, `k` = the character card scale):
-    - `gary_rock` (`eyes='askew'`), `gary_buried`, `gps_box`, `cooler`, `cooler_trophy`;
-    - `tent`, `tent_floating` (t bobs);
-    - `timelapse_cam`;
-    - `tour_sign` and `tour_sign_free` (t 0..1: shudder, crack, topple);
-    - `flying_bills` (t, gone by 0.9);
-    - `banner`, `livestream_counter`, `price_card`;
-    - `fridge_silhouette` and `phone_silhouette`.
-    - The `shots.json` prop strings (with notes in parentheses) are parsed as-is.
-  - **FX coordinates:** `sliding_rock` `path` points are canvas fractions (0..1 of the fx square), so convert from frame fractions. `dust_storm`, `flash_flood` and `rain` are full-frame (`size` = the frame width, centred).
-  - **`air_hockey_overlay`** is a new fx (silent).
-- [ ] P1 Video 2 (`sailing-stones`): a per-shot `grade: "sepia"` for flashbacks (shots s10-s11), and the `seated` character placement (s29).
+- [x] P1 Video 2 asset wiring: DONE (engine/props.py sprites, antennae ease/sway, seated, full-frame weather fx, chained ice_pane, sliding_rock paths, fx `move`/`card`/`screen`/held `t`, props layers back/front/top, plate variants, caption_avoid, exit_at_word, per-shot `lift`, engine/mech.py `pane_push_top`). Sepia is supported but unused in v17.
+- [ ] P2 sailing-stones G2 storyboard FROZEN at 7.5 (rounds 7.2, 7.4, 7.2, 7.5, 7.4). Open notes, judge again at G5 in motion: inserts panels and the phone UI are dense with small text (s09, s12, s16, s19, inserts area); the s03 fridge and rock read small; s04 is a sparse frame; the s14 alien-doze inset is not drawn (no zzz fx); s16's opening and key frames look alike.
 - [ ] P1 Play fly-through clips (image sequences) as shots or transitions, with directional motion blur, plus fast punch-ins and whip pans with blur, so the picture changes every ≤ 1.5 s.
-- [~] P1 Depth-tested compositing: DONE in the engine (`occlude()` in render_video.py: plate pixels nearer than the character's ground point are drawn back over it; off on riding shots and with `"no_occlusion": true`). Verify it on the playa plates (rocks and the sign in front of characters).
+- [x] P1 Depth-tested compositing: DONE and verified on the playa plates (the rock_low hero rock and the overlook cones hide a character's legs behind them).
 - [ ] P1 Grade: a vignette to a corner/centre ratio of about 0.80, plus split toning (warm highlights R-B ≈ +0.08, neutral or cool shadows). Today ours has no vignette and an inverted split (`references/reports/replication_playbook_2026-11.md` §3A).
 - [ ] P1 Depth-tested compositing (the biggest gap in the channel study): give each character a depth (its ground point in the plate's depth map) and draw nearer plate pixels over it, so characters stand behind posts, sit inside cabs and sink into snow (Segment Zero study).
 - [ ] P2 Depth of field for far characters, from the plate depth.
@@ -133,10 +120,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P3 Smear frames or motion blur for fast prop and limb moves, and for wheels.
 - [ ] P3 Our own retention overlay (a small chapter-dot row in our palette) and a faint watermark from `channel/logo/`. Design our own.
 
-- [ ] P1 Video 2 (`sailing-stones`) sprites the engine composites (they are NOT on the plates; sets built the plates without them):
-  - Ready in `blender/sets/inserts/sprites/`: `price_card_30/40/50.png` (flip in the corner of the alien_cam plates; each plate JSON has `price_card_xy`), `tour_sign_ice.png` and `tour_sign_ice_strike.png` (ALIEN crossed out; s22 on `playa_med` day), `tour_sign_free.png` (the NIGHT ONLY sign that splits and topples, s20 on `rock_low` frost).
-  - Still to draw (characters or engine): `googly_eyes` on the hero rock (anchor at the plate `targets.rock`; that rock becomes Gary in s02/s11/s20), `gary_buried` (one eye in dust, s08), `tent_floating` (s10), `cooler` + `cooler_trophy` (s11, s22), `flood_water` (fx `flash_flood`), `fridge_silhouette` (s03) and `phone_silhouette` (s17) scale cues, `air_hockey_overlay` (s18), `livestream_counter` (s14; the gps_screen plate JSON has `counter_xy`), `flying_bills` (s21).
-  - Baked into the plates: tour van and sign (overlook_med; day/golden = NIGHT ONLY · $20, night = SOLD OUT, van lamps lit at night), FINAL FAIL · LIVE banner (overlook_med frost), tent, time-lapse camera, weather mast, chairs, cooler, lantern and the 15-rock row (playa_med), hero rock + trail (playa_wide, rock_low, playa_top), ice sheet (every frost plate), pond water (playa_top night).
+- [x] P1 Video 2 sprites the engine composites: DONE through engine/props.py (string props on playa/inserts; plate-baked and held props skipped).
 
 ## audio (`audio/`)
 - [ ] P2 Re-run `build_mix.py` whenever `shots.json` changes (fx entries drive the SFX). New fx names need an entry in `lib/sfx_x.py` GEN or SILENT.
