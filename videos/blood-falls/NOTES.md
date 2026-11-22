@@ -1,10 +1,11 @@
-# Blood Falls: full video (flat2d v4, claude/area-flat2d-v5, 2026-11-22)
+# Blood Falls: full video (flat2d v5, claude/area-flat2d-v6, 2026-11-22)
 
 ## Files
 | file | what |
 |---|---|
 | `tests/preview_full_540.mp4` | 540x960 full-length preview with the mix (for the Director's motion/acting pass) |
-| `blood-falls_captions_cover_1080x1920.mp4` | the posting cut: 1080x1920, captions, 0.1 s cover in front; 65.6 s. Over 50 MB, so it is **not committed**; see "Final cut" below |
+| `blood-falls_final_1080x1920.mp4` | **the posting copy** (committed, under 45 MB): 1080x1920, captions, the mix, 0.1 s cover in front; 65.6 s. See "Final cut" below |
+| `blood-falls_captions_cover_1080x1920.mp4` | the high-bitrate master of the same cut (over 50 MB, **not committed**) |
 | `thumbnail.png` | house-style thumbnail (`tools/thumbnail.py` on a caption-free s02 frame) |
 | `tests/stills_v4/` | the review stills (one per shot, 540x960) and `sheet.png` |
 | `audio/blood-falls/music.json`, `sfx.json`, `mix.wav`, `cues.md`, `length.json` | the soundtrack plan, the mix and the cue sheet |
@@ -31,12 +32,12 @@ A shot starts 0.1 s before its first word. s11, s14 and s16 are split in two.
 | s06 | 20.98-24.42 | 6 | CLUE 1: test tube, SALT meter (sea vs this water), Fe tile |
 | s07 | 24.42-26.57 | 7 | the room darkens; plant badge crossed out; the scientist scratches his head; a big red "?" slams |
 | s08 | 26.57-32.70 | 8 | CLUE 2: magnified drop, microbes pop in, sun and O2 crossed out, Fe and S stream into the microbes, which swell |
-| s09 | 32.70-36.59 | 9 | CLUE 3: the crack at the foot; clear water turning orange then red; magnifier, CLEAR! |
-| s10 | 36.59-39.19 | 10 | survey plane towing a sensor loop; scan pulses into an X-ray band of the ice; the pool starts to glow |
+| s09 | 32.70-36.59 | 9 | CLUE 3: the crack at the foot; the water at the mouth is clear (pale blue-white, cyan edges, glinting) and only turns orange, then red, lower down after it meets the air; magnifier, CLEAR! |
+| s10 | 36.59-39.19 | 10 | a big, close survey plane towing a sensor loop; a scan cone with rings sweeps down through the X-ray band of the ice; the pool lights up where the rings land; the scientist shades his eyes, then startles and points down |
 | s11a | 39.19-43.06 | 11 | cross-section: 400 m arrow draws, the pool lights up and pulses, brine rises up the outflow channel |
 | s11b | 43.06-45.00 | 11 | night surface: cracks spread under the scientist's boots; SEALED FOR 1,000,000+ YEARS rolls up |
-| s12 | 45.00-48.14 | 12 | inside the pool: SALT cubes, crystals freeze on the ceiling and send HEAT waves down; STILL LIQUID |
-| s13 | 48.14-51.28 | 13 | dark pool: ghost Fe ions, INVISIBLE; hook: the crack opens and they rush up ("Until it escapes") |
+| s12 | 45.00-48.14 | 12 | inside the pool, **warm amber-violet palette, canted ceiling, macro scale**: big SALT cubes, crystals freeze on the ceiling and send HEAT waves down; STILL LIQUID |
+| s13 | 48.14-51.28 | 13 | **indigo** pool, big ghost Fe ions close to the lens, INVISIBLE; hook on "Until it escapes": a fast cross-fade into a cross-section of a crack in the ice, and the brine surges up toward a bright, warm surface (speed lines, spray, Fe ions, orange up-arrows) |
 | s14a | 51.28-55.22 | 14 | outlet: O2 bubbles hit the stream, which rusts orange; Fe + O2 = RUST |
 | s14b | 55.22-56.85 | 14 | timelapse: a wet nail rusts orange on a table (window flicks day/night) |
 | s15 | 56.85-58.98 | 15 | two-shot at the rust falls: NOT BLEEDING. / RUSTING. |
@@ -44,6 +45,11 @@ A shot starts 0.1 s before its first word. s11, s14 and s16 are split in two.
 | s16b | 62.51-65.50 | 16 | loop back to the s01 set and framing (camera eases to s01's opening values); 1911 chip |
 
 Hooks (SCRIPT.md map): 0 s bleeding glacier; 13.5 s "yet the red kept coming" punch-in; 17-20 s stamp → NO ALGAE; 26 s "?"; 28-31 s life without sun/oxygen; 36 s CLEAR!; 41.4 s hidden pool lights; 50.4 s "Until it escapes"; 54.7 s rust flash; 57-58.5 s NOT BLEEDING / RUSTING; 62.5 s loop to 1911.
+
+## v5 changes (the Director's three approved fixes from the Producer's review)
+1. **s09 CLUE 3:** `outlet_scene(..., glints=True, clear_len=250)`. The stream is wider and clear at the crack mouth (pale white-blue core, cyan edges, twinkling glints, a cold glow). It turns orange about 250 px down, and red on the snow. s14a uses the old defaults, unchanged.
+2. **40-50 s sameness:** `pool_room` takes a palette (`POOL_TEAL`, `POOL_WARM`, `POOL_INDIGO`) and a `tilt`. s12 is now warm and canted at macro scale. s13 is indigo with fewer, bigger ions. "Until it escapes" is a new composition (`escape_crack`): the brine squeezes up a crack toward warm daylight. The 0.16 s cross-fade at about 50.3 s counts as a designed beat in motion QA.
+3. **s10 air scan:** the plane is ~1.8x bigger and closer. A glowing scan cone with rings sweeps down to the pool, which fills and lights up. The scientist is larger and has a reaction beat on "glacier": a startle hop, then pointing down.
 
 ## v3 open notes fixed
 - **Secondary action in holds (`anim.secondary`, applied in `anim.actor` to every character):** the head leads with a slow look drift and the body lean follows 0.35 s later; the shoulders rise on each in-breath (upper arms open with the breath); the forearms beat on each stressed voice-over word (`anim.BEATS`, words of 5+ letters, set by `render.py` from words.json).

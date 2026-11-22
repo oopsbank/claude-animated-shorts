@@ -263,7 +263,7 @@ def s08(u, D, cue):
 
 
 # ---------------------------------------------------------------- s09: CLUE 3, the water comes out clear
-def outlet_scene(img, u, cam, rust_k=1.0, crack_open=1.0, clear_len=170, sky_cold=0.0):
+def outlet_scene(img, u, cam, rust_k=1.0, crack_open=1.0, clear_len=170, sky_cold=0.0, glints=False):
     """Close on the crack at the foot of the glacier: the brine squeezes out (clear), then turns orange and
     red as it runs down onto the snow. rust_k 0..1 = how much of the stream has rusted (0: all clear)."""
     img.paste(vgrad([(0, (60, 80, 150)), (.12, (150, 170, 220)), (.2, (240, 210, 200))]))
@@ -282,7 +282,7 @@ def outlet_scene(img, u, cam, rust_k=1.0, crack_open=1.0, clear_len=170, sky_col
     # the stream: clear -> orange -> red, flowing dashes all the way
     ys = np.linspace(cy + 40, 1340, 9)
     xs = [cx + 6 + 18 * math.sin(i * 1.1) + i * 6 for i in range(9)]
-    ws = [40 + i * 9 for i in range(9)]
+    ws = [(72 if glints else 40) + i * 9 for i in range(9)]
     clear_end = cy + 40 + clear_len + (1 - rust_k) * 600
     for i in range(8):
         y0, y1 = ys[i], ys[i + 1]
@@ -290,7 +290,14 @@ def outlet_scene(img, u, cam, rust_k=1.0, crack_open=1.0, clear_len=170, sky_col
             a = y0 + (y1 - y0) * j / 6; b = y0 + (y1 - y0) * (j + 1) / 6
             f = (a - ys[0]) / (ys[-1] - ys[0]); xa = xs[i] + (xs[i + 1] - xs[i]) * j / 6; wa = ws[i] + (ws[i + 1] - ws[i]) * j / 6
             k = smooth((a - clear_end) / 180)                             # 0 = clear, 1 = rusted
-            col = lerp((200, 236, 246), lerp((240, 140, 50), (186, 40, 34), smooth((a - clear_end - 180) / 260)), k)
+            clear = (226, 246, 255) if glints else (200, 236, 246)
+            if glints: k = smooth((a - clear_end) / 120)
+            col = lerp(clear, lerp((240, 140, 50), (186, 40, 34), smooth((a - clear_end - 180) / 260)), k)
+            if glints and k < .5:                                         # clear water: pale blue edges, ice shows through
+                d.polygon([(xa - wa / 2 - 5, a), (xa + wa / 2 + 5, a), (xa + wa / 2 + 5, b + 1), (xa - wa / 2 - 5, b + 1)], fill=INK)
+                d.polygon([(xa - wa / 2, a), (xa + wa / 2, a), (xa + wa / 2, b + 1), (xa - wa / 2, b + 1)], fill=(40, 200, 250))
+                d.polygon([(xa - wa / 2 + 7, a), (xa + wa / 2 - 7, a), (xa + wa / 2 - 7, b + 1), (xa - wa / 2 + 7, b + 1)], fill=col)
+                continue
             d.polygon([(xa - wa / 2 - 5, a), (xa + wa / 2 + 5, a), (xa + wa / 2 + 5, b + 1), (xa - wa / 2 - 5, b + 1)], fill=INK)
             d.polygon([(xa - wa / 2, a), (xa + wa / 2, a), (xa + wa / 2, b + 1), (xa - wa / 2, b + 1)], fill=col)
     rng = np.random.default_rng(4)
@@ -298,6 +305,14 @@ def outlet_scene(img, u, cam, rust_k=1.0, crack_open=1.0, clear_len=170, sky_col
         v = (rng.random() + u * .7) % 1; y = ys[0] + (ys[-1] - ys[0]) * v; i = min(7, int(v * 8))
         x = xs[i] + rng.uniform(-.3, .3) * ws[i]
         d.line([(x, y), (x + 2, y + 30)], fill=(255, 255, 255) if y < clear_end else (255, 190, 150), width=5)
+    if glints:                                                            # the clear part glints (twinkling stars)
+        radial(img, cx + 10, cy + 120, 260, (220, 250, 255), .35 + .08 * math.sin(u * 4))
+        for i in range(7):
+            v = (u * 1.3 + i * .37) % 1; tw = math.sin(math.pi * v)
+            y = cy + 70 + (clear_end - cy - 110) * ((i * .61) % 1); x = cx + 10 + 26 * math.sin(i * 2.3)
+            q = 6 + 16 * tw
+            d.polygon([(x, y - q * 2), (x + q * .45, y), (x, y + q * 2), (x - q * .45, y)], fill='white')
+            d.polygon([(x - q * 2, y), (x, y + q * .45), (x + q * 2, y), (x, y - q * .45)], fill='white')
     if rust_k > 0:
         radial(img, xs[-1], 1360, 360, (255, 80, 40), .18 * rust_k * (.85 + .15 * math.sin(u * 3)))
     snow_ground(img, lambda x: 1340 + 10 * math.sin(x / 140), seed=31, drifts=6)
@@ -310,7 +325,7 @@ def outlet_scene(img, u, cam, rust_k=1.0, crack_open=1.0, clear_len=170, sky_col
 def s09(u, D, cue):
     img = Image.new('RGBA', (W, H))
     cam = anim.lerp(-12, 12, smooth(u / D))
-    (ox, oy), clear_end = outlet_scene(img, u, cam)
+    (ox, oy), clear_end = outlet_scene(img, u, cam, clear_len=250, glints=True)
     t_right, t_red, t_clear = cue(2) - .1, cue(9) - .1, cue(14) - .1
     # the scientist leans in at the outlet (faces left), points at it, and startles on "clear"
     pt = {'armL': (82, 92), 'armR': (-24, -10), 'legL': (11, 1), 'legR': (-11, -1)}
@@ -379,31 +394,45 @@ def s10(u, D, cue):
     for x in range(0, W, 60): gd.line([(x, 1160), (x, H)], fill=(180, 240, 255, 22), width=2)
     img.alpha_composite(gl)
     d.line([(x, y) for x, y in cut[:len(xs)]], fill=INK, width=6)
-    # the plane crosses, towing a sensor loop; pulses run down into the ice and the hidden pool starts to glow
-    px = -120 + 900 * smooth(seg(u, 0, D + .4)) + cam * .3; py = 560 + 10 * math.sin(u * 2)
-    lx, ly = px - 60, 760 + 8 * math.sin(u * 2 + .6)
-    d.line([(px - 30, py + 30), (lx - 120, ly - 10)], fill=INK, width=4); d.line([(px - 10, py + 30), (lx + 120, ly - 10)], fill=INK, width=4)
-    find = smooth(seg(u, cue(3), D))
-    radial(img, 560, 1650, 520, TEAL, .12 + .4 * find * (.85 + .15 * math.sin(u * 4)))
-    pm = mask(); ImageDraw.Draw(pm).ellipse([200, 1580, 920, 1720], fill=255)
-    glow(img, pm, TEAL, .5 * find, blur=40, add=True)
-    for k in range(6):                                                    # scan pulses
-        v = (u * 1.4 - k * .33)
-        if v < 0: continue
-        v = v % 2.0
-        r = 60 + 520 * v; a = max(0, 1 - v / 2)
-        m = mask(); ImageDraw.Draw(m).arc([lx - r * 1.3, ly - r * .3, lx + r * 1.3, ly + r * 1.1], 20, 160, fill=255, width=10)
-        glow(img, m, (160, 255, 236), .7 * a, blur=4, add=True)
-    sensor_loop(img, lx, ly, u)
-    props.plane(img, px, py, 1.25)
-    put_chip(img, 'AIR SCAN', (20, 120, 130), px - 40, py - 120, pop(u, cue(2) - .1, .3, 1.8), size=46)
-    # the scientist on the snow watches it pass, pointing up
-    pt = dict(STAND, armR=(-140, -160))
-    pose = chain(u, [(0, STAND), (.35, add(STAND, armR=(10, 10))), (.7, pt, lambda f: out_back(f, 1.7))])
-    g = scientist(img, u, pose, 'surprised', 760, 1290, .66, look=-.3 + .5 * smooth(u / D), rim=(255, 210, 170), rim_dir=(-1, -.4))
+    # the plane crosses close and big, towing a sensor loop; a scan cone sweeps down through the ice with rings,
+    # the hidden pool lights up where they land, and the scientist reacts
+    px = 120 + 500 * smooth(seg(u, 0, D + .3)) + cam * .3; py = 330 + 12 * math.sin(u * 2)
+    lx, ly = px - 90, 640 + 10 * math.sin(u * 2 + .6)
+    d.line([(px - 60, py + 60), (lx - 200, ly - 14)], fill=INK, width=6); d.line([(px - 20, py + 60), (lx + 200, ly - 14)], fill=INK, width=6)
+    on = smooth(seg(u, cue(2) - .2, cue(2) + .3))
+    find = smooth(seg(u, cue(3), cue(5) + .3))
+    cone = mask(); ImageDraw.Draw(cone).polygon([(lx - 230, ly + 20), (lx + 230, ly + 20), (lx + 470, 1660), (lx - 470, 1660)], fill=255)
+    glow(img, cone, (150, 255, 236), on * (.34 + .08 * math.sin(u * 7)), blur=24, add=True)
+    radial(img, 560, 1650, 640, TEAL, .15 + .7 * find * (.85 + .15 * math.sin(u * 4)))
+    pm = mask(); ImageDraw.Draw(pm).ellipse([160, 1560, 960, 1760], fill=255)
+    pool = Image.new('RGBA', (W, H), (40, 190, 180, 255)); img.paste(pool, (0, 0), pm.point(lambda v: int(v * (.35 + .5 * find))))
+    glow(img, pm, TEAL, .2 + .9 * find, blur=40, add=True)
+    glow(img, pm, (220, 255, 245), .5 * find * (.8 + .2 * math.sin(u * 6)), blur=8, add=True)
+    for k in range(5):                                                    # scan rings sweep down the cone
+        v = (u * 1.6 - k * .2) % 1.0
+        if u * 1.6 - k * .2 < 0 or on < .05: continue
+        y = ly + 40 + (1640 - ly - 40) * v; hw = 230 + 240 * (y - ly) / (1660 - ly)
+        m = mask(); ImageDraw.Draw(m).ellipse([lx - hw, y - hw * .14, lx + hw, y + hw * .14], outline=255, width=14)
+        glow(img, m, (120, 255, 230), on * .8 * (1 - v * .5), blur=14, add=True)
+        glow(img, m, (230, 255, 250), on * (1 - v * .5), blur=2, add=True)
+        if y > 1560: glow(img, m, TEAL, on * .5, blur=20, add=True)        # the ring lands on the pool
+    sensor_loop(img, lx, ly, u, 1.5)
+    props.plane(img, px, py, 2.3)
+    put_chip(img, 'AIR SCAN', (20, 120, 130), px - 60, py - 190, pop(u, cue(2) - .1, .3, 1.8), size=56)
+    # the scientist in the foreground: shades his eyes, then startles and points down when the pool lights up
+    t_hit = cue(5) - .1
+    shade = dict(STAND, armR=(-150, -120))
+    pt = dict(STAND, armR=(-140, -160), armL=(40, 70))
+    down = dict(STAND, armR=(-60, -10), armL=(150, 160))
+    pose = chain(u, [(0, STAND), (.3, shade, smooth), (t_hit - .25, add(shade, armR=(10, 10))), (t_hit, pt, lambda f: out_back(f, 1.8)),
+                     (t_hit + .8, down, smooth)])
+    hop = 26 * math.sin(math.pi * seg(u, t_hit, t_hit + .3)) if t_hit < u < t_hit + .3 else 0
+    lean = -8 * out_back(seg(u, t_hit, t_hit + .4))
+    g = scientist(img, u, pose, 'surprised' if u > t_hit else 'thinking', 890, 1160, .62, look=-.5, lean=lean, hop=hop,
+                  rim=(255, 210, 170), rim_dir=(-1, -.4))
     foreground_frame(img, [[(-20 + cam * -.6, 1940), (-20, 1780), (160, 1750), (320, 1840), (420, 1940)]], color=(120, 150, 210), alpha=.85)
     snow_particles(img, 71, n=(50, 20, 6), wind=(6, 1), t=u)
-    img = finish(img, u, 1.04 + .04 * smooth(u / D), 540, 1100, dx=-cam * 1.05)
+    img = finish(img, u, 1.04 + .04 * smooth(u / D), 540, 1000, dx=-cam * 1.05)
     return img, {'faces': [face_box(g)], 'avoid': [(0, 1560, W, 1740)]}
 
 
@@ -589,18 +618,31 @@ def chip_text(txt):
 
 
 # ---------------------------------------------------------------- s12 / s13: inside the pool
-def pool_room(img, u, dark=0.0, crack=0.0):
-    """Inside the brine pool: the ice ceiling on top (needle crystals on its underside), teal water with
-    caustics and motes, sediment and rocks below. dark 0..1 darkens it (s13); crack 0..1 opens a slot up."""
-    img.paste(vgrad([(0, lerp((40, 150, 150), (10, 40, 50), dark)), (.5, lerp((18, 96, 110), (6, 24, 36), dark)), (1, lerp((8, 40, 56), (2, 10, 20), dark))]))
-    radial(img, 540 + 160 * math.sin(u * .5), 700, 800, lerp((120, 255, 226), (40, 100, 110), dark), .35)
+def ceil_y(x, tilt=0.0):
+    return 360 + 26 * math.sin(x / 90) + 14 * math.sin(x / 33) + tilt * (x - 540)
+
+
+POOL_TEAL = {'top': (40, 150, 150), 'mid': (18, 96, 110), 'bot': (8, 40, 56), 'light': (120, 255, 226), 'caust': (80, 200, 190),
+             'rays': (150, 255, 230), 'mote': (200, 255, 236), 'bub': (210, 255, 240)}
+POOL_WARM = {'top': (196, 110, 70), 'mid': (110, 44, 84), 'bot': (40, 16, 50), 'light': (255, 176, 96), 'caust': (230, 130, 110),
+             'rays': (255, 196, 130), 'mote': (255, 226, 196), 'bub': (255, 232, 214)}           # s12: salt + heat
+POOL_INDIGO = {'top': (52, 60, 150), 'mid': (24, 28, 92), 'bot': (8, 8, 40), 'light': (150, 160, 255), 'caust': (90, 100, 210),
+               'rays': (170, 180, 255), 'mote': (210, 216, 255), 'bub': (220, 226, 255)}       # s13: iron, invisible
+
+
+def pool_room(img, u, dark=0.0, crack=0.0, pal=POOL_TEAL, tilt=0.0):
+    """Inside the brine pool: the ice ceiling on top (needle crystals on its underside), water with caustics
+    and motes, sediment and rocks below. dark 0..1 darkens it; crack 0..1 opens a slot up; pal = water palette
+    (POOL_TEAL / POOL_WARM / POOL_INDIGO); tilt = ceiling slope (px per px), for a canted angle."""
+    img.paste(vgrad([(0, lerp(pal['top'], (10, 40, 50), dark)), (.5, lerp(pal['mid'], (6, 24, 36), dark)), (1, lerp(pal['bot'], (2, 10, 20), dark))]))
+    radial(img, 540 + 160 * math.sin(u * .5), 700, 800, lerp(pal['light'], (40, 100, 110), dark), .35)
     d = ImageDraw.Draw(img)
     for k in range(10):                                                   # caustic bands drift
         y0 = 420 + k * 120 + 20 * math.sin(u * .7 + k)
-        d.line([(x, y0 + 16 * math.sin(x / 80 + u * 1.5 + k)) for x in range(-20, W + 21, 16)], fill=lerp((80, 200, 190), (20, 60, 70), dark), width=4)
+        d.line([(x, y0 + 16 * math.sin(x / 80 + u * 1.5 + k) + tilt * (x - 540)) for x in range(-20, W + 21, 16)], fill=lerp(pal['caust'], (20, 60, 70), dark), width=4)
     # ice ceiling
     xs = np.arange(-20, W + 21, 20)
-    ceil = [(x, 360 + 26 * math.sin(x / 90) + 14 * math.sin(x / 33)) for x in xs]
+    ceil = [(x, ceil_y(x, tilt)) for x in xs]
     d.polygon([(-20, -10), (W + 20, -10)] + ceil[::-1], fill=lerp((200, 236, 250), (90, 120, 150), dark))
     for k in range(4):
         d.line([(x, 80 + k * 70 + 10 * math.sin(x / 100 + k)) for x in xs], fill=lerp((150, 200, 236), (60, 90, 120), dark), width=4)
@@ -617,39 +659,42 @@ def pool_room(img, u, dark=0.0, crack=0.0):
     floor = [(x, 1640 + 20 * math.sin(x / 120) + 10 * math.sin(x / 41)) for x in xs]
     d.polygon(floor + [(W + 20, H + 10), (-20, H + 10)], fill=lerp((96, 74, 96), (30, 24, 36), dark)); d.line(floor, fill=INK, width=6)
     rocks(img, 41, [(120, 1700, 50), (880, 1720, 60), (500, 1790, 34)], lit=lerp((150, 116, 136), (60, 50, 60), dark), shade=lerp((90, 66, 90), (30, 24, 34), dark), snow=lerp((150, 116, 136), (60, 50, 60), dark))
-    light_rays(img, 540, 300, lerp((150, 255, 230), (70, 140, 140), dark), n=7, alpha=.13, spread=(55, 125), length=1500, seed=8, phase=3 * math.sin(u * .5))
-    dust(img, 13, 60, (0, 380, W, 1640), lerp((200, 255, 236), (90, 130, 140), dark), 150, size=(2, 6), t=u)
-    bubbles(img, 200, 1620, 1200, u * .5, seed=3, n=6, color=lerp((210, 255, 240), (120, 170, 170), dark))
-    bubbles(img, 880, 1620, 1200, u * .5, seed=4, n=6, color=lerp((210, 255, 240), (120, 170, 170), dark))
+    light_rays(img, 540, 300, lerp(pal['rays'], (70, 140, 140), dark), n=7, alpha=.13, spread=(55, 125), length=1500, seed=8, phase=3 * math.sin(u * .5))
+    dust(img, 13, 60, (0, 380, W, 1640), lerp(pal['mote'], (90, 130, 140), dark), 150, size=(2, 6), t=u)
+    bubbles(img, 200, 1620, 1200, u * .5, seed=3, n=6, color=lerp(pal['bub'], (120, 170, 170), dark))
+    bubbles(img, 880, 1620, 1200, u * .5, seed=4, n=6, color=lerp(pal['bub'], (120, 170, 170), dark))
     return ceil
 
 
 def s12(u, D, cue):
     img = Image.new('RGBA', (W, H))
-    ceil = pool_room(img, u)
-    radial(img, 540, 1100, 700, (120, 255, 226), .25 + .05 * math.sin(u * 2.5))           # the brine glows
+    TILT = -.09                                                           # canted, warm close-up: salt + heat
+    ceil = pool_room(img, u, pal=POOL_WARM, tilt=TILT)
+    radial(img, 540, 1100, 700, (255, 170, 100), .25 + .05 * math.sin(u * 2.5))           # the brine glows warm
     t_salt, t_heat, t_free, t_liq = cue(0) - .1, cue(2) - .1, cue(6) - .1, cue(7) - .1
     d = ImageDraw.Draw(img)
     # needle crystals grow on the ceiling (it freezes) and each one sends heat (red waves) back into the water
     rng = np.random.default_rng(6)
     for i in range(14):
-        x = 60 + i * 72 + rng.uniform(-20, 20); y = 360 + 26 * math.sin(x / 90) + 14 * math.sin(x / 33)
-        L = (40 + 60 * rng.uniform()) * smooth(seg(u, .1 + i * .08, 1.0 + i * .12))
+        x = 60 + i * 72 + rng.uniform(-20, 20); y = ceil_y(x, TILT)
+        L = (60 + 90 * rng.uniform()) * smooth(seg(u, .1 + i * .08, 1.0 + i * .12))
         if L > 3:
-            d.polygon([(x - 10, y), (x + 10, y), (x + 1, y + L)], fill=(236, 250, 255), outline=(90, 150, 200))
+            d.polygon([(x - 15, y), (x + 15, y), (x + 1, y + L)], fill=(236, 250, 255), outline=(90, 150, 200))
         v = (u - t_heat + i * .17) % 1.1
         if u > t_heat and L > 10 and v < 1:                               # latent heat: a red wave leaves each crystal
             pts = [(x + 12 * math.sin(j * 1.4 + u * 9), y + L + 20 + j * 18 + 120 * v) for j in range(6)]
-            d.line(pts, fill=INK, width=11, joint='curve'); d.line(pts, fill=(255, 90, 60), width=6, joint='curve')
+            pts = [(px_ + 10 * math.sin(j), py_ + 10 * j) for j, (px_, py_) in enumerate(pts)]
+            d.line(pts, fill=INK, width=16, joint='curve'); d.line(pts, fill=(255, 90, 60), width=9, joint='curve')
     radial(img, 540, 520, 600, (255, 90, 60), .2 * smooth(seg(u, t_heat, t_heat + .5)) * (.8 + .2 * math.sin(u * 5)))
-    # salt cubes tumble through the water
-    for i in range(10):
-        q = 20 + (i % 3) * 6; x = 120 + i * 96 + 30 * math.sin(u + i); y = 700 + (i * 137) % 700 + 40 * math.sin(u * .7 + i * 2)
+    # big salt cubes tumble close to the lens (macro scale)
+    for i in range(7):
+        q = 34 + (i % 3) * 16; x = 130 + i * 140 + 30 * math.sin(u + i); y = 760 + (i * 211) % 640 + 40 * math.sin(u * .7 + i * 2)
         a = u * 40 + i * 30; s_ = pop(u, t_salt + i * .04, .3, 1.6)
         if s_ <= .01: continue
         q *= s_; c, sn = math.cos(math.radians(a)), math.sin(math.radians(a))
         sq = [(x + q * (c * px - sn * py), y + q * (sn * px + c * py)) for px, py in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
-        d.polygon(sq, fill=(250, 250, 255), outline=INK); d.line([sq[0], sq[2]], fill=(200, 210, 230), width=2)
+        d.polygon(sq, fill=(250, 250, 255), outline=INK, width=4); d.line([sq[0], sq[2]], fill=(200, 210, 230), width=3)
+        d.polygon([sq[0], sq[1], ((sq[0][0] + sq[1][0] + sq[2][0] + sq[3][0]) / 4, (sq[0][1] + sq[1][1] + sq[2][1] + sq[3][1]) / 4)], fill=(255, 236, 220))
     # a couple of microbes swim through
     for i in range(3):
         microbe(img, (200 + i * 330 + 60 * u) % (W + 200) - 100, 1240 + 120 * math.sin(i * 2 + u), 22, u, 70 + i)
@@ -657,45 +702,109 @@ def s12(u, D, cue):
     put_chip(img, 'HEAT', (220, 70, 50), 850, 610, pop(u, t_heat, .3, 1.9), size=60, angle=4)
     k = pop(u, t_liq, .35, 1.8)
     put_chip(img, 'STILL LIQUID', (14, 130, 120), 540, 1500, k, size=64, angle=2 * math.sin(u * 3))
-    img = finish(img, u, 1.04 + .05 * smooth(u / D), 540, 900, dx=10 * math.sin(u * .6), vig=(.4, (2, 12, 20)), grain_amt=.03)
+    img = finish(img, u, 1.08 + .05 * smooth(u / D), 540, 900, dx=10 * math.sin(u * .6), vig=(.4, (30, 8, 24)), grain_amt=.03)
     return img, {'faces': [], 'avoid': [(0, 1430, W, 1580)]}
+
+
+def escape_crack(img, u, f):
+    """s13 "Until it escapes": cross-section of a crack in the ice, bright warm surface on top. f 0..1 = how
+    far the brine has squeezed up (dark teal column with Fe ions, spray at its head)."""
+    img.paste(vgrad([(0, (255, 190, 110)), (.17, (255, 238, 196)), (.22, (200, 230, 248)), (.55, (120, 170, 222)), (1, (30, 50, 110))]))
+    radial(img, 560, 200, 760, (255, 214, 140), .85 + .1 * math.sin(u * 5))
+    light_rays(img, 560, 60, (255, 230, 180), n=9, alpha=.2, spread=(60, 120), length=1400, seed=5, phase=2 * math.sin(u))
+    d = ImageDraw.Draw(img)
+    surf = 330
+    d.line([(x, surf + 8 * math.sin(x / 90)) for x in range(-20, W + 21, 20)], fill=INK, width=8)
+    for k in range(10):                                                   # ice strata
+        y0 = surf + 120 + k * 150
+        d.line([(x, y0 + 14 * math.sin(x / 130 + k)) for x in range(-20, W + 21, 20)], fill=(236, 248, 255) if k % 2 else (90, 140, 200), width=4)
+    ys = np.linspace(H + 20, surf - 10, 16)
+    cxs = [540 + 50 * math.sin(i * 1.3) + 20 * math.sin(i * 3.1) for i in range(16)]
+    hw = [70 + 10 * math.sin(i * 2.2) + (30 if i > 13 else 0) for i in range(16)]
+    left = [(cxs[i] - hw[i], ys[i]) for i in range(16)]; right = [(cxs[i] + hw[i], ys[i]) for i in range(16)]
+    slot = left + right[::-1]
+    m = mask(); ImageDraw.Draw(m).polygon(slot, fill=255)
+    glow(img, m, (255, 230, 190), .5, blur=50, add=True)
+    inside = vgrad([(0, (255, 244, 210)), (.2, (255, 214, 140)), (.45, (190, 110, 80)), (.7, (40, 40, 76)), (1, (20, 28, 56))], W, H)
+    img.paste(inside, (0, 0), m)                                          # warm daylight pours down the crack
+    head = H + 20 - (H + 20 - surf + 40) * f
+    bm = mask(); ImageDraw.Draw(bm).polygon(slot, fill=255); ImageDraw.Draw(bm).rectangle([0, 0, W, head], fill=0)
+    brine = vgrad([(0, (60, 230, 200)), (.4, (20, 140, 150)), (1, (8, 60, 80))], W, H)
+    img.paste(brine, (0, 0), bm)
+    glow(img, bm, TEAL, .4, blur=30, add=True)
+    d = ImageDraw.Draw(img)
+    d.line(left, fill=INK, width=8, joint='curve'); d.line(right, fill=INK, width=8, joint='curve')
+    i = min(15, int((H + 20 - head) / (H + 20 - surf) * 15)); hx = cxs[i]
+    d.ellipse([hx - 80, head - 40, hx + 80, head + 40], fill=(120, 250, 220), outline=INK, width=5)
+    rng = np.random.default_rng(21)
+    for k in range(14):                                                   # spray at the head
+        a = rng.uniform(-2.4, -.7); r = 60 + 140 * ((u * 3 + k / 14) % 1)
+        x, y = hx + r * math.cos(a), head + r * math.sin(a); q = rng.uniform(8, 16)
+        d.ellipse([x - q, y - q, x + q, y + q], fill=(150, 255, 230), outline=INK, width=3)
+    for k in range(18):                                                   # speed lines rush up the walls
+        v = (u * 2.5 + k / 18) % 1; y = H - (H - surf) * v
+        if y < head: continue
+        j = min(15, max(0, int((H + 20 - y) / (H + 20 - surf) * 15))); side = -1 if k % 2 else 1
+        x = cxs[j] + side * hw[j] * .55
+        d.line([(x, y), (x, y + 120)], fill=(220, 255, 246), width=6)
+    for k in range(6):                                                    # iron rides the push upward
+        y = head + 120 + ((k * 260 - u * 1400) % 1400)
+        j = min(15, max(0, int((H + 20 - y) / (H + 20 - surf) * 15))); x = cxs[j] + 30 * math.sin(k * 2)
+        if y < H:
+            d.ellipse([x - 32, y - 32, x + 32, y + 32], outline=(230, 250, 255), width=5)
+            d.text((x, y), 'Fe', font=font(30, True), fill=(230, 250, 255), anchor='mm')
+    for k in range(3):                                                    # a big upward push arrow beside the crack
+        y = 1500 - 240 * k - 300 * ((u * 1.5) % 1); al = 1 - k * .25
+        ax = 860
+        pts = [(ax, y - 90), (ax + 70, y), (ax + 30, y), (ax + 30, y + 90), (ax - 30, y + 90), (ax - 30, y), (ax - 70, y)]
+        lay = layer(); ImageDraw.Draw(lay).polygon(pts, fill=(255, 176, 80, int(230 * al)), outline=(10, 6, 20, int(255 * al)))
+        img.alpha_composite(lay)
+    return head
 
 
 def s13(u, D, cue):
     img = Image.new('RGBA', (W, H))
     t_iron, t_inv, t_until, t_esc = cue(3) - .1, cue(5) - .1, cue(6) - .15, cue(8) - .1
-    dark = .25 + .3 * smooth(seg(u, 0, 1.2))
+    dark = .1 + .2 * smooth(seg(u, 0, 1.2))
     crack = smooth(seg(u, t_until, t_until + .45))
-    pool_room(img, u + 3, dark=dark, crack=crack)
-    # dissolved iron: ghost particles (colourless). They flash on "iron", fade on "invisible", then rush up the crack
+    pool_room(img, u + 3, dark=dark, crack=crack, pal=POOL_INDIGO)
+    # dissolved iron: big ghost ions close to the lens (colourless). They flash on "iron", fade on "invisible"
     hi = math.exp(-max(0, u - t_iron) * 3) * (u > t_iron)
-    fade = 1 - .55 * smooth(seg(u, t_inv, t_inv + .5))
+    fade = 1 - .3 * smooth(seg(u, t_inv, t_inv + .5))
     lay = layer(); d = ImageDraw.Draw(lay); rng = np.random.default_rng(13)
-    for i in range(26):
-        x0, y0 = rng.uniform(60, W - 60), rng.uniform(520, 1560); q = rng.uniform(30, 46)
+    for i in range(14):
+        x0, y0 = rng.uniform(80, W - 80), rng.uniform(520, 1560); q = rng.uniform(46, 78)
         x = x0 + 18 * math.sin(u * .8 + i); y = y0 + 14 * math.cos(u * .7 + 2 * i)
-        if crack > 0:                                                     # sucked toward the crack, then up it
-            v = ease_in(seg(u, t_until + .05 + (y0 - 520) / 1040 * .5, t_esc + .6))
+        if crack > 0:                                                     # sucked toward the crack
+            v = ease_in(seg(u, t_until + .05 + (y0 - 520) / 1040 * .3, t_esc + .6))
             x = x + (560 - x) * v; y = y + (300 - y) * v - 300 * v * v
         a = int(255 * fade * (.75 + .25 * hi))
-        for ang in range(0, 360, 36):
-            d.arc([x - q, y - q, x + q, y + q], ang, ang + 20, fill=(230, 250, 255, a), width=4)
-        d.text((x, y), 'Fe', font=font(int(q * .9), True), fill=(230, 250, 255, int(a * .9)), anchor='mm')
+        for ang in range(0, 360, 30):
+            d.arc([x - q, y - q, x + q, y + q], ang, ang + 18, fill=(230, 236, 255, a), width=7)
+        d.text((x, y), 'Fe', font=font(int(q * .9), True), fill=(220, 226, 255, int(a * .9)), anchor='mm')
     for i in range(4):                                                    # dim microbes: the pool is alive, but dark
-        microbe(lay, 150 + i * 260 + 30 * math.sin(u + i), 900 + 260 * math.sin(i * 1.7) + 20 * math.cos(u * .8 + i), 22, u, 120 + i, .5, (90, 170, 150))
+        microbe(lay, 150 + i * 260 + 30 * math.sin(u + i), 760 + 200 * math.sin(i * 1.7) + 20 * math.cos(u * .8 + i), 22, u, 120 + i, .5, (120, 150, 220))
     img.alpha_composite(lay)
-    if hi > .05: radial(img, 540, 1000, 700, (200, 255, 240), .2 * hi)
+    if hi > .05: radial(img, 540, 1000, 700, (200, 210, 255), .2 * hi)
     k = pop(u, t_inv, .3, 1.8) * (1 - smooth(seg(u, t_until, t_until + .3)))
     if k > .01:
         lay = layer(560, 200); dl = ImageDraw.Draw(lay)
-        pill(lay, '     INVISIBLE', 280, 100, (40, 60, 80), size=60)
+        pill(lay, '     INVISIBLE', 280, 100, (40, 50, 100), size=60)
         ex, ey = 120, 100                                                 # eye-slash icon
         dl.ellipse([ex - 40, ey - 22, ex + 40, ey + 22], outline='white', width=7); dl.ellipse([ex - 12, ey - 12, ex + 12, ey + 12], fill='white')
         dl.line([(ex - 44, ey + 30), (ex + 44, ey - 30)], fill=(255, 90, 80), width=9)
         anim.scaled_paste(img, lay, 540, 1160, k)
-    sx, sy = shake(u, t_esc, 10)
     z = 1.04 + .04 * smooth(u / D) + .08 * smooth(seg(u, t_until, D))
-    img = finish(img, u, z, 560, anim.lerp(1000, 500, smooth(seg(u, t_until, D))), dx=sx, dy=sy, vig=(.5, (0, 4, 10)), grain_amt=.035)
+    img = finish(img, u, z, 560, anim.lerp(1000, 500, smooth(seg(u, t_until, D))), vig=(.5, (0, 2, 16)), grain_amt=.035)
+    # "Until it escapes": whip up into the crack; the brine squeezes up toward the bright, warm surface
+    t_sw = t_until + .1
+    if u > t_sw:
+        f = ease_in(seg(u, t_sw, D - .05)) * .95 + .05
+        esc = Image.new('RGBA', (W, H)); head = escape_crack(esc, u, f)
+        sx, sy = shake(u, t_esc, 12)
+        esc = finish(esc, u, 1.06 + .05 * smooth(seg(u, t_sw, D)), 560, max(700, min(1300, head)), dx=sx, dy=sy, vig=(.3, (40, 20, 10)), grain_amt=.03)
+        a = smooth(seg(u, t_sw, t_sw + .16))
+        img = Image.blend(img, esc, a) if a < 1 else esc
     return img, {'faces': [], 'avoid': [(0, 1080, W, 1240)]}
 
 
