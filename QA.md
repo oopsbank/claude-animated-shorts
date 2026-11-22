@@ -2,7 +2,7 @@
 
 Every task ends with these checks: first the automatic checks, then your own look, then an independent reviewer.
 
-**Updated standard (the Director, 2026-11-21, evening): every stage's OVERALL score (the mean of its criteria) must be ≥ 8/10.** Fix and re-review until it passes, and keep going until there is a finished video. This applies to sets, plates, characters, props, fx, the engine, audio, storyboards, drafts, thumbnails.
+**Updated standard (the Director, 2026-11-21, evening): every stage's OVERALL score (the mean of its criteria) must be ≥ 8/10.** **Scripts are exempt (the Director, 2026-11-22): no score gate on scripts; the Director reads and approves them directly. The ≥ 8 bar stays for all visuals (sets, plates, characters, fx, storyboards, style frames, drafts, thumbnails).** Fix and re-review until it passes, and keep going until there is a finished video. This applies to sets, plates, characters, props, fx, the engine, audio, storyboards, drafts, thumbnails.
 - The overall score of each stage is ≥ 8, and all automatic checks pass. Scripts have no facts score (dropped by the Director, 2026-11-22); facts still need sources.
 - Fix and re-review with fresh reviewers until it passes. There is no round cap.
 - Report progress to the Producer every 3 rounds, so the Director can step in.
@@ -47,7 +47,7 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
 
   Plus one **comedy reviewer** (are the gags actually funny, in the Director's preferred **absurd** style: absurd escalation and imagined cutaways, framed as a character's fantasy, never as fact?) and one **fact checker** (is every claim true and sourced?).
   - **Pass** (the Director, 2026-11-21, option B, after 8 rounds showed that fresh reviewers disagree by about ±1):
-    - **the median of the 5 panel scores ≥ 8**;
+    - **the median of the 5 panel scores ≥ 8**; (**suspended 2026-11-22: scripts have no score gate; a panel, if run, is advisory only**)
     - **no swipe point before 50 s** from any engagement reviewer;
     - (no facts score: dropped by the Director, 2026-11-22).
   - Every round uses fresh reviewers with no view of earlier drafts or of the target score. Stop as soon as the panel passes; if it plateaus for 3 rounds, report to the Producer.

@@ -9,7 +9,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **Length: always a little over 1 minute (62-66 s, never under 61 s).** YouTube Shorts is the platform that pays per view for us; TikTok's Creator Rewards needs an eligible country and >1 min.
 - **Captions:** the "sentence" style (Poppins Bold, 1-2 words as written, white), picked on 2026-11-21 (`PIPELINE.md` › Captions).
 - **Lean crew, nothing extra and nothing missing:** see "How to run the crew" below. **No scheduled tasks** unless asked. The nightly 1st AD task (`trig_01RG5qNmG98WYrpCXKiSLCjq`) is disabled.
-- **Quality bar: each stage's overall score ≥ 8/10** (updated 2026-11-21 evening). Iterate until it passes and until there is a finished video.
+- **Quality bar: each visual stage's overall score ≥ 8/10** (updated 2026-11-21 evening). **Scripts are exempt since 2026-11-22: no score gate; the Director approves them directly.** Iterate until it passes and until there is a finished video.
 - **Comedy taste: ABSURD** (picked 2026-11-21 over slapstick and deadpan). Lean into absurd escalation and imagined cutaways (e.g. aliens playing air hockey with boulders), always framed as a character's fantasy or a joke, never as fact. One deadpan line can land the payoff.
 - **Always ask before publishing.** Posting goes through the **Buffer API** (`PIPELINE.md` › Publishing; connected 2026-11-21: YouTube, TikTok, Facebook). Videos need a public URL. Upload-Post was removed.
 
@@ -49,7 +49,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
   1. Screenwriter (G1-G2);
   2. Sound, plus a set or asset only if needed;
   3. Animator (G5).
-- **The standard for every stage is an overall score ≥ 8/10** (`QA.md`): iterate with fresh reviewers until every criterion passes, with no round cap, and report every 3 rounds. To save usage, review cheap previews (low-res stills, storyboards, crops) before expensive renders.
+- **The standard for every visual stage is an overall score ≥ 8/10 (scripts exempt)** (`QA.md`): iterate with fresh reviewers until every criterion passes, with no round cap, and report every 3 rounds. To save usage, review cheap previews (low-res stills, storyboards, crops) before expensive renders.
 - Crew sessions push to `claude/area-<area>`. The Producer merges into the integration branch `claude/busy-maxwell-tkdir9`, keeping both sides of LESSONS/BACKLOG conflicts.
 - Messages sent to a rate-limited session are lost. After a reset, resend the full instructions, not "continue".
 - No crew sessions are kept between videos.
