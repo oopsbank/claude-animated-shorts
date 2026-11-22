@@ -217,7 +217,7 @@ def smoke(img, seed, box, t, color=(90, 80, 84), n=18, alpha=150, rise=.12, size
 
 
 # ---------------------------------------------------------------- atmosphere cross-section
-def altitude_ruler(img, x, y_ground, px_per_km, kms=(0, 2, 4, 6, 8, 10, 12), col=(220, 236, 255), hi=None):
+def altitude_ruler(img, x, y_ground, px_per_km, kms=(0, 2, 4, 6, 8, 10, 12), col=(220, 236, 255), hi=None, fs=30):
     """Left-edge altitude ruler (KM ticks). hi = the km to highlight (8)."""
     d = ImageDraw.Draw(img)
     top = y_ground - px_per_km * kms[-1]
@@ -227,7 +227,7 @@ def altitude_ruler(img, x, y_ground, px_per_km, kms=(0, 2, 4, 6, 8, 10, 12), col
         big = hi is not None and k == hi
         d.line([(x - 18, y), (x + 18, y)], fill=INK, width=9); d.line([(x - 16, y), (x + 16, y)], fill=col, width=4)
         if not big:
-            d.text((x + 30, y), f'{k} KM', font=font(30, True), fill=col, anchor='lm', stroke_width=4, stroke_fill=INK)
+            d.text((x + 30, y), f'{k} KM', font=font(fs, True), fill=col, anchor='lm', stroke_width=4, stroke_fill=INK)
     return top
 
 

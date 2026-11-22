@@ -746,19 +746,29 @@ def s07(u, D, cue):
 
 
 # ---------------------------------------------------------------- s08: "So what explodes...?"
-def diagram_disc(img, cx, cy, R0, R1, squash, u, glow_ring=1.0, glow_centre=1.0, seed=3, n=360, palette='neon'):
+def diagram_disc(img, cx, cy, R0, R1, squash, u, glow_ring=1.0, glow_centre=1.0, seed=3, n=150, palette='neon'):
+    """The riddle as a phone-readable diagram: a ground disc, a ring of thick fallen logs pointing outward,
+    a clear gap, and a cluster of tall upright bare trunks at the centre."""
     d = ImageDraw.Draw(img)
-    logs, poles = T.treefall_items(seed, R0, R1, n, 34)
+    d.ellipse([cx - R1 - 40, cy - (R1 + 40) * squash, cx + R1 + 40, cy + (R1 + 40) * squash], fill=(20, 34, 60), outline=(60, 90, 140), width=4)
+    d.ellipse([cx - R0 * .95, cy - R0 * .95 * squash, cx + R0 * .95, cy + R0 * .95 * squash], fill=(26, 56, 74))
+    logs, poles = T.treefall_items(seed, R0 + 60, R1, n, 15)
     ring = (255, 150, 60) if palette == 'neon' else (126, 96, 68)
     for r, a, lk, da in logs:
         x, y = cx + math.cos(a) * r, cy + math.sin(a) * r * squash
-        ang = math.atan2(math.sin(a + da) * squash, math.cos(a + da)); L = 44 * lk
+        ang = math.atan2(math.sin(a + da) * squash, math.cos(a + da)); L = 64 * lk
         e = (x + math.cos(ang) * L, y + math.sin(ang) * L)
-        d.line([(x, y), e], fill=INK, width=12); d.line([(x, y), e], fill=lerp((90, 70, 60), ring, glow_ring), width=6)
+        d.line([(x, y), e], fill=INK, width=24); d.line([(x, y), e], fill=lerp((110, 80, 60), ring, glow_ring), width=13)
+        d.ellipse([x - 9, y - 9, x + 9, y + 9], fill=INK); d.ellipse([x - 5, y - 5, x + 5, y + 5], fill=lerp((140, 100, 70), (255, 210, 140), glow_ring))
+    col = lerp((110, 120, 130), (130, 240, 255), glow_centre)
     for r, a in sorted(poles, key=lambda p: math.sin(p[1]) * p[0]):
-        x, y = cx + math.cos(a) * r, cy + math.sin(a) * r * squash; h = 90 + 30 * math.sin(a * 3)
-        col = lerp((100, 110, 120), (120, 240, 255), glow_centre)
-        d.line([(x, y), (x, y - h)], fill=INK, width=12); d.line([(x, y), (x, y - h)], fill=col, width=6)
+        x, y = cx + math.cos(a) * r * .95, cy + math.sin(a) * r * .95 * squash; h = 150 + 30 * math.sin(a * 3)
+        sw = 2 * math.sin(u * 1.3 + a * 4)                                # a faint sway: they are still standing
+        d.ellipse([x - 16, y - 6, x + 16, y + 6], fill=(10, 18, 30))
+        d.line([(x, y), (x + sw, y - h)], fill=INK, width=22); d.line([(x, y), (x + sw, y - h)], fill=col, width=11)
+        for k in (.45, .7):                                               # broken branch stubs
+            sy = y - h * k; dd = 16 if (int(r) + int(k * 10)) % 2 else -16
+            d.line([(x + sw * k, sy), (x + sw * k + dd, sy - 12)], fill=INK, width=9); d.line([(x + sw * k, sy), (x + sw * k + dd, sy - 12)], fill=col, width=4)
 
 
 def s08(u, D, cue):
@@ -767,31 +777,32 @@ def s08(u, D, cue):
     d = ImageDraw.Draw(img)
     for x in range(0, W, 90): d.line([(x, 0), (x, H)], fill=(24, 40, 80), width=2)
     for y in range(0, H, 90): d.line([(0, y), (W, y)], fill=(24, 40, 80), width=2)
-    cx, cy = 540, 1240
+    cx, cy, sq = 540, 1010, .58
     t_ex, t_fl, t_st = cue(2) - .1, cue(3) - .1, cue(10) - .15
     g_ring = smooth(seg(u, t_fl, t_fl + .4)); g_c = smooth(seg(u, t_st - .5, t_st))
-    m = mask(); ImageDraw.Draw(m).ellipse([cx - 560, cy - 250, cx + 560, cy + 250], outline=255, width=60)
-    glow(img, m, (255, 130, 50), .35 * g_ring * (.8 + .2 * math.sin(u * 4)), blur=50, add=True)
-    radial(img, cx, cy - 40, 230, (100, 230, 255), .4 * g_c * (.8 + .2 * math.sin(u * 5)))
-    diagram_disc(img, cx, cy, 130, 540, .45, u, .35 + .65 * g_ring, .35 + .65 * g_c)
+    m = mask(); ImageDraw.Draw(m).ellipse([cx - 440, cy - 440 * sq, cx + 440, cy + 440 * sq], outline=255, width=90)
+    glow(img, m, (255, 130, 50), .4 * g_ring * (.8 + .2 * math.sin(u * 4)), blur=50, add=True)
+    diagram_disc(img, cx, cy, 165, 420, sq, u, .4 + .6 * g_ring, .4 + .6 * g_c)
+    radial(img, cx, cy - 70, 240, (100, 230, 255), .45 * g_c * (.8 + .2 * math.sin(u * 5)))
     if u > t_ex:                                                         # the burst above the disc
         v = u - t_ex
-        radial(img, cx, 560, 300 * ease_out(v / .4) + 60, (255, 230, 170), .8 * (1 - .5 * smooth(v / 2)))
-        T.shock_ring(img, cx, 560, 60 + 380 * ease_out(v / .8), 20, (255, 220, 160), .6 * (1 - smooth(v / 1.2)), squash=.4)
-    chip_t(img, 'FLAT', (200, 100, 40), 870, 1560, u, t_fl + .1, size=54)
-    chip_t(img, 'STANDING', (30, 150, 170), 540, 1020, u, t_st, size=54)
-    # a small Kulik looking at the riddle (bottom left)
-    g = kulik(img, u, chain(u, [(0, STAND), (.4, dict(POSES['think']), lambda f: out_back(f, 1.4))]), 'thinking', 170, 1880, .42,
-              look=.5, label_on=False, rim=(150, 200, 255), aura_a=.5)
-    img = finish(img, u, 1.0 + .05 * smooth(u / D), 540, 1000, vig=(.45, (2, 4, 14)))
+        radial(img, cx, 590, 300 * ease_out(v / .4) + 60, (255, 230, 170), .8 * (1 - .3 * smooth(v / 2)))
+        fire_cloud(img, cx, 590, u, v, .52)
+        T.shock_ring(img, cx, 590, 60 + 380 * ease_out(v / .8), 20, (255, 220, 160), .6 * (1 - smooth(v / 1.2)), squash=.4)
+    chip_t(img, 'FLAT', (200, 100, 40), 870, 1420, u, t_fl + .1, size=88, angle=-3)
+    chip_t(img, 'STANDING', (30, 150, 170), cx + 250, 760, u, t_st, size=80, angle=3)
+    # Kulik, big in the bottom-left corner, thinking over the riddle
+    g = kulik(img, u, chain(u, [(0, STAND), (.4, dict(POSES['think']), lambda f: out_back(f, 1.4))]), 'thinking', 250, 1890, .74,
+              look=.6, label_on=False, rim=(150, 200, 255), aura_a=.5)
+    img = finish(img, u, 1.0 + .04 * smooth(u / D), 540, 1000, vig=(.45, (2, 4, 14)))
     q = slam(u, cue(1) - .05, .3, 1.5)
     if q > 0:
         lay = layer(520, 700); dl = ImageDraw.Draw(lay)
         dl.text((266, 366), '?', font=font(520), fill=(20, 6, 10), anchor='mm')
         dl.text((260, 350), '?', font=font(520), fill=(240, 60, 54), anchor='mm', stroke_width=14, stroke_fill=INK)
-        radial(img, 540, 470, 380, (255, 60, 50), .35 * smooth(seg(u, cue(1), cue(1) + .3)))
-        anim.scaled_paste(img, lay, 540, 470, q * .78, angle=damp(u - cue(1), 9, 4, 12) + 3 * math.sin(u * 3))
-    return img, {'faces': [face_box(g)], 'avoid': [(0, 160, W, 760)]}
+        radial(img, 540, 290, 330, (255, 60, 50), .35 * smooth(seg(u, cue(1), cue(1) + .3)))
+        anim.scaled_paste(img, lay, 540, 290, q * .6, angle=damp(u - cue(1), 9, 4, 12) + 3 * math.sin(u * 3))
+    return img, {'faces': [face_box(g)], 'avoid': [(0, 160, W, 1300)]}
 
 
 # ---------------------------------------------------------------- s09: comet? antimatter? alien ship?
@@ -859,75 +870,118 @@ def s09(u, D, cue):
 
 
 # ---------------------------------------------------------------- s10: the answer, a burst 8 km up
-GROUND_Y, KM = 1690, 112
-BURST = (600, GROUND_Y - 8 * KM)
+GROUND_Y, KM = 1640, 75
+BURST = (540, GROUND_Y - 8 * KM)
 
 
 def atmo_bg(img, u, cam=0.0):
     img.paste(vgrad([(0, (4, 4, 18)), (.22, (14, 20, 60)), (.55, (40, 90, 170)), (.85, (130, 190, 240)), (.88, (170, 210, 240))]))
-    stars(img, 15, 60, 500, u)
+    stars(img, 15, 60, 760, u)
     d = ImageDraw.Draw(img)
     for k, y in enumerate((GROUND_Y - 11 * KM, GROUND_Y - 6 * KM, GROUND_Y - 2 * KM)):   # faint layer bands
         d.line([(0, y), (W, y)], fill=(90, 130, 200), width=2)
-    cloud_bands(img, 31, GROUND_Y - 260, GROUND_Y - 60, (230, 240, 255), .35, n=5, drift=u * 30)
-    T.forest_row(img, 91, GROUND_Y + 10, 40, 80, (40, 90, 70), (24, 60, 50), n=70, iw=2, t=u)
+    cloud_bands(img, 31, GROUND_Y - 300, GROUND_Y - 60, (230, 240, 255), .45, n=6, drift=u * 30)
+    T.forest_row(img, 91, GROUND_Y + 10, 50, 100, (40, 90, 70), (24, 60, 50), n=60, iw=3, t=u)
     d = ImageDraw.Draw(img); d.rectangle([0, GROUND_Y + 20, W, H], fill=(52, 70, 50))
     d.line([(0, GROUND_Y + 20), (W, GROUND_Y + 20)], fill=INK, width=6)
     d.rectangle([0, GROUND_Y + 26, W, H], fill=(76, 58, 44))
     for k in range(4): d.line([(0, GROUND_Y + 70 + k * 50), (W, GROUND_Y + 60 + k * 50)], fill=(64, 48, 38), width=5)
 
 
+ROCK_FROM = (1400, -380)
+
+
+def fire_cloud(img, x, y, u, v, sc=1.0):
+    """The airburst as a flat-2D fireball: lobed red/orange rim, yellow body, white-hot core, darkening with v."""
+    k = ease_out(min(1, v / .5)); R = (60 + 190 * k) * sc
+    d = ImageDraw.Draw(img); rng = np.random.default_rng(44)
+    cool = smooth(v / 2.2)
+    for layer_i, (rk, col) in enumerate(((1.0, lerp((240, 90, 40), (150, 60, 50), cool)), (.72, lerp((255, 160, 50), (230, 110, 50), cool)),
+                                         (.45, lerp((255, 225, 110), (255, 170, 80), cool)))):
+        n = 13
+        for i in range(n):
+            a = i * 2 * math.pi / n + rng.uniform(-.15, .15) + u * .15 * (1 if layer_i % 2 else -1)
+            rr = R * rk * (.62 + .08 * math.sin(u * 3 + i)); q = R * rk * rng.uniform(.38, .5)
+            cx_, cy_ = x + math.cos(a) * rr, y + math.sin(a) * rr * .9
+            if layer_i == 0: d.ellipse([cx_ - q - 6, cy_ - q - 6, cx_ + q + 6, cy_ + q + 6], fill=INK)
+        for i in range(n):
+            a = i * 2 * math.pi / n + u * .15 * (1 if layer_i % 2 else -1)
+            rr = R * rk * (.62 + .08 * math.sin(u * 3 + i)); q = R * rk * .45
+            cx_, cy_ = x + math.cos(a) * rr, y + math.sin(a) * rr * .9
+            d.ellipse([cx_ - q, cy_ - q, cx_ + q, cy_ + q], fill=col)
+        d.ellipse([x - R * rk * .7, y - R * rk * .65, x + R * rk * .7, y + R * rk * .65], fill=col)
+    radial(img, x, y, R * .9, (255, 255, 235), .9 * (1 - .4 * cool), power=.8)
+
+
+
+
+def rock_path(u, t_b):
+    """Fraction along the diagonal ROCK_FROM -> BURST: in fast, a slow drift for the size comparison, then the dive."""
+    t1 = t_b - .3
+    if u < 1.5: return .38 + .42 * ease_out(u / 1.5)
+    if u < t1: return .80 + .03 * (u - 1.5) / max(.01, t1 - 1.5)
+    return .83 + .17 * ease_in(seg(u, t1, t_b))
+
+
 def s10(u, D, cue):
     img = Image.new('RGBA', (W, H))
     atmo_bg(img, u)
-    T.altitude_ruler(img, 70, GROUND_Y, KM, hi=8)
+    T.altitude_ruler(img, 64, GROUND_Y, KM, kms=(0, 2, 4, 6, 8, 10), fs=42)
     t_b, t_8 = cue(10) - .05, cue(13) - .1
     bx, by = BURST
-    d = ImageDraw.Draw(img)
-    if u < t_b:                                                           # the rock dives in, heating up
-        f = ease_in(seg(u, -.2, t_b)) ** .7
-        x0, y0 = 1100, -120
-        x, y = x0 + (bx - x0) * f, y0 + (by - y0) * f
-        ang = math.atan2(by - y0, bx - x0)
-        heat = smooth(seg(u, .3, t_b))
-        T.fireball(img, x, y, 40 + 40 * heat, ang, 260 + 520 * heat, u, alpha=.35 + .65 * heat)
-        T.rock(ImageDraw.Draw(img), x, y, 78, ang=u * 2, col=lerp((120, 100, 92), (255, 120, 50), heat), lit=lerp((176, 150, 134), (255, 230, 150), heat),
-               dark=lerp((78, 62, 60), (200, 60, 30), heat), seed=5)
+    # the 8 KM line: faint from the start, drawn bright on "eight"
+    T.dashed(ImageDraw.Draw(img), (230, by), (W, by), (200, 215, 240), 4, 22, 18, phase=-u * 40)
+    k8 = smooth(seg(u, t_8 - .3, t_8 + .3))
+    if k8 > 0:
+        m8 = mask(); ImageDraw.Draw(m8).line([(230, by), (230 + (W - 230) * k8, by)], fill=255, width=14)
+        glow(img, m8, (255, 220, 90), .6, blur=12, add=True)
+        T.dashed(ImageDraw.Draw(img), (230, by), (230 + (W - 230) * k8, by), (255, 225, 90), 9, 34, 16, phase=-u * 80)
+    ang = math.atan2(by - ROCK_FROM[1], bx - ROCK_FROM[0])
+    t_cmp = cue(5) - .1                                                    # "the size of a building"
+    cmp_s = pop(u, t_cmp, .35, 1.7) * (1 - smooth(seg(u, t_b - .25, t_b)))
+    if u < t_b:                                                           # the rock streaks in, heating up
+        f = rock_path(u, t_b)
+        x, y = ROCK_FROM[0] + (bx - ROCK_FROM[0]) * f, ROCK_FROM[1] + (by - ROCK_FROM[1]) * f
+        heat = .45 + .55 * smooth(seg(u, 0, t_b))
+        tm = mask(); tx, ty = x - math.cos(ang) * 1000, y - math.sin(ang) * 1000; nx, ny = -math.sin(ang), math.cos(ang)
+        ImageDraw.Draw(tm).polygon([(x + nx * 120, y + ny * 120), (tx + nx * 20, ty + ny * 20), (tx - nx * 20, ty - ny * 20), (x - nx * 120, y - ny * 120)], fill=255)
+        glow(img, tm, (255, 96, 30), .85, blur=40, add=False)                   # the long fiery trail
+        T.fireball(img, x, y, 80 + 30 * heat, ang, 820 + 260 * heat, u, alpha=.7 + .3 * heat)
+        T.rock(ImageDraw.Draw(img), x, y, 140, ang=u * 1.5, col=lerp((150, 104, 80), (255, 120, 50), heat),
+               lit=lerp((200, 160, 130), (255, 230, 150), heat), dark=lerp((90, 62, 56), (200, 60, 30), heat), seed=5)
+        if cmp_s > .01:                                                   # same-scale building beside the rock
+            lay = layer(W, 900); dl = ImageDraw.Draw(lay)
+            ox, oy = x, y                                                 # layer centre follows the rock
+            lx, ly = W / 2 - 370, 450                                     # building centre-x and rock centre-y in layer coords
+            dl.rounded_rectangle([lx - 150, ly - 230, lx + 150, ly + 230], 30, fill=(230, 236, 246, 90), outline=(255, 255, 255, 220), width=5)
+            T.building(dl, lx, ly + 165, 160, 330, floors=10)
+            dl.text((lx + 185, ly), '≈', font=font(110, True), fill='white', anchor='mm', stroke_width=8, stroke_fill=INK)
+            dl.line([(lx - 120, ly - 165), (lx - 120, ly + 165)], fill='white', width=6)
+            for yy in (ly - 165, ly + 165): dl.line([(lx - 134, yy), (lx - 106, yy)], fill='white', width=6)
+            anim.scaled_paste(img, lay, ox - 40, oy, cmp_s * 1.12, angle=0)
+            put_chip(img, '~50-60 M ≈ A BUILDING', (40, 110, 200), 540, 380, cmp_s, size=76, angle=-2)
     else:
         v = u - t_b
-        radial(img, bx, by, 240 + 700 * ease_out(v / .8), (255, 220, 150), .95 * (1 - .55 * smooth(v / 2)))
-        radial(img, bx, by, 80 + 160 * ease_out(v / .3), (255, 255, 240), .95 * (1 - .6 * smooth(v / 1.5)), power=.8)
-        T.shock_ring(img, bx, by, 60 + 500 * ease_out(v / 1.0), 26, (255, 230, 180), .7 * (1 - smooth(v / 1.4)), squash=1.0)
-        rng = np.random.default_rng(12)
-        for i in range(26):                                               # fragments fly apart and burn out
-            a = rng.uniform(0, 2 * math.pi); sp = rng.uniform(200, 520); x = bx + math.cos(a) * sp * v; y = by + math.sin(a) * sp * v + 80 * v * v
-            q = max(0, 14 * (1 - v / 1.2)) * rng.uniform(.6, 1.2)
-            if q > 1: d.ellipse([x - q, y - q, x + q, y + q], fill=(255, 200 - int(80 * min(1, v)), 90))
-        T.smoke(img, 9, (bx - 300, by - 260, bx + 300, by + 220), u, color=(255, 170, 110), n=14, alpha=int(170 * smooth(v / .6)), rise=.06, size=(60, 130))
-        burst_star(img, bx, by, u, .9 * smooth(v / .3) * (1 - .3 * smooth(v / 2)))
-    # the 8 KM line draws across, with its tag
-    k8 = smooth(seg(u, t_8 - .3, t_8 + .3))
-    T.dashed(ImageDraw.Draw(img), (40, by), (W, by), (170, 190, 230), 3, 20, 20, phase=-u * 40)
-    if k8 > 0:
-        d = ImageDraw.Draw(img)
-        T.dashed(d, (40, by), (40 + (W - 40) * k8, by), (255, 220, 90), 7, 30, 18, phase=-u * 80)
-        put_chip(img, '8 KM UP', (220, 130, 30), 300, by - 90, pop(u, t_8, .3, 2), size=58)
-    # scale inset: the rock is the size of a building
-    s = pop(u, cue(6) - .1, .35, 1.7) * (1 - smooth(seg(u, t_b + .6, t_b + 1.0)))
-    if s > .01:
-        lay = layer(540, 460); dl = ImageDraw.Draw(lay)
-        dl.rounded_rectangle([12, 12, 528, 448], 40, fill=INK); dl.rounded_rectangle([4, 4, 520, 440], 40, fill=(230, 236, 246), outline=INK, width=6)
-        dl.rectangle([20, 380, 504, 430], fill=(130, 150, 110))
-        T.rock(dl, 150, 270, 110, seed=5)
-        dl.text((282, 270), '≈', font=font(90), fill=INK, anchor='mm')
-        T.building(dl, 400, 380, 120, 300, floors=7)
-        dl.text((262, 60), '~50-60 M', font=font(44), fill=(60, 70, 90), anchor='mm')
-        anim.scaled_paste(img, lay, 770, 470, s * .82, angle=-2)
-    flash(img, u, t_b, .3, .9)
-    sx, sy = shake(u, t_b, 14, .5)
-    img = finish(img, u, 1.02 + .04 * smooth(u / D), 600, 900, dx=sx, dy=sy, vig=(.4, (2, 4, 20)))
-    chip_t(img, 'THE ANSWER', (40, 150, 90), 540, 150, u, cue(1) - .1, size=60)
-    return img, {'faces': [], 'avoid': [(0, 0, W, 620)]}
+        radial(img, bx, by, 420 + 900 * ease_out(v / .8), (255, 220, 150), .95 * (1 - .35 * smooth(v / 2)))
+        radial(img, bx, by, 200 + 260 * ease_out(v / .3), (255, 255, 240), 1.0 * (1 - .3 * smooth(v / 1.5)), power=.8)
+        T.shock_ring(img, bx, by, 80 + 760 * ease_out(v / 1.1), 40, (255, 235, 190), .85 * (1 - smooth(v / 1.5)), squash=1.0)
+        T.shock_ring(img, bx, by, 40 + 420 * ease_out(v / 1.3), 22, (255, 200, 120), .6 * (1 - smooth(v / 1.6)), squash=1.0)
+        rng = np.random.default_rng(12); d = ImageDraw.Draw(img)
+        for i in range(40):                                               # fragments fly apart and burn out
+            a = rng.uniform(0, 2 * math.pi); sp = rng.uniform(260, 700); x = bx + math.cos(a) * sp * v; y = by + math.sin(a) * sp * v + 90 * v * v
+            q = max(0, 20 * (1 - v / 1.3)) * rng.uniform(.6, 1.2)
+            if q > 1:
+                d.line([(x, y), (x - math.cos(a) * q * 3, y - math.sin(a) * q * 3)], fill=(255, 170, 70), width=int(q))
+                d.ellipse([x - q, y - q, x + q, y + q], fill=(255, 220 - int(90 * min(1, v)), 110))
+        T.smoke(img, 9, (bx - 380, by - 320, bx + 380, by + 260), u, color=(255, 196, 120), n=12, alpha=int(90 * smooth(v / .6)), rise=.06, size=(70, 150))
+        fire_cloud(img, bx, by, u, v)
+        put_chip(img, '8 KM UP', (220, 130, 30), 830, by - 290, pop(u, t_8, .3, 2), size=76, angle=-3)
+    flash(img, u, t_b, .4, 1.0)
+    sx, sy = shake(u, t_b, 18, .55)
+    zf = smooth(seg(u, 0, t_b))                                           # the camera rides with the rock, then settles on the burst
+    img = finish(img, u, 1.14 - .1 * zf + .03 * smooth(seg(u, t_b, D)), anim.lerp(720, bx, zf), anim.lerp(720, by, zf), dx=sx, dy=sy, vig=(.4, (2, 4, 20)))
+    chip_t(img, 'THE ANSWER', (40, 150, 90), 540, 150, u, cue(1) - .1, size=64)
+    return img, {'faces': [], 'avoid': [(0, 0, W, 1330)]}
 
 
 # ---------------------------------------------------------------- s11: it never hit the ground
@@ -1215,15 +1269,19 @@ def s14b(u, D, cue):
     A = ring_scene(u, D, cue)
     A = finish(A, u, 1.0 + .06 * smooth(u / D), 540, 1200, vig=(.4, (30, 14, 20)))
     slam_title(A, 's14b', [('NO CRATER', (255, 76, 60), 140)], 260, u, cue(13) - .08)
-    t_tilt = cue(24) - .15
-    k = smooth(seg(u, t_tilt, D - .04))
+    # the loop: a vertical tilt into the film's opening frame, done before "pointing" so no caption sits on the
+    # seam; the tail is s01a's own lead-in (u < 0), ending one frame before s01a's frame 0
+    t0, t1 = cue(23) - .02, cue(24) - .04
+    k = smooth(seg(u, t0, t1))
     if k <= 0: return A, {'faces': [], 'avoid': [(0, 160, W, 460)]}
-    Bimg, _ = s01a(0.0, 4.27, lambda i: 99.0)                            # the opening frame of the film: the loop
-    out = Image.new('RGBA', (W, H)); Bimg = Bimg.convert('RGBA')
+    Bimg, binfo = s01a(min(0.0, u - D), 4.27, lambda i: 99.0)
+    Bimg = Bimg.convert('RGBA')
+    if k >= 1: return Bimg, {'faces': [], 'avoid': binfo['avoid'], 'seam': None}
+    out = Image.new('RGBA', (W, H))
     off = int(round(k * H))
     if off < H: out.alpha_composite(A.crop((0, 0, W, H - off)), (0, off))
     if off > 0: out.alpha_composite(Bimg.crop((0, H - off, W, H)), (0, 0))
-    return out, {'faces': [], 'avoid': [(0, 160, W, 460)]}
+    return out, {'faces': [], 'avoid': [(0, 160, W, 460)], 'seam': off}
 
 
 SHOTS = {'s01a': s01a, 's01b': s01b, 's02': s02, 's03': s03, 's04a': s04a, 's04b': s04b, 's05': s05, 's06': s06,

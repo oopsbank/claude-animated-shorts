@@ -152,7 +152,9 @@ class Film:
             img = anim.camera(img, 1 + .045 * (1 - anim.ease_out(u / .2)))
             if u < .1:
                 img.alpha_composite(Image.new('RGBA', img.size, (255, 255, 255, int(70 * (1 - u / .1)))))
+        on_seam = info.get('seam') is not None                           # a fast wipe in progress: no caption on the seam
         for g in self.caps:
+            if on_seam: break
             a, b = g['show']
             if a <= T < b:
                 k = (T - a) * FPS

@@ -1,13 +1,15 @@
 # Tunguska: "The Explosion With No Crater" (flat2d, claude/area-tunguska, 2026-11-22)
 
-Video 4. Same look, tone and pipeline as video 3 (blood-falls): white stickmen with a black outline, rich flat 2D, serious mystery, no comedy, "sentence" captions, continuous motion. Status: **540 preview for the Producer's review; the 1080 final is not rendered yet.**
+Video 4. Same look, tone and pipeline as video 3 (blood-falls): white stickmen with a black outline, rich flat 2D, serious mystery, no comedy, "sentence" captions, continuous motion. Status: **v2 (Producer's fixes to s08, s10 and the ending) rendered; 1080x1920 posting copy committed.** Not published.
 
 ## Files
 | file | what |
 |---|---|
-| `tests/preview_full_540.mp4` | 540x960 full-length preview with the mix (no cover), for the Producer/Director pass |
+| `tunguska_final_1080x1920.mp4` | **the posting copy** (committed, under 45 MB): 1080x1920, captions, the mix, 0.1 s cover in front. See "Final cut" |
+| `tests/preview_full_540.mp4` | 540x960 full-length preview with the mix (no cover), downscaled from the v2 1080 render |
 | `tests/sheet_2s.jpg` | 2 s contact sheet of the preview |
 | `tests/stills_r1/` | the review stills (one per shot, 540x960) and `sheet.png` |
+| `tests/stills_r2/` | v2 review stills of the changed shots (s08, s10 before/after the burst, the s14b last frame) |
 | `thumbnail.png` | house-style thumbnail (caption-free s05 frame, CLUE badge hidden: Kulik and the crossed-out crater ring) |
 | `flat2d/tunguska.py` | the shots `s01a`-`s14b`, `SHOT_LIST`, `END` |
 | `flat2d/taiga.py` | new kit layers: spruce/forest rows, bare upright trunks, fallen trees (side and top views), radial treefall, fireball, shock ring, smoke, altitude ruler, space rock, building, hairdryer, grass in an airflow |
@@ -37,15 +39,15 @@ Final (after the Producer's pass): `render.py ... --film tunguska --size 1080x19
 | s05 | 19.87-22.95 | 5 | CLUE 1: Kulik with his probe shovel on the flat bog; red X over the dashed crater ring; NO HOLE, NO ROCK |
 | s06 | 22.95-26.87 | 6 | CLUE 2: the 1927 survey map; the pencil maps the trunks ring by ring; red arrows shoot outward; ONE SPOT pin |
 | s07 | 26.87-31.87 | 7 | CLUE 3: low angle up the bare upright trunks (overcast), Kulik looks up and points; STILL STANDING; trunk = telegraph pole card |
-| s08 | 31.87-35.43 | 8 | navy diagram: a burst above a tilted disc, the ring of logs glows on "flattens" (FLAT), the centre poles on "standing" (STANDING); big red ? |
+| s08 | 31.87-35.43 | 8 | navy diagram, phone-readable: a fireball burst above a ground disc; a ring of thick fallen logs pointing outward glows on "flattens" (FLAT), a clear gap, then tall upright bare trunks with branch stubs glow on "standing" (STANDING); big red ?; Kulik large, full figure, bottom left, thinking |
 | s09 | 35.43-38.79 | 9 | purple dusk: three townspeople, bubbles COMET, ANTIMATTER, ALIEN SHIP pop on their words, each stamped ? |
-| s10 | 38.79-43.20 | 10 | atmosphere cross-section with a KM ruler; THE ANSWER; the rock dives in and heats; ≈ building inset (~50-60 M); bursts on "burst"; 8 KM UP line |
+| s10 | 38.79-43.20 | 10 | atmosphere cross-section, tightened to 0-10 KM (8 KM line near frame centre); THE ANSWER; a big glowing rock streaks in diagonally with a long fiery trail, the camera riding with it; on "the size of a building" it slows and a same-scale building pops in beside it, ~50-60 M ≈ A BUILDING; on "burst" it dives to the centre and bursts on the 8 KM line: white flash, shake, a flat-2D fireball, two shock rings, fragments; the 8 KM line lights up and 8 KM UP on "eight" |
 | s11 | 43.20-45.55 | 11 | ground view under an orange sky: the burst in the air, the pieces burn out, only the shock sphere comes down and bends the trees; IT NEVER HIT THE GROUND |
 | s12a | 45.55-49.57 | 12 | blueprint: arrows straight down onto the centre tree, its branches fly off on "lost their branches", the trunk stays; STRAIGHT DOWN, STILL STANDING |
 | s12b | 49.57-52.20 | 12 | the same blueprint, panned out: slanted arrows hit the trees sideways, they fall flat on "knocked them flat"; SIDEWAYS, FLAT |
 | s13 | 52.20-57.53 | 13 | a hairdryer (no brand) held over grass: airflow down then out, the blades right under it stay up, the rest bend outward; STAYS UP, BLOWN OUTWARD; a top view inset (FROM ABOVE) that rhymes with the forest map |
 | s14a | 57.53-60.66 | 14 | Kulik among the bare trunks at dusk; IRON crossed out in his thought; looks up at the empty sky on "the rock never touched the ground" |
-| s14b | 60.66-65.40 | 14 | 3/4 aerial: the ring of fallen trees around bare trunks, Kulik tiny at the centre; NO CRATER; on "pointing at the sky" the camera tilts up into the s01a opening frame (the loop) |
+| s14b | 60.66-65.40 | 14 | 3/4 aerial: the ring of fallen trees around bare trunks, Kulik tiny at the centre; NO CRATER; a 0.3 s whip-tilt on "ones," finishes before "pointing" and lands in the s01a opening framing; "pointing at the sky." plays over s01a's own lead-in (u < 0), so the last frame is s01a one frame before frame 0 (the loop). No caption during the wipe (render.py: `info['seam']`) |
 
 Hooks (SCRIPT.md map): 0 s bolide + flash; 4.8 s NO CRATER; 11.2 s the trader thrown; 20 s CLUE 1; 24 s outward arrows; 28 s CLUE 3 standing trunks; 32 s the big ?; 36 s the guesses; 41.4 s the burst 8 km up; 43.4 s IT NEVER HIT THE GROUND; 52.5 s the hairdryer; 61 s NO CRATER and the loop.
 
