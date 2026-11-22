@@ -82,3 +82,6 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - When the Director corrects something, fix it **and** add a rule.
 - Check the other branches and earlier sessions for channel conventions before calling a video final (the cover-as-first-3-frames rule was missing from the handoff).
 - PIL `GaussianBlur` on straight RGBA drags in black halos. Blur only the alpha.
+- Sheet reviews of many small assets plateau around 7: each fresh reviewer finds new nitpicks. Once a stage has not improved for 3 rounds, freeze it with notes and judge it in its real shots (G3). Give reviewers the fixed-upstream context (cast colours, style rules) up front, or they spend their points on it.
+- Judge a mechanism (a push, a shove, a drift) on a large 3-4 frame strip of the beat, or in the storyboard. On 180 px dense sheets the reviewers read 0.3-canvas moves as "static".
+- Check the review sheet itself before blaming the asset. A crop that cut off the seated legs, and an enlarged thumbnail that overlapped its neighbour, cost two rounds of "clipped" notes.

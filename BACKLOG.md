@@ -36,7 +36,12 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P3 Foreground occluder props near the camera (window frames, logs, railings) for the engine to depth-test against.
 
 ## characters (`characters/`, bean-head cast)
-- [ ] P1 Video 2 (`sailing-stones`): hat `antennae` (a headband with two springy green antenna balls, for the guide and his tourists) with an `antennae="droop"` state; a `seated="cooler"` pose; held props `gps_box`, `screwdriver`, `googly_eyes`, `mug`, `laptop`, `frying_pan`, `ticket`, `cash_fan`, `camera`, `flashlight`, `phone`, `selfie_stick`, `megaphone`, `flag`, `air_hockey_mallet`, `gary_rock`. Cast ids and colours are in `scripts/sailing-stones/build.py` (CAST).
+- [ ] P2 Video 2 wardrobe was frozen at ~7/10 after 8 review rounds (the ≥ 8 check moves to the storyboard and draft, G3). Open notes from the reviewers:
+  - Grips on chest-held two-hand props (phone, camera, laptop) still read as "pasted on". Try forearms drawn over the prop edge, or a mitten hand.
+  - The seated pose reads OK but stiff: knees could bend over the lid.
+  - Prop text (ADMIT 1, LIVE, ICE TOURS) is small at phone size.
+  - Night legs sink into navy: the engine rim light should fix this.
+  - The antenna droop has no spring compression.
 - [ ] P1 (for the engine) In `character()`:
   - `lid=` (0..1, with 0.5 = half-shut) so the engine can drop its blink overlay;
   - arm in-betweens (`arm_pose=('hang', 'point', 0.4)` or elbow/hand offsets) so gestures ease and overshoot;
@@ -51,7 +56,14 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - Stickman (`stickman/`) is **on hold**. Its open items (unreviewed hats/props/mouths, think-pose sliver, sleeve merge, head turn, toe-roll, run/sit) are in git history before 2026-11-21.
 
 ## fx (`fx/`)
-- [ ] P1 Video 2 (`sailing-stones`) new effects, same flat style: `ice_pane` (kw `stage`=water|freeze|panes|drift, `direction`, `view`=top|side: a pale cyan translucent sheet with white edge glints), `ice_crack` (white crack lines racing across the sheet), `sliding_rock` (a rock sprite sliding along `path` with a groove trail; `count`, `sprite`=rock|fridge, `path`='away' shrinks toward the horizon), `gps_ping` (expanding radar rings + a dot), `year_badge` (a UI tag in the top third: white Poppins Bold on a plum pill, kw `label`), `dust_storm` (a brown wall of dust rolling across, then settling), `flash_flood` (a brown wall of water, kw direction), `rain` (slanted streaks).
+- [ ] P1 Video 2 fx frozen at ~5.8/10 after 3 rounds (6.2, 5.8, 5.8) on 180 px dense sheets. All 9 fx exist, are registered in CATALOG and `sfx_x.py`, and pass `catalog.py`. Judge them next in the storyboard; the reviewers' open notes:
+  - **Mechanism (`ice_pane stage=drift`):**
+    - top view: the push contact must read in one glance. Use a bigger pane travel, an impact star on contact, and wind as 3-4 plum-outlined streak arrows (now white dashes).
+    - side view: reads as near-static at tile size. Use a bigger shove, a pane tilt-back anticipation, and a rock jolt.
+  - **`sliding_rock path='away'`:** the crowd reads as mushrooms or stalks; try a flat groove with pebble ridges and no vertical stem.
+  - **`dust_storm` / `flash_flood`:** the full cover holds ~40% of the life; cut it to ~15%. The flood body is a flat slab: add moving foam and debris, and a camp item bobbing for the gag.
+  - **Stage chaining:** `ice_pane` water, freeze and panes end on a full sheet before their 8% fade, by design. The engine should chain the stages in one framing (fade only the last).
+  - **Style:** thin lines (rain, crack edges, rink lines) want plum ink weight.
 - [ ] P2 Polish from the cast review and review round 4:
   - glow_eyes: scale in from a slit, about 70% smaller, below the brows;
   - anger_vein and question_mark: ease the exit over 2-3 more frames;
@@ -68,6 +80,20 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 - [ ] P3 `path_line`: a thicker "actual" stroke and a longer hold on the kink.
 
 ## engine (`engine/`)
+- [ ] P1 Video 2 asset wiring (`claude/area-assets`):
+  - **Character kwargs:** `hat='antennae'` with `antennae='up'|'droop'|0..1` (ease 0→1 on "Fine. It's ice.") and `antennae_sway` (deg, spring wobble on hops); `seated='cooler'` (draws its own cooler) or `'bare'` (place the `cooler` sprite yourself; the seat top is `bean.seat_top(build)`).
+  - **Held props** use arm pose `'hold'`. `('hold', 'hold')` with a one-hand prop puts it in the right hand.
+  - **Sprites** (`characters/scripts/sprites.py`, `sprite(name, t, k)`, anchor in `im.info['anchor']`, `k` = the character card scale):
+    - `gary_rock` (`eyes='askew'`), `gary_buried`, `gps_box`, `cooler`, `cooler_trophy`;
+    - `tent`, `tent_floating` (t bobs);
+    - `timelapse_cam`;
+    - `tour_sign` and `tour_sign_free` (t 0..1: shudder, crack, topple);
+    - `flying_bills` (t, gone by 0.9);
+    - `banner`, `livestream_counter`, `price_card`;
+    - `fridge_silhouette` and `phone_silhouette`.
+    - The `shots.json` prop strings (with notes in parentheses) are parsed as-is.
+  - **FX coordinates:** `sliding_rock` `path` points are canvas fractions (0..1 of the fx square), so convert from frame fractions. `dust_storm`, `flash_flood` and `rain` are full-frame (`size` = the frame width, centred).
+  - **`air_hockey_overlay`** is a new fx (silent).
 - [ ] P1 Video 2 (`sailing-stones`): a per-shot `grade: "sepia"` for flashbacks (shots s10-s11), and the `seated` character placement (s29).
 - [ ] P1 Play fly-through clips (image sequences) as shots or transitions, with directional motion blur, plus fast punch-ins and whip pans with blur, so the picture changes every ≤ 1.5 s.
 - [ ] P1 Grade: a vignette to a corner/centre ratio of about 0.80, plus split toning (warm highlights R-B ≈ +0.08, neutral or cool shadows). Today ours has no vignette and an inverted split (`references/reports/replication_playbook_2026-11.md` §3A).
