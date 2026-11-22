@@ -23,7 +23,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
     - plates: playa 6.9, inserts 7.4 (dense text);
     - a few static spans.
   - Not done: the Director's listen to the 1.24x voice stretch.
-- **Video 3 (decided 2026-11-22): our usual true-story content (topic M2, "The Glacier That Bleeds", picked by the Director) in a NEW LOOK: neon white stickmen with glow auras and labels on a dark 2D background**, the animation style of reference short xBqCZDzFmog (style only, never its content). Brief: `scripts/blood-falls/BRIEF.md`. The stickman is off hold for this video.
+- **Video 3 (decided 2026-11-22): our usual true-story content (topic M2, "The Glacier That Bleeds", picked by the Director) in a NEW LOOK: neon white stickmen with glow auras and labels on a dark 2D background**, the animation style of reference short xBqCZDzFmog (style only, never its content). Brief: `scripts/blood-falls/BRIEF.md`. The stickman is off hold for this video. **No comedy in video 3** (the Director, 2026-11-22): a serious mystery tone.
 - **All crew sessions are archived.** No scheduled tasks are active (the one-time 13:00 restart fired and disabled itself; the nightly 1st AD task stays disabled).
 - **Next video:** start at `PIPELINE.md` › Stage gates, with fresh sessions. It must apply, from the start:
   - the leaders' story engine (`QA.md` › scripts; `references/reports/retention_2026-11.md` §8);

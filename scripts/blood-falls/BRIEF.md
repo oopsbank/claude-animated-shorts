@@ -12,5 +12,8 @@ Take only the **animation style** of reference short xBqCZDzFmog (@MindsetEvolvi
 
 ## What stays: our channel's content and rules
 - A surprising **true** story, explained: topic M2 in `scripts/TOPICS.md`, "The Glacier That Bleeds" (Blood Falls, Taylor Glacier, Antarctica; found in 1911), score 9. Chosen by the Director.
-- Voice-over narrator, 225-240 words, 62-66 s, the leaders' story engine (`QA.md` › scripts), facts sourced and >= 9, ABSURD comedy, "sentence" captions, a picture change every <= 1.5 s, a mid-action hook, an ending on a gag or a loop.
+- Voice-over narrator, 225-240 words, 62-66 s, the leaders' story engine (`QA.md` › scripts), facts sourced and >= 9, **NO comedy** (the Director, 2026-11-22: "bỏ hài đi"; a serious, gripping mystery tone; no gags, jokes or absurd cutaways), "sentence" captions, a picture change every <= 1.5 s, a mid-action hook, an ending on a gag or a loop.
 - Original title, checked against `references/titles.md`.
+
+## Tone (the Director, 2026-11-22)
+- **No comedy in this video.** The tension comes from the mystery: the wrong explanation, the clues, the reveal. The script panel drops the comedy reviewer; the 3 engagement reviewers and the fact checker stay (pass: median >= 8 of the 4 scores, no swipe before 50 s, facts >= 9).
