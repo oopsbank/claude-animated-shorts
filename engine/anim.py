@@ -350,6 +350,7 @@ class Camera:
         sw = (span['w0'], span['w1'])
         c = self.c
         fx, fy = c.get('focus', (0.5, 0.48))
+        fx, fy = float(c.get('x', fx)), float(c.get('y', fy))      # an explicit base x/y wins over the auto focus
         self.base = {'zoom': float(c.get('zoom', 1.0)), 'x': fx, 'y': fy, 'roll': float(c.get('roll', 0.0))}
         n = max(1, self.f1 - self.f0)
         mv = c.get('move', 'push_in')

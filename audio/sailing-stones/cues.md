@@ -47,7 +47,7 @@ bed = music + sfx. margin = voice - bed (integrated). speech median / p10 = 400 
 | body 11.0 | 10.97-35.97 | -14.7 | -24.7 | -38.1 | -24.5 | 9.8 | 10.0 | 6.5 |
 | mystery 36.0 | 35.97-41.13 | -14.0 | -24.6 | -32.8 | -24.2 | 10.2 | 10.2 | 6.1 |
 | body 41.1 | 41.13-49.93 | -14.1 | -24.1 | -39.4 | -23.9 | 9.9 | 9.8 | 6.2 |
-| explain 49.9 | 49.93-54.99 | -14.5 | -24.2 | -37.8 | -24.0 | 9.5 | 9.8 | 7.4 |
+| explain 49.9 | 49.93-54.99 | -14.5 | -24.2 | -37.8 | -24.0 | 9.5 | 9.7 | 7.3 |
 | body 55.0 | 54.99-59.61 | -14.1 | -24.1 | -38.3 | -23.9 | 9.8 | 9.9 | 7.7 |
 | payoff 59.6 | 59.61-65.70 | -14.5 | -26.2 | -43.0 | -26.1 | 11.6 | 13.6 | 9.0 |
 
@@ -74,7 +74,7 @@ level = target LU vs the voice stem (max momentary of the event). Beds are integ
 
 | # | time s | frame | cue | sound | why | level LU | pan |
 |---|---|---|---|---|---|---|---|
-| 1 | 1.043 | 31.3 | gps_ping | tracker ping: sonar blip + echo | fx gps_ping (s01 word 4) | -16 | -0.10 |
+| 1 | 1.043 | 31.3 | gps_ping | tracker ping: sonar blip + echo | fx gps_ping (s01 word 4) | -16 | -0.17 |
 | 2 | 4.848 | 145.4 | sparkle | glock sparkle run | fx sparkle (s02 word 4) | -15 | -0.12 |
 | 3 | 10.516 | 315.5 | question_mark | rising two-note pizzicato 'hmm?' | fx question_mark (s04 word 7) | -16 | +0.00 |
 | 4 | 12.787 | 383.6 | year_badge | title card pop: paper flick + thump | fx year_badge (s06 word 0) | -16 | +0.00 |
@@ -97,7 +97,7 @@ level = target LU vs the voice stem (max momentary of the event). Beds are integ
 | 21 | 42.341 | 1270.2 | ice_crack | thin ice crackling, dispersive 'pew' cracks | fx ice_crack (s15 word 5) | -14 | +0.00 |
 | 22 | 46.227 | 1386.8 | whoosh | transition whoosh | fx whoosh (s16 word 1) | -17 | +0.00 |
 | 23 | 49.614 | 1488.4 | ka_ching | cash register ka-ching | price beat: Fifty bucks (the biggest) (word 173 'bucks!"') | -11 | +0.00 |
-| 24 | 51.735 | 1552.0 | pane_push_top | engine s17 mechanism: the wind shoves a pane into a rock (same grind as ice_pane) | fx pane_push_top (s17 word 8) | -15 | +0.00 |
+| 24 | 50.293 | 1508.8 | pane_push_top | engine s17 mechanism: the wind shoves a pane into a rock (same grind as ice_pane) | fx pane_push_top (s17 word 2) | -15 | +0.00 |
 | 25 | 51.735 | 1552.0 | ice_pane | ice pane grinding / shoving | huge panes (one pane, not two over the rock) (word 182 'panes;') | -16 | +0.00 |
 | 26 | 55.146 | 1654.4 | live_flurry | a flurry of livestream notification chimes | the counter shoots up to 1.2M (word 195 'livestream') | -16 | +0.00 |
 | 27 | 58.373 | 1751.2 | sign_crash | wooden sign splitting and slapping flat | Gary goes straight through the NIGHT ONLY sign (word 207 'through') | -15 | +0.00 |

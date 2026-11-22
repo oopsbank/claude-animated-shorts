@@ -23,6 +23,15 @@
     "move": "glide",
     "glides": [
      {
+      "at_word": 2,
+      "to": {
+       "zoom": 2.0,
+       "x": 0.35,
+       "y": 0.6
+      },
+      "dur": 30
+     },
+     {
       "at_word": 6,
       "to": {
        "zoom": 1.25,
@@ -38,9 +47,9 @@
       "dur": 10
      }
     ],
-    "zoom": 1.7,
-    "x": 0.4,
-    "y": 0.66
+    "zoom": 2.4,
+    "x": 0.34,
+    "y": 0.6
    },
    "note": "Opens on an extreme close-up of hands pushing the GPS box into a hollowed rock (zoom 1.9); pull-out to the cousins at \"fifteen\", to the camp and the rock row at \"waited\". Matches the last shot for the loop.",
    "characters": [
@@ -59,6 +68,7 @@
       },
       {
        "expr": "smug",
+       "prop": null,
        "at_word": 6,
        "arm_pose": [
         "hip",
@@ -67,6 +77,7 @@
       },
       {
        "expr": "grin",
+       "lean": -6,
        "at_word": 14,
        "arm_pose": [
         "hip",
@@ -118,9 +129,9 @@
    "fx": [
     {
      "name": "gps_ping",
-     "x": 0.42,
-     "y": 0.74,
-     "size": 0.45,
+     "x": 0.355,
+     "y": 0.57,
+     "size": 0.3,
      "at_word": 4
     },
     {
@@ -1336,12 +1347,10 @@
       }
      ],
      "blink": true,
-     "enter_at_word": 9,
-     "exit_at_word": 12,
+     "enter_at_word": 5,
      "insert": {
       "cam": "playa_med",
-      "at_word": 9,
-      "until_word": 12
+      "at_word": 5
      },
      "build": "adult",
      "skin": "#f1c9a5",
@@ -1365,12 +1374,10 @@
       }
      ],
      "blink": true,
-     "enter_at_word": 9,
-     "exit_at_word": 12,
+     "enter_at_word": 5,
      "insert": {
       "cam": "playa_med",
-      "at_word": 9,
-      "until_word": 12
+      "at_word": 5
      },
      "build": "stout",
      "skin": "#8d5a3b",
@@ -1775,7 +1782,7 @@
      "x": 0.5,
      "y": 0.42,
      "size": 1.0,
-     "at_word": 8
+     "at_word": 2
     }
    ],
    "props": [
