@@ -1,0 +1,33 @@
+{
+ "ground_y": 1557.3,
+ "px_per_m": 236.71,
+ "horizon_y": -1.0,
+ "light_dir": "top",
+ "tint": "#a9b0e6",
+ "stand_x": 0.5,
+ "ground_x": 540.0,
+ "set": "playa",
+ "cam": "playa_top",
+ "light": "night",
+ "view": "top",
+ "targets": {
+  "rock": [
+   540.0,
+   1582.2
+  ]
+ },
+ "note": "top-down: rock near the bottom, trail running up; px_per_m along the ground",
+ "depth": {
+  "file": "playa__playa_top__depth.png",
+  "near": 0.3,
+  "far": 400.0,
+  "kind": "distance",
+  "encoding": "srgb",
+  "f_px": 1866.67,
+  "ride_dir": [
+   0.0,
+   0.0,
+   -1.0
+  ]
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "ground_y": 1060.9,
+ "px_per_m": 138.03,
+ "horizon_y": 881.9,
+ "light_dir": "right",
+ "tint": "#eaf4ff",
+ "stand_x": 0.457,
+ "ground_x": 493.0,
+ "set": "playa",
+ "cam": "playa_wide",
+ "light": "frost",
+ "targets": {
+  "rock": [
+   363.6,
+   1308.5
+  ],
+  "camp_rocks": [
+   828.3,
+   964.3
+  ]
+ },
+ "note": "depth-layered: hero rock + trail near, camp mid, mountains far",
+ "depth": {
+  "file": "playa__playa_wide__depth.png",
+  "near": 0.3,
+  "far": 400.0,
+  "kind": "distance",
+  "encoding": "srgb",
+  "f_px": 1386.67,
+  "ride_dir": [
+   -0.0,
+   0.0562,
+   -0.9984
+  ]
+ }
+}
