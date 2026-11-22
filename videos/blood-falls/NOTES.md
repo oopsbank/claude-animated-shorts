@@ -52,17 +52,29 @@ Hooks (SCRIPT.md map): 0 s bleeding glacier; 13.5 s "yet the red kept coming" pu
 - **s11b:** the cracks spread out from his boots (draw-on), the glow pulses, the counter rolls up.
 
 ## Review (stills only; one fresh sonnet reviewer per round, 540x960)
-REVIEW_TABLE
+| Round | richness / readability / composition | per shot (s01 … s16b) | Overall | Changes before it |
+|---|---|---|---|---|
+| 1 | 7.5 / 7 / 7 | 8 8 8 6 8 8 7 8 7 7 7 8 7 7 6 8 7 7 8 | 7.3 | first full set |
+| 2 | 8 / 7 / 7 | 8 7 8 7 9 8 7 8 8 7 8 8 8 8 8 7 8 8 7 | 7.7 | role labels as caption avoid boxes; s09 lens up; s11a plane/tag off the title; s12-s13 light shafts and bubbles; s14b window, shelf, lamp; s16a floor, rays; s16b badge moved, lighter sepia |
+| 3 | 8 / 7 / 7 | 8 8 8 7 8 8 7 8 7 7 8 7 8 7 7 8 8 8 8 | 7.6 | torsos are hard caption limits (unless no band is free); s04 label over the bubble tail; s02 geologist inward; s11b scientist smaller and off centre; s15 chip moved up |
+| 4 | 8 / 8 / 7 | 8 8 8 8 8 8 7 8 7 8 8 8 8 7 7 8 8 8 8 | **7.8** | s04 smaller bubble; s14a scientist inward; s12 brine glow |
+
+**Result: 7.8, under the 8 target.** I stopped after R4, the best round so far: Claude usage is near the weekly limit, and the fix lists now repeat or misread (R3 and R4 credit captions and props to the wrong shot ids, e.g. "isn't red" under s10, the nail under s13). The weakest stills are s07, s09, s13 and s14a (7). The final render uses the R4 code.
 
 ## Motion QA (`flat2d/motion_qa.py`)
-MOTION_QA
+Run on the 1965 rendered frames: `motion_qa.py FRAMES 4.729 10.186 14.664 18.199 20.982 24.416 26.574 32.703 36.586 39.19 43.058 45.0 48.138 51.282 55.221 56.847 58.977 62.513 --impacts 54.59 60.73` → **PASS**:
+- frozen frames: none (the minimum consecutive-frame diff is 0.41; the longest frozen span is 0 s);
+- pops: none outside the cuts and the two designed beats (the s14a "rusts" flash + shake at 54.59 s, the s16a iris dive at 60.73 s).
+- `motion_qa.py` change: the cut window is now −1..+6 frames, because render.py's cut punch-in settles over 6 frames. With ±1, the settle frames 2-4 after each cut were flagged as pops.
+- Characters in holds: every actor goes through `anim.actor`, so breath, blinks and `secondary` (head drift, lean, shoulder rise, beats on speech) run on every frame. The acting itself is the Director's call on the preview.
 
 ## Sound
 Serious mystery tone, no comedy stings (no boing, ka-ching or pizzicato "hmm?"): `mystery` (sus pad, ticking glock, no drums) for the setup and the hidden sea, `explain` (vibes arpeggio) for the clues and the rust reveal, `payoff` for the punchline, `mystery` again into a loop end (a riser into the last frame, no sting). New ambience beds in `audio/lib/sfx_x.py`: `polar` (wind and a low howl, no birds) and `under` (muffled rumble with sparse low bubbles); the lab uses the room tone. SFX: title and stamp impacts, ice cracks (frost, stamp crack, cracks under the boots, the brine squeezing out), card pops on the CLUE badges, sonar pings on the scan and the pool, risers into "what is?" and "escapes", sparkles on the microbes and "clear", a pop on the algae bubble, a whoosh on the iris dive.
 Mix: −14.05 LUFS integrated, −1.20 dBTP, voice 10.3-13.3 LU over the bed per section; 1965 frames = 65.50 s (`length.json`). With the 0.1 s cover the posted cut is **65.6 s** (62-66 s rule).
 
 ## Final cut
-FINAL
+- `videos/blood-falls/blood-falls_captions_cover_1080x1920.mp4`: 1080x1920, 30 fps, 1968 frames (3 cover frames + 1965), **65.61 s**, AAC 192k. It is 98 MB, so it is **not committed** (the limit is 50 MB). It exists only in this session's container. To rebuild it, render with `flat2d/render.py ... --size 1080x1920` (~45 min on 4 cores), mux `audio/blood-falls/mix.wav`, then run `tools/add_cover.sh <video> videos/blood-falls/thumbnail.png <out>`.
+- `thumbnail.png`: a caption-free s02 frame (t = 8.9 s, zoom 1.15) with THIS GLACIER / IS BLEEDING (red) / SINCE 1911 (yellow).
 
 ## Publishing text (not posted)
 **Title:** This Glacier Has Been "Bleeding" Since 1911 🩸 #shorts
@@ -78,4 +90,8 @@ Sources: Mikucki et al. 2009 (Science); Badgeley et al. 2017 (Journal of Glaciol
 This Antarctic glacier has "bled" red since 1911. It's not algae and it's not blood: it's a million-year-old sealed sea of iron-rich brine that rusts the moment it meets air. 🩸🧊 #bloodfalls #antarctica #science
 
 ## Open notes
-OPEN
+- **Stills plateaued at 7.8** (target 8). For a further pass, the reviewers keep naming these: s07 (lab clutter around the "?"), s09 and s14a (the lower third is sparse snow; the outlet set is thin), s13 (the dark pool is plain). The caption collisions are now solved by `place_band`.
+- **Acting and feel are the Director's call** on `tests/preview_full_540.mp4`. Two things to watch: the secondary-action amplitude (`anim.secondary`, amt=1.0), and whether the speech beats on every 5+-letter word read as busy.
+- **Loop:** s16b ends on the s01 set at s01's opening camera, but the geologist is standing and pointing while s01 opens with him walking in, so the restart has a pose jump.
+- **Render cost:** ~5 s per frame per process at 1080, because of the per-frame stickman cards from the idle motion; the full render took ~45 min on 4 cores. Caching cards on quantised idle angles would cut this.
+- The new ambience beds (`polar`, `under`) are in `audio/lib/sfx_x.py` BEDS; other polar videos can use them.

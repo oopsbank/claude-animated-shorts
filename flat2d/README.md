@@ -35,3 +35,18 @@ Pillow + numpy helpers for 1080x1920 "rich flat 2D" scenes (the Director's look 
 - Stand-in timings: `scripts/blood-falls/stand_in_words.py` turns SCRIPT.md into `words.json` at 3.7 words/s (no voice yet).
 
 Rules kept: blur masks only, never straight RGBA (LESSONS); glow sits behind characters, never on faces (DRAWING_RULES 19); captions follow PIPELINE › Captions.
+
+## v4 (full blood-falls video)
+- `blood_falls_2.py` holds s07-s16 and the `SHOT_LIST` [(shot, line, first word)]. It splits lines across shots (s11a/b, s14a/b, s16a/b), and `END` fixes the film length (1965 frames).
+- `anim.secondary` adds secondary action in holds on every `actor`:
+  - the head leads, and the lean follows 0.35 s later;
+  - the shoulders rise with the breath;
+  - the forearms beat on stressed voice-over words (`anim.BEATS`, global time `anim.NOW`, both set by render.py).
+- `render.place_band` sets the caption baseline per shot:
+  - faces and role labels are always avoided;
+  - torsos are avoided unless no band within ±15% is free, and legs cost extra;
+  - info['avoid'] boxes are kept clear;
+  - the width is the widest caption of the shot.
+- render.py tags words.json with the SCRIPT.md line of each word when tts.py left none.
+- `stills.py WORDS OUTDIR`: one captioned still per shot (at `STILL_AT` or 0.7 of the shot) plus a sheet, as input for the review gate.
+- `motion_qa.py`: the cut window is −1..+6 frames (the cut punch-in settle), `--impacts` lists designed beats, and it prints a PASS/FAIL line.

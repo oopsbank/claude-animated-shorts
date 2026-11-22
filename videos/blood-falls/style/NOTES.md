@@ -124,3 +124,6 @@ New shots designed for the test:
 - **The reviewers contradict each other and misread the strips.** R2 saw "no anticipation" in a 0.3 s wind-up; R3 said NO ALGAE was "not visible" when it showed for 0.37 s (it now shows from +0.48 s). R4 wants the stamp "to stay large until the cut" while R3 wanted it faded. This matches the ±1 noise in LESSONS. Judge the mp4 itself; a human pass is needed.
 - **s11a:** the pool should pulse and the channel should show rising flow; in motion, `t` already drives the scan line, the plane and the motes. **s11b:** the reviewers want the caption off his torso, and the crack spread should be animated.
 - **Render cost:** ~3 s per frame at full size, so ~10 min per 24 s test on 4 procs. Frames are cached per shot only through the cards.
+
+## v4: full video (claude/area-flat2d-v5, 2026-11-22)
+All shots s01-s16 (s11, s14 and s16 split in two) were built on the real voice. The v3 open notes are fixed: secondary action at the rig, captions kept off torsos, the s11a pool pulse and rising flow, and the s11b crack spread. Stills review: 7.3 → 7.7 → 7.6 → 7.8, stopped at 7.8 (target 8; Claude usage limit). `motion_qa`: PASS. See `videos/blood-falls/NOTES.md`.
