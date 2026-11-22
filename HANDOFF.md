@@ -27,7 +27,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
   - Sound: done (65.7 s, 1,390 characters, review 8.0; merged). The voice was sped up 1.24x, so the Director should listen (`videos/sailing-stones/preview_*.mp3`).
   - Assets `session_01CUE843yWqYSyTQCUwPyKUW` (characters/props/fx, `claude/area-assets`) is running.
   - Next: the engine P1s and wiring the new props/fx, then the render (G5).
-  - **Daily 01:00 restart** (Asia/Ho_Chi_Minh, `trig_01AyDYT1m754M2mKKN89QVQC`, the Director asked for it): it wakes stalled crew sessions with their full instructions. The one-shot 01:30 wake-up on 2026-11-22 has already fired. Delete the daily task when the Director no longer wants it.
+  - **One-time restart at 13:00 on 2026-11-22** (Asia/Ho_Chi_Minh, `trig_01AyDYT1m754M2mKKN89QVQC`, the Director asked for exactly one): it wakes stalled crew sessions with their full instructions, then disables itself. The 01:30 wake-up has already fired. No other scheduled tasks.
 - **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session. It must apply, from the start:
   - the leaders' story engine (`QA.md` › scripts; `references/reports/retention_2026-11.md` §8);
   - a picture change every ≤ 1.5 s and a mid-action hook (preflight warns);
