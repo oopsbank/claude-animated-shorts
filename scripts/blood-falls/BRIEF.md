@@ -17,3 +17,7 @@ Take only the **animation style** of reference short xBqCZDzFmog (@MindsetEvolvi
 
 ## Tone (the Director, 2026-11-22)
 - **No comedy in this video.** The tension comes from the mystery: the wrong explanation, the clues, the reveal. The script panel drops the comedy reviewer; the 3 engagement reviewers stay (pass: median >= 8, no swipe before 50 s); no facts score.
+
+## Look level (the Director, 2026-11-22)
+- First flat mocks were "too plain" (đơn sơ quá). The Director chose **richer 2D** (option 2) over 3D Blender backgrounds: layered depth with haze, gradients and texture, faceted light/shadow planes, scene lighting and glow, rim light on characters, contact shadows, particles (snow), vignette, more props and detail. Still flat-2D in feel.
+- Starting point: `videos/blood-falls/mock/rich_A_v0.png` (and its script). It is better than the flat mock but still basic: the bar is a style frame that a fresh reviewer scores >= 8 on richness/appeal at phone size.
