@@ -24,6 +24,11 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - A `props` entry can be a dict now: every reader of `props` must skip non-strings (`p.startswith` crashed on dicts).
 - Environment fx (storm, flood, rain, ice) need a `dur` that fits the beat: a storm that lasts to the end of the shot still covers the "Gary" punch-in.
 - UI cards over a zoomed or rolled camera go in screen space (`"screen": true`), or the zoom crops them.
+- A storyboard with one frame per shot hides every shot that changes: show an opening frame for shots with glides, keep the key pick off a cut-in, and never pick the same cut-in twice (s14 showed one moment three times and reviewers scored it as three duplicates).
+- A cut-in must hide the main shot's fx (the s14 ice fx covered the sleeping-cousins cut-in).
+- A mechanism drawn by an fx with its own built-in rock can't push the story's rock: move the fx canvas along the rock's path (`move`), switch its rock off, and draw the hero rock over it (props layer `top`).
+- `audio/build_mix.py` needs scipy, which the venv lacked: `uv pip install --python .venv/bin/python scipy`.
+- Storyboard reviews plateau around 7.4 ±0.3 when the remaining notes are frozen assets (fx at 5.8, frost plates, dense inserts): report them to the Producer after round 3 instead of polishing around them.
 
 ## Sets (Blender look)
 - Photo-scanned models clash with 2D characters. Use stylised flat-colour packs (Quaternius, KayKit), scaled to real metres (a Quaternius barrel is 0.2 units).
