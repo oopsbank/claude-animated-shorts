@@ -988,6 +988,7 @@
    "set": "inserts",
    "cam": "alien_cam",
    "light": "day",
+   "plate": "inserts__alien_cam__day__rock_racing_league.png",
    "size": "medium",
    "grammar": [
     "pov"
@@ -1353,6 +1354,7 @@
    "set": "inserts",
    "cam": "alien_cam",
    "light": "day",
+   "plate": "inserts__alien_cam__day__alien_air_hockey_final.png",
    "size": "medium",
    "grammar": [
     "pov",

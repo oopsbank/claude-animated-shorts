@@ -97,7 +97,7 @@ SHOTS = [
       characters=[C('kip', 0.40, [B('They', arm=('hold', 'hold'), prop='frying_pan', expr='stern')], seated='cooler'), C('lou', 0.62, [B('They', arm=('hold', 'hold'), prop='gps_box', expr='pained')], seated='cooler')],
       fx=[F('splash', 'paddle', 0.5, 0.85)], props=['cooler', 'flood_water', 'gary_rock']),
  dict(text="\"Alien rock-racing league!\" he yells. \"Forty bucks.\"",
-      set='inserts', cam='alien_cam', light='day', size='medium', grammar=['pov'], camera=dict(move='push_in', amount=0.1),
+      set='inserts', cam='alien_cam', light='day', plate='inserts__alien_cam__day__rock_racing_league.png', size='medium', grammar=['pov'], camera=dict(move='push_in', amount=0.1),
       note='FANTASY CUTAWAY (thought bubble + ALIEN CAM filter): a stadium of cheering aliens, rocks in tiny racing helmets and numbered bibs crossing a finish line; price card $40; his real antennae poke into the bubble edge.',
       characters=[], fx=[F('speed_lines', 'rock-racing', 0.5, 0.55), F('sparkle', 'Forty', 0.8, 0.2)], props=['fantasy:rock_racing_league', 'price_card:$40']),
  # --- STAGE 3: year two (he livestreams their failure)
@@ -120,7 +120,7 @@ SHOTS = [
       props=['ice_sheet', dict(name='gary_rock', x=0.5, y=0.7, word='Gary', dur=2.0, path=[(0.48, 0.71), (0.56, 0.67)])]),
  # --- THE COLLISION: his fantasy vs the real thing (mechanism + the one analogy)
  dict(text="\"Alien air-hockey final!\" cries the guide. \"The referee's a rock! Fifty bucks!\"",
-      set='inserts', cam='alien_cam', light='day', size='medium', grammar=['pov', 'dutch'], camera=glide(G("referee's", 6, zoom=1.3, x=0.35, roll=-6), G('Fifty', 6, zoom=1.15, x=0.7, roll=-6), roll=-6),
+      set='inserts', cam='alien_cam', light='day', plate='inserts__alien_cam__day__alien_air_hockey_final.png', size='medium', grammar=['pov', 'dutch'], camera=glide(G("referee's", 6, zoom=1.3, x=0.35, roll=-6), G('Fifty', 6, zoom=1.15, x=0.7, roll=-6), roll=-6),
       note='FANTASY CUTAWAY (thought bubble + ALIEN CAM filter): a neon alien air-hockey championship, a referee that is itself a rock (with a whistle and a striped shirt), a boulder as the puck, a scoreboard; price card $50.',
       characters=[], fx=[F('whoosh', 'air-hockey', 0.5, 0.5, angle=0), F('sparkle', 'Fifty', 0.8, 0.2)], props=['fantasy:alien_air_hockey_final', 'price_card:$50']),
  dict(text="The sun breaks the phone-thin ice into huge panes; a light breeze shoves them into rocks.",
