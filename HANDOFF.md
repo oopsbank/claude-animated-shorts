@@ -49,6 +49,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
   1. Screenwriter (G1-G2);
   2. Sound, plus a set or asset only if needed;
   3. Animator (G5).
+- **Judging (2026-11-22, `QA.md` › How visuals are judged): LLM reviewers score stills only (≥ 8); motion is checked automatically (PASS/FAIL); acting and feel are the Director's call on a low-res motion test.**
 - **The standard for every visual stage is an overall score ≥ 8/10 (scripts exempt)** (`QA.md`): iterate with fresh reviewers until every criterion passes, with no round cap, and report every 3 rounds. To save usage, review cheap previews (low-res stills, storyboards, crops) before expensive renders.
 - Crew sessions push to `claude/area-<area>`. The Producer merges into the integration branch `claude/busy-maxwell-tkdir9`, keeping both sides of LESSONS/BACKLOG conflicts.
 - Messages sent to a rate-limited session are lost. After a reset, resend the full instructions, not "continue".

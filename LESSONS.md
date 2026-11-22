@@ -125,3 +125,4 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Acting scores 6 when arms swap poses in one frame and faces are small at phone size. Fix `character()` in-betweens and bigger poses before the next video's render.
 - Thumbnail: zoom onto the character so the action fills the middle; a wide frame leaves the bottom half empty and puts the headline over the sign.
 - Times like "1h" are ambiguous (01:00 vs 13:00): confirm with the Director, and default to a one-shot task unless they say "every day".
+- LLM reviewers score motion and acting from stills at ~6 whatever the animation does, and contradict each other round to round (blood-falls motion test: 4 rounds stuck at 6.5). Don't loop on it: check motion automatically and let the Director judge acting on a low-res mp4.

@@ -8,6 +8,18 @@ Every task ends with these checks: first the automatic checks, then your own loo
 - Report progress to the Producer every 3 rounds, so the Director can step in.
 - Reviewers never see earlier drafts or the target score.
 
+## How visuals are judged (the Director, 2026-11-22)
+LLM reviewers only see stills, so they guess at motion and contradict each other (±1, misread strips). Split the judging by what each judge can actually see:
+
+| Part | Judge | Pass |
+|---|---|---|
+| Richness, readability, composition (per still frame / contact sheet) | fresh LLM reviewer (sonnet) | overall ≥ 8 |
+| Motion | automatic checks (`flat2d/motion_qa.py`, `engine/qa.py`) | PASS/FAIL: no frozen span > 0.4 s, no pops except cuts/impacts, every on-screen character moves during holds (breath, blink, secondary action) |
+| Acting and overall feel | **the Director**, on a low-res motion test | the Director's OK or notes |
+
+- Never ask an LLM reviewer to score motion or acting from stills.
+- After posting, retention data is the real judge.
+
 ## Reviewer protocol
 Spawn a fresh agent. Give it:
 - 1-4 preview images, plus zoomed crops of the risky areas: joints, crossings, edges and faces.
