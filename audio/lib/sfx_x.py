@@ -410,6 +410,6 @@ GEN = {
     "live_flurry": (live_flurry, -14, "a flurry of livestream notification chimes"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
-SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line"}
+SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
         "room": amb_room}

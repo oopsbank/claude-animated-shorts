@@ -186,6 +186,11 @@ Slanted rain streaks fall with splash ticks at the bottom. The rain builds up, p
 
 ![rain](previews/rain.png)
 
+### `air_hockey_overlay`
+The fantasy's neon rink flickers over the real ice: rink border, centre line and circle, goal creases and a puck. It stutters on, buzzes once, then glitches off. It is silent in `audio/lib/sfx_x.py`. Kwargs: color, color2, aspect (rink height/width, default 0.6).
+
+![air_hockey_overlay](previews/air_hockey_overlay.png)
+
 These effects next to bean characters:
 
 ![with cast](previews/with_cast_bike.png)
