@@ -4,15 +4,15 @@
 
 - [x] **no black spans >= 12 f**: PASS []
 - [x] **no white spans >= 12 f**: PASS []
-- [x] **no frozen spans >= 12 f**: PASS [] (median frame diff 1.05 grey levels)
+- [x] **no frozen spans >= 12 f**: PASS [] (median frame diff 1.09 grey levels)
 - [x] **no character clipped at the frame edge**: PASS 0 frames; first: []
 - [x] **feet on the ground line (+-4 px)**: PASS 0 frames; worst: []
 - [x] **planted feet move <= 2 px**: PASS 0 frames; first: []
-- [x] **beats land 0-3 f before their word**: PASS 23 beats; off: []
+- [x] **beats land 0-3 f before their word**: PASS 26 beats; off: []
 - [x] **captions land 0-2 f before their word**: PASS 146 captions; off: []
 - [x] **no caption during silences > 0.4 s**: PASS 0 frames; first: []
 - [x] **captions never cover a face**: PASS 0 frames; first: []
-- [i] frame stats (reference targets, warning only): 9/66 sampled frames pass
+- [i] frame stats (reference targets, warning only): 10/66 sampled frames pass
 - [x] **mp4 is 1080x1920, 30 fps, frame count matches**: PASS {'width': 1080, 'height': 1920, 'r_frame_rate': '30/1', 'nb_frames': '1971'}
 
 ## Frame stats (1 per second)
@@ -23,11 +23,11 @@ f_00060.jpg lum=0.52 p98=0.82 sat=0.58 cool=0.29 edge=0.06 FAIL p98,sat
 f_00090.jpg lum=0.51 p98=0.84 sat=0.58 cool=0.41 edge=0.05 FAIL p98,sat,cool
 f_00120.jpg lum=0.54 p98=0.88 sat=0.54 cool=0.43 edge=0.03 FAIL sat,cool,edge
 f_00150.jpg lum=0.51 p98=0.85 sat=0.54 cool=0.37 edge=0.04 FAIL p98,sat,cool,edge
-f_00180.jpg lum=0.54 p98=0.88 sat=0.51 cool=0.37 edge=0.04 FAIL sat,cool
-f_00210.jpg lum=0.51 p98=0.87 sat=0.51 cool=0.41 edge=0.05 FAIL sat,cool
-f_00240.jpg lum=0.50 p98=0.87 sat=0.51 cool=0.42 edge=0.05 FAIL sat,cool
-f_00270.jpg lum=0.52 p98=0.88 sat=0.43 cool=0.07 edge=0.02 FAIL edge
-f_00300.jpg lum=0.51 p98=0.87 sat=0.43 cool=0.04 edge=0.02 FAIL edge
+f_00180.jpg lum=0.53 p98=0.86 sat=0.50 cool=0.39 edge=0.04 FAIL cool
+f_00210.jpg lum=0.51 p98=0.87 sat=0.50 cool=0.42 edge=0.04 FAIL cool
+f_00240.jpg lum=0.50 p98=0.87 sat=0.50 cool=0.43 edge=0.05 FAIL sat,cool
+f_00270.jpg lum=0.52 p98=0.88 sat=0.43 cool=0.06 edge=0.02 FAIL edge
+f_00300.jpg lum=0.51 p98=0.86 sat=0.43 cool=0.04 edge=0.02 FAIL edge
 f_00330.jpg lum=0.50 p98=0.89 sat=0.58 cool=0.48 edge=0.04 FAIL sat,cool,edge
 f_00360.jpg lum=0.50 p98=0.89 sat=0.58 cool=0.48 edge=0.04 FAIL sat,cool,edge
 f_00390.jpg lum=0.47 p98=0.73 sat=0.45 cool=0.44 edge=0.04 FAIL p98,cool,edge
@@ -40,25 +40,25 @@ f_00570.jpg lum=0.41 p98=0.90 sat=0.44 cool=0.46 edge=0.05 FAIL cool
 f_00600.jpg lum=0.40 p98=0.88 sat=0.56 cool=0.16 edge=0.03 FAIL sat,edge
 f_00630.jpg lum=0.51 p98=0.87 sat=0.58 cool=0.10 edge=0.02 FAIL sat,edge
 f_00660.jpg lum=0.26 p98=0.70 sat=0.69 cool=0.06 edge=0.05 FAIL lum,p98,sat
-f_00690.jpg lum=0.43 p98=0.87 sat=0.50 cool=0.31 edge=0.10 FAIL sat
-f_00720.jpg lum=0.43 p98=0.87 sat=0.50 cool=0.31 edge=0.10 PASS
-f_00750.jpg lum=0.44 p98=0.87 sat=0.49 cool=0.29 edge=0.09 PASS
+f_00690.jpg lum=0.45 p98=0.87 sat=0.49 cool=0.25 edge=0.10 PASS
+f_00720.jpg lum=0.45 p98=0.86 sat=0.48 cool=0.24 edge=0.10 PASS
+f_00750.jpg lum=0.47 p98=0.89 sat=0.44 cool=0.07 edge=0.07 PASS
 f_00780.jpg lum=0.50 p98=0.87 sat=0.42 cool=0.03 edge=0.04 FAIL edge
 f_00810.jpg lum=0.52 p98=0.88 sat=0.41 cool=0.03 edge=0.04 PASS
 f_00840.jpg lum=0.48 p98=0.87 sat=0.42 cool=0.01 edge=0.03 FAIL edge
 f_00870.jpg lum=0.49 p98=0.92 sat=0.39 cool=0.04 edge=0.04 PASS
 f_00900.jpg lum=0.47 p98=0.92 sat=0.41 cool=0.05 edge=0.05 PASS
-f_00930.jpg lum=0.41 p98=0.87 sat=0.43 cool=0.11 edge=0.12 PASS
-f_00960.jpg lum=0.41 p98=0.87 sat=0.43 cool=0.12 edge=0.12 PASS
+f_00930.jpg lum=0.41 p98=0.86 sat=0.44 cool=0.15 edge=0.11 PASS
+f_00960.jpg lum=0.46 p98=0.88 sat=0.40 cool=0.10 edge=0.10 PASS
 f_00990.jpg lum=0.49 p98=0.89 sat=0.56 cool=0.42 edge=0.04 FAIL sat,cool
 f_01020.jpg lum=0.49 p98=0.88 sat=0.56 cool=0.44 edge=0.04 FAIL sat,cool
 f_01050.jpg lum=0.48 p98=0.91 sat=0.55 cool=0.44 edge=0.05 FAIL sat,cool
 f_01080.jpg lum=0.44 p98=0.47 sat=0.47 cool=0.97 edge=0.01 FAIL p98,cool,edge
-f_01110.jpg lum=0.46 p98=0.89 sat=0.45 cool=0.93 edge=0.02 FAIL cool,edge
-f_01140.jpg lum=0.46 p98=0.99 sat=0.44 cool=0.92 edge=0.03 FAIL cool,edge
-f_01170.jpg lum=0.39 p98=0.89 sat=0.45 cool=0.42 edge=0.04 FAIL lum,cool,edge
+f_01110.jpg lum=0.45 p98=0.85 sat=0.45 cool=0.94 edge=0.01 FAIL cool,edge
+f_01140.jpg lum=0.47 p98=0.99 sat=0.43 cool=0.89 edge=0.03 FAIL cool,edge
+f_01170.jpg lum=0.43 p98=0.89 sat=0.40 cool=0.34 edge=0.04 FAIL edge
 f_01200.jpg lum=0.44 p98=0.47 sat=0.47 cool=0.97 edge=0.01 FAIL p98,cool,edge
-f_01230.jpg lum=0.44 p98=0.47 sat=0.47 cool=0.98 edge=0.00 FAIL p98,cool,edge
+f_01230.jpg lum=0.44 p98=0.47 sat=0.46 cool=0.98 edge=0.00 FAIL p98,cool,edge
 f_01260.jpg lum=0.51 p98=0.92 sat=0.48 cool=0.39 edge=0.04 FAIL cool
 f_01290.jpg lum=0.45 p98=0.91 sat=0.46 cool=0.18 edge=0.05 PASS
 f_01320.jpg lum=0.51 p98=0.91 sat=0.47 cool=0.37 edge=0.06 FAIL cool
@@ -77,9 +77,9 @@ f_01680.jpg lum=0.41 p98=0.93 sat=0.39 cool=0.38 edge=0.07 FAIL cool
 f_01710.jpg lum=0.50 p98=0.93 sat=0.33 cool=0.32 edge=0.07 FAIL sat
 f_01740.jpg lum=0.53 p98=0.98 sat=0.36 cool=0.31 edge=0.04 FAIL edge
 f_01770.jpg lum=0.51 p98=0.98 sat=0.34 cool=0.30 edge=0.04 FAIL sat,edge
-f_01800.jpg lum=0.53 p98=0.87 sat=0.51 cool=0.41 edge=0.04 FAIL sat,cool
-f_01830.jpg lum=0.55 p98=0.89 sat=0.52 cool=0.53 edge=0.04 FAIL sat,cool,edge
-f_01860.jpg lum=0.53 p98=0.88 sat=0.54 cool=0.51 edge=0.04 FAIL sat,cool
+f_01800.jpg lum=0.55 p98=0.86 sat=0.48 cool=0.42 edge=0.05 FAIL lum,cool
+f_01830.jpg lum=0.53 p98=0.84 sat=0.51 cool=0.58 edge=0.04 FAIL p98,sat,cool,edge
+f_01860.jpg lum=0.55 p98=0.86 sat=0.51 cool=0.50 edge=0.04 FAIL lum,sat,cool
 f_01890.jpg lum=0.52 p98=0.83 sat=0.53 cool=0.42 edge=0.05 FAIL p98,sat,cool
 f_01920.jpg lum=0.52 p98=0.88 sat=0.52 cool=0.39 edge=0.06 FAIL sat,cool
 f_01950.jpg lum=0.52 p98=0.89 sat=0.51 cool=0.34 edge=0.06 FAIL sat
