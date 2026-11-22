@@ -116,7 +116,7 @@ def panel_leaf_blower(d):
     bg_desert(d)
     # the boulder sliding off to the right on a jet of air, a dust plume and its groove trail behind it
     line(d, [(720, 1215), (300, 1270)], shade(TAN, 0.6), 22)
-    rock(d, 840, 1130, 140, 105, seed=5)
+    rock(d, 820, 1110, 185, 140, seed=5)
     for k in range(4): line(d, [(980, 1040 + k * 34), (1010, 1040 + k * 34)], INK, 6)                 # motion ticks
     puff(d, 700, 1220, 40); puff(d, 960, 1225, 26)
     rnd = random.Random(12)
@@ -128,7 +128,7 @@ def panel_leaf_blower(d):
         tip = leaf_blower(d, x + 30 * s, y - 70 * s, a, s * 1.5)
         for k in range(5):   # air blasts
             t0 = (tip[0] + 10, tip[1] + (k - 2) * 16)
-            line(d, [t0, (t0[0] + 200, t0[1] - 40 + (k - 2) * 26)], (255, 255, 255), 7)
+            line(d, [t0, (t0[0] + 230, t0[1] - 40 + (k - 2) * 34)], (255, 255, 255), 10)
     title_plate(d, 'PROPULSION DEPT.', 420, SUN)
 
 def title_plate(d, t, y, col=(255, 255, 255), bg=(60, 20, 90), size=50):
@@ -144,12 +144,16 @@ def panel_rock_racing(d):
         ell(d, x, 360, 46, 24, (255, 250, 210), 4)
         poly(d, [(x - 40, 380), (x + 40, 380), (x + 260, 900), (x - 260, 900)], (255, 250, 210, 60) if False else (90, 70, 130), 0, None)
     rnd = random.Random(7)
-    for row in range(4):   # the cheering alien stadium
-        y = 570 + row * 80
+    for row in range(3):   # the cheering alien stadium
+        y = 580 + row * 105
         poly(d, [(BX0, y + 30), (BX1, y + 30), (BX1, y + 70), (BX0, y + 70)], (70, 40, 110) if row % 2 else (90, 50, 140), 0, None)
-        for k in range(10 - row):
-            x = BX0 + 60 + k * (BX1 - BX0 - 120) / (9 - row) + rnd.uniform(-12, 12)
-            alien(d, x, y + 50, 0.52 + 0.04 * row, body=[LIME, (150, 230, 120), (90, 200, 160)][k % 3], cheer=rnd.random() < 0.5)
+        for k in range(7 - row):
+            x = BX0 + 90 + k * (BX1 - BX0 - 180) / (6 - row) + rnd.uniform(-10, 10)
+            ch = rnd.random() < 0.6; alien(d, x, y + 60, 0.68 + 0.06 * row, body=[LIME, (150, 230, 120), (90, 200, 160)][k % 3], cheer=ch)
+            if ch and k % 2 == 0:   # foam finger
+                fx_, fy_ = x + 40 * (0.68 + 0.06 * row), y - 40
+                poly(d, [(fx_ - 14, fy_ + 10), (fx_ + 14, fy_ + 10), (fx_ + 14, fy_ - 20), (fx_ + 4, fy_ - 20), (fx_ + 4, fy_ - 58), (fx_ - 6, fy_ - 58), (fx_ - 6, fy_ - 20), (fx_ - 14, fy_ - 20)], SUN, 4)
+    poly(d, [(700, 835), (960, 835), (960, 895), (700, 895)], (250, 250, 245), 5); text_c(d, (830, 865), 'GO #3!', font(40, True), ORANGE)
     poly(d, [(BX0, 940), (BX1, 940), (BX1, BY1), (BX0, BY1)], TAN, 0, None)
     for k in range(4): line(d, [(BX0, 1040 + k * 150), (BX1, 1000 + k * 165)], (255, 255, 255), 6)   # lanes
     for k in range(10):   # chequered finish line on the right
@@ -168,15 +172,17 @@ def panel_air_hockey(d):
     for k in range(70):   # crowd silhouettes with glowing eyes
         x = rnd.uniform(BX0, BX1); y = rnd.uniform(560, 700)
         ell(d, x, y, 26, 30, (60, 34, 90), 0, None); ell(d, x - 8, y, 5, 3, LIME, 0, None); ell(d, x + 8, y, 5, 3, LIME, 0, None)
+    ell(d, 540, 730, 40, 26, (255, 70, 60), 5)   # goal lamp
+    for k in range(6): a = math.radians(200 + k * 28); line(d, [(540 + 52 * math.cos(a), 730 + 34 * math.sin(a)), (540 + 90 * math.cos(a), 730 + 58 * math.sin(a))], (255, 120, 90), 6)
     # scoreboard
     poly(d, [(330, 370), (750, 370), (750, 540), (330, 540)], (14, 8, 24), 7)
     text_c(d, (540, 405), 'FINAL', font(40, True), SUN)
     text_c(d, (430, 480), '3', font(80, True), (80, 255, 200)); text_c(d, (540, 475), ':', font(70, True), (255, 255, 255)); text_c(d, (650, 480), '2', font(80, True), (255, 90, 170))
     # the neon rink in perspective
-    rink = [(150, 760), (930, 760), (1080, 1640), (0, 1640)]
+    rink = [(200, 760), (880, 760), (960, 1600), (120, 1600)]
     poly(d, rink, (70, 130, 210), 14, (170, 250, 255))
     poly(d, [(200, 790), (880, 790), (900, 900), (180, 900)], (100, 165, 235), 0, None)   # ice sheen
-    line(d, [(85, 1130), (995, 1130)], (255, 90, 170), 8)                                      # centre line
+    line(d, [(150, 1130), (930, 1130)], (255, 90, 170), 8)                                      # centre line
     d.ellipse(S(400, 1060, 680, 1200), outline=(255, 90, 170), width=lw(8))
     for (gx, gy, gw) in ((540, 770, 150), (540, 1560, 230)): poly(d, [(gx - gw, gy - 14), (gx + gw, gy - 14), (gx + gw, gy + 14), (gx - gw, gy + 14)], (120, 240, 255), 4)   # goals
     for k in range(7): line(d, [(320 + k * 70, 1546), (340 + k * 70, 1600)], (170, 250, 255), 4)   # goal net
@@ -270,6 +276,10 @@ def livestream(out_dir):
     text_c(d, (vx0 + 115, vy0 + 67), 'LIVE', font(46, True), (255, 255, 255))
     d.rounded_rectangle(S(vx0 + 215, vy0 + 30, vx0 + 480, vy0 + 104), radius=16 * SS, fill=(20, 16, 24, 180))
     ell(d, vx0 + 250, vy0 + 67, 11, 11, (255, 255, 255), 0, None); text_c(d, (vx0 + 365, vy0 + 67), '1.2M', font(46, True), (255, 255, 255))
+    for k, (hx_, hy_, r) in enumerate(((vx1 - 70, vy1 - 90, 26), (vx1 - 120, vy1 - 190, 20), (vx1 - 60, vy1 - 270, 30), (vx1 - 110, vy1 - 380, 18), (vx1 - 70, vy1 - 470, 22))):   # heart spam
+        col = [(255, 70, 110), (255, 140, 60), (255, 70, 110), (160, 110, 255), (255, 70, 110)][k]
+        d.ellipse(S(hx_ - r, hy_ - r, hx_, hy_), fill=col); d.ellipse(S(hx_, hy_ - r, hx_ + r, hy_), fill=col)
+        d.polygon([(x * SS, y * SS) for x, y in ((hx_ - r, hy_ - r / 2), (hx_ + r, hy_ - r / 2), (hx_, hy_ + r))], fill=col)
     # channel row under the video (no brand): an alien avatar, a made-up handle, a sad follow button
     ay = vy1 + 70
     ell(d, px0 + 90, ay, 42, 42, LIME, 5); ell(d, px0 + 78, ay - 2, 8, 12, INK, 0, None); ell(d, px0 + 102, ay - 2, 8, 12, INK, 0, None)
@@ -311,7 +321,7 @@ def wood_sign(lines, strike=None, w=760, h=380):
         if strike == i:
             f = font(sz[i], True); first = t.split(' ')[0]; bb = d.textbbox((0, 0), t, font=f); fb = d.textbbox((0, 0), first, font=f)
             x0 = w / 2 - (bb[2] - bb[0]) / SS / 2; x1 = x0 + (fb[2] - fb[0]) / SS
-            line(d, [(x0 - 10, ys[i] + 18), (x1 + 10, ys[i] - 22)], (230, 40, 40), 16)
+            line(d, [(x0 - 12, ys[i] + 20), (x1 + 12, ys[i] - 24)], (215, 20, 30), 26)
     return im.resize((w, h + ph), Image.LANCZOS)
 
 def plate_json(path, extra=None):
