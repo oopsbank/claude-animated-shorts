@@ -1,0 +1,28 @@
+# The Glacier That Bleeds (working title)
+
+Status: Producer draft v1, 2026-11-22. The Director asked for the script without the review panel. Not voiced yet.
+
+## Sources
+- Blood Falls overview, Griffith Taylor 1911, early red-algae explanation: https://en.wikipedia.org/wiki/Blood_Falls
+- Mikucki et al. 2009, Science: ancient marine brine isolated >= 1.5 Myr, microbes cycling sulfur with Fe(III), no oxygen, no light; brine clear on emerging: https://www.montana.edu/priscu/documents/Publications/MikuckiEtAlScience2009.pdf
+- Badgeley et al. 2017, Journal of Glaciology: radar maps the brine inside the glacier; latent heat from freezing helps keep it liquid: https://www.cambridge.org/core/journals/journal-of-glaciology/article/an-englacial-hydrologic-system-of-brine-within-a-cold-glacier-blood-falls-mcmurdo-dry-valleys-antarctica/B5C197906AD54619AEA26068AD92989A
+- UAF release (2017), "Researchers solve the century-old mystery of Blood Falls": https://uaf.edu/news/archives/news-archives-2010-2021/researchers-solve-the-100-year-old-mystery-of-blood-falls.php
+- Unsure, to verify before voicing: "about 400 m of ice" over the brine (from a reviewer reading of Mikucki 2009); the airborne survey (Mikucki et al. 2015, airborne electromagnetics) as the "scan from the air".
+
+## Voice-over (236 words, ~64 s at 3.7 words/s)
+1. In 1911, a geologist named Griffith Taylor walked up to an Antarctic glacier and found it bleeding.
+2. You see, a bright red stain was pouring out of the ice onto clean white snow.
+3. The air there averages minus seventeen. Nothing should flow. Yet the red kept coming.
+4. Explorers had an answer: "It's red algae. Tiny plants. Mystery solved."
+5. That answer stuck for decades. The place got a name: Blood Falls.
+6. Clue one. When scientists tested the water, they found no algae. Just salt, saltier than the sea, and lots of iron.
+7. So if plants aren't making it red, what is?
+8. Clue two. The water was alive with microbes. No sunlight, no oxygen. They survive by breathing iron and sulfur instead.
+9. Clue three. Right where it comes out, the water isn't red at all. It's clear.
+10. Then scientists scanned under the glacier from the air.
+11. Under four hundred metres of ice, they found a hidden pool of ancient seawater, sealed off for over a million years.
+12. Salt, and heat released as it freezes, keep it liquid.
+13. Down there, the iron stays dissolved and colourless.
+14. But the moment it squeezes out into the open air, the iron meets oxygen, and it rusts. Like a wet nail turning orange overnight.
+15. The glacier isn't bleeding. It's rusting.
+16. And the red algae? Never there. Just a sealed world of microbes, still alive under the ice, still painting the snow red, like in 1911.
