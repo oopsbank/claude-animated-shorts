@@ -99,13 +99,13 @@ def bg_desert(d, sky=((90, 190, 255), (255, 170, 120))):
         t = (y - BY0) / (BY1 - BY0)
         c = tuple(int(sky[0][i] + (sky[1][i] - sky[0][i]) * min(1, t / 0.45)) for i in range(3))
         d.line([(BX0 * SS, y * SS), (BX1 * SS, y * SS)], fill=c, width=SS + 1)
-    poly(d, [(BX0, 860), (200, 760), (330, 820), (470, 720), (640, 830), (800, 740), (BX1, 820), (BX1, 900), (BX0, 900)], (150, 70, 120), 5)
-    poly(d, [(BX0, 880), (BX1, 870), (BX1, BY1), (BX0, BY1)], TAN, 0, None)
+    poly(d, [(BX0, 780), (200, 680), (330, 740), (470, 640), (640, 750), (800, 660), (BX1, 740), (BX1, 820), (BX0, 820)], (150, 70, 120), 5)
+    poly(d, [(BX0, 800), (BX1, 790), (BX1, BY1), (BX0, BY1)], TAN, 0, None)
     rnd = random.Random(3)
     for k in range(40):   # mud cracks
         x, y = rnd.uniform(BX0, BX1), rnd.uniform(920, BY1); L = rnd.uniform(30, 90) * (y - 860) / 600
         line(d, [(x, y), (x + L, y + rnd.uniform(-6, 6)), (x + L * 1.4, y + rnd.uniform(-10, 10))], shade(TAN, 0.75), 3)
-    ell(d, 840, 560, 70, 70, SUN, 0, None)
+    ell(d, 820, 540, 70, 70, SUN, 0, None)
 
 def leaf(d, x, y, r, col, ang):
     ca, sa = math.cos(math.radians(ang)), math.sin(math.radians(ang))
@@ -129,6 +129,12 @@ def panel_leaf_blower(d):
         for k in range(5):   # air blasts
             t0 = (tip[0] + 10, tip[1] + (k - 2) * 16)
             line(d, [t0, (t0[0] + 230, t0[1] - 40 + (k - 2) * 34)], (255, 255, 255), 10)
+    sx_, sy_ = 880, 1430   # the site supervisor: a rock in a hard hat with a clipboard
+    rock(d, sx_, sy_, 95, 80, seed=61, col=(100, 86, 84))
+    d.chord(S(sx_ - 70, sy_ - 140, sx_ + 60, sy_ - 40), 180, 360, fill=SUN, outline=INK, width=lw(6)); line(d, [(sx_ - 85, sy_ - 90), (sx_ + 75, sy_ - 90)], INK, 9)
+    for ex in (-26, 14): ell(d, sx_ + ex, sy_ - 55, 12, 12, (255, 255, 255), 4); ell(d, sx_ + ex + 3, sy_ - 53, 5, 5, INK, 0, None)
+    poly(d, [(sx_ - 130, sy_ - 50), (sx_ - 60, sy_ - 50), (sx_ - 60, sy_ + 40), (sx_ - 130, sy_ + 40)], (250, 246, 230), 5)
+    for k in range(3): line(d, [(sx_ - 120, sy_ - 25 + k * 22), (sx_ - 72, sy_ - 25 + k * 22)], INK, 3)
     title_plate(d, 'PROPULSION DEPT.', 420, SUN)
 
 def title_plate(d, t, y, col=(255, 255, 255), bg=(60, 20, 90), size=50):
@@ -153,7 +159,7 @@ def panel_rock_racing(d):
             if ch and k % 2 == 0:   # foam finger
                 fx_, fy_ = x + 40 * (0.68 + 0.06 * row), y - 40
                 poly(d, [(fx_ - 14, fy_ + 10), (fx_ + 14, fy_ + 10), (fx_ + 14, fy_ - 20), (fx_ + 4, fy_ - 20), (fx_ + 4, fy_ - 58), (fx_ - 6, fy_ - 58), (fx_ - 6, fy_ - 20), (fx_ - 14, fy_ - 20)], SUN, 4)
-    poly(d, [(700, 835), (960, 835), (960, 895), (700, 895)], (250, 250, 245), 5); text_c(d, (830, 865), 'GO #3!', font(40, True), ORANGE)
+    poly(d, [(640, 820), (980, 820), (980, 905), (640, 905)], (250, 250, 245), 6); text_c(d, (810, 862), 'GO #3!', font(58, True), ORANGE)
     poly(d, [(BX0, 940), (BX1, 940), (BX1, BY1), (BX0, BY1)], TAN, 0, None)
     for k in range(4): line(d, [(BX0, 1040 + k * 150), (BX1, 1000 + k * 165)], (255, 255, 255), 6)   # lanes
     for k in range(10):   # chequered finish line on the right
@@ -164,6 +170,10 @@ def panel_rock_racing(d):
         rock(d, x, y, sz, sz * 0.7, seed=20 + n, col=[(70, 58, 62), (88, 70, 64), (60, 56, 70)][n - 1])
         helmet(d, x + sz * 0.05, y - sz * 0.55, sz * 0.48, [ORANGE, BLUE, PINK][n - 1])
         bib(d, x, y - sz * 0.02, sz * 0.85, sz * 0.62, n)
+    tx, ty = 930, 1150   # the trophy: a golden rock on a cup
+    poly(d, [(tx - 40, ty + 60), (tx + 40, ty + 60), (tx + 30, ty + 20), (tx - 30, ty + 20)], (120, 70, 30), 5)
+    d.chord(S(tx - 50, ty - 50, tx + 50, ty + 40), 0, 180, fill=SUN, outline=INK, width=lw(5)); line(d, [(tx, ty + 30), (tx, ty + 20)], INK, 8)
+    rock(d, tx, ty - 25, 40, 30, seed=77, col=(240, 180, 40))
     title_plate(d, 'ROCK RACING LEAGUE', 470, (255, 255, 255), ORANGE, 40)
 
 def panel_air_hockey(d):
@@ -175,8 +185,8 @@ def panel_air_hockey(d):
     ell(d, 540, 730, 40, 26, (255, 70, 60), 5)   # goal lamp
     for k in range(6): a = math.radians(200 + k * 28); line(d, [(540 + 52 * math.cos(a), 730 + 34 * math.sin(a)), (540 + 90 * math.cos(a), 730 + 58 * math.sin(a))], (255, 120, 90), 6)
     # scoreboard
-    poly(d, [(330, 370), (750, 370), (750, 540), (330, 540)], (14, 8, 24), 7)
-    text_c(d, (540, 405), 'FINAL', font(40, True), SUN)
+    poly(d, [(250, 360), (830, 360), (830, 545), (250, 545)], (14, 8, 24), 7)
+    text_c(d, (540, 405), 'AIR HOCKEY FINAL', font(34, True), SUN)
     text_c(d, (430, 480), '3', font(80, True), (80, 255, 200)); text_c(d, (540, 475), ':', font(70, True), (255, 255, 255)); text_c(d, (650, 480), '2', font(80, True), (255, 90, 170))
     # the neon rink in perspective
     rink = [(200, 760), (880, 760), (960, 1600), (120, 1600)]
@@ -186,7 +196,7 @@ def panel_air_hockey(d):
     d.ellipse(S(400, 1060, 680, 1200), outline=(255, 90, 170), width=lw(8))
     for (gx, gy, gw) in ((540, 770, 150), (540, 1560, 230)): poly(d, [(gx - gw, gy - 14), (gx + gw, gy - 14), (gx + gw, gy + 14), (gx - gw, gy + 14)], (120, 240, 255), 4)   # goals
     for k in range(7): line(d, [(320 + k * 70, 1546), (340 + k * 70, 1600)], (170, 250, 255), 4)   # goal net
-    text_c(d, (540, 1460), 'SAVE?!', font(56, True), SUN, stroke=6)
+    text_c(d, (540, 1450), 'SAVE?!', font(84, True), SUN, stroke=8)
     # the boulder puck flying, with a neon streak
     for k in range(5): line(d, [(860 + k * 30, 1300 + k * 18), (800 + k * 20, 1240 + k * 12)], (120, 240, 255), 7)
     rock(d, 690, 1210, 170, 100, seed=31)
@@ -203,7 +213,6 @@ def panel_air_hockey(d):
     for sx in (-1, 1): ell(d, rx + sx * 32, ry - 82, 16, 16, (255, 255, 255), 5); ell(d, rx + sx * 32, ry - 79, 7, 7, INK, 0, None)
     ell(d, rx + 40, ry - 48, 30, 18, SUN, 6); line(d, [(rx + 20, ry - 40), (rx - 10, ry - 20)], INK, 3)
     for k in range(3): line(d, [(rx + 52 + k * 6, ry - 56 - k * 14), (rx + 80 + k * 10, ry - 66 - k * 20)], (255, 255, 255), 5)   # tweet!
-    title_plate(d, 'AIR HOCKEY FINAL', 625, (255, 255, 255), (60, 20, 90), 46)
 
 # ---------------------------------------------------------------- thought bubble + ALIEN CAM filter
 def bubble_mask():
@@ -222,6 +231,11 @@ def alien_cam(panel_fn, tag):
         t = y / H; c = (int(60 + 50 * t), int(30 + 20 * t), int(90 + 60 * t)); d.line([(0, y * SS), (W * SS, y * SS)], fill=c, width=SS + 1)
     stars(d, 40, (0, 0, W, H), 2, (255, 230, 160))
     scene = Image.new('RGB', (W * SS, H * SS), (0, 0, 0)); ds = ImageDraw.Draw(scene); panel_fn(ds)
+    k_in = 0.88   # pull the art inside the cloud edge: shrink the content box about its centre, pad with its own blurred edges
+    box = (BX0 * SS, BY0 * SS, BX1 * SS, BY1 * SS); crop = scene.crop(box); bw, bh = crop.size
+    pad = crop.resize((bw, bh)).filter(ImageFilter.GaussianBlur(30 * SS))
+    sm = crop.resize((int(bw * k_in), int(bh * k_in)), Image.LANCZOS); pad.paste(sm, ((bw - sm.width) // 2, (bh - sm.height) // 2))
+    scene = Image.new('RGB', (W * SS, H * SS), (0, 0, 0)); scene.paste(pad.resize((int(bw * 1.08), int(bh * 1.08))), (box[0] - int(bw * 0.04), box[1] - int(bh * 0.04)))
     # ALIEN CAM filter: green cast, scanlines, vignette, REC overlay
     g = Image.new('RGB', scene.size, (60, 255, 90)); scene = Image.blend(scene, ImageChops.multiply(scene, g), 0.12)
     sl = Image.new('L', scene.size, 0); dsl = ImageDraw.Draw(sl)
@@ -242,11 +256,11 @@ def alien_cam(panel_fn, tag):
     # the ALIEN CAM camcorder HUD over the whole frame, clear of the bubble art
     for (x, y, sx, sy) in ((50, 90, 1, 1), (1030, 90, -1, 1), (50, 1870, 1, -1), (1030, 1870, -1, -1)):
         line(db, [(x, y + sy * 80), (x, y), (x + sx * 80, y)], (190, 255, 180), 8)
-    ell(db, 110, 165, 16, 16, (255, 50, 50), 0, None); text_c(db, (140, 165), 'REC', font(40, True), (230, 255, 225), anchor='lm')
+    ell(db, 110, 165, 16, 16, (255, 50, 50), 0, None); text_c(db, (140, 165), 'REC', font(48, True), (230, 255, 225), anchor='lm')
     db.rounded_rectangle(S(640, 132, 1000, 198), radius=14 * SS, fill=(30, 110, 45), outline=(190, 255, 180), width=lw(4))
     text_c(db, (820, 165), 'ALIEN CAM', font(40, True), (200, 255, 190))
-    text_c(db, (1000, 1800), '00:41:27', font(36, True), (230, 255, 225), anchor='rm')
-    for k in range(4): db.rectangle(S(820 + k * 34, 1760 - k * 0, 846 + k * 34, 1780), fill=(190, 255, 180))   # battery bars
+    text_c(db, (1000, 1800), '00:41:27', font(48, True), (230, 255, 225), anchor='rm')
+    for k in range(4): db.rectangle(S(780 + k * 40, 1730, 810 + k * 40, 1752), fill=(190, 255, 180))   # battery bars
     im = bg.resize((W, H), Image.LANCZOS)
     return im
 

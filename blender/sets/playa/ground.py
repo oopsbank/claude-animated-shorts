@@ -108,22 +108,22 @@ def pebbles(center, n=14, spread=0.8, seed=1, size=0.05):
 def ice_mat():
     """Thin ice over shallow water: near-clear, mirror-glossy (reflects sky and mountains), pale cyan tint, faint pane seams."""
     m = bpy.data.materials.new('ice'); m.use_nodes = True; n = m.node_tree.nodes; l = m.node_tree.links; P = n['Principled BSDF']
-    P.inputs['Base Color'].default_value = (0.78, 0.92, 1.0, 1); P.inputs['Roughness'].default_value = 0.008
+    P.inputs['Base Color'].default_value = (0.70, 0.88, 1.0, 1); P.inputs['Roughness'].default_value = 0.008
     P.inputs['Transmission Weight'].default_value = 0.7
     P.inputs['Coat Weight'].default_value = 1.0; P.inputs['Coat Roughness'].default_value = 0.0; P.inputs['IOR'].default_value = 1.31
     P.inputs['Specular IOR Level'].default_value = 0.8
-    tc = n.new('ShaderNodeTexCoord'); v = n.new('ShaderNodeTexVoronoi'); v.feature = 'DISTANCE_TO_EDGE'; v.inputs['Scale'].default_value = 0.3
+    tc = n.new('ShaderNodeTexCoord'); v = n.new('ShaderNodeTexVoronoi'); v.feature = 'DISTANCE_TO_EDGE'; v.inputs['Scale'].default_value = 0.5
     l.new(tc.outputs['Object'], v.inputs['Vector'])
     r = n.new('ShaderNodeMapRange'); r.inputs['From Min'].default_value = 0.0; r.inputs['From Max'].default_value = 0.005
-    r.inputs['To Min'].default_value = 0.55; r.inputs['To Max'].default_value = 0.7; l.new(v.outputs['Distance'], r.inputs['Value'])
+    r.inputs['To Min'].default_value = 0.4; r.inputs['To Max'].default_value = 0.7; l.new(v.outputs['Distance'], r.inputs['Value'])
     l.new(r.outputs['Result'], P.inputs['Transmission Weight'])          # pane seams go white-opaque
     return m
 
 def pond_mat():
     """Ankle-deep night water: dark, glossy, slightly see-through, small ripple bump."""
     m = bpy.data.materials.new('pond'); m.use_nodes = True; n = m.node_tree.nodes; l = m.node_tree.links; P = n['Principled BSDF']
-    P.inputs['Base Color'].default_value = (0.20, 0.28, 0.40, 1); P.inputs['Roughness'].default_value = 0.03
-    P.inputs['Transmission Weight'].default_value = 0.88; P.inputs['IOR'].default_value = 1.33
+    P.inputs['Base Color'].default_value = (0.05, 0.08, 0.15, 1); P.inputs['Roughness'].default_value = 0.0
+    P.inputs['Transmission Weight'].default_value = 0.3; P.inputs['Specular IOR Level'].default_value = 1.0; P.inputs['IOR'].default_value = 1.33
     tc = n.new('ShaderNodeTexCoord'); nz = n.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 3.0; l.new(tc.outputs['Object'], nz.inputs['Vector'])
     b = n.new('ShaderNodeBump'); b.inputs['Strength'].default_value = 0.08; l.new(nz.outputs['Fac'], b.inputs['Height']); l.new(b.outputs['Normal'], P.inputs['Normal'])
     return m
