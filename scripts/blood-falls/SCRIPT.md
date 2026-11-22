@@ -1,6 +1,6 @@
 # The Glacier That Bleeds (working title)
 
-Status: Producer draft v1, 2026-11-22. The Director asked for the script without the review panel. Not voiced yet.
+Status: Producer draft v2 (the Director: the 'no algae' finding comes right after the red-algae answer), 2026-11-22. The Director asked for the script without the review panel. Not voiced yet.
 
 ## Sources
 - Blood Falls overview, Griffith Taylor 1911, early red-algae explanation: https://en.wikipedia.org/wiki/Blood_Falls
@@ -11,11 +11,11 @@ Status: Producer draft v1, 2026-11-22. The Director asked for the script without
 
 ## Voice-over (236 words, ~64 s at 3.7 words/s)
 1. In 1911, a geologist named Griffith Taylor walked up to an Antarctic glacier and found it bleeding.
-2. You see, a bright red stain was pouring out of the ice onto clean white snow.
+2. You see, a bright red stain was pouring out of the ice onto clean white snow. They named it Blood Falls.
 3. The air there averages minus seventeen. Nothing should flow. Yet the red kept coming.
 4. Explorers had an answer: "It's red algae. Tiny plants. Mystery solved."
-5. That answer stuck for decades. The place got a name: Blood Falls.
-6. Clue one. When scientists tested the water, they found no algae. Just salt, saltier than the sea, and lots of iron.
+5. But when scientists finally tested the water, there was no algae in it.
+6. Clue one. Just salt, saltier than the sea, and lots of iron.
 7. So if plants aren't making it red, what is?
 8. Clue two. The water was alive with microbes. No sunlight, no oxygen. They survive by breathing iron and sulfur instead.
 9. Clue three. Right where it comes out, the water isn't red at all. It's clear.

@@ -1,4 +1,4 @@
-# Blood Falls: kịch bản song ngữ và bảng hình (bản nháp v1, 2026-11-22)
+# Blood Falls: kịch bản song ngữ và bảng hình (bản nháp v2, 2026-11-22)
 
 Không chấm điểm (theo yêu cầu của Đạo diễn). Thời gian ước tính ở 3,7 từ/giây, tổng ~64 giây.
 
@@ -7,11 +7,11 @@ Không chấm điểm (theo yêu cầu của Đạo diễn). Thời gian ước 
 | # | English (voice-over) | Tiếng Việt |
 |---|---|---|
 | 1 | In 1911, a geologist named Griffith Taylor walked up to an Antarctic glacier and found it bleeding. | Năm 1911, nhà địa chất Griffith Taylor đi đến một sông băng ở Nam Cực và thấy nó đang chảy máu. |
-| 2 | You see, a bright red stain was pouring out of the ice onto clean white snow. | Một vệt đỏ tươi đang trào ra từ trong băng, chảy xuống nền tuyết trắng tinh. |
+| 2 | You see, a bright red stain was pouring out of the ice onto clean white snow. They named it Blood Falls. | Một vệt đỏ tươi đang trào ra từ trong băng, chảy xuống nền tuyết trắng tinh. Người ta đặt tên nó là Thác Máu. |
 | 3 | The air there averages minus seventeen. Nothing should flow. Yet the red kept coming. | Nhiệt độ ở đó trung bình âm 17 độ. Không gì có thể chảy được. Vậy mà màu đỏ vẫn cứ tuôn ra. |
 | 4 | Explorers had an answer: "It's red algae. Tiny plants. Mystery solved." | Các nhà thám hiểm có câu trả lời: "Là tảo đỏ. Cây tí hon thôi. Xong bí ẩn." |
-| 5 | That answer stuck for decades. The place got a name: Blood Falls. | Câu trả lời đó đứng vững hàng chục năm. Nơi này được đặt tên: Thác Máu. |
-| 6 | Clue one. When scientists tested the water, they found no algae. Just salt, saltier than the sea, and lots of iron. | Manh mối một. Khi các nhà khoa học xét nghiệm nước, họ không thấy tảo. Chỉ có muối, mặn hơn cả nước biển, và rất nhiều sắt. |
+| 5 | But when scientists finally tested the water, there was no algae in it. | Nhưng khi các nhà khoa học cuối cùng cũng xét nghiệm nước, trong đó chẳng có chút tảo nào. |
+| 6 | Clue one. Just salt, saltier than the sea, and lots of iron. | Manh mối một. Chỉ có muối, mặn hơn cả nước biển, và rất nhiều sắt. |
 | 7 | So if plants aren't making it red, what is? | Vậy nếu không phải cây làm nó đỏ, thì là gì? |
 | 8 | Clue two. The water was alive with microbes. No sunlight, no oxygen. They survive by breathing iron and sulfur instead. | Manh mối hai. Nước đầy vi sinh vật sống. Không ánh sáng, không oxy. Chúng sống bằng cách "thở" sắt và lưu huỳnh. |
 | 9 | Clue three. Right where it comes out, the water isn't red at all. It's clear. | Manh mối ba. Ngay chỗ nó chảy ra, nước hoàn toàn không đỏ. Nó trong suốt. |
@@ -30,21 +30,21 @@ Phong cách: người que trắng viền đen, nhãn chữ màu trên đầu, n�
 | Cảnh | Thời gian | Lời (#) | Trên màn hình |
 |---|---|---|---|
 | s01 | 0.0–4.3 | 1 | Mở giữa hành động: người que đội mũ lông, nhãn **GEOLOGIST · 1911** (xanh dương), leo qua đồi tuyết, dừng sững. Chữ lớn trắng trên cùng: **"THE GLACIER IS BLEEDING"**. Cắt cận vách băng trắng xanh có vệt đỏ. |
-| s02 | 4.3–8.4 | 2 | Cận vách băng: dòng đỏ trào ra, loang xuống tuyết trắng. Người que lùi một bước, tay che miệng. |
-| s03 | 8.4–12.2 | 3 | Nhiệt kế đồ hoạ tụt xuống **−17°C**, tuyết bay ngang. Các giọt băng đóng cứng, nhưng dòng đỏ vẫn chảy (tương phản rõ). |
-| s04 | 12.2–15.4 | 4 | Ba người que nhãn **EXPLORERS** (cam) đứng quanh, một người chỉ tay tự tin. Bong bóng hình tảo xanh-đỏ nhỏ. Tem **"MYSTERY SOLVED ✓"** đóng xuống. |
-| s05 | 15.4–18.6 | 5 | Lịch xé nhanh qua các năm (1911 → 1950 → 1990). Biển gỗ cắm trên tuyết: **BLOOD FALLS**. |
-| s06 | 18.6–24.3 | 6 | Phòng thí nghiệm xám: người que nhãn **SCIENTIST** (xanh lá) cầm ống nghiệm đỏ. Chữ **CLUE 1**. Kính hiển vi: tảo gạch chéo ✗; biểu tượng muối và **Fe** (sắt) hiện lên. |
-| s07 | 24.3–26.8 | 7 | Người que gãi đầu, dấu **?** lớn màu đỏ trên nền tối dần. |
-| s08 | 26.8–31.9 | 8 | **CLUE 2**. Cận giọt nước phóng to: vi sinh vật tròn nhỏ phát sáng nhẹ. Biểu tượng mặt trời ✗, O₂ ✗; Fe và S trôi vào vi sinh vật. |
-| s09 | 31.9–36.0 | 9 | **CLUE 3**. Cận khe nứt nơi nước chảy ra: nước **trong suốt**, vài giây sau ngả cam-đỏ. Người que nhìn sát, ngạc nhiên. |
-| s10 | 36.0–38.4 | 10 | Máy bay nhỏ kéo vòng cảm biến bay ngang sông băng; tia quét xuống xuyên băng. |
-| s11 | 38.4–44.1 | 11 | Mặt cắt "X-quang" sông băng: lớp băng dày (nhãn **400 m**), đáy có hồ nước xanh sẫm phát sáng. Bộ đếm năm chạy lên **1,000,000+**. |
-| s12 | 44.1–46.8 | 12 | Trong hồ: biểu tượng muối + mũi tên nhiệt đỏ, nước vẫn lăn tăn không đóng băng. |
-| s13 | 46.8–49.0 | 13 | Cận hồ tối: các hạt sắt tan, không màu, trôi lặng lẽ. |
-| s14 | 49.0–55.5 | 14 | Dòng nước ép lên qua khe, gặp không khí: hạt O₂ xanh chạm vào, nước chuyển cam-đỏ (chuyển màu rõ). Cắt cảnh: cây đinh ướt trên bàn chuyển cam qua timelapse. |
-| s15 | 55.5–57.1 | 15 | Toàn cảnh thác đỏ. Chữ lớn: **"NOT BLEEDING. RUSTING."** |
-| s16 | 57.1–63.8 | 16 | Bong bóng tảo từ s04 vỡ "pop". Zoom xuống dưới băng: thế giới vi sinh phát sáng. Kéo ra toàn cảnh, cắt về đúng khung hình s01 (người que 1911 đứng trước thác) để tạo vòng lặp. |
+| s02 | 4.3–9.8 | 2 | Cận vách băng: dòng đỏ trào ra, loang xuống tuyết trắng. Người que lùi một bước, tay che miệng. Biển gỗ cắm trên tuyết: **BLOOD FALLS**. |
+| s03 | 9.8–13.5 | 3 | Nhiệt kế đồ hoạ tụt xuống **−17°C**, tuyết bay ngang. Các giọt băng đóng cứng, nhưng dòng đỏ vẫn chảy (tương phản rõ). |
+| s04 | 13.5–16.8 | 4 | Ba người que nhãn **EXPLORERS** (cam) đứng quanh, một người chỉ tay tự tin. Bong bóng hình tảo xanh-đỏ nhỏ. Tem **"MYSTERY SOLVED ✓"** đóng xuống. |
+| s05 | 16.8–20.3 | 5 | Ngay sau tem "MYSTERY SOLVED": phòng thí nghiệm xám, người que nhãn **SCIENTIST** (xanh lá) soi kính hiển vi; hình tảo bị gạch chéo đỏ **✗ NO ALGAE**. Tem "MYSTERY SOLVED" nứt vỡ. |
+| s06 | 20.3–23.5 | 6 | Chữ **CLUE 1**. Ống nghiệm đỏ: biểu tượng muối (đậm hơn nước biển) và **Fe** (sắt) hiện lên. |
+| s07 | 23.5–26.0 | 7 | Người que gãi đầu, dấu **?** lớn màu đỏ trên nền tối dần. |
+| s08 | 26.0–31.1 | 8 | **CLUE 2**. Cận giọt nước phóng to: vi sinh vật tròn nhỏ phát sáng nhẹ. Biểu tượng mặt trời ✗, O₂ ✗; Fe và S trôi vào vi sinh vật. |
+| s09 | 31.1–35.2 | 9 | **CLUE 3**. Cận khe nứt nơi nước chảy ra: nước **trong suốt**, vài giây sau ngả cam-đỏ. Người que nhìn sát, ngạc nhiên. |
+| s10 | 35.2–37.6 | 10 | Máy bay nhỏ kéo vòng cảm biến bay ngang sông băng; tia quét xuống xuyên băng. |
+| s11 | 37.6–43.3 | 11 | Mặt cắt "X-quang" sông băng: lớp băng dày (nhãn **400 m**), đáy có hồ nước xanh sẫm phát sáng. Bộ đếm năm chạy lên **1,000,000+**. |
+| s12 | 43.3–46.0 | 12 | Trong hồ: biểu tượng muối + mũi tên nhiệt đỏ, nước vẫn lăn tăn không đóng băng. |
+| s13 | 46.0–48.2 | 13 | Cận hồ tối: các hạt sắt tan, không màu, trôi lặng lẽ. |
+| s14 | 48.2–54.7 | 14 | Dòng nước ép lên qua khe, gặp không khí: hạt O₂ xanh chạm vào, nước chuyển cam-đỏ (chuyển màu rõ). Cắt cảnh: cây đinh ướt trên bàn chuyển cam qua timelapse. |
+| s15 | 54.7–56.3 | 15 | Toàn cảnh thác đỏ. Chữ lớn: **"NOT BLEEDING. RUSTING."** |
+| s16 | 56.3–63.0 | 16 | Bong bóng tảo từ s04 vỡ "pop". Zoom xuống dưới băng: thế giới vi sinh phát sáng. Kéo ra toàn cảnh, cắt về đúng khung hình s01 (người que 1911 đứng trước thác) để tạo vòng lặp. |
 
 ## Còn mở
 - Cần kiểm lại 2 số liệu trước khi lồng tiếng: "400 m băng" và việc khảo sát "từ trên không" (Mikucki 2015, đo điện từ trên không).
