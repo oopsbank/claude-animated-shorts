@@ -25,7 +25,8 @@ UI = {'banner', 'livestream_counter', 'price_card'}           # anchored at thei
 # the frost ice and the night pond. Keyed by name -> cams where the plate has it (None = every cam).
 BAKED = {'tent': {'playa_med', 'playa_wide'}, 'timelapse_cam': {'playa_med', 'playa_wide'}, 'rock_row_15': None,
          'rock_trail_hero': None, 'tour_van': None, 'ice_sheet': None, 'pond_water': None,
-         'tour_sign': {'overlook_med'}, 'banner': {'overlook_med'}}
+         'tour_sign': {'overlook_med'}, 'banner': {'overlook_med'},
+         'fantasy': None, 'livestream_screen': None, 'air_hockey_overlay': None, 'flood_water': None}   # plate variants / fx
 # Default placement per (name, cam) or name. UI 'w' = width as a fraction of the frame.
 DEFAULTS = {
     'gary_rock': dict(x=0.62, y=0.86, scale=1.2),
@@ -45,7 +46,7 @@ DEFAULTS = {
     'fridge_silhouette': dict(x=0.25, y=0.80, scale=1.0),
     'phone_silhouette': dict(x=0.3, y=0.72, scale=2.0, layer='front'),
     'banner': dict(x=0.5, y=0.22, w=0.8, layer='front'),
-    'livestream_counter': dict(x=0.78, y=0.08, w=0.36, layer='front'),
+    'livestream_counter': dict(x=0.72, y=0.1, w=0.3, layer='front'),
     'price_card': dict(x=0.8, y=0.24, w=0.3, layer='front'),
 }
 _warned = set()
@@ -80,6 +81,7 @@ def plan(shot):
         if e.get('sprite') is False: continue
         if not e.get('sprite') and b in BAKED and (BAKED[b] is None or cam in BAKED[b]): continue   # in the plate
         if not e.get('sprite') and b in held: continue                                           # in a hand
+        if not e.get('sprite') and b == 'cooler' and any(c.get('seated') == 'cooler' for c in shot.get('characters', [])): continue   # bean draws it
         d = dict(DEFAULTS.get(b, {})); d.update(DEFAULTS.get((b, cam), {})); d.update(e); d['_base'] = b
         out.append(d)
     return out

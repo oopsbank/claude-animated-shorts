@@ -32,8 +32,11 @@ def find_plate(shot, dirs):
         cands = [shot['plate']] + [os.path.join(d, shot['plate']) for d in dirs]
     else:
         name = f"{shot['set']}__{shot['cam']}__{shot['light']}"
-        cands = [os.path.join(ROOT, 'blender', 'sets', shot['set'], 'plates', name + ext) for ext in ('.png', '.jpg')]
-        cands += [os.path.join(d, name + ext) for d in dirs for ext in ('.png', '.jpg')]
+        # plate variants: "variant": tag on the shot, or a "fantasy:<tag>" prop -> <set>__<cam>__<light>__<tag>
+        var = shot.get('variant') or next((p.split(':', 1)[1].strip() for p in shot.get('props', []) if isinstance(p, str) and p.startswith('fantasy:')), None)
+        names = ([name + '__' + var] if var else []) + [name]
+        cands = [os.path.join(ROOT, 'blender', 'sets', shot['set'], 'plates', n + ext) for n in names for ext in ('.png', '.jpg')]
+        cands += [os.path.join(d, n + ext) for d in dirs for n in names for ext in ('.png', '.jpg')]
     for p in cands:
         if os.path.exists(p): return p
     if STANDIN_PLATES:                # sets not built yet: stand-in plate by shot size
