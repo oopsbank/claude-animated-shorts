@@ -25,12 +25,18 @@ for s, sp in zip(shots, spans):
     ats += [e.get('at_word', 0) for e in s.get('fx', [])]
     f = anim.beat_frame(w, words, max(ats))[1] + 8 if ats else int(sp['f0'] + 0.6 * (sp['f1'] - sp['f0']))
     f = min(max(f, sp['f0'] + 4), sp['f1'] - 4)
+    ins = next((c['insert'] for c in s.get('characters', []) if c.get('insert')), None)
+    fi = anim.beat_frame(w, words, ins.get('at_word', 0))[1] + 10 if ins else None
+    if ins:                                  # the main pick shows the main plate, not the cut-in
+        a0 = anim.beat_frame(w, words, ins.get('at_word', 0))[1] - anim.LEAD
+        a1 = anim.beat_frame(w, words, ins['until_word'])[1] - anim.LEAD if 'until_word' in ins else sp['f1']
+        if a0 <= f < a1: f = max(sp['f0'] + 4, a0 - 6) if a0 - 6 > sp['f0'] + 4 else min(sp['f1'] - 4, a1 + 6)
+    # shots whose framing or picture changes a lot get an opening frame too (an XCU that pulls out, a flood that rolls in)
+    cam = s.get('camera') or {}
+    if (cam.get('glides') or cam.get('zoom')) and f - sp['f0'] > 24:
+        picks.append((sp['f0'] + 8, s.get('id', '') + ' open', ''))
     picks.append((f, s.get('id', ''), s['text']))
-    for c in s.get('characters', []):
-        ins = c.get('insert')
-        if ins:
-            fi = anim.beat_frame(w, words, ins.get('at_word', 0))[1] + 10
-            if sp['f0'] <= fi < sp['f1'] and abs(fi - f) > 6: picks.append((fi, s.get('id', '') + ' insert', ''))
+    if ins and sp['f0'] <= fi < sp['f1'] and all(abs(fi - p[0]) > 6 for p in picks): picks.append((fi, s.get('id', '') + ' insert', ''))
 picks.sort()
 
 env = dict(os.environ, ENGINE_STANDIN='0', ENGINE_QUIET='1')
