@@ -31,6 +31,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - A `follow` camera with no rider in the shot doesn't move: give character-free or static shots a slow glide, or qa.py flags frozen spans (s10, s14's ending, s16's opening).
 - Check that a camera field is actually read before tuning it: the base `camera.x`/`y` were ignored (only the auto `focus` was used), so six shots' framing notes did nothing for 2 review rounds.
 - A cut-in with no `until_word` must run to the shot's last frame: its end got the same 2-frame lead as its start, so the cousins were drawn over the top-view plate for 2 frames (planted-feet QA caught it).
+- Draft reviews on 0.5 s contact sheets score acting at 6 whatever the camera does: one-frame arm swaps and small face changes don't read at 180 px. Fix acting at the rig (in-betweens, bigger poses), not with more camera moves.
 - A rolled camera has a zoom floor (roll -6° needs ~1.18 to hide the border): a push below it is clamped to nothing. Glide above the floor.
 - Seated cards (`seated=`) sit ~6 px above the ground line: re-plant them on their lowest opaque row, like a lean.
 - A deliberate punch-in that cuts edge characters needs `crop: true` on the shot, or qa.py counts every frame of it as clipped.

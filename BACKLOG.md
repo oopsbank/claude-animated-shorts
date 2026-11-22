@@ -105,6 +105,7 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 
 ## engine (`engine/`)
 - [x] P1 Video 2 asset wiring: DONE (engine/props.py sprites, antennae ease/sway, seated, full-frame weather fx, chained ice_pane, sliding_rock paths, fx `move`/`card`/`screen`/held `t`, props layers back/front/top, plate variants, caption_avoid, exit_at_word, per-shot `lift`, engine/mech.py `pane_push_top`). Sepia is supported but unused in v17.
+- [ ] P1 sailing-stones G5 draft v1 FROZEN at 7.1 (3 rounds 7.1, 7.0, 7.1; QA all PASS): `videos/sailing-stones/draft_v1.mp4`, notes in `videos/sailing-stones/NOTES.md`. Main gap: acting 6 (needs arm in-betweens and bigger expression swaps), then static spans in s03/s14/s21 and the cutaway panels.
 - [ ] P2 sailing-stones G2 storyboard FROZEN at 7.5 (rounds 7.2, 7.4, 7.2, 7.5, 7.4). Open notes, judge again at G5 in motion: inserts panels and the phone UI are dense with small text (s09, s12, s16, s19, inserts area); the s03 fridge and rock read small; s04 is a sparse frame; the s14 alien-doze inset is not drawn (no zzz fx); s16's opening and key frames look alike.
 - [ ] P1 Play fly-through clips (image sequences) as shots or transitions, with directional motion blur, plus fast punch-ins and whip pans with blur, so the picture changes every ≤ 1.5 s.
 - [x] P1 Depth-tested compositing: DONE and verified on the playa plates (the rock_low hero rock and the overlook cones hide a character's legs behind them).
