@@ -48,7 +48,7 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
   - **Pass** (the Director, 2026-11-21, option B, after 8 rounds showed that fresh reviewers disagree by about ±1):
     - **the median of the 5 panel scores ≥ 8**;
     - **no swipe point before 50 s** from any engagement reviewer;
-    - **facts ≥ 9**.
+    - **facts ≥ 8** (the Director, 2026-11-22; was 9).
   - Every round uses fresh reviewers with no view of earlier drafts or of the target score. Stop as soon as the panel passes; if it plateaus for 3 rounds, report to the Producer.
   - The real test is the posted video's retention.
   - Story-engine conventions (for example "You see," as line 2) are tools, not rules: drop one if the panel says it hurts.
