@@ -489,7 +489,7 @@ def place_fx(base, k, f, chars, screen=False):
         if 't' in e: t = float(e['t'])
         size = int(float(e.get('size', 0.9 if e['name'] == 'path_line' else 0.35)) * W)
         if e['name'] in FULL_FX: size = H; e = dict(e, x=0.5, y=0.5)          # full-frame: the square covers the frame
-        kw = {kk: v for kk, v in e.items() if kk not in ('name', 't', 'screen', 'card', 'card_label', 'card_tilt', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor', 'dx') and not kk.startswith('_')}
+        kw = {kk: v for kk, v in e.items() if kk not in ('name', 't', 'screen', 'card', 'card_label', 'card_tilt', 'move', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor', 'dx') and not kk.startswith('_')}
         if e['name'] == 'path_line':          # racing lines named in the plate JSON follow the real road (sets: paths.py)
             ins_ = shot.get('_insert'); pl = ins_[2] if (ins_ and ins_[0] <= f < ins_[1]) else shot['_plate']
             ppaths = G['plates'][pl][1].get('paths', {})
@@ -512,6 +512,9 @@ def place_fx(base, k, f, chars, screen=False):
             im = stub_fx(e['name'], t, size)
         if e.get('card'): im = sepia_card(im, t, e.get('card_label'), e.get('card_tilt', 0))
         x, y = float(e.get('x', 0.5)) * W, float(e.get('y', 0.5)) * H
+        if e.get('move'):                    # the whole fx canvas travels along points (frame fractions), eased over its life
+            pts = e['move']; u_ = smooth(t) * (len(pts) - 1); j_ = min(int(u_), len(pts) - 2); r_ = u_ - j_
+            x = (pts[j_][0] + (pts[j_ + 1][0] - pts[j_][0]) * r_) * W; y = (pts[j_][1] + (pts[j_ + 1][1] - pts[j_][1]) * r_) * H
         if e.get('on'):
             c = next((c for c in chars if c['id'] == e['on']), None)
             if c and c['bbox']:
@@ -628,6 +631,7 @@ def render_shot(k, f):
     chars = place_characters(base, k, f, meta)
     if shot.get('_props'): PROPS.draw(base, shot['_props'], 'front', f, lambda e: prop_t(k, f, e), meta, W, H)
     fxs = place_fx(base, k, f, chars)
+    if shot.get('_props'): PROPS.draw(base, shot['_props'], 'top', f, lambda e: prop_t(k, f, e), meta, W, H)   # over the fx
     img, to_screen, cam = camera_xform(base.convert('RGB'), G['cams'][k].at(f))
     gk = f'{k}:insert' if (ins and ins[0] <= f < ins[1]) else str(k)          # cut-ins have their own plate grade
     if G['grades'].get(gk): img = GRADE.apply(img, G['grades'][gk])

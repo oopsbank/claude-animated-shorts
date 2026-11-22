@@ -1125,7 +1125,8 @@ def _ice_side(t, n, u, e, kw):
         tr = [('s', [(x0, gy - th * 0.2, th * 0.5), (rxp, gy - th * 0.2, th * 0.5)], (120, 92, 66))] if abs(rxp - x0) > 2 else []
         puff = bump(seg(t, 0.26, 0.5))        # dust kicked up at the contact
         if puff > 0.03: comp(lay, group(n, [('c', x0 + sgn * (rx_ * 0.2 + k * u * 0.12 * puff), gy - u * (0.06 + 0.05 * k) * puff, u * (0.08 - 0.015 * k) * puff, (214, 186, 146)) for k in range(3)], e * 0.6 * puff))
-        comp(lay, group(n, tr + [('p', rock_poly(rxp, gy - ry_ * 0.85, rx_ * sq, ry_ / sq, seed=6), ROCKC)], e * g))
+        if kw.get('rock', True):   # rock=False: the engine draws the pushed rock itself (sailing-stones s20: Gary)
+            comp(lay, group(n, tr + [('p', rock_poly(rxp, gy - ry_ * 0.85, rx_ * sq, ry_ / sq, seed=6), ROCKC)], e * g))
     return opacity(lay, out_a * g)
 
 
