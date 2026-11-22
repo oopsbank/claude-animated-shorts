@@ -18,3 +18,7 @@
 ## Not checked yet
 - The Director's listen to the 1.24x voice (BACKLOG › audio).
 - Thumbnail and cover cut (`tools/thumbnail.py`, `tools/add_cover.sh`).
+
+## Thumbnail and cover (2026-11-22)
+- `thumbnail.png`: s20 frame 1762 without captions (Gary hits the NIGHT ONLY sign), zoom 1.5 at 0.6,0.5; headline "THESE ROCKS / MOVE / BY THEMSELVES".
+- `sailing-stones_v1_cover_1080x1920.mp4`: draft v1 with the thumbnail as the first 3 frames, audio delayed 0.1 s (1974 frames). Not posted; awaiting the Director.
