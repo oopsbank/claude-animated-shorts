@@ -1,0 +1,14 @@
+{
+ "ground_y": 1900,
+ "px_per_m": 300,
+ "horizon_y": -1,
+ "light_dir": "top",
+ "tint": "#ffffff",
+ "view": "insert",
+ "note": "full-frame 2D insert, no characters",
+ "panel": "alien_air_hockey_final",
+ "price_card_xy": [
+  860,
+  1500
+ ]
+}

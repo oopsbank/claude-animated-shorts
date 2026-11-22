@@ -178,11 +178,11 @@ def panel_rock_racing(d):
     title_plate(d, 'ROCK RACING LEAGUE', 470, (255, 255, 255), ORANGE, 40)
 
 def panel_air_hockey(d):
-    poly(d, [(BX0, BY0), (BX1, BY0), (BX1, BY1), (BX0, BY1)], (28, 14, 48), 0, None)
+    poly(d, [(BX0, BY0), (BX1, BY0), (BX1, BY1), (BX0, BY1)], (60, 36, 96), 0, None)
     rnd = random.Random(9)
     for k in range(70):   # crowd silhouettes with glowing eyes
         x = rnd.uniform(BX0, BX1); y = rnd.uniform(560, 700)
-        ell(d, x, y, 26, 30, (120, 76, 160), 0, None); ell(d, x - 8, y, 5, 3, LIME, 0, None); ell(d, x + 8, y, 5, 3, LIME, 0, None)
+        ell(d, x, y, 26, 30, (150, 100, 190), 0, None); ell(d, x - 8, y, 5, 3, LIME, 0, None); ell(d, x + 8, y, 5, 3, LIME, 0, None)
     ell(d, 540, 730, 40, 26, (255, 70, 60), 5)   # goal lamp
     for k in range(6): a = math.radians(200 + k * 28); line(d, [(540 + 52 * math.cos(a), 730 + 34 * math.sin(a)), (540 + 90 * math.cos(a), 730 + 58 * math.sin(a))], (255, 120, 90), 6)
     # scoreboard
@@ -230,7 +230,7 @@ def bubble_mask():
 def alien_cam(panel_fn, tag):
     bg = Image.new('RGB', (W * SS, H * SS)); d = ImageDraw.Draw(bg)
     for y in range(H):   # dreamy outside: plum to violet, a few sparkles
-        t = y / H; c = (int(60 + 50 * t), int(30 + 20 * t), int(90 + 60 * t)); d.line([(0, y * SS), (W * SS, y * SS)], fill=c, width=SS + 1)
+        t = y / H; c = (int(110 + 50 * t), int(64 + 30 * t), int(160 + 50 * t)); d.line([(0, y * SS), (W * SS, y * SS)], fill=c, width=SS + 1)
     stars(d, 40, (0, 0, W, H), 2, (255, 230, 160))
     scene = Image.new('RGB', (W * SS, H * SS), (0, 0, 0)); ds = ImageDraw.Draw(scene); panel_fn(ds)
     k_in = 0.88   # pull the art inside the cloud edge: shrink the content box about its centre, pad with its own blurred edges
