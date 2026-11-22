@@ -40,7 +40,7 @@ PR.cooler((0.1, 6.3, 0), rz=8)
 PR.tripod_cam((2.7, 5.2, 0), rz=200)
 PR.weather_mast((4.2, 8.6, 0), rz=30)
 PR.lantern((0.1, 6.3, 0.49))
-C.point((-2.6, 8.4, 0.6), (1.0, 0.55, 0.22), power=45, radius=0.5)                 # glow inside the tent (night)
+C.point((-2.6, 8.4, 0.6), (1.0, 0.55, 0.22), power=120, radius=0.5)                 # glow inside the tent (night)
 C.point((4.2, 8.6, 3.1), (1.0, 0.15, 0.1), power=4, radius=0.05)                    # red beacon on the mast
 C.point((HERO[0] - 7.0, HERO[1] - 2.0, 0.4), (1.0, 0.6, 0.3), power=70, radius=0.6)  # warm spill from a lantern off-frame
 for k in range(15):   # the row of 15 tagged rocks, each with a short trail behind
@@ -59,21 +59,21 @@ for x in (-8.0, 8.0):
 pad = C.rbox((22, 12, 0.3), (OVER[0], OVER[1] - 4, 0.0), PR.gravel_mat(), r=0.12)
 road = C.rbox((140, 7, 0.32), (OVER[0], OVER[1] - 13, 0.0), C.pbr('asphalt', (0.07, 0.065, 0.075), rough=0.8, coat=0.0, bevel=0.02), r=0.05)
 for x in range(-60, 61, 6): C.rbox((3.0, 0.15, 0.01), (OVER[0] + x, OVER[1] - 13, 0.165), C.pbr('roadline', (0.85, 0.7, 0.2), rough=0.5, coat=0.0), r=0.0)
-van = PR.tour_van((OVER[0] - 4.6, OVER[1] - 0.6, 0.15), rz=-24)
+van = PR.tour_van((OVER[0] - 4.0, OVER[1] + 0.4, 0.15), rz=-24)
 night_lamps = []
 SIGN_TXT = {'day': 'ALIEN ROCK TOURS\nNIGHT ONLY · $20', 'night': 'ALIEN ROCK TOURS\nSOLD OUT'}   # golden and frost use the day board
-SIGNS = {ln: PR.sign_posts(t, (OVER[0] + 3.4, OVER[1] - 1.6), rz=-8, w=2.6, h=1.15)[0] for ln, t in SIGN_TXT.items()}
-SIGN_C = (OVER[0] + 3.4, OVER[1] - 1.6 - 0.1, 2.4 - 1.15 / 2 - 0.05)
+SIGNS = {ln: PR.sign_posts(t, (OVER[0] + 2.5, OVER[1] - 1.2), rz=-12, w=2.4, h=1.1)[0] for ln, t in SIGN_TXT.items()}
+SIGN_C = (OVER[0] + 2.5, OVER[1] - 1.2 - 0.1, 2.4 - 1.1 / 2 - 0.05)
 PR.alien_cutout((OVER[0] + 0.6, OVER[1] + 1.2), rz=-5)
 # ticket stand in the right foreground: folding table, cash box, ticket roll; cones along the pad edge
 tbl = C.pbr('table_top', PR.lin('#f6d49a'), rough=0.4, coat=0.4)
-C.rbox((1.4, 0.7, 0.05), (OVER[0] + 1.45, OVER[1] - 5.0, 0.92), tbl, r=0.02)
+C.rbox((1.4, 0.7, 0.05), (OVER[0] + 2.3, OVER[1] - 6.0, 0.92), tbl, r=0.02)
 for sx in (-0.6, 0.6):
-    for sy in (-0.28, 0.28): C.rcyl(0.02, 0.76, (OVER[0] + 1.45 + sx, OVER[1] - 5.0 + sy, 0.53), C.pbr('chair_al', (0.55, 0.55, 0.58), rough=0.3, metal=0.9, coat=0.0), verts=8, r=0.0)
-C.rbox((0.36, 0.26, 0.14), (OVER[0] + 1.15, OVER[1] - 5.05, 1.02), C.pbr('cashbox', PR.lin('#2f6b4f'), rough=0.3, coat=0.7), r=0.02)
-C.rbox((0.30, 0.02, 0.04), (OVER[0] + 1.15, OVER[1] - 5.19, 1.06), C.gold('cash_gold'), r=0.01)
-C.rcyl(0.07, 0.12, (OVER[0] + 1.75, OVER[1] - 4.95, 1.0), C.pbr('tickets', PR.lin('#e8613c'), rough=0.5, coat=0.2), rot=(90, 0, 0), verts=18, r=0.01)
-C.contact_blob((OVER[0] + 1.45, OVER[1] - 5.0, 0.15), 1.8, 1.1)
+    for sy in (-0.28, 0.28): C.rcyl(0.02, 0.76, (OVER[0] + 2.3 + sx, OVER[1] - 6.0 + sy, 0.53), C.pbr('chair_al', (0.55, 0.55, 0.58), rough=0.3, metal=0.9, coat=0.0), verts=8, r=0.0)
+C.rbox((0.36, 0.26, 0.14), (OVER[0] + 2.0, OVER[1] - 6.05, 1.02), C.pbr('cashbox', PR.lin('#2f6b4f'), rough=0.3, coat=0.7), r=0.02)
+C.rbox((0.30, 0.02, 0.04), (OVER[0] + 2.0, OVER[1] - 6.19, 1.06), C.gold('cash_gold'), r=0.01)
+C.rcyl(0.07, 0.12, (OVER[0] + 2.6, OVER[1] - 5.95, 1.0), C.pbr('tickets', PR.lin('#e8613c'), rough=0.5, coat=0.2), rot=(90, 0, 0), verts=18, r=0.01)
+C.contact_blob((OVER[0] + 2.3, OVER[1] - 6.0, 0.15), 1.8, 1.1)
 cone = C.pbr('cone', PR.lin('#ff7a1a'), rough=0.35, coat=0.6)
 for cx, cy in ((-2.2, -4.8), (-1.6, -6.2), (3.6, -2.6)):
     bpy.ops.mesh.primitive_cone_add(vertices=20, radius1=0.17, radius2=0.03, depth=0.55, location=(OVER[0] + cx, OVER[1] + cy, 0.43))
@@ -82,15 +82,15 @@ for cx, cy in ((-2.2, -4.8), (-1.6, -6.2), (3.6, -2.6)):
     C.rcyl(0.11, 0.07, (OVER[0] + cx, OVER[1] + cy, 0.5), C.pbr('cone_band', (0.9, 0.9, 0.88), rough=0.3, coat=0.5), verts=20, r=0.0)
 BANNER, BANNER_POSTS, _ = PR.sign_posts('FINAL FAIL · LIVE', (OVER[0] - 0.8, OVER[1] + 3.6), rz=0, w=3.4, h=0.8, style='banner', post_h=3.0)
 for wy in (-0.85, 0.85):   # the van's tyre tracks across the gravel, and two stray tumbleweeds
-    a = math.radians(-24); G.trail((OVER[0] - 4.6 - 1.45 * math.cos(a) - wy * math.sin(a), OVER[1] - 0.6 - 1.45 * math.sin(a) + wy * math.cos(a)), -24 + 180 + 25, 14, width=0.32, wobble=0.6, seed=9)
+    a = math.radians(-24); G.trail((OVER[0] - 4.0 - 1.45 * math.cos(a) - wy * math.sin(a), OVER[1] + 0.4 - 1.45 * math.sin(a) + wy * math.cos(a)), -24 + 180 + 25, 14, width=0.32, wobble=0.6, seed=9)
 for tx, ty, r in ((-2.6, -6.6, 0.32), (3.3, -7.4, 0.24)):
     bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=r, location=(OVER[0] + tx, OVER[1] + ty, 0.15 + r * 0.9))
     tw = bpy.context.object; w_ = tw.modifiers.new('wire', 'WIREFRAME'); w_.thickness = 0.03
     C.assign(tw, C.pbr('tumble', PR.lin('#b08a55'), rough=0.8, coat=0.0, bevel=0.0)); C.no_ink(tw)
 # warm practicals: van headlamps and a lantern on the sign post
-C.point((OVER[0] - 4.6 + 2.7 * math.cos(math.radians(-24)), OVER[1] - 0.6 + 2.7 * math.sin(math.radians(-24)), 1.0), (1.0, 0.70, 0.38), power=90, radius=0.3)
+C.point((OVER[0] - 4.0 + 2.7 * math.cos(math.radians(-24)), OVER[1] + 0.4 + 2.7 * math.sin(math.radians(-24)), 1.0), (1.0, 0.70, 0.38), power=90, radius=0.3)
 PR.lantern((OVER[0] + 2.0, OVER[1] - 1.7, 0.15))
-C.point((OVER[0] - 4.6, OVER[1] - 0.6, 2.2), (1.0, 0.6, 0.3), power=70, radius=0.4)   # cabin glow
+C.point((OVER[0] - 4.0, OVER[1] + 0.4, 2.2), (1.0, 0.6, 0.3), power=70, radius=0.4)   # cabin glow
 
 # ---------- the flooded / frozen playa (per light) ----------
 ice = C.plane(1400, (0, 0, 0.012), G.ice_mat()); ice.name = 'ice_sheet'
@@ -114,11 +114,11 @@ CAMS = {
                        haze_range=(4, 480), per_light=per('playa_wide'), note='depth-layered: hero rock + trail near, camp mid, mountains far'),
     'playa_med': dict(loc=(0.3, -1.6, 1.4), target=(0.0, 9.0, 1.0), lens=22, stand=(0.2, 3.4, 0), fstop=5.6,
                       haze_range=(3, 480), per_light=per('playa_med'), note='camp two-shot; also the 1948/1960s flashbacks (engine sepia)'),
-    'rock_low': dict(loc=(hx - 2.9 * dx + 0.9 * dy, hy - 2.9 * dy - 0.9 * dx, 0.38), target=(hx + 9 * dx, hy + 9 * dy, 0.55), lens=24, stand=(hx + 2.6 * dx + 0.9 * dy, hy + 2.6 * dy - 0.9 * dx, 0), fstop=3.2,
+    'rock_low': dict(loc=(hx - 2.9 * dx + 1.7 * dy, hy - 2.9 * dy - 1.7 * dx, 0.34), target=(hx + 9 * dx - 1.5 * dy, hy + 9 * dy + 1.5 * dx, 0.75), lens=24, stand=(hx + 2.6 * dx + 0.9 * dy, hy + 2.6 * dy - 0.9 * dx, 0), fstop=3.2,
                      haze_range=(2, 480), per_light=per('rock_low'), note='ground-level beside the hero rock (left third), its trail running away; holds a 1.7x zoom on the rock edge'),
     'playa_top': dict(loc=(hx + 2.4 * dx, hy + 2.4 * dy, 7.5), target=None, lens=35, roll=TRAIL_H - 90, stand=(hx, hy, 0), fstop=None, top=True,
-                      haze_range=(10, 40), haze_k=0.0, per_light=per('playa_top'), light_overrides={'night': dict(exposure=0.9, sun_e=3.0)}, note='top-down: rock near the bottom, trail running up; px_per_m along the ground'),
-    'overlook_med': dict(loc=(OVER[0] - 0.2, OVER[1] - 8.6, 1.05), target=(OVER[0] - 0.2, OVER[1] + 6.0, 1.75), lens=18, stand=(OVER[0] - 0.4, OVER[1] - 3.6, 0.15), fstop=4.0,
+                      haze_range=(10, 40), haze_k=0.0, per_light=per('playa_top'), light_overrides={'night': dict(exposure=0.9, sun_e=5.0)}, note='top-down: rock near the bottom, trail running up; px_per_m along the ground'),
+    'overlook_med': dict(loc=(OVER[0] - 0.2, OVER[1] - 8.6, 1.05), target=(OVER[0] - 0.2, OVER[1] + 6.0, 2.2), lens=18, stand=(OVER[0] - 0.4, OVER[1] - 3.6, 0.15), fstop=4.0,
                          haze_range=(3, 480), per_light=per('overlook_med'), note='gravel pull-out: van left, sign right, alien cut-out; room for 4 characters at 0.8x'),
 }
 C.INK_FADE, C.INK_RANGE, C.INK_BORDER, C.INK_FAR_K, C.INK_THICK = (20, 80, 0.5), (4, 60), False, 0.6, 2.4   # only the sign boards carry ink
@@ -130,8 +130,8 @@ LIGHTS = {
     'golden': dict(DAYK, az=120, elev=12, sun=(1.0, 0.52, 0.20), sun_e=17.0, sun_soft=6, amb=(0.30, 0.40, 0.95), amb_e=0.55,
                    fill=(0.5, 0.55, 1.0), fill_e=140, exposure=0.1, haze=(1.0, 0.62, 0.42), haze_k=0.4, prac=0.6, emit=0.6, grade_warm=(1.04, 1.0, 0.92),
                    sky=[(0.0, (1.0, 0.66, 0.32)), (0.08, (1.0, 0.52, 0.30)), (0.26, (0.55, 0.48, 0.78)), (0.6, (0.22, 0.32, 0.72))], clouds=(1.0, 0.6, 0.4)),
-    'night': dict(az=200, elev=50, sun=(0.55, 0.65, 1.0), sun_e=1.6, amb=(0.24, 0.30, 0.62), amb_e=0.8, fill=(0.6, 0.62, 1.0), fill_e=150,
-                  exposure=0.55, haze=(0.10, 0.12, 0.28), haze_k=0.45, prac=3.0, emit=5.0, sky_refl=1.0, grade_sat=1.1,
+    'night': dict(az=200, elev=50, sun=(0.50, 0.62, 1.0), sun_e=1.6, amb=(0.16, 0.24, 0.66), amb_e=0.55, fill=(0.5, 0.58, 1.0), fill_e=70,
+                  exposure=0.45, prac_k=1, haze=(0.10, 0.12, 0.28), haze_k=0.45, prac=3.0, emit=5.0, sky_refl=1.0, grade_sat=1.1,
                   sky=[(0.0, (0.22, 0.20, 0.42)), (0.1, (0.07, 0.09, 0.26)), (0.45, (0.02, 0.03, 0.12))], stars=3.5, clouds=None, cloud_amt=0),
     'frost': dict(DAYK, az=95, elev=26, sun=(1.0, 0.84, 0.66), sun_e=8.0, sun_soft=6, amb=(0.42, 0.6, 1.0), amb_e=0.8,
                   fill=(0.55, 0.7, 1.0), fill_e=140, exposure=-0.6, haze=(0.80, 0.88, 1.0), haze_k=0.4, prac=0.0, emit=0.15,

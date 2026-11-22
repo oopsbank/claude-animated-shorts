@@ -91,9 +91,9 @@ def stars(d, n, box, seed, col=(255, 255, 255)):
         poly(d, [(x, y - r * 2), (x + r * 0.5, y - r * 0.5), (x + r * 2, y), (x + r * 0.5, y + r * 0.5), (x, y + r * 2), (x - r * 0.5, y + r * 0.5), (x - r * 2, y), (x - r * 0.5, y - r * 0.5)], col, 0, None)
 
 # ---------------------------------------------------------------- fantasy panels (drawn into the bubble box)
-BX0, BY0, BX1, BY1 = 60, 300, 1020, 1520          # bubble content box (1x coords)
+BX0, BY0, BX1, BY1 = 60, 300, 1020, 1620          # bubble content box (1x coords)
 
-def bg_desert(d, sky=((255, 176, 92), (255, 120, 120))):
+def bg_desert(d, sky=((90, 190, 255), (255, 170, 120))):
     for y in range(BY0, BY1):   # sunset sky gradient, then desert floor
         t = (y - BY0) / (BY1 - BY0)
         c = tuple(int(sky[0][i] + (sky[1][i] - sky[0][i]) * min(1, t / 0.45)) for i in range(3))
@@ -109,13 +109,13 @@ def bg_desert(d, sky=((255, 176, 92), (255, 120, 120))):
 def panel_leaf_blower(d):
     bg_desert(d)
     # the boulder racing to the right, a dust plume and speed lines behind it
-    line(d, [(560, 1255), (90, 1330)], shade(TAN, 0.6), 22)                                  # its groove trail
-    for k in range(5): line(d, [(880, 1040 + k * 40), (980, 1040 + k * 40)], (255, 245, 220), 8)   # it zooms off to the right
-    rock(d, 720, 1150, 190, 140, seed=5)
-    puff(d, 560, 1250, 46); puff(d, 900, 1250, 34)
+    line(d, [(660, 1200), (90, 1330)], shade(TAN, 0.6), 22)                                  # its groove trail
+    rock(d, 800, 1120, 150, 110, seed=5)
+    for k in range(3): line(d, [(650 - k * 20, 1060 + k * 40), (690 - k * 20, 1060 + k * 40)], INK, 6)   # motion ticks
+    puff(d, 640, 1210, 46); puff(d, 560, 1240, 34); puff(d, 950, 1200, 28)
     # three tiny aliens in hi-vis vests, blasting it with leaf blowers
-    for (x, y, s, a) in ((200, 1180, 0.85, -4), (340, 1300, 1.05, -12), (170, 1420, 1.2, -22)):
-        hx, hy = alien(d, x, y, s, vest=(255, 140, 30), face=2 if s > 1 else 1)
+    for (x, y, s, a) in ((230, 1150, 1.05, -4), (420, 1310, 1.3, -10), (190, 1430, 1.5, -20)):
+        hx, hy = alien(d, x, y, s, vest=(255, 225, 0), face=2 if s > 1.2 else 1)
         tip = leaf_blower(d, x + 30 * s, y - 70 * s, a, s * 1.6)
         for k in range(4):   # air blasts
             t0 = (tip[0] + 10, tip[1] + (k - 1.5) * 18)
@@ -144,7 +144,7 @@ def panel_rock_racing(d):
         for k in range(4): line(d, [(x - sz - 40 - k * 30, y - 40 + k * 22), (x - sz - 140 - k * 30, y - 40 + k * 22)], (255, 255, 255), 6)
         rock(d, x, y, sz, sz * 0.7, seed=20 + n, col=[(70, 58, 62), (88, 70, 64), (60, 56, 70)][n - 1])
         helmet(d, x + sz * 0.05, y - sz * 0.55, sz * 0.48, [ORANGE, BLUE, PINK][n - 1])
-        bib(d, x, y - sz * 0.05, sz * 0.62, sz * 0.5, n)
+        bib(d, x, y - sz * 0.02, sz * 0.85, sz * 0.62, n)
     poly(d, [(180, 330), (900, 330), (900, 430), (180, 430)], ORANGE, 6)
     text_c(d, (540, 380), 'ROCK RACING LEAGUE', font(44, True), (255, 255, 255), stroke=5)
 
@@ -159,12 +159,12 @@ def panel_air_hockey(d):
     text_c(d, (540, 375), 'FINAL', font(40, True), SUN)
     text_c(d, (410, 460), '3', font(90, True), (80, 255, 200)); text_c(d, (540, 455), ':', font(80, True), (255, 255, 255)); text_c(d, (670, 460), '2', font(90, True), (255, 90, 170))
     # the neon rink in perspective
-    rink = [(150, 760), (930, 760), (1060, 1500), (20, 1500)]
+    rink = [(150, 760), (930, 760), (1080, 1640), (0, 1640)]
     poly(d, rink, (70, 130, 210), 8, (120, 240, 255))
     poly(d, [(200, 790), (880, 790), (900, 900), (180, 900)], (100, 165, 235), 0, None)   # ice sheen
     line(d, [(85, 1130), (995, 1130)], (255, 90, 170), 8)                                      # centre line
     d.ellipse(S(400, 1060, 680, 1200), outline=(255, 90, 170), width=lw(8))
-    for (gx, gy, gw) in ((540, 770, 150), (540, 1490, 240)): poly(d, [(gx - gw, gy - 14), (gx + gw, gy - 14), (gx + gw, gy + 14), (gx - gw, gy + 14)], (120, 240, 255), 4)   # goals
+    for (gx, gy, gw) in ((540, 770, 150), (540, 1600, 260)): poly(d, [(gx - gw, gy - 14), (gx + gw, gy - 14), (gx + gw, gy + 14), (gx - gw, gy + 14)], (120, 240, 255), 4)   # goals
     # the boulder puck flying, with a neon streak
     for k in range(5): line(d, [(300 - k * 30, 1300 + k * 18), (470 - k * 20, 1240 + k * 12)], (120, 240, 255), 7)
     rock(d, 540, 1200, 150, 90, seed=31)
@@ -179,14 +179,15 @@ def panel_air_hockey(d):
         x0 = rx - 95 + k * 40; poly(d, [(x0, ry - 30), (x0 + 20, ry - 30), (x0 + 20, ry + 70), (x0, ry + 70)], INK if k % 2 == 0 else (250, 250, 250), 0, None)
     d.rectangle(S(rx - 100, ry - 32, rx + 100, ry + 72), outline=INK, width=lw(6))
     for sx in (-1, 1): ell(d, rx + sx * 32, ry - 82, 16, 16, (255, 255, 255), 5); ell(d, rx + sx * 32, ry - 79, 7, 7, INK, 0, None)
-    ell(d, rx + 34, ry - 48, 22, 13, SUN, 5); line(d, [(rx + 20, ry - 40), (rx - 10, ry - 20)], INK, 3)
+    ell(d, rx + 40, ry - 48, 30, 18, SUN, 6); line(d, [(rx + 20, ry - 40), (rx - 10, ry - 20)], INK, 3)
     for k in range(3): line(d, [(rx + 52 + k * 6, ry - 56 - k * 14), (rx + 80 + k * 10, ry - 66 - k * 20)], (255, 255, 255), 5)   # tweet!
-    text_c(d, (540, 625), 'GALACTIC AIR HOCKEY FINAL', font(40, True), (255, 255, 255), stroke=5)
+    poly(d, [(170, 595), (910, 595), (910, 655), (170, 655)], (60, 20, 90), 5)
+    text_c(d, (540, 625), 'GALACTIC AIR HOCKEY FINAL', font(40, True), (255, 255, 255), stroke=4)
 
 # ---------------------------------------------------------------- thought bubble + ALIEN CAM filter
 def bubble_mask():
     m = Image.new('L', (W * SS, H * SS), 0); d = ImageDraw.Draw(m)
-    cx, cy, rx, ry = 540, 910, 480, 610
+    cx, cy, rx, ry = 540, 960, 480, 660
     d.ellipse(S(cx - rx + 40, cy - ry + 40, cx + rx - 40, cy + ry - 40), fill=255)
     n = 22
     for k in range(n):   # cloud scallops along the rim
@@ -201,7 +202,7 @@ def alien_cam(panel_fn, tag):
     stars(d, 40, (0, 0, W, H), 2, (255, 230, 160))
     scene = Image.new('RGB', (W * SS, H * SS), (0, 0, 0)); ds = ImageDraw.Draw(scene); panel_fn(ds)
     # ALIEN CAM filter: green cast, scanlines, vignette, REC overlay
-    g = Image.new('RGB', scene.size, (60, 255, 90)); scene = Image.blend(scene, ImageChops.multiply(scene, g), 0.2)
+    g = Image.new('RGB', scene.size, (60, 255, 90)); scene = Image.blend(scene, ImageChops.multiply(scene, g), 0.12)
     sl = Image.new('L', scene.size, 0); dsl = ImageDraw.Draw(sl)
     for y in range(0, H * SS, 8 * SS): dsl.rectangle([0, y, W * SS, y + 2 * SS], fill=40)
     scene = Image.composite(Image.new('RGB', scene.size, (0, 30, 0)), scene, sl)
@@ -209,12 +210,12 @@ def alien_cam(panel_fn, tag):
     vg = vg.filter(ImageFilter.GaussianBlur(160)).resize(scene.size)
     scene = Image.composite(scene, ImageChops.multiply(scene, Image.new('RGB', scene.size, (120, 150, 120))), vg)
     do = ImageDraw.Draw(scene)
-    for (x, y, sx, sy) in ((170, 400, 1, 1), (910, 400, -1, 1), (230, 1300, 1, -1), (850, 1300, -1, -1)):   # viewfinder brackets
+    for (x, y, sx, sy) in ((170, 400, 1, 1), (910, 400, -1, 1), (230, 1400, 1, -1), (850, 1400, -1, -1)):   # viewfinder brackets
         line(do, [(x, y + sy * 70), (x, y), (x + sx * 70, y)], (235, 255, 235), 8)
-    ell(do, 190, 1395, 13, 13, (255, 50, 50), 0, None); text_c(do, (315, 1340), 'REC', font(34, True), (235, 255, 235), anchor='lm')
-    poly(do, [(420, 1315), (660, 1315), (660, 1365), (420, 1365)], (30, 90, 40), 3, (235, 255, 235))
-    text_c(do, (540, 1340), 'ALIEN CAM', font(32, True), (180, 255, 170))
-    text_c(do, (800, 1340), '00:41:27', font(30, True), (235, 255, 235), anchor='rm')
+    ell(do, 190, 1395, 13, 13, (255, 50, 50), 0, None); text_c(do, (315, 1450), 'REC', font(34, True), (235, 255, 235), anchor='lm')
+    poly(do, [(420, 1425), (660, 1425), (660, 1475), (420, 1475)], (30, 90, 40), 3, (235, 255, 235))
+    text_c(do, (540, 1450), 'ALIEN CAM', font(32, True), (180, 255, 170))
+    text_c(do, (800, 1450), '00:41:27', font(30, True), (235, 255, 235), anchor='rm')
     m = bubble_mask(); bg.paste(scene, (0, 0), m)
     # bubble rim (ink + cream) and the trailing thought dots toward the thinker (bottom left)
     edge = m.filter(ImageFilter.MaxFilter(2 * 10 * SS + 1)); ring = ImageChops.subtract(edge, m)
@@ -222,7 +223,7 @@ def alien_cam(panel_fn, tag):
     edge2 = edge.filter(ImageFilter.MaxFilter(2 * 6 * SS + 1)); ring2 = ImageChops.subtract(edge2, edge)
     bg.paste(Image.new('RGB', bg.size, INK), (0, 0), ring2)
     db = ImageDraw.Draw(bg)
-    for (x, y, r) in ((240, 1620, 48), (160, 1730, 32), (105, 1810, 20)): ell(db, x, y, r, r, CREAM, 8)
+    for (x, y, r) in ((200, 1700, 44), (135, 1790, 30), (90, 1860, 19)): ell(db, x, y, r, r, CREAM, 8)
     im = bg.resize((W, H), Image.LANCZOS)
     return im
 
