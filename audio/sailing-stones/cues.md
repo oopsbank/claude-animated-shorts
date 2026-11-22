@@ -11,8 +11,8 @@ All music and SFX are original, synthesized in numpy/scipy (`audio/lib/score.py`
 
 ## Master loudness (own BS.1770-4 meter)
 - Integrated **-14.0 LUFS** (target -14.0), true peak **-1.2 dBTP** (ceiling -1.2), LRA 1.5 LU
-- Stems at mix gain: voice -14.4, music -24.5, sfx -38.5 LUFS; master gain +12.03 dB
-- Limiter: max gain reduction 3.28 dB, active (>0.1 dB) on 3.62 % of samples
+- Stems at mix gain: voice -14.4, music -24.5, sfx -38.3 LUFS; master gain +12.03 dB
+- Limiter: max gain reduction 3.34 dB, active (>0.1 dB) on 3.58 % of samples
 
 ffmpeg ebur128 cross-check:
 ```
@@ -42,14 +42,14 @@ bed = music + sfx. margin = voice - bed (integrated). speech median / p10 = 400 
 
 | section | time s | voice | music | sfx | bed | margin LU | speech median LU | speech p10 LU |
 |---|---|---|---|---|---|---|---|---|
-| hook 0.0 | 0.00-5.35 | -13.9 | -23.4 | -39.8 | -23.3 | 9.4 | 9.7 | 7.1 |
-| mystery 5.3 | 5.35-10.97 | -14.2 | -24.5 | -42.0 | -24.4 | 10.2 | 11.1 | 6.7 |
+| hook 0.0 | 0.00-5.35 | -13.9 | -23.4 | -40.6 | -23.3 | 9.4 | 9.7 | 7.1 |
+| mystery 5.3 | 5.35-10.97 | -14.2 | -24.5 | -41.2 | -24.4 | 10.2 | 11.0 | 6.7 |
 | body 11.0 | 10.97-35.97 | -14.7 | -24.7 | -38.1 | -24.5 | 9.8 | 10.0 | 6.5 |
-| mystery 36.0 | 35.97-41.13 | -14.0 | -24.6 | -32.9 | -24.2 | 10.2 | 10.2 | 6.1 |
-| body 41.1 | 41.13-49.93 | -14.1 | -24.1 | -39.4 | -24.0 | 9.9 | 9.8 | 6.2 |
-| explain 49.9 | 49.93-54.99 | -14.5 | -24.2 | -39.9 | -24.1 | 9.6 | 9.9 | 7.4 |
-| body 55.0 | 54.99-59.61 | -14.1 | -24.1 | -38.7 | -24.0 | 9.9 | 9.9 | 7.7 |
-| payoff 59.6 | 59.61-65.70 | -14.5 | -26.2 | -41.9 | -26.1 | 11.6 | 13.5 | 9.0 |
+| mystery 36.0 | 35.97-41.13 | -14.0 | -24.6 | -32.8 | -24.2 | 10.2 | 10.2 | 6.1 |
+| body 41.1 | 41.13-49.93 | -14.1 | -24.1 | -39.4 | -23.9 | 9.9 | 9.8 | 6.2 |
+| explain 49.9 | 49.93-54.99 | -14.5 | -24.2 | -37.8 | -24.0 | 9.5 | 9.8 | 7.4 |
+| body 55.0 | 54.99-59.61 | -14.1 | -24.1 | -38.3 | -23.9 | 9.8 | 9.9 | 7.7 |
+| payoff 59.6 | 59.61-65.70 | -14.5 | -26.2 | -43.0 | -26.1 | 11.6 | 13.6 | 9.0 |
 
 ## Music map (original, G major, 112 bpm)
 Music under the voice: -3 dB duck keyed from words.json, section targets (LU vs voice): hook -9.5, body -10.0, mystery -10.0, explain -9.5, payoff -11.0. Applied section gains (dB): hook@0.0s -13.0, mystery@5.3s -7.9, body@11.0s -14.6, mystery@36.0s -8.2, body@41.1s -13.8, explain@49.9s -11.6, body@55.0s -14.2, payoff@59.6s -5.1.
@@ -97,10 +97,11 @@ level = target LU vs the voice stem (max momentary of the event). Beds are integ
 | 21 | 42.341 | 1270.2 | ice_crack | thin ice crackling, dispersive 'pew' cracks | fx ice_crack (s15 word 5) | -14 | +0.00 |
 | 22 | 46.227 | 1386.8 | whoosh | transition whoosh | fx whoosh (s16 word 1) | -17 | +0.00 |
 | 23 | 49.614 | 1488.4 | ka_ching | cash register ka-ching | price beat: Fifty bucks (the biggest) (word 173 'bucks!"') | -11 | +0.00 |
-| 24 | 51.735 | 1552.0 | ice_pane | ice pane grinding / shoving | huge panes (one pane, not two over the rock) (word 182 'panes;') | -16 | +0.00 |
-| 25 | 55.146 | 1654.4 | live_flurry | a flurry of livestream notification chimes | the counter shoots up to 1.2M (word 195 'livestream') | -16 | +0.00 |
-| 26 | 58.373 | 1751.2 | sign_crash | wooden sign splitting and slapping flat | Gary goes straight through the NIGHT ONLY sign (word 207 'through') | -15 | +0.00 |
-| 27 | 64.688 | 1940.6 | ka_ching | cash register ka-ching | five bucks: a small, deflated ka-ching (word 231 'bucks.') | -17 | +0.00 |
+| 24 | 51.735 | 1552.0 | pane_push_top | engine s17 mechanism: the wind shoves a pane into a rock (same grind as ice_pane) | fx pane_push_top (s17 word 8) | -15 | +0.00 |
+| 25 | 51.735 | 1552.0 | ice_pane | ice pane grinding / shoving | huge panes (one pane, not two over the rock) (word 182 'panes;') | -16 | +0.00 |
+| 26 | 55.146 | 1654.4 | live_flurry | a flurry of livestream notification chimes | the counter shoots up to 1.2M (word 195 'livestream') | -16 | +0.00 |
+| 27 | 58.373 | 1751.2 | sign_crash | wooden sign splitting and slapping flat | Gary goes straight through the NIGHT ONLY sign (word 207 'through') | -15 | +0.00 |
+| 28 | 64.688 | 1940.6 | ka_ching | cash register ka-ching | five bucks: a small, deflated ka-ching (word 231 'bucks.') | -17 | +0.00 |
 | bed | 0.000-22.472 | 0.0 | amb_desert | ambience for set 'playa' | shots on that set | -30.0 (int.) | 0 |
 | bed | 22.472-25.076 | 674.2 | amb_alien | ambience for set 'inserts' | shots on that set | -30.0 (int.) | 0 |
 | bed | 25.076-30.185 | 752.3 | amb_desert | ambience for set 'playa' | shots on that set | -30.0 (int.) | 0 |

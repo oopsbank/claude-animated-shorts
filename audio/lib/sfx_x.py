@@ -403,6 +403,7 @@ GEN = {
     "rain": (rain, -16, "rain on a shallow pond"),
     "ice_crack": (ice_crack, -14, "thin ice crackling, dispersive 'pew' cracks"),
     "ice_pane": (ice_pane, -15, "ice pane grinding / shoving"),
+    "pane_push_top": (ice_pane, -15, "engine s17 mechanism: the wind shoves a pane into a rock (same grind as ice_pane)"),
     "sliding_rock": (sliding_rock, -15, "rock scraping over wet mud and ice"),
     "ka_ching": (ka_ching, -10, "cash register ka-ching"),
     "sign_crash": (sign_crash, -9, "wooden sign splitting and slapping flat"),
