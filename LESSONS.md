@@ -106,7 +106,7 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 
 ## Process and QA
 - Don't push a look metric all the way to the reference number by grading alone: forcing our warm/cool split to the leaders' value made frames dull and blue (our dark pixels are warm because of plum ink and red costumes, not the grade). Use a gentle finish (vignette 0.14, split ±0.02) and fix the rest in lighting and sets.
-- Fresh LLM reviewers disagree by about ±1 on the same script, so "all five ≥ 9" is noise-bound: 8 rounds plateaued at 7-9. Gate scripts on the panel median ≥ 8, no swipe before 50 s and facts ≥ 8 (was 9 until 2026-11-22), then let real retention data judge.
+- Fresh LLM reviewers disagree by about ±1 on the same script, so "all five ≥ 9" is noise-bound: 8 rounds plateaued at 7-9. Gate scripts on the panel median ≥ 8, no swipe before 50 s (the facts score was dropped by the Director on 2026-11-22), then let real retention data judge.
 - `tools/preflight.py` must report every missing plate, not exit on the first one: `find_plate` raises SystemExit, so catch it (fixed 2026-11-21).
 - The 5-reviewer script panel with no round cap burned one session's whole 5-hour limit in 9 rounds (53 sub-agents) and stalled it for 4 h. Run panel reviewers and gag writers on `model: "sonnet"` with short prompts, all in parallel, and keep the main model for the rewrite itself.
 - Measure, don't eyeball, when matching a reference: our first "sentence" captions were 3x wider than theirs. Our frames also had no vignette (0.99 vs 0.78) and an inverted warm/cool split, and both only showed up in `style_metrics.py`.

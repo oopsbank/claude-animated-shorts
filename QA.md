@@ -3,7 +3,7 @@
 Every task ends with these checks: first the automatic checks, then your own look, then an independent reviewer.
 
 **Updated standard (the Director, 2026-11-21, evening): every stage's OVERALL score (the mean of its criteria) must be ≥ 8/10.** Fix and re-review until it passes, and keep going until there is a finished video. This applies to sets, plates, characters, props, fx, the engine, audio, storyboards, drafts, thumbnails.
-- The overall score of each stage is ≥ 8, and all automatic checks pass. Facts in scripts stay ≥ 8 (lowered from 9 by the Director, 2026-11-22).
+- The overall score of each stage is ≥ 8, and all automatic checks pass. Scripts have no facts score (dropped by the Director, 2026-11-22); facts still need sources.
 - Fix and re-review with fresh reviewers until it passes. There is no round cap.
 - Report progress to the Producer every 3 rounds, so the Director can step in.
 - Reviewers never see earlier drafts or the target score.
@@ -48,7 +48,7 @@ Ask it for a **score per criterion out of 10**, then a **numbered fix list with 
   - **Pass** (the Director, 2026-11-21, option B, after 8 rounds showed that fresh reviewers disagree by about ±1):
     - **the median of the 5 panel scores ≥ 8**;
     - **no swipe point before 50 s** from any engagement reviewer;
-    - **facts ≥ 8** (the Director, 2026-11-22; was 9).
+    - (no facts score: dropped by the Director, 2026-11-22).
   - Every round uses fresh reviewers with no view of earlier drafts or of the target score. Stop as soon as the panel passes; if it plateaus for 3 rounds, report to the Producer.
   - The real test is the posted video's retention.
   - Story-engine conventions (for example "You see," as line 2) are tools, not rules: drop one if the panel says it hurts.
