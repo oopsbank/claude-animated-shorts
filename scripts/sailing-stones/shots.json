@@ -13,6 +13,7 @@
    "set": "playa",
    "cam": "playa_med",
    "light": "day",
+   "crop": true,
    "size": "medium",
    "grammar": [
     "xcu",
@@ -532,6 +533,7 @@
    "set": "playa",
    "cam": "overlook_med",
    "light": "night",
+   "crop": true,
    "size": "wide",
    "grammar": [
     "crowd"
@@ -830,18 +832,26 @@
    "light": "golden",
    "size": "wide",
    "camera": {
-    "move": "follow",
-    "direction": "right",
-    "zoom": 1.2,
+    "move": "glide",
     "glides": [
      {
-      "at_word": 8,
+      "at_word": 0,
       "to": {
-       "zoom": 1.45
+       "zoom": 1.32,
+       "x": 0.56
+      },
+      "dur": 40
+     },
+     {
+      "at_word": 10,
+      "to": {
+       "zoom": 1.45,
+       "x": 0.56
       },
       "dur": 6
      }
-    ]
+    ],
+    "zoom": 1.2
    },
    "note": "Slapstick: a brown wall of water sweeps the tent away (screen-right, camera follows); at \"included\" two heads pop out of the tent door. A generic comic setback at the camp (flash floods are a Death Valley hazard), not the playa pond and not the real team's history.",
    "characters": [
@@ -1061,6 +1071,7 @@
    "set": "playa",
    "cam": "overlook_med",
    "light": "frost",
+   "crop": true,
    "size": "medium",
    "grammar": [
     "crowd"
@@ -1215,6 +1226,13 @@
        "zoom": 1.0
       },
       "dur": 6
+     },
+     {
+      "at_word": 16,
+      "to": {
+       "zoom": 1.12
+      },
+      "dur": 24
      }
     ]
    },
@@ -1320,6 +1338,7 @@
    "set": "playa",
    "cam": "playa_med",
    "light": "frost",
+   "crop": true,
    "size": "medium",
    "grammar": [
     "depth"
@@ -1568,6 +1587,14 @@
    "camera": {
     "move": "glide",
     "glides": [
+     {
+      "at_word": 1,
+      "to": {
+       "zoom": 1.12,
+       "roll": -6
+      },
+      "dur": 20
+     },
      {
       "at_word": 7,
       "to": {
@@ -2011,6 +2038,7 @@
    "set": "playa",
    "cam": "playa_med",
    "light": "day",
+   "crop": true,
    "size": "medium",
    "camera": {
     "move": "glide",

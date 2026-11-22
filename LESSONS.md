@@ -28,6 +28,9 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - A cut-in must hide the main shot's fx (the s14 ice fx covered the sleeping-cousins cut-in).
 - A mechanism drawn by an fx with its own built-in rock can't push the story's rock: move the fx canvas along the rock's path (`move`), switch its rock off, and draw the hero rock over it (props layer `top`).
 - Never splice-render a few shots into a full render: `--frames` rewrites `track.json` for those frames only and `qa.py` then misses the rest. Finish the shot-list changes first, or stop the render and restart it whole (CPU is cheap, usage is not).
+- A `follow` camera with no rider in the shot doesn't move: give character-free or static shots a slow glide, or qa.py flags frozen spans (s10, s14's ending, s16's opening).
+- Seated cards (`seated=`) sit ~6 px above the ground line: re-plant them on their lowest opaque row, like a lean.
+- A deliberate punch-in that cuts edge characters needs `crop: true` on the shot, or qa.py counts every frame of it as clipped.
 - A new engine fx name needs an entry in `audio/lib/sfx_x.py` GEN or SILENT, or the mix drops its sound (`pane_push_top` reuses the ice_pane grind).
 - `audio/build_mix.py` needs scipy, which the venv lacked: `uv pip install --python .venv/bin/python scipy`.
 - Storyboard reviews plateau around 7.4 ±0.3 when the remaining notes are frozen assets (fx at 5.8, frost plates, dense inserts): report them to the Producer after round 3 instead of polishing around them.

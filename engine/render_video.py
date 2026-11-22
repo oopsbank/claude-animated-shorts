@@ -404,7 +404,7 @@ def place_characters(base, k, f, meta):
             gx += (r.get('contact_dx') or 0) * fig_h * sg
         ox, oy = int(round(gx - sx)), int(round(gy - sy))
         ft = feet_of(im.getchannel('A'), sx)
-        if ft and (abs(st['lean']) > 0.05 or st.get('rig')): oy += int(round(sy - ft['y'])) - 1   # re-plant: lean drops a foot; bike cards' wheels sit above 975
+        if ft and (abs(st['lean']) > 0.05 or st.get('rig') or spec.get('seated')): oy += int(round(sy - ft['y'])) - 1   # re-plant: lean drops a foot; bike cards' wheels sit above 975
         if ft0 and ft:     # report the foot strokes' x after the rotation, from the unrotated band (rotation about the soles)
             th = math.radians(st['lean'])
             rx = lambda x: None if x is None else sx + (x - sx) * math.cos(th)
