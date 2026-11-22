@@ -9,23 +9,23 @@ Status: Producer draft v2 (the Director: the 'no algae' finding comes right afte
 - UAF release (2017), "Researchers solve the century-old mystery of Blood Falls": https://uaf.edu/news/archives/news-archives-2010-2021/researchers-solve-the-100-year-old-mystery-of-blood-falls.php
 - Verified 2026-11-22: ~400 m of ice over the brine pool, ~4 km from the snout (Mikucki et al. 2009, above). "Scanned from the air": Mikucki et al. 2015, Nature Communications, helicopter-borne SkyTEM electromagnetic survey of Taylor Valley found brine under Taylor Glacier: https://www.doi.org/10.1038/NCOMMS7831 ; https://home.dartmouth.edu/news/2015/04/scientists-discover-salty-aquifer-previously-unknown-microbial-habitat-under
 
-## Voice-over (236 words, ~64 s at 3.7 words/s)
-1. In 1911, a geologist named Griffith Taylor walked up to an Antarctic glacier and found it bleeding.
+## Voice-over (v3: 217 words; trimmed so the voice needs little stretch — the Director found the 1.155x take rushed)
+1. In 1911, geologist Griffith Taylor walked up to an Antarctic glacier and found it bleeding.
 2. You see, a bright red stain was pouring out of the ice onto clean white snow. They named it Blood Falls.
 3. The air there averages minus seventeen. Nothing should flow. Yet the red kept coming.
-4. Explorers had an answer: "It's red algae. Tiny plants. Mystery solved."
-5. But when scientists finally tested the water, there was no algae in it.
+4. Explorers had an answer: "It's red algae. Mystery solved."
+5. But when scientists finally tested it, there was no algae.
 6. Clue one. Just salt, saltier than the sea, and lots of iron.
 7. So if plants aren't making it red, what is?
-8. Clue two. The water was alive with microbes. No sunlight, no oxygen. They survive by breathing iron and sulfur instead.
+8. Clue two. The water was alive with microbes. No sunlight, no oxygen. They breathe iron and sulfur instead.
 9. Clue three. Right where it comes out, the water isn't red at all. It's clear.
 10. Then scientists scanned under the glacier from the air.
-11. Under four hundred metres of ice, they found a hidden pool of ancient seawater, sealed off for over a million years.
+11. Under four hundred metres of ice sat a hidden pool of ancient seawater, sealed for over a million years.
 12. Salt, and heat released as it freezes, keep it liquid.
 13. Down there, the iron stays invisible. Until it escapes.
-14. But the moment it squeezes out into the open air, the iron meets oxygen, and it rusts. Like a wet nail turning orange overnight.
+14. But the moment it squeezes out into the air, the iron meets oxygen and rusts. Like a wet nail turning orange.
 15. The glacier isn't bleeding. It's rusting.
-16. And the red algae? Never there. Just a sealed world of microbes, still alive under the ice, still painting the snow red, like in 1911.
+16. And the red algae? Never there. Just a sealed world of microbes, still painting the snow red, like in 1911.
 
 ## Hook map (a hook every ~10 s)
 | ~Time | Line | Hook |

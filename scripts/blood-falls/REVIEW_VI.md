@@ -1,4 +1,4 @@
-# Blood Falls: kịch bản song ngữ và bảng hình (bản nháp v2, 2026-11-22)
+# Blood Falls: kịch bản song ngữ và bảng hình (bản v3, 2026-11-22: rút gọn để giọng đọc bớt gấp)
 
 Không chấm điểm (theo yêu cầu của Đạo diễn). Thời gian ước tính ở 3,7 từ/giây, tổng ~64 giây.
 
@@ -6,22 +6,22 @@ Không chấm điểm (theo yêu cầu của Đạo diễn). Thời gian ước 
 
 | # | English (voice-over) | Tiếng Việt |
 |---|---|---|
-| 1 | In 1911, a geologist named Griffith Taylor walked up to an Antarctic glacier and found it bleeding. | Năm 1911, nhà địa chất Griffith Taylor đi đến một sông băng ở Nam Cực và thấy nó đang chảy máu. |
+| 1 | In 1911, geologist Griffith Taylor walked up to an Antarctic glacier and found it bleeding. | Năm 1911, nhà địa chất Griffith Taylor đi đến một sông băng ở Nam Cực và thấy nó đang chảy máu. |
 | 2 | You see, a bright red stain was pouring out of the ice onto clean white snow. They named it Blood Falls. | Một vệt đỏ tươi đang trào ra từ trong băng, chảy xuống nền tuyết trắng tinh. Người ta đặt tên nó là Thác Máu. |
 | 3 | The air there averages minus seventeen. Nothing should flow. Yet the red kept coming. | Nhiệt độ ở đó trung bình âm 17 độ. Không gì có thể chảy được. Vậy mà màu đỏ vẫn cứ tuôn ra. |
-| 4 | Explorers had an answer: "It's red algae. Tiny plants. Mystery solved." | Các nhà thám hiểm có câu trả lời: "Là tảo đỏ. Cây tí hon thôi. Xong bí ẩn." |
-| 5 | But when scientists finally tested the water, there was no algae in it. | Nhưng khi các nhà khoa học cuối cùng cũng xét nghiệm nước, trong đó chẳng có chút tảo nào. |
+| 4 | Explorers had an answer: "It's red algae. Mystery solved." | Các nhà thám hiểm có câu trả lời: "Là tảo đỏ. Xong bí ẩn." |
+| 5 | But when scientists finally tested it, there was no algae. | Nhưng khi các nhà khoa học cuối cùng cũng xét nghiệm, chẳng có chút tảo nào. |
 | 6 | Clue one. Just salt, saltier than the sea, and lots of iron. | Manh mối một. Chỉ có muối, mặn hơn cả nước biển, và rất nhiều sắt. |
 | 7 | So if plants aren't making it red, what is? | Vậy nếu không phải cây làm nó đỏ, thì là gì? |
-| 8 | Clue two. The water was alive with microbes. No sunlight, no oxygen. They survive by breathing iron and sulfur instead. | Manh mối hai. Nước đầy vi sinh vật sống. Không ánh sáng, không oxy. Chúng sống bằng cách "thở" sắt và lưu huỳnh. |
+| 8 | Clue two. The water was alive with microbes. No sunlight, no oxygen. They breathe iron and sulfur instead. | Manh mối hai. Nước đầy vi sinh vật sống. Không ánh sáng, không oxy. Chúng sống bằng cách "thở" sắt và lưu huỳnh. |
 | 9 | Clue three. Right where it comes out, the water isn't red at all. It's clear. | Manh mối ba. Ngay chỗ nó chảy ra, nước hoàn toàn không đỏ. Nó trong suốt. |
 | 10 | Then scientists scanned under the glacier from the air. | Rồi các nhà khoa học quét xuyên sông băng từ trên không. |
-| 11 | Under four hundred metres of ice, they found a hidden pool of ancient seawater, sealed off for over a million years. | Dưới 400 mét băng, họ tìm thấy một hồ nước biển cổ đại bị giấu kín, bị niêm phong hơn một triệu năm. |
+| 11 | Under four hundred metres of ice sat a hidden pool of ancient seawater, sealed for over a million years. | Dưới 400 mét băng là một hồ nước biển cổ đại bị giấu kín, bị niêm phong hơn một triệu năm. |
 | 12 | Salt, and heat released as it freezes, keep it liquid. | Muối, cùng nhiệt toả ra khi nó đóng băng, giữ cho nó ở dạng lỏng. |
 | 13 | Down there, the iron stays invisible. Until it escapes. | Ở dưới đó, sắt vẫn vô hình. Cho đến khi nó thoát ra. |
-| 14 | But the moment it squeezes out into the open air, the iron meets oxygen, and it rusts. Like a wet nail turning orange overnight. | Nhưng ngay khi nó bị ép ra ngoài không khí, sắt gặp oxy và gỉ. Như cây đinh ướt chuyển màu cam sau một đêm. |
+| 14 | But the moment it squeezes out into the air, the iron meets oxygen and rusts. Like a wet nail turning orange. | Nhưng ngay khi nó bị ép ra ngoài không khí, sắt gặp oxy và gỉ. Như cây đinh ướt chuyển màu cam. |
 | 15 | The glacier isn't bleeding. It's rusting. | Sông băng không chảy máu. Nó đang gỉ sét. |
-| 16 | And the red algae? Never there. Just a sealed world of microbes, still alive under the ice, still painting the snow red, like in 1911. | Còn tảo đỏ? Chưa bao giờ có. Chỉ có một thế giới vi sinh bị niêm phong, vẫn sống dưới lớp băng, vẫn tô đỏ tuyết, như năm 1911. |
+| 16 | And the red algae? Never there. Just a sealed world of microbes, still painting the snow red, like in 1911. | Còn tảo đỏ? Chưa bao giờ có. Chỉ có một thế giới vi sinh bị niêm phong, vẫn tô đỏ tuyết, như năm 1911. |
 
 ## 2. Bảng hình: trên màn hình hiện gì
 
