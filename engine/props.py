@@ -28,22 +28,21 @@ BAKED = {'tent': {'playa_med', 'playa_wide'}, 'timelapse_cam': {'playa_med', 'pl
          'tour_sign': {'overlook_med'}, 'banner': {'overlook_med'},
          'fantasy': None, 'livestream_screen': None, 'air_hockey_overlay': None, 'flood_water': None}   # plate variants / fx
 # Default placement per (name, cam) or name. UI 'w' = width as a fraction of the frame.
-DEFAULTS = {
-    'gary_rock': dict(x=0.62, y=0.86, scale=1.2),
-    ('gary_rock', 'rock_low'): dict(x=0.40, y=0.80, scale=1.6),
-    ('gary_rock', 'playa_med'): dict(x=0.55, y=0.80, scale=1.0),
-    ('gary_rock', 'overlook_med'): dict(x=0.40, y=0.86, scale=1.0),
-    'gary_buried': dict(x=0.62, y=0.80, scale=1.2),
-    'gps_box': dict(x=0.45, y=0.82, scale=1.0),
-    'cooler': dict(x=0.5, y=0.86, scale=1.0),
-    'cooler_trophy': dict(x=0.78, y=0.80, scale=1.0),
-    'tent': dict(x=0.2, y=0.74, scale=1.0),
-    'tent_floating': dict(x=0.55, y=0.78, scale=1.3, layer='front'),
-    'timelapse_cam': dict(x=0.8, y=0.78, scale=1.0),
-    'tour_sign': dict(x=0.8, y=0.80, scale=1.0),
-    'tour_sign_free': dict(x=0.62, y=0.70, scale=0.9),
+DEFAULTS = {     # tuned on the playa plates: ground rows wide 0.55, med 0.65, rock_low 0.56 (camera 0.38 m up), overlook 0.63
+    'gary_rock': dict(x=0.6, y=0.7, scale=1.0),
+    ('gary_rock', 'rock_low'): dict(x=0.5, y=0.6, scale=1.0),
+    ('gary_rock', 'playa_med'): dict(x=0.5, y=0.69, scale=1.0),
+    'gary_buried': dict(x=0.6, y=0.7, scale=1.0),
+    'gps_box': dict(x=0.45, y=0.7, scale=1.0),
+    'cooler': dict(x=0.5, y=0.7, scale=1.0),
+    'cooler_trophy': dict(x=0.78, y=0.69, scale=1.0),
+    'tent': dict(x=0.2, y=0.66, scale=1.0),
+    'tent_floating': dict(x=0.55, y=0.62, scale=1.1, layer='front'),
+    'timelapse_cam': dict(x=0.8, y=0.66, scale=1.0),
+    'tour_sign': dict(x=0.82, y=0.68, scale=1.0),
+    'tour_sign_free': dict(x=0.66, y=0.575, scale=0.55),
     'flying_bills': dict(x=0.6, y=0.6, scale=1.0, layer='front'),
-    'fridge_silhouette': dict(x=0.25, y=0.80, scale=1.0),
+    'fridge_silhouette': dict(target='rock', dx=-0.17, dy=0.0, scale=0.8, kw={'ghost': True}),
     'phone_silhouette': dict(x=0.3, y=0.72, scale=2.0, layer='front'),
     'banner': dict(x=0.5, y=0.22, w=0.8, layer='front'),
     'livestream_counter': dict(x=0.72, y=0.1, w=0.3, layer='front'),
@@ -103,7 +102,7 @@ def _sprite(name, t, k, kw):
 def card_scale(meta, y_px, W):
     """Character-card scale (bean units -> px) at ground row y_px: perspective from the plate's horizon."""
     s0 = meta['px_per_m'] * 1.75 / 777
-    if meta.get('top'): return s0
+    if meta.get('top') or meta.get('view') == 'top': return s0
     hz, gy = meta['horizon_y'], meta['ground_y']
     return s0 * max(0.08, (y_px - hz) / max(1.0, gy - hz))
 
@@ -116,7 +115,10 @@ def draw(base, entries, layer, f, t_of, meta, W, H):
         t = t_of(e)
         if t is None: continue
         x, y = float(e.get('x', 0.5)), float(e.get('y', 0.8))
-        if e.get('_auto') and meta.get(e['_base'] + '_xy'):
+        if e.get('target') and e['target'] in meta.get('targets', {}):     # a plate target (px or fractions) + dx, dy
+            tx, ty = meta['targets'][e['target']]; tx, ty = (tx / W, ty / H) if tx > 1.5 else (tx, ty)
+            x, y = tx + float(e.get('dx', 0)), ty + float(e.get('dy', 0))
+        elif e.get('_auto') and meta.get(e['_base'] + '_xy'):
             px_, py_ = meta[e['_base'] + '_xy']; x, y = (px_ / W, py_ / H) if px_ > 1.5 else (px_, py_)
         if e.get('path'):
             pts = e['path']; u = smooth(t) * (len(pts) - 1); i = min(int(u), len(pts) - 2); r = u - i

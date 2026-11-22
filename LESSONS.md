@@ -16,6 +16,15 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - HuggingFace is blocked, so Whisper and other model downloads fail. To get a competitor's script, read the burned-in captions with `rapidocr-onnxruntime` (pip, models bundled) in a separate venv, at 10 fps on the caption band, then de-duplicate. Measure pacing with `references/scripts/video_cuts.py` and sound with `video_audio.py`.
 - The Director can upload competitor MP4s into the session (YouTube blocks downloads here). Keep them out of the repo; keep only measurements and structure notes.
 
+- A low-res test plate (25%) must be upscaled to 1080x1920 before the engine reads it: its JSON is in full-size px, and `load_plate` rescales the JSON by the image size (ground_y x4 off the frame).
+
+## Engine wiring (video 2)
+- New engine features must not change old shots: gate them (string props are sprites only on `props.SPRITE_SETS`) and diff video 1 frames 290 and 1040 before and after.
+- Scale props by perspective from their ground row, and keep them near the plate's ground line: on a low camera (rock_low, 0.38 m up) a prop at y 0.8 came out 7x too big. Place scale props from plate `targets` (the fridge beside the hero rock).
+- A `props` entry can be a dict now: every reader of `props` must skip non-strings (`p.startswith` crashed on dicts).
+- Environment fx (storm, flood, rain, ice) need a `dur` that fits the beat: a storm that lasts to the end of the shot still covers the "Gary" punch-in.
+- UI cards over a zoomed or rolled camera go in screen space (`"screen": true`), or the zoom crops them.
+
 ## Sets (Blender look)
 - Photo-scanned models clash with 2D characters. Use stylised flat-colour packs (Quaternius, KayKit), scaled to real metres (a Quaternius barrel is 0.2 units).
 - Use "Khronos PBR Neutral" (AgX washes emissives to white) and add glow in post. Glow and bloom are **warm-only**, or they blow out white faces. Keep lamp glass emission ≤ 0.3 × the night multiplier, or it clips to white.

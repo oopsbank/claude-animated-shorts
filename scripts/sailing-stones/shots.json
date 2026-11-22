@@ -153,7 +153,8 @@
       "at_word": 4,
       "to": {
        "zoom": 1.6,
-       "y": 0.7
+       "x": 0.5,
+       "y": 0.6
       },
       "dur": 4
      }
@@ -468,27 +469,41 @@
      "at_word": 0
     },
     {
-     "name": "whoosh",
-     "x": 0.75,
-     "y": 0.45,
-     "angle": 90,
+     "name": "dust_puff",
+     "x": 0.27,
+     "y": 0.3,
+     "size": 0.3,
+     "dur": 1.6,
+     "card": "sepia",
+     "card_label": "1948: WIND",
+     "card_tilt": 6,
+     "screen": true,
      "at_word": 2
     },
     {
+     "name": "ice_pane",
+     "x": 0.73,
+     "y": 0.33,
+     "size": 0.3,
+     "dur": 1.6,
+     "stage": "freeze",
+     "card": "sepia",
+     "card_label": "1955: ICE",
+     "card_tilt": -5,
+     "screen": true,
+     "at_word": 4
+    },
+    {
      "name": "sliding_rock",
-     "x": 0.75,
-     "y": 0.6,
-     "path": [
-      [
-       0.72,
-       0.6
-      ],
-      [
-       0.82,
-       0.55
-      ]
-     ],
-     "dur": 0.8,
+     "x": 0.3,
+     "y": 0.62,
+     "size": 0.3,
+     "dur": 1.4,
+     "path": "away",
+     "card": "sepia",
+     "card_label": "1969: FENCED IN",
+     "card_tilt": 4,
+     "screen": true,
      "at_word": 8
     }
    ],
@@ -727,6 +742,7 @@
      "name": "dust_storm",
      "x": 0.5,
      "y": 0.5,
+     "dur": 1.3,
      "at_word": 3
     },
     {
@@ -867,6 +883,7 @@
      "x": 0.5,
      "y": 0.7,
      "direction": "right",
+     "dur": 4.0,
      "at_word": 3
     },
     {
@@ -1172,8 +1189,8 @@
      "x": 0.5,
      "y": 0.5,
      "stage": "freeze",
-     "at_word": 7,
-     "size": 1.0
+     "size": 1.3,
+     "at_word": 7
     }
    ],
    "props": [
@@ -1311,7 +1328,23 @@
    ],
    "props": [
     "ice_sheet",
-    "gary_rock"
+    {
+     "name": "gary_rock",
+     "x": 0.5,
+     "y": 0.7,
+     "dur": 2.0,
+     "path": [
+      [
+       0.48,
+       0.71
+      ],
+      [
+       0.56,
+       0.67
+      ]
+     ],
+     "at_word": 13
+    }
    ]
   },
   {
@@ -1422,8 +1455,8 @@
      "x": 0.5,
      "y": 0.5,
      "stage": "panes",
-     "at_word": 8,
-     "size": 1.0
+     "size": 1.8,
+     "at_word": 8
     },
     {
      "name": "whoosh",
@@ -1438,8 +1471,8 @@
      "y": 0.5,
      "stage": "drift",
      "direction": "right",
-     "at_word": 12,
-     "size": 1.0
+     "size": 1.8,
+     "at_word": 12
     },
     {
      "name": "sliding_rock",
@@ -1595,8 +1628,9 @@
    "fx": [
     {
      "name": "ice_pane",
-     "x": 0.45,
-     "y": 0.75,
+     "x": 0.3,
+     "y": 0.66,
+     "size": 0.45,
      "stage": "drift",
      "view": "side",
      "at_word": 1
@@ -1618,8 +1652,33 @@
     }
    ],
    "props": [
-    "gary_rock",
-    "tour_sign_free:ALIEN ROCK TOURS · NIGHT ONLY (a separate sprite that splits and topples)"
+    {
+     "name": "gary_rock",
+     "dur": 1.6,
+     "scale": 1.7,
+     "path": [
+      [
+       0.38,
+       0.64
+      ],
+      [
+       0.56,
+       0.6
+      ]
+     ],
+     "kw": {
+      "eyes": "askew"
+     },
+     "at_word": 2
+    },
+    {
+     "name": "tour_sign_free:ALIEN ROCK TOURS · NIGHT ONLY",
+     "dur": 1.2,
+     "x": 0.68,
+     "y": 0.6,
+     "scale": 1.0,
+     "at_word": 5
+    }
    ]
   },
   {
@@ -1671,8 +1730,8 @@
        ]
       },
       {
-       "at_word": 2,
-       "antennae": "droop"
+       "antennae": "droop",
+       "at_word": 2
       },
       {
        "expr": "neutral",
@@ -1728,9 +1787,9 @@
      "name": "flying_bills",
      "x": 0.85,
      "y": 0.45,
-     "at_word": 2,
      "dur": 2.5,
-     "layer": "back"
+     "layer": "back",
+     "at_word": 2
     }
    ]
   },

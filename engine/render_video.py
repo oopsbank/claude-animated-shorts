@@ -133,6 +133,9 @@ def setup(shots_path, words_path, plate_dirs):
             if (pr if isinstance(pr, str) else pr.get('name', '')).startswith('air_hockey_overlay') and not any(e['name'] == 'air_hockey_overlay' for e in s.get('fx', [])):
                 s.setdefault('fx', []).append(dict({'name': 'air_hockey_overlay', 'at_word': 0, 'x': 0.5, 'y': 0.8, 'size': 1.0, 'aspect': 0.32},
                                                    **({} if isinstance(pr, str) else {kk: v for kk, v in pr.items() if kk != 'name'})))
+        # flood_water listed as a prop: the flash_flood fx held at full water (a still flood to float on)
+        if any(isinstance(pr, str) and pr.startswith('flood_water') for pr in s.get('props', [])) and not any(e['name'] == 'flash_flood' for e in s.get('fx', [])):
+            s.setdefault('fx', []).append({'name': 'flash_flood', 'at_word': 0, 't': 0.45})
         # ice_pane stages chain in one framing: each stage but the last holds its full sheet (t 0.91, before its fade)
         # until the next stage starts, and the last plays to the end of the shot
         ip = [e for e in s.get('fx', []) if e['name'] == 'ice_pane']
@@ -229,11 +232,11 @@ def layout_shot(shot, meta):
             if abs(x - float(c.get('x', 0.5))) > 1e-3:
                 if os.environ.get('ENGINE_QUIET') != '1': print(f"  [layout] {shot.get('id')}/{c.get('id')}: x {c.get('x')} -> {x:.3f} (bodies overlapped)")
                 c['x'] = round(x, 3)
-    sticker = next((p.split(':', 1)[1] for p in shot.get('props', []) if p.startswith('helmet_sticker:')), None)
+    sticker = next((p.split(':', 1)[1] for p in shot.get('props', []) if isinstance(p, str) and p.startswith('helmet_sticker:')), None)
     for c in cs:
         if sticker: c['_sticker'] = sticker
     if not cs:
-        kind = next((p for p in shot.get('props', []) if p in BIKES), None)
+        kind = next((p for p in shot.get('props', []) if isinstance(p, str) and p in BIKES), None)
         if kind: shot['_bike_prop'] = (kind, float(meta.get('stand_x', 0.5)))
 
 
@@ -423,13 +426,38 @@ def place_characters(base, k, f, meta):
     return out
 
 
+def sepia_card(im, t, label=None, tilt=0.0):
+    """An fx drawn inside a small old photo card (s06's 1948/1950s/1960s theories): cream paper, plum ink edge,
+    the picture sepia-toned, an optional handwritten-style label; pops in (overshoot) and drops out over the life."""
+    from PIL import ImageFont, ImageOps
+    n = im.width; pad = int(n * 0.07); lab = int(n * 0.2) if label else pad
+    pic = Image.new('RGBA', (n, n), (236, 222, 196, 255)); pic.alpha_composite(im.convert('RGBA'))
+    g = ImageOps.grayscale(pic.convert('RGB')); sep = ImageOps.colorize(g, (70, 48, 34), (246, 232, 204))
+    card = Image.new('RGBA', (n + 2 * pad, n + pad + lab), (250, 242, 222, 255))
+    card.paste(sep, (pad, pad)); d = ImageDraw.Draw(card); ink = (36, 23, 38, 255)
+    d.rectangle((pad, pad, pad + n - 1, pad + n - 1), outline=(120, 92, 70, 255), width=max(2, n // 120))
+    d.rectangle((0, 0, card.width - 1, card.height - 1), outline=ink, width=max(3, n // 60))
+    if label:
+        try: font = ImageFont.truetype(os.path.join(HERE, 'fonts', 'Poppins-Bold.ttf'), int(lab * 0.62))
+        except OSError: font = ImageFont.load_default()
+        d.text((card.width / 2, n + pad + lab / 2), label, fill=ink, font=font, anchor='mm')
+    k = anim.out_back(clamp(t / 0.12), 2.0) * (1 - smooth(clamp((t - 0.9) / 0.1)))
+    if k <= 0.02: return Image.new('RGBA', (n, n), (0, 0, 0, 0))
+    sz = max(2, int(card.width * k * 0.9)), max(2, int(card.height * k * 0.9))
+    card = card.resize(sz, Image.LANCZOS).rotate(tilt, resample=Image.BICUBIC, expand=True)
+    out = Image.new('RGBA', (max(n, card.width), max(n, card.height)), (0, 0, 0, 0))
+    out.alpha_composite(card, ((out.width - card.width) // 2, (out.height - card.height) // 2))
+    return out
+
+
 FULL_FX = {'dust_storm', 'flash_flood', 'rain'}                       # placed full-frame
 LONG_FX = FULL_FX | {'ice_pane', 'air_hockey_overlay'}               # last from their word to the end of the shot
 
 
-def place_fx(base, k, f, chars):
+def place_fx(base, k, f, chars, screen=False):
     shot = G['shots'][k]; sp = G['spans'][k]; mod = G['fx']; out = []
     for e in shot.get('fx', []) + shot.get('_auto_fx', []):
+        if bool(e.get('screen')) != screen: continue      # "screen": true fx are drawn after the camera move (UI cards)
         land, wf = anim.beat_frame((sp['w0'], sp['w1']), G['words'], e.get('at_word', 0))
         if '_frame' in e: land = wf = e['_frame']
         if e['name'] == 'path_line' and 'dur' not in e:     # a track diagram plays across the rest of the shot (or cut-in)
@@ -446,14 +474,16 @@ def place_fx(base, k, f, chars):
             peak = float(e.get('peak', 0.0 if e['name'] in LONG_FX else 0.3))
             start = wf - int(round(peak * dur))         # the effect peaks on the word onset
         hold = e.get('_hold_until')
+        if 't' in e: start, dur, hold = sp['f0'] - 2, sp['f1'] - sp['f0'] + 4, None     # a held state: t fixed, whole shot
         if not (start <= f < start + dur or (hold is not None and start <= f < hold)): continue
         ins_ = shot.get('_insert')
         if e['name'] == 'path_line' and ins_ and ins_[0] <= land < ins_[1] and f >= ins_[1]: continue   # the diagram ends with its cut-in
         t = (f - start + 0.5) / dur
         if hold is not None: t = min(t, 0.91)                # chained stage: hold the full sheet, the next takes over
+        if 't' in e: t = float(e['t'])
         size = int(float(e.get('size', 0.9 if e['name'] == 'path_line' else 0.35)) * W)
         if e['name'] in FULL_FX: size = H; e = dict(e, x=0.5, y=0.5)          # full-frame: the square covers the frame
-        kw = {kk: v for kk, v in e.items() if kk not in ('name', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor', 'dx') and not kk.startswith('_')}
+        kw = {kk: v for kk, v in e.items() if kk not in ('name', 't', 'screen', 'card', 'card_label', 'card_tilt', 'at_word', 'x', 'y', 'size', 'dur', 'peak', 'kick', 'on', 'anchor', 'dx') and not kk.startswith('_')}
         if e['name'] == 'path_line':          # racing lines named in the plate JSON follow the real road (sets: paths.py)
             ins_ = shot.get('_insert'); pl = ins_[2] if (ins_ and ins_[0] <= f < ins_[1]) else shot['_plate']
             ppaths = G['plates'][pl][1].get('paths', {})
@@ -474,6 +504,7 @@ def place_fx(base, k, f, chars):
             im = (mod.render if mod else stub_fx)(e['name'], t, size, **kw)
         except KeyError:
             im = stub_fx(e['name'], t, size)
+        if e.get('card'): im = sepia_card(im, t, e.get('card_label'), e.get('card_tilt', 0))
         x, y = float(e.get('x', 0.5)) * W, float(e.get('y', 0.5)) * H
         if e.get('on'):
             c = next((c for c in chars if c['id'] == e['on']), None)
@@ -596,6 +627,8 @@ def render_shot(k, f):
     if G['grades'].get(gk): img = GRADE.apply(img, G['grades'][gk])
     if os.environ.get('ENGINE_FINISH', '1') == '1':      # vignette + warm/cool split (+ sepia flashbacks), every frame
         img = GRADE.finish(img, sepia=(shot.get('grade') == 'sepia' and not (ins and ins[0] <= f < ins[1])))
+    if any(e.get('screen') for e in shot.get('fx', [])):
+        sc = img.convert('RGBA'); fxs += place_fx(sc, k, f, chars, screen=True); img = sc.convert('RGB')
     for c in chars:
         if c['bbox']:
             x0, y0, x1, y1 = c['bbox']; pts = [to_screen(x, y) for x in (x0, x1) for y in (y0, y1)]
@@ -684,6 +717,7 @@ def main():
     ap.add_argument('--workers', type=int, default=4); ap.add_argument('--audio', default=None)
     ap.add_argument('--png', action='store_true'); ap.add_argument('--length', type=int, default=None); ap.add_argument('--no-grade', action='store_true'); ap.add_argument('--no-mp4', action='store_true')
     a = ap.parse_args()
+    a.plates += [d for d in os.environ.get('ENGINE_PLATES', '').split(os.pathsep) if d]   # extra plate dirs (tests, storyboards)
     a.plates.append(os.path.join(HERE, 'test', 'plates'))
     os.makedirs(os.path.join(a.out, 'frames'), exist_ok=True)
     setup(a.shots, a.words, a.plates)
