@@ -1,0 +1,1418 @@
+[
+{
+"word": "In",
+"start": 0.15,
+"end": 0.328,
+"line": 1
+},
+{
+"word": "1911,",
+"start": 0.343,
+"end": 0.786,
+"line": 1
+},
+{
+"word": "a",
+"start": 0.825,
+"end": 0.981,
+"line": 1
+},
+{
+"word": "geologist",
+"start": 0.994,
+"end": 1.325,
+"line": 1
+},
+{
+"word": "named",
+"start": 1.354,
+"end": 1.598,
+"line": 1
+},
+{
+"word": "Griffith",
+"start": 1.619,
+"end": 1.928,
+"line": 1
+},
+{
+"word": "Taylor",
+"start": 1.955,
+"end": 2.22,
+"line": 1
+},
+{
+"word": "walked",
+"start": 2.243,
+"end": 2.509,
+"line": 1
+},
+{
+"word": "up",
+"start": 2.532,
+"end": 2.71,
+"line": 1
+},
+{
+"word": "to",
+"start": 2.725,
+"end": 2.903,
+"line": 1
+},
+{
+"word": "an",
+"start": 2.918,
+"end": 3.096,
+"line": 1
+},
+{
+"word": "Antarctic",
+"start": 3.112,
+"end": 3.443,
+"line": 1
+},
+{
+"word": "glacier",
+"start": 3.472,
+"end": 3.759,
+"line": 1
+},
+{
+"word": "and",
+"start": 3.784,
+"end": 3.984,
+"line": 1
+},
+{
+"word": "found",
+"start": 4.001,
+"end": 4.244,
+"line": 1
+},
+{
+"word": "it",
+"start": 4.266,
+"end": 4.443,
+"line": 1
+},
+{
+"word": "bleeding.",
+"start": 4.459,
+"end": 4.768,
+"line": 1
+},
+{
+"word": "You",
+"start": 5.015,
+"end": 5.228,
+"line": 2
+},
+{
+"word": "see,",
+"start": 5.246,
+"end": 5.459,
+"line": 2
+},
+{
+"word": "a",
+"start": 5.478,
+"end": 5.644,
+"line": 2
+},
+{
+"word": "bright",
+"start": 5.658,
+"end": 5.941,
+"line": 2
+},
+{
+"word": "red",
+"start": 5.966,
+"end": 6.179,
+"line": 2
+},
+{
+"word": "stain",
+"start": 6.197,
+"end": 6.457,
+"line": 2
+},
+{
+"word": "was",
+"start": 6.479,
+"end": 6.692,
+"line": 2
+},
+{
+"word": "pouring",
+"start": 6.711,
+"end": 7.017,
+"line": 2
+},
+{
+"word": "out",
+"start": 7.044,
+"end": 7.256,
+"line": 2
+},
+{
+"word": "of",
+"start": 7.275,
+"end": 7.464,
+"line": 2
+},
+{
+"word": "the",
+"start": 7.481,
+"end": 7.694,
+"line": 2
+},
+{
+"word": "ice",
+"start": 7.712,
+"end": 7.925,
+"line": 2
+},
+{
+"word": "onto",
+"start": 7.944,
+"end": 8.18,
+"line": 2
+},
+{
+"word": "clean",
+"start": 8.2,
+"end": 8.46,
+"line": 2
+},
+{
+"word": "white",
+"start": 8.482,
+"end": 8.742,
+"line": 2
+},
+{
+"word": "snow.",
+"start": 8.765,
+"end": 9.001,
+"line": 2
+},
+{
+"word": "They",
+"start": 9.161,
+"end": 9.398,
+"line": 2
+},
+{
+"word": "named",
+"start": 9.418,
+"end": 9.678,
+"line": 2
+},
+{
+"word": "it",
+"start": 9.7,
+"end": 9.89,
+"line": 2
+},
+{
+"word": "Blood",
+"start": 9.906,
+"end": 10.166,
+"line": 2
+},
+{
+"word": "Falls.",
+"start": 10.188,
+"end": 10.448,
+"line": 2
+},
+{
+"word": "The",
+"start": 10.691,
+"end": 10.869,
+"line": 3
+},
+{
+"word": "air",
+"start": 10.884,
+"end": 11.062,
+"line": 3
+},
+{
+"word": "there",
+"start": 11.078,
+"end": 11.295,
+"line": 3
+},
+{
+"word": "averages",
+"start": 11.314,
+"end": 11.59,
+"line": 3
+},
+{
+"word": "minus",
+"start": 11.614,
+"end": 11.831,
+"line": 3
+},
+{
+"word": "seventeen.",
+"start": 11.85,
+"end": 12.145,
+"line": 3
+},
+{
+"word": "Nothing",
+"start": 12.311,
+"end": 12.567,
+"line": 3
+},
+{
+"word": "should",
+"start": 12.589,
+"end": 12.826,
+"line": 3
+},
+{
+"word": "flow.",
+"start": 12.847,
+"end": 13.044,
+"line": 3
+},
+{
+"word": "Yet",
+"start": 13.201,
+"end": 13.38,
+"line": 3
+},
+{
+"word": "the",
+"start": 13.395,
+"end": 13.573,
+"line": 3
+},
+{
+"word": "red",
+"start": 13.589,
+"end": 13.767,
+"line": 3
+},
+{
+"word": "kept",
+"start": 13.782,
+"end": 13.98,
+"line": 3
+},
+{
+"word": "coming.",
+"start": 13.997,
+"end": 14.234,
+"line": 3
+},
+{
+"word": "Explorers",
+"start": 14.474,
+"end": 14.742,
+"line": 4
+},
+{
+"word": "had",
+"start": 14.765,
+"end": 14.926,
+"line": 4
+},
+{
+"word": "an",
+"start": 14.94,
+"end": 15.084,
+"line": 4
+},
+{
+"word": "answer:",
+"start": 15.097,
+"end": 15.311,
+"line": 4
+},
+{
+"word": "\"It's",
+"start": 15.47,
+"end": 15.631,
+"line": 4
+},
+{
+"word": "red",
+"start": 15.645,
+"end": 15.806,
+"line": 4
+},
+{
+"word": "algae.",
+"start": 15.82,
+"end": 16.017,
+"line": 4
+},
+{
+"word": "Tiny",
+"start": 16.174,
+"end": 16.353,
+"line": 4
+},
+{
+"word": "plants.",
+"start": 16.369,
+"end": 16.583,
+"line": 4
+},
+{
+"word": "Mystery",
+"start": 16.742,
+"end": 16.974,
+"line": 4
+},
+{
+"word": "solved.\"",
+"start": 16.994,
+"end": 17.209,
+"line": 4
+},
+{
+"word": "But",
+"start": 17.447,
+"end": 17.65,
+"line": 5
+},
+{
+"word": "when",
+"start": 17.667,
+"end": 17.892,
+"line": 5
+},
+{
+"word": "scientists",
+"start": 17.911,
+"end": 18.269,
+"line": 5
+},
+{
+"word": "finally",
+"start": 18.3,
+"end": 18.591,
+"line": 5
+},
+{
+"word": "tested",
+"start": 18.617,
+"end": 18.886,
+"line": 5
+},
+{
+"word": "the",
+"start": 18.909,
+"end": 19.111,
+"line": 5
+},
+{
+"word": "water,",
+"start": 19.129,
+"end": 19.376,
+"line": 5
+},
+{
+"word": "there",
+"start": 19.397,
+"end": 19.644,
+"line": 5
+},
+{
+"word": "was",
+"start": 19.665,
+"end": 19.868,
+"line": 5
+},
+{
+"word": "no",
+"start": 19.885,
+"end": 20.065,
+"line": 5
+},
+{
+"word": "algae",
+"start": 20.081,
+"end": 20.328,
+"line": 5
+},
+{
+"word": "in",
+"start": 20.349,
+"end": 20.529,
+"line": 5
+},
+{
+"word": "it.",
+"start": 20.545,
+"end": 20.725,
+"line": 5
+},
+{
+"word": "Clue",
+"start": 20.961,
+"end": 21.187,
+"line": 6
+},
+{
+"word": "one.",
+"start": 21.207,
+"end": 21.411,
+"line": 6
+},
+{
+"word": "Just",
+"start": 21.569,
+"end": 21.796,
+"line": 6
+},
+{
+"word": "salt,",
+"start": 21.816,
+"end": 22.042,
+"line": 6
+},
+{
+"word": "saltier",
+"start": 22.062,
+"end": 22.356,
+"line": 6
+},
+{
+"word": "than",
+"start": 22.381,
+"end": 22.608,
+"line": 6
+},
+{
+"word": "the",
+"start": 22.628,
+"end": 22.832,
+"line": 6
+},
+{
+"word": "sea,",
+"start": 22.85,
+"end": 23.054,
+"line": 6
+},
+{
+"word": "and",
+"start": 23.072,
+"end": 23.276,
+"line": 6
+},
+{
+"word": "lots",
+"start": 23.294,
+"end": 23.52,
+"line": 6
+},
+{
+"word": "of",
+"start": 23.54,
+"end": 23.722,
+"line": 6
+},
+{
+"word": "iron.",
+"start": 23.738,
+"end": 23.964,
+"line": 6
+},
+{
+"word": "So",
+"start": 24.204,
+"end": 24.394,
+"line": 7
+},
+{
+"word": "if",
+"start": 24.41,
+"end": 24.6,
+"line": 7
+},
+{
+"word": "plants",
+"start": 24.617,
+"end": 24.9,
+"line": 7
+},
+{
+"word": "aren't",
+"start": 24.925,
+"end": 25.185,
+"line": 7
+},
+{
+"word": "making",
+"start": 25.207,
+"end": 25.49,
+"line": 7
+},
+{
+"word": "it",
+"start": 25.515,
+"end": 25.705,
+"line": 7
+},
+{
+"word": "red,",
+"start": 25.721,
+"end": 25.935,
+"line": 7
+},
+{
+"word": "what",
+"start": 25.953,
+"end": 26.19,
+"line": 7
+},
+{
+"word": "is?",
+"start": 26.21,
+"end": 26.4,
+"line": 7
+},
+{
+"word": "Clue",
+"start": 26.636,
+"end": 26.841,
+"line": 8
+},
+{
+"word": "two.",
+"start": 26.858,
+"end": 27.042,
+"line": 8
+},
+{
+"word": "The",
+"start": 27.198,
+"end": 27.382,
+"line": 8
+},
+{
+"word": "water",
+"start": 27.398,
+"end": 27.622,
+"line": 8
+},
+{
+"word": "was",
+"start": 27.642,
+"end": 27.826,
+"line": 8
+},
+{
+"word": "alive",
+"start": 27.842,
+"end": 28.066,
+"line": 8
+},
+{
+"word": "with",
+"start": 28.085,
+"end": 28.29,
+"line": 8
+},
+{
+"word": "microbes.",
+"start": 28.307,
+"end": 28.592,
+"line": 8
+},
+{
+"word": "No",
+"start": 28.757,
+"end": 28.921,
+"line": 8
+},
+{
+"word": "sunlight,",
+"start": 28.935,
+"end": 29.22,
+"line": 8
+},
+{
+"word": "no",
+"start": 29.244,
+"end": 29.408,
+"line": 8
+},
+{
+"word": "oxygen.",
+"start": 29.422,
+"end": 29.667,
+"line": 8
+},
+{
+"word": "They",
+"start": 29.828,
+"end": 30.032,
+"line": 8
+},
+{
+"word": "survive",
+"start": 30.05,
+"end": 30.314,
+"line": 8
+},
+{
+"word": "by",
+"start": 30.337,
+"end": 30.501,
+"line": 8
+},
+{
+"word": "breathing",
+"start": 30.515,
+"end": 30.82,
+"line": 8
+},
+{
+"word": "iron",
+"start": 30.847,
+"end": 31.051,
+"line": 8
+},
+{
+"word": "and",
+"start": 31.069,
+"end": 31.253,
+"line": 8
+},
+{
+"word": "sulfur",
+"start": 31.269,
+"end": 31.513,
+"line": 8
+},
+{
+"word": "instead.",
+"start": 31.534,
+"end": 31.799,
+"line": 8
+},
+{
+"word": "Clue",
+"start": 32.042,
+"end": 32.264,
+"line": 9
+},
+{
+"word": "three.",
+"start": 32.284,
+"end": 32.528,
+"line": 9
+},
+{
+"word": "Right",
+"start": 32.689,
+"end": 32.934,
+"line": 9
+},
+{
+"word": "where",
+"start": 32.955,
+"end": 33.199,
+"line": 9
+},
+{
+"word": "it",
+"start": 33.22,
+"end": 33.399,
+"line": 9
+},
+{
+"word": "comes",
+"start": 33.414,
+"end": 33.659,
+"line": 9
+},
+{
+"word": "out,",
+"start": 33.68,
+"end": 33.88,
+"line": 9
+},
+{
+"word": "the",
+"start": 33.898,
+"end": 34.098,
+"line": 9
+},
+{
+"word": "water",
+"start": 34.116,
+"end": 34.36,
+"line": 9
+},
+{
+"word": "isn't",
+"start": 34.381,
+"end": 34.604,
+"line": 9
+},
+{
+"word": "red",
+"start": 34.623,
+"end": 34.823,
+"line": 9
+},
+{
+"word": "at",
+"start": 34.841,
+"end": 35.019,
+"line": 9
+},
+{
+"word": "all.",
+"start": 35.035,
+"end": 35.235,
+"line": 9
+},
+{
+"word": "It's",
+"start": 35.393,
+"end": 35.593,
+"line": 9
+},
+{
+"word": "clear.",
+"start": 35.61,
+"end": 35.855,
+"line": 9
+},
+{
+"word": "Then",
+"start": 36.096,
+"end": 36.3,
+"line": 10
+},
+{
+"word": "scientists",
+"start": 36.317,
+"end": 36.642,
+"line": 10
+},
+{
+"word": "scanned",
+"start": 36.67,
+"end": 36.935,
+"line": 10
+},
+{
+"word": "under",
+"start": 36.958,
+"end": 37.181,
+"line": 10
+},
+{
+"word": "the",
+"start": 37.201,
+"end": 37.385,
+"line": 10
+},
+{
+"word": "glacier",
+"start": 37.401,
+"end": 37.665,
+"line": 10
+},
+{
+"word": "from",
+"start": 37.688,
+"end": 37.891,
+"line": 10
+},
+{
+"word": "the",
+"start": 37.909,
+"end": 38.093,
+"line": 10
+},
+{
+"word": "air.",
+"start": 38.109,
+"end": 38.292,
+"line": 10
+},
+{
+"word": "Under",
+"start": 38.528,
+"end": 38.78,
+"line": 11
+},
+{
+"word": "four",
+"start": 38.802,
+"end": 39.032,
+"line": 11
+},
+{
+"word": "hundred",
+"start": 39.051,
+"end": 39.349,
+"line": 11
+},
+{
+"word": "metres",
+"start": 39.375,
+"end": 39.649,
+"line": 11
+},
+{
+"word": "of",
+"start": 39.673,
+"end": 39.857,
+"line": 11
+},
+{
+"word": "ice,",
+"start": 39.873,
+"end": 40.08,
+"line": 11
+},
+{
+"word": "they",
+"start": 40.098,
+"end": 40.327,
+"line": 11
+},
+{
+"word": "found",
+"start": 40.347,
+"end": 40.599,
+"line": 11
+},
+{
+"word": "a",
+"start": 40.621,
+"end": 40.782,
+"line": 11
+},
+{
+"word": "hidden",
+"start": 40.796,
+"end": 41.071,
+"line": 11
+},
+{
+"word": "pool",
+"start": 41.095,
+"end": 41.324,
+"line": 11
+},
+{
+"word": "of",
+"start": 41.344,
+"end": 41.528,
+"line": 11
+},
+{
+"word": "ancient",
+"start": 41.544,
+"end": 41.841,
+"line": 11
+},
+{
+"word": "seawater,",
+"start": 41.867,
+"end": 42.187,
+"line": 11
+},
+{
+"word": "sealed",
+"start": 42.215,
+"end": 42.489,
+"line": 11
+},
+{
+"word": "off",
+"start": 42.513,
+"end": 42.72,
+"line": 11
+},
+{
+"word": "for",
+"start": 42.738,
+"end": 42.945,
+"line": 11
+},
+{
+"word": "over",
+"start": 42.962,
+"end": 43.192,
+"line": 11
+},
+{
+"word": "a",
+"start": 43.212,
+"end": 43.373,
+"line": 11
+},
+{
+"word": "million",
+"start": 43.387,
+"end": 43.684,
+"line": 11
+},
+{
+"word": "years.",
+"start": 43.71,
+"end": 43.962,
+"line": 11
+},
+{
+"word": "Salt,",
+"start": 44.204,
+"end": 44.428,
+"line": 12
+},
+{
+"word": "and",
+"start": 44.448,
+"end": 44.649,
+"line": 12
+},
+{
+"word": "heat",
+"start": 44.667,
+"end": 44.891,
+"line": 12
+},
+{
+"word": "released",
+"start": 44.91,
+"end": 45.223,
+"line": 12
+},
+{
+"word": "as",
+"start": 45.25,
+"end": 45.43,
+"line": 12
+},
+{
+"word": "it",
+"start": 45.445,
+"end": 45.625,
+"line": 12
+},
+{
+"word": "freezes,",
+"start": 45.641,
+"end": 45.931,
+"line": 12
+},
+{
+"word": "keep",
+"start": 45.956,
+"end": 46.18,
+"line": 12
+},
+{
+"word": "it",
+"start": 46.2,
+"end": 46.38,
+"line": 12
+},
+{
+"word": "liquid.",
+"start": 46.395,
+"end": 46.663,
+"line": 12
+},
+{
+"word": "Down",
+"start": 46.907,
+"end": 47.101,
+"line": 13
+},
+{
+"word": "there,",
+"start": 47.118,
+"end": 47.332,
+"line": 13
+},
+{
+"word": "the",
+"start": 47.351,
+"end": 47.526,
+"line": 13
+},
+{
+"word": "iron",
+"start": 47.542,
+"end": 47.736,
+"line": 13
+},
+{
+"word": "stays",
+"start": 47.753,
+"end": 47.967,
+"line": 13
+},
+{
+"word": "invisible.",
+"start": 47.986,
+"end": 48.277,
+"line": 13
+},
+{
+"word": "Until",
+"start": 48.442,
+"end": 48.656,
+"line": 13
+},
+{
+"word": "it",
+"start": 48.675,
+"end": 48.831,
+"line": 13
+},
+{
+"word": "escapes.",
+"start": 48.845,
+"end": 49.097,
+"line": 13
+},
+{
+"word": "But",
+"start": 49.339,
+"end": 49.547,
+"line": 14
+},
+{
+"word": "the",
+"start": 49.565,
+"end": 49.772,
+"line": 14
+},
+{
+"word": "moment",
+"start": 49.79,
+"end": 50.066,
+"line": 14
+},
+{
+"word": "it",
+"start": 50.09,
+"end": 50.274,
+"line": 14
+},
+{
+"word": "squeezes",
+"start": 50.29,
+"end": 50.611,
+"line": 14
+},
+{
+"word": "out",
+"start": 50.639,
+"end": 50.847,
+"line": 14
+},
+{
+"word": "into",
+"start": 50.865,
+"end": 51.095,
+"line": 14
+},
+{
+"word": "the",
+"start": 51.115,
+"end": 51.322,
+"line": 14
+},
+{
+"word": "open",
+"start": 51.34,
+"end": 51.57,
+"line": 14
+},
+{
+"word": "air,",
+"start": 51.59,
+"end": 51.798,
+"line": 14
+},
+{
+"word": "the",
+"start": 51.816,
+"end": 52.023,
+"line": 14
+},
+{
+"word": "iron",
+"start": 52.041,
+"end": 52.271,
+"line": 14
+},
+{
+"word": "meets",
+"start": 52.291,
+"end": 52.544,
+"line": 14
+},
+{
+"word": "oxygen,",
+"start": 52.566,
+"end": 52.842,
+"line": 14
+},
+{
+"word": "and",
+"start": 52.866,
+"end": 53.073,
+"line": 14
+},
+{
+"word": "it",
+"start": 53.091,
+"end": 53.276,
+"line": 14
+},
+{
+"word": "rusts.",
+"start": 53.292,
+"end": 53.544,
+"line": 14
+},
+{
+"word": "Like",
+"start": 53.706,
+"end": 53.937,
+"line": 14
+},
+{
+"word": "a",
+"start": 53.957,
+"end": 54.118,
+"line": 14
+},
+{
+"word": "wet",
+"start": 54.132,
+"end": 54.34,
+"line": 14
+},
+{
+"word": "nail",
+"start": 54.358,
+"end": 54.588,
+"line": 14
+},
+{
+"word": "turning",
+"start": 54.608,
+"end": 54.906,
+"line": 14
+},
+{
+"word": "orange",
+"start": 54.932,
+"end": 55.208,
+"line": 14
+},
+{
+"word": "overnight.",
+"start": 55.232,
+"end": 55.576,
+"line": 14
+},
+{
+"word": "The",
+"start": 55.826,
+"end": 55.98,
+"line": 15
+},
+{
+"word": "glacier",
+"start": 55.993,
+"end": 56.215,
+"line": 15
+},
+{
+"word": "isn't",
+"start": 56.234,
+"end": 56.405,
+"line": 15
+},
+{
+"word": "bleeding.",
+"start": 56.42,
+"end": 56.658,
+"line": 15
+},
+{
+"word": "It's",
+"start": 56.819,
+"end": 56.973,
+"line": 15
+},
+{
+"word": "rusting.",
+"start": 56.986,
+"end": 57.208,
+"line": 15
+},
+{
+"word": "And",
+"start": 57.447,
+"end": 57.652,
+"line": 16
+},
+{
+"word": "the",
+"start": 57.67,
+"end": 57.875,
+"line": 16
+},
+{
+"word": "red",
+"start": 57.893,
+"end": 58.098,
+"line": 16
+},
+{
+"word": "algae?",
+"start": 58.116,
+"end": 58.366,
+"line": 16
+},
+{
+"word": "Never",
+"start": 58.527,
+"end": 58.777,
+"line": 16
+},
+{
+"word": "there.",
+"start": 58.799,
+"end": 59.049,
+"line": 16
+},
+{
+"word": "Just",
+"start": 59.211,
+"end": 59.438,
+"line": 16
+},
+{
+"word": "a",
+"start": 59.458,
+"end": 59.618,
+"line": 16
+},
+{
+"word": "sealed",
+"start": 59.632,
+"end": 59.905,
+"line": 16
+},
+{
+"word": "world",
+"start": 59.928,
+"end": 60.178,
+"line": 16
+},
+{
+"word": "of",
+"start": 60.2,
+"end": 60.383,
+"line": 16
+},
+{
+"word": "microbes,",
+"start": 60.398,
+"end": 60.716,
+"line": 16
+},
+{
+"word": "still",
+"start": 60.744,
+"end": 60.994,
+"line": 16
+},
+{
+"word": "alive",
+"start": 61.015,
+"end": 61.265,
+"line": 16
+},
+{
+"word": "under",
+"start": 61.287,
+"end": 61.537,
+"line": 16
+},
+{
+"word": "the",
+"start": 61.559,
+"end": 61.764,
+"line": 16
+},
+{
+"word": "ice,",
+"start": 61.782,
+"end": 61.987,
+"line": 16
+},
+{
+"word": "still",
+"start": 62.004,
+"end": 62.254,
+"line": 16
+},
+{
+"word": "painting",
+"start": 62.276,
+"end": 62.594,
+"line": 16
+},
+{
+"word": "the",
+"start": 62.621,
+"end": 62.826,
+"line": 16
+},
+{
+"word": "snow",
+"start": 62.844,
+"end": 63.072,
+"line": 16
+},
+{
+"word": "red,",
+"start": 63.091,
+"end": 63.296,
+"line": 16
+},
+{
+"word": "like",
+"start": 63.314,
+"end": 63.542,
+"line": 16
+},
+{
+"word": "in",
+"start": 63.561,
+"end": 63.744,
+"line": 16
+},
+{
+"word": "1911.",
+"start": 63.76,
+"end": 64.215,
+"line": 16
+}
+]

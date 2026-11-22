@@ -445,7 +445,165 @@ def s15(t=0.0):
     return img
 
 
-SHOTS = {'s01': s01, 's05': s05, 's11': s11, 's15': s15}
+# ------------------------------------------------------------------ s11a / s11b (Director, 2026-11-22: s11 split in two)
+def s11a(t=0.0):
+    """Pure X-ray cross-section: thick ice, the glowing brine lens under it, bedrock below. No character:
+    the caption sits on the clean bedrock band under the pool. Moves: plane crosses (x = 300 + 90 t), radar
+    pulses run down the fan, the scan line sweeps the ice, the pool glow pulses 0.9-1.0, motes drift, the
+    400 m arrow draws downward, stars twinkle, the outflow channel's dashes run toward Blood Falls."""
+    img = vgrad([(0, (10, 14, 44)), (.2, (40, 56, 120)), (1, (10, 14, 36))])
+    surf = 420; ice_bot = lambda x: 1060 + 26 * math.sin(x / 170)
+    d = ImageDraw.Draw(img); rng = np.random.default_rng(2)
+    for _ in range(60):
+        x, y, q = rng.uniform(0, W), rng.uniform(0, surf - 60), rng.uniform(1.5, 3.5)
+        d.ellipse([x - q, y - q, x + q, y + q], fill=(220, 230, 255))
+    peak_range(img, 41, surf + 10, 60, 150, (70, 84, 150), (46, 56, 112), (150, 170, 220), n=7)
+    xs = np.arange(-10, W + 11, 10)
+    top = [(x, surf + 8 * math.sin(x / 90)) for x in xs]
+    body = top + [(x, ice_bot(x)) for x in xs[::-1]]
+    ice = vgrad([(0, (190, 234, 250)), (.25, (120, 196, 236)), (.5, (60, 130, 200)), (1, (20, 50, 120))], W, H)
+    bm = mask(); ImageDraw.Draw(bm).polygon(body, fill=255)
+    img.paste(ice, (0, 0), bm)
+    d = ImageDraw.Draw(img)
+    for k in range(13):  # strata (white every third)
+        y0 = surf + 34 + k * 44
+        pts = [(x, y0 + 14 * math.sin(x / 130 + k) + 6 * math.sin(x / 41 + 2 * k)) for x in xs]
+        d.line(pts, fill=(255, 255, 255) if k % 3 == 0 else (70, 134, 200), width=3 if k % 3 else 4)
+    for _ in range(60):
+        x, y, q = rng.uniform(0, W), rng.uniform(surf + 40, 940), rng.uniform(3, 9)
+        d.ellipse([x - q, y - q, x + q, y + q], outline=(230, 248, 255), width=2)
+    for _ in range(7):
+        x, y = rng.uniform(200, W - 200), rng.uniform(surf + 40, 780)
+        pts = [(x, y)]
+        for _ in range(4): x += rng.uniform(-30, 30); y += rng.uniform(30, 50); pts.append((x, y))
+        d.line(pts, fill=(30, 70, 130), width=4)
+    gl = layer(); gd = ImageDraw.Draw(gl)
+    for x in range(0, W, 60): gd.line([(x, surf), (x, 1020)], fill=(180, 240, 255, 26), width=2)
+    for y in range(surf, 1020, 60): gd.line([(0, y), (W, y)], fill=(180, 240, 255, 26), width=2)
+    img.alpha_composite(gl)
+    sy = 720 + 200 * math.sin(t)
+    m = mask(); ImageDraw.Draw(m).rectangle([0, sy - 4, W, sy + 4], fill=255)
+    glow(img, m, (120, 255, 240), .8, blur=10, add=True)
+    # bedrock: lifted plum, lit by the pool; strata start low so the band under the pool stays clean
+    rock = vgrad([(0, (156, 112, 138)), (.35, (126, 88, 120)), (1, (66, 48, 80))], W, H - 1040, 0)
+    rl = Image.new('RGBA', (W, H)); rl.paste(rock, (0, 1040))
+    rm = mask(); ImageDraw.Draw(rm).polygon([(x, ice_bot(x) - 4) for x in xs] + [(W + 10, H), (-10, H)], fill=255)
+    img.paste(rl, (0, 0), rm)
+    d = ImageDraw.Draw(img)
+    for k in range(4):
+        y0 = 1560 + k * 96
+        d.line([(x, y0 + 18 * math.sin(x / 110 + k * 1.7)) for x in xs], fill=(150, 108, 130) if k % 2 else (86, 60, 90), width=6)
+    for x, y, q in ((80, 1600, 30), (560, 1640, 22), (1010, 1590, 34), (300, 1780, 26), (800, 1760, 30)):
+        d.polygon([(x - q, y), (x - q * .3, y - q * .8), (x + q, y - q * .4), (x + q * .7, y + q * .5)], fill=(160, 118, 136), outline=(40, 26, 42), width=3)
+    for x, y, q in ((180, 1700, 30), (690, 1860, 26), (930, 1700, 22)):  # fossil shells: an ancient sea floor
+        d.chord([x - q, y - q, x + q, y + q], 180, 360, fill=(196, 160, 170), outline=(40, 26, 42), width=3)
+        for a in range(200, 341, 35):
+            d.line([(x, y), (x + q * math.cos(math.radians(a)), y + q * math.sin(math.radians(a)))], fill=(120, 84, 104), width=2)
+    # brine pool: a wide glowing lens just under the ice
+    cx, cy, rx, ry = 540, 1215, 600, 160
+    radial(img, cx, cy + 80, 780, (60, 230, 200), .3)
+    light_rays(img, cx, cy + 60, (80, 240, 210), n=8, alpha=.16, spread=(50, 130), length=900, seed=4, phase=2 * math.sin(t))  # pool light falls on the old sea floor
+    pm = mask(); ImageDraw.Draw(pm).ellipse([cx - rx, cy - ry, cx + rx, cy + ry], fill=255)
+    glow(img, pm, (60, 255, 210), .9, blur=90, add=True)
+    glow(img, pm, (160, 255, 230), .6, blur=30, add=True)
+    pool = vgrad([(0, (120, 255, 226)), (.5, (24, 170, 160)), (1, (10, 80, 96))], 2 * rx, 2 * ry)
+    radial(pool, rx, ry * .6, rx * .7, (220, 255, 240), .6)
+    dust(pool, 9, 70, (20, 10, 2 * rx - 20, 2 * ry - 10), (210, 255, 230), 200, size=(2, 7), t=t)
+    cm = mask(2 * rx, 2 * ry); ImageDraw.Draw(cm).ellipse([0, 0, 2 * rx - 1, 2 * ry - 1], fill=255)
+    img.paste(pool, (cx - rx, cy - ry), cm)
+    d = ImageDraw.Draw(img)
+    d.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], outline=INK, width=6)
+    d.ellipse([cx - rx + 6, cy - ry + 6, cx + rx - 6, cy + ry - 6], outline=(190, 255, 240), width=5)
+    d.arc([cx - rx + 60, cy - ry + 18, cx + rx - 60, cy + ry - 20], 200, 250, fill=(240, 255, 250), width=8)
+    pill(img, 'BRINE POOL', cx, cy + 20, (14, 110, 110), size=54, pad=28)
+    ch = [(990, cy - 80), (1000, 900), (960, 720), (1010, surf + 40), (W + 20, surf - 10)]
+    d.line(ch, fill=INK, width=26, joint='curve'); d.line(ch, fill=(90, 230, 210), width=14, joint='curve')
+    d.line(ch[-2:], fill=(220, 60, 40), width=14)
+    d.polygon(top + [(x, y + 24) for x, y in top[::-1]], fill=(246, 250, 255)); d.line(top, fill=INK, width=6)
+    px_, py_ = 300 + 90 * t, 345
+    fan = mask(); ImageDraw.Draw(fan).polygon([(px_ - 10, py_ + 50), (px_ + 20, py_ + 50), (px_ + 360, cy - 120), (px_ - 330, cy - 120)], fill=255)
+    fill_mask(img, fan, (140, 255, 230), .15, blur=8)
+    for k in range(5):
+        yk = surf + 40 + k * 110
+        ImageDraw.Draw(img).arc([px_ + 5 - (yk - py_) * .48, yk - 36, px_ + 5 + (yk - py_) * .48, yk + 36], 20, 160, fill=(170, 255, 236), width=5)
+    props.plane(img, px_ - 10, py_, 1.2)
+    d = ImageDraw.Draw(img); ax = 76
+    for y0, y1 in ((surf + 30, 660), (780, ice_bot(ax) - 16)):
+        d.line([(ax, y0), (ax, y1)], fill=INK, width=22); d.line([(ax, y0), (ax, y1)], fill='white', width=13)
+    for y, s_ in ((surf + 30, 1), (ice_bot(ax) - 16, -1)):
+        d.polygon([(ax, y), (ax - 26, y + 40 * s_), (ax + 26, y + 40 * s_)], fill='white', outline=INK, width=4)
+    pill(img, '400 m', ax + 86, 720, (36, 120, 200), size=64, pad=24)
+    pill(img, 'TO BLOOD FALLS', 880, surf - 56, (200, 50, 44), size=34, pad=20)
+    vignette(img, .3, (4, 6, 20))
+    grain(img, .03, .04)
+    title(img, [('A HIDDEN SEA', 'white', 104), ('UNDER THE ICE', (110, 255, 226), 86)], 60)
+    caption(img, 'ancient seawater,', avoid=[(0, 1040, W, 1400)], nudge=True)  # bedrock band, under the pool
+    return img
+
+
+def s11b(t=0.0):
+    """The scientist, full figure on the glacier surface at night, reacting to what the radar found under
+    his boots: he points down, leaning back; teal light leaks up through the cracks around his feet.
+    Moves: the counter rolls to 1,000,000+, the crack glow pulses, the plane's radar ring sweeps,
+    snow drifts, the scientist breathes and blinks; the arm lands with anticipation and overshoot."""
+    img = vgrad([(0, (8, 12, 40)), (.35, (30, 44, 104)), (.55, (70, 90, 160)), (.62, (150, 170, 220))])
+    d = ImageDraw.Draw(img); rng = np.random.default_rng(5)
+    for _ in range(90):
+        x, y, q = rng.uniform(0, W), rng.uniform(0, 1000), rng.uniform(1.5, 3.8)
+        d.ellipse([x - q, y - q, x + q, y + q], fill=(220, 230, 255))
+    # aurora band (teal, same colour as the brine: what lies under the ice)
+    am = mask(); ImageDraw.Draw(am).polygon([(x, 560 + 70 * math.sin(x / 160) + y) for x, y in ((0, 0), (300, -40), (600, 0), (900, -60), (1080, -20))] +
+                                            [(1080, 640), (800, 700), (400, 660), (0, 700)], fill=255)
+    glow(img, am, (60, 220, 190), .55, blur=60, add=True)
+    peak_range(img, 51, 1010, 140, 300, (120, 130, 190), (70, 80, 140), (220, 230, 250), n=7)
+    haze(img, 900, 1060, (150, 170, 220), .5)
+    # glacier surface: wide snow plain with sastrugi, lit cold blue
+    yg = lambda x: 1060 + 10 * math.sin(x / 150)
+    snow_ground(img, yg, color=(150, 168, 214), shade=(112, 128, 184), seed=21)
+    d = ImageDraw.Draw(img)
+    for k in range(7):
+        y0 = 1180 + k * 90; x0 = 60 + (k % 3) * 260
+        pts = [(x0 + u * 16, y0 + 10 * math.sin(u / 3 + k)) for u in range(0, 26)]
+        d.line(pts, fill=(104, 120, 176), width=5); d.line([(x, y + 6) for x, y in pts], fill=(196, 210, 240), width=3)
+    # glowing cracks under his feet: the brine far below shows through
+    cx0, cy0 = 640, 1790
+    cr = mask(); cd = ImageDraw.Draw(cr); rr = np.random.default_rng(8); lines_ = []
+    for a in np.linspace(0, 2 * math.pi, 9, endpoint=False):
+        x, y = cx0, cy0; pts = [(x, y)]
+        for _ in range(5):
+            a2 = a + rr.uniform(-.4, .4); x += math.cos(a2) * rr.uniform(60, 110); y += math.sin(a2) * rr.uniform(20, 40); pts.append((x, y))
+        lines_.append(pts); cd.line(pts, fill=255, width=14)
+    glow(img, cr, (60, 255, 210), .95 * (.9 + .1 * math.sin(t * 3)), blur=60, add=True)
+    glow(img, cr, (140, 255, 230), 1.0, blur=14, add=True)
+    radial(img, cx0, cy0, 560, (60, 230, 200), .45)
+    d = ImageDraw.Draw(img)
+    for pts in lines_:
+        d.line(pts, fill=(20, 60, 70), width=12); d.line(pts, fill=(170, 255, 236), width=7)
+    # survey plane far above with a radar ring sweeping the ice
+    props.plane(img, 820 + 60 * t, 440, .8)
+    for k in range(3):
+        r = 120 + k * 170
+        ImageDraw.Draw(img).arc([820 - r * 1.2, 440 + r * .5, 820 + r * 1.2, 440 + r * 1.3], 30, 150, fill=(170, 255, 236), width=4)
+    # the scientist: leans back, one arm points down at the cracks, the other flung back (reacting)
+    pose = dict(armL=(50, 28), armR=(-118, -150), legL=(16, 2), legR=(-12, -1))  # startled: one hand down at the cracks, one flung up
+    g = scientist(img, 640, 1790, 1.25, expr='surprised', pose=pose, rim=(150, 255, 230), rim_dir=(-.6, 1), label_at='above', rim_w=12)
+    foreground_frame(img, [[(-20, 1940), (-20, 1830), (140, 1800), (300, 1860), (380, 1940)]], color=(120, 140, 200), alpha=.85)
+    snow_particles(img, 29, n=(70, 30, 10), wind=(4, 1), t=t)
+    vignette(img, .36, (4, 6, 24))
+    grain(img, .03, .04)
+    # counter (UI): SEALED FOR 1,000,000+ YEARS
+    bx0, by0, bx1, by1 = 150, 120, 930, 330
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([bx0 + 8, by0 + 12, bx1 + 8, by1 + 12], 40, fill=(6, 4, 16))
+    d.rounded_rectangle([bx0, by0, bx1, by1], 40, fill=(16, 26, 58), outline=(120, 255, 230), width=7)
+    d.text(((bx0 + bx1) / 2, by0 + 56), 'SEALED FOR', font=font(48, True), fill=(150, 240, 230), anchor='mm')
+    d.text(((bx0 + bx1) / 2, by0 + 140), '1,000,000+ YEARS', font=font(92), fill='white', anchor='mm',
+           stroke_width=6, stroke_fill=(10, 6, 20))
+    caption(img, 'sealed off', avoid=[face_box(g), body_box(g)], nudge=True)
+    return img
+
+
+SHOTS = {'s01': s01, 's05': s05, 's11': s11, 's11a': s11a, 's11b': s11b, 's15': s15}
 
 if __name__ == '__main__':
     out = sys.argv[1]; os.makedirs(out, exist_ok=True)

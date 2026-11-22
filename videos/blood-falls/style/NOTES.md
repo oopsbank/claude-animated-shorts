@@ -86,3 +86,41 @@ Frames: `s01_style.png`, `s05_style.png`, `s11_style.png` and `s15_style.png`, a
 - **s05 readability holds at 7:** reviewers keep calling the cracked MYSTERY SOLVED stamp premature or cluttered. It is the brief's beat (the old algae theory cracks). The Director should decide whether to keep it.
 - **Engine:** port `clean_band` / `busy` into the engine's caption placement (per shot, on the rendered background without characters' faces), with the same ±7% window.
 - **Reviewers contradict each other on s15 staging** (pull the figures in vs. separate them). This matches LESSONS: reviewer noise is about ±1. Judge it in motion instead.
+
+## v3 pass: s11 split + first motion test (claude/area-flat2d-v3, 2026-11-22)
+Director decisions: split s11 into s11a/s11b; keep the cracking MYSTERY SOLVED stamp in s05; judge the look in motion.
+
+**New style frames:**
+- `s11a_style.png`: pure X-ray cross-section. The thick ice (400 m arrow), the glowing BRINE POOL lens and the outflow channel to Blood Falls; pool light falls on a fossil sea floor. The caption sits on the bedrock band under the pool (the pool is passed as an avoid box to `caption(nudge=True)`).
+- `s11b_style.png`: the scientist, full figure (scale 1.25), on the night glacier surface under an aurora. One hand points at the glowing cracks under his boots, the other is flung up. The plane and radar ring are in the sky, and the SEALED FOR 1,000,000+ YEARS counter is on top.
+
+**Shot renderer:** `flat2d/anim.py`, `flat2d/blood_falls.py`, `flat2d/render.py` and `flat2d/motion_qa.py` (see `flat2d/README.md`). Stand-in timings come from `scripts/blood-falls/stand_in_words.py` (3.7 words/s, 64.2 s total). Lines 1-6 end at 24.1 s.
+
+**Motion test:** `videos/blood-falls/tests/motion_s01_s06.mp4` (0-24.1 s, 540x960, 30 fps, silent, ~6 MB). The 0.5 s contact sheets and strips of the key actions are in `tests/review_r4/`. `motion_qa.py` finds no frozen frame; the only "pops" are the cut flashes and impacts.
+
+New shots designed for the test:
+- **s02:** close on the falls. The geologist winds up, steps back (the foot lifts), lands the hand to the mouth in stages, shakes his head, and flinches when the BLOOD FALLS sign drops in and plants.
+- **s03:** a cold grade and a blizzard. Icicles grow and frost creeps in. The thermometer drops while the −17°C readout rolls. The geologist shivers, his breath puffs, and the sign rattles. On "Yet the red kept coming" there is a punch-in, a shake and pulse rings on the falls.
+- **s04:** an explorers' camp at dusk with a tent, a lantern flicker and a flag.
+  - The leader winds up and points. The RED ALGAE speech bubble grows out of his hand, and he beats on "Tiny plants".
+  - The others nod, think and cheer.
+  - MYSTERY SOLVED falls in with an ink ring and a shake.
+- **s06:** the CLUE 1 badge slams in. The scientist raises a sloshing, glowing test tube. A SALT meter shows SEA vs. THIS WATER, and the bar overshoots past the sea. The Fe IRON tile pops, and iron specks fly from the tube into it.
+
+**Review (one fresh sonnet reviewer per round; contact sheets plus strips at the point, recoil, stamp slam, stamp crack and microscope X; scores are motion / richness / readability / composition / acting):**
+
+| Round | Scores | Overall | s11a | s11b | Main changes before it |
+|---|---|---|---|---|---|
+| 1 | 6/8/7/7/6 | 6.5 | 7 | 6.5 | First render; geologist kept in frame in s02/s03, s01 peer beat, s02 head shake |
+| 2 | 6/7/7/7/5 | 6.5 | 7 | 6.5 | Bigger stamp slam + ink ring, wider crack and more shards, slower X, deeper recoil, point settle; s11a pool lower, s11b cracks |
+| 3 | 6/7/7/7/6 | 6.5 | 7 | 6.5 | Longer point wind-up (lean back), real step back, idle weight shifts, beats on key words, cut punch-in + flash, crack shake + scientist flinch, X flash; s11b bigger, startled |
+| 4 | 6/7/7/6/6 | 6.5 | 7 | 7 | Stamp halves fall away, slam kept in frame, NO ALGAE earlier, slower point |
+
+**Result:** stopped on the plateau rule (R2-R4 had no gain over R1). The target was >= 8.
+
+## Open notes (v3)
+- **Acting is the ceiling (5-6).** Every round reads the holds as "static" at 0.1 s strip spacing and on 0.5 s sheets, even with breathing, blinks, weight shifts and beats on words (LESSONS: sheets score acting at ~6). Next idea: secondary actions in holds, done at the rig (a head turn that leads the body, a shoulder rise, hands that move during speech), not more camera moves.
+- **Captions over the torsos in s01/s02:** `clean_band` avoids faces only, inside a ±7% window. Pass body boxes as well, or allow a wider window when a character fills the 70% band.
+- **The reviewers contradict each other and misread the strips.** R2 saw "no anticipation" in a 0.3 s wind-up; R3 said NO ALGAE was "not visible" when it showed for 0.37 s (it now shows from +0.48 s). R4 wants the stamp "to stay large until the cut" while R3 wanted it faded. This matches the ±1 noise in LESSONS. Judge the mp4 itself; a human pass is needed.
+- **s11a:** the pool should pulse and the channel should show rising flow; in motion, `t` already drives the scan line, the plane and the motes. **s11b:** the reviewers want the caption off his torso, and the crack spread should be animated.
+- **Render cost:** ~3 s per frame at full size, so ~10 min per 24 s test on 4 procs. Frames are cached per shot only through the cards.

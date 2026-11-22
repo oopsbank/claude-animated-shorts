@@ -15,5 +15,23 @@ Pillow + numpy helpers for 1080x1920 "rich flat 2D" scenes (the Director's look 
   - **Graphics:** a stamp (with `cracked=True`, split between words), a big X, an algae chain, a survey plane.
 - `style_frames.py OUTDIR [--small DIR] [s01 s05 s11 s15]`: the blood-falls style frames. Every scene takes `t` (seconds), and the comment on each layer says how it moves.
 - `sheet.py DIR`: joins the 540x960 review downscales into one sheet.
+- `style_frames.py` also builds **s11a** (pure X-ray cross-section, caption on the bedrock band) and **s11b** (the scientist full figure on the ice surface, reacting), from the Director's split of s11 (2026-11-22).
+
+## Shot renderer (motion)
+- `anim.py`: motion helpers.
+  - **Easing:** `smooth`, `out_back`, `slam`, `pop`, `shake`, `damp` (follow-through).
+  - **Poses:** `mix`/`add`/`chain` give pose in-betweens (anticipation, then the action, then overshoot and settle).
+  - **Walk:** `walk_pose` + `walk_track` (foot-locked).
+  - **Characters:** `card` (cached stickman cards). `actor` places a character with breathing, blinks, lean and hop, and returns head and hand positions.
+  - **Camera and post:** `camera` (push, pan, shake). Cached `vignette` and `grain` (the grain boils every 2 frames).
+- `blood_falls.py`: the shots as `sNN(u, D, cue) -> (img, info)`. u is the shot-local time, D the shot length, and `cue(i)` the time of word i of the shot's line, so actions land on the voice.
+  - **Parallax:** background layers are drawn shifted by `cam*(1-f)`, then the whole frame is panned and pushed.
+  - Every shot has particles, glow pulses and a moving hold; nothing is frozen.
+- `render.py WORDS.json OUT.mp4 [--t0 --t1 --size 540x960 --sheet DIR --strip NAME:T:N]` renders frames in parallel (4 procs, ~3 s per frame at full size, then downscaled).
+  - **Captions:** house "sentence" captions from `words.json`, with a pop. The band is picked once per shot with `clean_band`, avoiding faces; s01 stays at a fixed 70%.
+  - **Cuts:** each cut gets a 6-frame punch-in settle and a 3-frame light flash.
+  - **Output:** ffmpeg writes the mp4. It also makes 0.5 s contact sheets and consecutive-frame strips.
+- `motion_qa.py FRAMES_DIR [cut s ...]` reports frozen frames (consecutive diff < 0.25) and pops (> 4x the local median, not on a cut).
+- Stand-in timings: `scripts/blood-falls/stand_in_words.py` turns SCRIPT.md into `words.json` at 3.7 words/s (no voice yet).
 
 Rules kept: blur masks only, never straight RGBA (LESSONS); glow sits behind characters, never on faces (DRAWING_RULES 19); captions follow PIPELINE › Captions.

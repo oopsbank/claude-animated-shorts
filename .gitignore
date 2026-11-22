@@ -7,3 +7,4 @@ blender/sets/*/plates/_tmp/
 videos/*/storyboard/frames/
 videos/*/storyboard/grade.json
 videos/*/storyboard/track.json
+videos/*/tests/*.frames/
