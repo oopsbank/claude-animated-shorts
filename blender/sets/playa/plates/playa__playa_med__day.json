@@ -1,0 +1,36 @@
+{
+ "ground_y": 1378.6,
+ "px_per_m": 331.84,
+ "horizon_y": 915.7,
+ "light_dir": "top",
+ "tint": "#fff4e4",
+ "stand_x": 0.5,
+ "ground_x": 539.7,
+ "set": "playa",
+ "cam": "playa_med",
+ "light": "day",
+ "targets": {
+  "camp_rocks": [
+   737.0,
+   1021.8
+  ],
+  "tent": [
+   205.3,
+   1023.6
+  ]
+ },
+ "note": "camp two-shot; also the 1948/1960s flashbacks (engine sepia)",
+ "depth": {
+  "file": "playa__playa_med__depth.png",
+  "near": 0.3,
+  "far": 400.0,
+  "kind": "distance",
+  "encoding": "srgb",
+  "f_px": 1173.33,
+  "ride_dir": [
+   0.0,
+   0.0377,
+   -0.9993
+  ]
+ }
+}

@@ -13,7 +13,24 @@
   "rock": [
    363.6,
    1308.5
+  ],
+  "camp_rocks": [
+   828.3,
+   964.3
   ]
  },
- "note": "depth-layered: hero rock + trail near, camp mid, mountains far"
+ "note": "depth-layered: hero rock + trail near, camp mid, mountains far",
+ "depth": {
+  "file": "playa__playa_wide__depth.png",
+  "near": 0.3,
+  "far": 400.0,
+  "kind": "distance",
+  "encoding": "srgb",
+  "f_px": 1386.67,
+  "ride_dir": [
+   -0.0,
+   0.0562,
+   -0.9984
+  ]
+ }
 }

@@ -1,0 +1,36 @@
+{
+ "ground_y": 1083.0,
+ "px_per_m": 233.74,
+ "horizon_y": 1002.8,
+ "light_dir": "top",
+ "tint": "#a9b0e6",
+ "stand_x": 0.693,
+ "ground_x": 748.9,
+ "set": "playa",
+ "cam": "rock_low",
+ "light": "night",
+ "targets": {
+  "rock": [
+   290.0,
+   1019.1
+  ],
+  "camp_rocks": [
+   782.8,
+   1005.9
+  ]
+ },
+ "note": "ground-level beside the hero rock (left third), its trail running away; holds a 1.7x zoom on the rock edge",
+ "depth": {
+  "file": "playa__rock_low__depth.png",
+  "near": 0.3,
+  "far": 400.0,
+  "kind": "distance",
+  "encoding": "srgb",
+  "f_px": 1280.0,
+  "ride_dir": [
+   0.0,
+   -0.0334,
+   -0.9994
+  ]
+ }
+}
