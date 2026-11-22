@@ -230,7 +230,7 @@ def lantern(loc=(0, 0, 0), on=True):
     bpy.ops.mesh.primitive_torus_add(major_radius=0.06, minor_radius=0.008, location=(0, 0, 0.28), rotation=(math.radians(90), 0, 0))
     t = bpy.context.object; C.assign(t, C.gold('lantern_gold')); C.no_ink(t); o.append(t)
     g = group(o, loc, 0)
-    C.point((loc[0], loc[1], loc[2] + 0.2), (1.0, 0.58, 0.25), power=60, radius=0.08)
+    C.point((loc[0], loc[1], loc[2] + 0.2), (1.0, 0.58, 0.25), power=150, radius=0.08)
     return g
 
 def sign_posts(text, loc, rz=0, w=2.4, h=1.1, style='plank', post_h=2.4):
