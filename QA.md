@@ -3,7 +3,7 @@
 Every task ends with these checks: first the automatic checks, then your own look, then an independent reviewer.
 
 **Updated standard (the Director, 2026-11-21, evening): every stage's OVERALL score (the mean of its criteria) must be ≥ 8/10.** Fix and re-review until it passes, and keep going until there is a finished video. This applies to sets, plates, characters, props, fx, the engine, audio, storyboards, drafts, thumbnails.
-- The overall score of each stage is ≥ 8, and all automatic checks pass. Facts in scripts stay ≥ 9.
+- The overall score of each stage is ≥ 8, and all automatic checks pass. Facts in scripts stay ≥ 8 (lowered from 9 by the Director, 2026-11-22).
 - Fix and re-review with fresh reviewers until it passes. There is no round cap.
 - Report progress to the Producer every 3 rounds, so the Director can step in.
 - Reviewers never see earlier drafts or the target score.
