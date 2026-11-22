@@ -1,6 +1,6 @@
 # Producer handoff (read this first)
 
-The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, `LESSONS.md` and `BACKLOG.md`. Updated 2026-11-21.
+The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, `LESSONS.md` and `BACKLOG.md`. Updated 2026-11-22.
 
 ## The Director (the user)
 - **Reply in Vietnamese**, briefly and plainly. Keep code, docs and commits in English. **Videos are in English.**
@@ -13,35 +13,29 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **Comedy taste: ABSURD** (picked 2026-11-21 over slapstick and deadpan). Lean into absurd escalation and imagined cutaways (e.g. aliens playing air hockey with boulders), always framed as a character's fantasy or a joke, never as fact. One deadpan line can land the payoff.
 - **Always ask before publishing.** Posting goes through the **Buffer API** (`PIPELINE.md` › Publishing; connected 2026-11-21: YouTube, TikTok, Facebook). Videos need a public URL. Upload-Post was removed.
 
-## Status
-- **Video 1, "Why Your Bike Steers Backwards First": final, not yet posted.**
-  - File to post: `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4` (draft v5, sentence captions, with the thumbnail as the first 3 frames, 64.14 s).
-  - Also: `thumbnail.png`. The proposed title and captions are in `videos/bike-countersteer/NOTES.md`.
-  - The draft history and open nice-to-haves are in the same NOTES file.
-  - **The Director decided (2026-11-21) not to remake it.** It has the pacing and story weaknesses found in the retention study, so the lessons go into the next video. Posting it is the Director's call.
-- **Video 2: "sailing-stones": POSTED 2026-11-22** (draft v1, G5 frozen at 7.1) on YouTube, TikTok and Facebook via Buffer; links in `videos/sailing-stones/NOTES.md`. The Animator session can be archived unless the Director wants a v2.
-- Earlier notes on video 2: the script is final (v17, merged) and the Director said to produce it to a finished video (each stage's overall score ≥ 8).
-  - Crew sessions:
-    - Sound `session_01CUE8441Kj9vhQtH74MvcqK` (voice + mix, `claude/area-audio`);
-    - Production Designer: done and archived 2026-11-22. Final `playa` (5 cams × 4 lights + depth) and `inserts` plates merged; frozen at playa 6.9, inserts 7.4, open fixes in BACKLOG › sets;
-    - Screenwriter `session_01CUE841LfyxuYFPbEVjdLVm` is idle; keep it for script fixes, then archive.
-  - Sound: done (65.7 s, 1,390 characters, review 8.0; merged). The voice was sped up 1.24x, so the Director should listen (`videos/sailing-stones/preview_*.mp3`).
-  - Assets: done and merged 2026-11-22 (wardrobe frozen ~7, fx frozen ~5.8; judge them in the storyboard). The session is archived.
-  - Animator `session_01CUE841fgjSkF1r1GptHY2h` (`claude/area-engine-v2`; the old `claude/area-engine` holds unrelated video 1 history, never force-push it): engine wiring, then the G2 storyboard, then the G5 draft.
-  - Claude usage shows a **weekly-limit warning** (2026-11-22): keep reviewers on sonnet and previews low-res.
-  - **One-time restart at 13:00 on 2026-11-22** (Asia/Ho_Chi_Minh, `trig_01AyDYT1m754M2mKKN89QVQC`, the Director asked for exactly one): it wakes stalled crew sessions with their full instructions, then disables itself. The 01:30 wake-up has already fired. No other scheduled tasks.
-- **Next video:** start at `PIPELINE.md` › Stage gates, with a fresh Screenwriter session. It must apply, from the start:
+## Status (2026-11-22)
+- **Video 1, "Why Your Bike Steers Backwards First": final (v6 + cover), NOT posted.** File: `videos/bike-countersteer/bike-countersteer_captions_cover_1080x1920.mp4`; title and captions in its `NOTES.md`. The 2026-11-21 Buffer draft (`6b019df9d5eabfb8cc337d28`) points to the old file: re-upload v6 to the media repo and post fresh. Posting is the Director's call (asked 2026-11-22, no answer yet).
+- **Video 2, "The Rocks That Move By Themselves" (`sailing-stones`): POSTED 2026-11-22 ~16:34** on YouTube, TikTok and Facebook (reel) via Buffer, with the Director's OK. Links and post ids are in `videos/sailing-stones/NOTES.md`.
+  - The posted cut is draft v1 with the cover: G2 storyboard frozen at 7.5, G5 draft frozen at 7.1 (plateau rule). Script v17 panel PASS; sound 8.0.
+  - What held the scores under 8 (fix these for the next video, BACKLOG has the details):
+    - acting 6: one-frame arm swaps, small faces, the same stance for 2-4 s;
+    - fx frozen at 5.8;
+    - plates: playa 6.9, inserts 7.4 (dense text);
+    - a few static spans.
+  - Not done: the Director's listen to the 1.24x voice stretch.
+- **All crew sessions are archived.** No scheduled tasks are active (the one-time 13:00 restart fired and disabled itself; the nightly 1st AD task stays disabled).
+- **Next video:** start at `PIPELINE.md` › Stage gates, with fresh sessions. It must apply, from the start:
   - the leaders' story engine (`QA.md` › scripts; `references/reports/retention_2026-11.md` §8);
   - a picture change every ≤ 1.5 s and a mid-action hook (preflight warns);
   - the shot grammar (`replication_playbook_2026-11.md` §3E);
   - "sentence" captions;
   - an ending on a gag or a loop.
-  - Before its render, the P1 engine items should be in: the grade vignette and split tone, depth-tested characters, and fly-through clips.
-- **Known channel problem:** posted shorts keep at most about 50% of their length (the Director's analytics). The causes and fixes are in `references/reports/retention_2026-11.md`.
+  - Biggest quality gap: **acting** (`character()` arm in-betweens, bigger poses and faces). It is worth a wardrobe pass before the next render.
+- **Known channel problem:** posted shorts keep at most about 50% of their length (the Director's analytics). The causes and fixes are in `references/reports/retention_2026-11.md`. Check video 2's retention when the Director shares analytics.
 
 ## Accounts and limits
-- **ElevenLabs** (proxy-injected, `api.elevenlabs.io`): free tier, 10,000 characters a month; 1,251 were used in November. One video is about 1,250 characters. Voice each script **once**.
-- **Claude usage:** one 5-hour limit is shared by **all** sessions. Six parallel sessions hit it within hours and stalled for about 5 h each time.
+- **ElevenLabs** (proxy-injected, `api.elevenlabs.io`): free tier, 10,000 characters a month; 2,641 were used in November (after video 2). One video is about 1,250 characters. Voice each script **once**.
+- **Claude usage:** one 5-hour limit is shared by **all** sessions. Six parallel sessions hit it within hours and stalled for about 5 h each time. On 2026-11-22 a **weekly-limit warning** appeared and one Animator hit the 5-hour limit in about 1.5 h: keep reviewers on sonnet, previews low-res, and at most 3 sessions.
 - **Environment `claude-animated-shorts`:**
   - The setup script installs `.venv` (bpy 5.3, Pillow, numpy, yt-dlp) and clones the CC0 packs into `packs/`.
   - Allowed hosts: YouTube (`www.youtube.com`, `i.ytimg.com`), Poly Haven, `kenney.nl`.
@@ -57,7 +51,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **The standard for every stage is an overall score ≥ 8/10** (`QA.md`): iterate with fresh reviewers until every criterion passes, with no round cap, and report every 3 rounds. To save usage, review cheap previews (low-res stills, storyboards, crops) before expensive renders.
 - Crew sessions push to `claude/area-<area>`. The Producer merges into the integration branch `claude/busy-maxwell-tkdir9`, keeping both sides of LESSONS/BACKLOG conflicts.
 - Messages sent to a rate-limited session are lost. After a reset, resend the full instructions, not "continue".
-- Kept session: Sound Designer `session_01CUE8441Kj9vhQtH74MvcqK` (it can voice the next script). All other first-video sessions are archived.
+- No crew sessions are kept between videos.
 
 ## Where the knowledge lives
 | What | File |

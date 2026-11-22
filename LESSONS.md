@@ -17,6 +17,10 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - The Director can upload competitor MP4s into the session (YouTube blocks downloads here). Keep them out of the repo; keep only measurements and structure notes.
 
 - A low-res test plate (25%) must be upscaled to 1080x1920 before the engine reads it: its JSON is in full-size px, and `load_plate` rescales the JSON by the image size (ground_y x4 off the frame).
+- Never force-push an area branch that holds unrelated old history (`claude/area-engine`, `claude/area-sets`): push to a new name (`claude/area-engine-v2`), and cherry-pick only the new commits from the old one.
+- When cherry-picking many area commits, resolve BACKLOG/LESSONS conflicts by keeping both sides, then dedupe duplicated lines and headings once at the end; keep the integration branch's `scripts/<slug>/` files and re-apply the area's small edits in `build.py`.
+- Buffer: Facebook posts need `metadata.facebook.type: "reel"`; TikTok takes a few minutes in "sending", so poll `post(input:{id}) { status externalLink }` in the background.
+- github.io is blocked from the container: check that Pages deployed through the repo's Actions runs before handing a URL to Buffer.
 
 ## Engine wiring (video 2)
 - New engine features must not change old shots: gate them (string props are sprites only on `props.SPRITE_SETS`) and diff video 1 frames 290 and 1040 before and after.
@@ -116,3 +120,8 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Sheet reviews of many small assets plateau around 7: each fresh reviewer finds new nitpicks. Once a stage has not improved for 3 rounds, freeze it with notes and judge it in its real shots (G3). Give reviewers the fixed-upstream context (cast colours, style rules) up front, or they spend their points on it.
 - Judge a mechanism (a push, a shove, a drift) on a large 3-4 frame strip of the beat, or in the storyboard. On 180 px dense sheets the reviewers read 0.3-canvas moves as "static".
 - Check the review sheet itself before blaming the asset. A crop that cut off the seated legs, and an enlarged thumbnail that overlapped its neighbour, cost two rounds of "clipped" notes.
+- Frozen upstream stages come back as the blockers downstream: video 2's fx (5.8) and dense insert text were named by every storyboard and draft reviewer. Fix the stage that froze lowest before the render, or stage around it in the engine early.
+- For a mechanism shot, engine-moved sprites (a big translucent pane, a ≥ 0.5 W cue arrow, contact, a delayed move, a growing trail) read better than a self-contained fx clip, and are cheaper to iterate.
+- Acting scores 6 when arms swap poses in one frame and faces are small at phone size. Fix `character()` in-betweens and bigger poses before the next video's render.
+- Thumbnail: zoom onto the character so the action fills the middle; a wide frame leaves the bottom half empty and puts the headline over the sign.
+- Times like "1h" are ambiguous (01:00 vs 13:00): confirm with the Director, and default to a one-shot task unless they say "every day".
