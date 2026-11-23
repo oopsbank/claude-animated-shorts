@@ -105,6 +105,12 @@ Serious mystery, no comedy stings. `mystery` (sus pad, ticking glock) for the ev
 Mix: −14.05 LUFS integrated, −1.20 dBTP, voice 10.2-11.5 LU over the bed per section; 1962 frames = 65.40 s (`length.json`).
 
 ## Publishing text (draft; never posted without the Director's OK)
+## Posted 2026-11-23 ~11:00 (Asia/Ho_Chi_Minh), with the Director's OK ("ok đăng đi"), via Buffer
+- File: `https://oopsbank.github.io/some-crazy-things-media/tunguska_1080x1920.mp4` (= `tunguska_final_1080x1920.mp4`, v3).
+- Facebook reel (post 6b03ba3fd5eabfb8cc02a3fe): https://www.facebook.com/reel/1863094158459724/
+- TikTok (post 6b03ba4bcc364169c1ab49d0): https://tiktok.com/@somecrazythingzz/video/7711211886443826452
+- YouTube: FAILED (post 6b03ba3ed864a011051bcf56): "The daily posting limit for this channel has been reached" (video 3 went out ~15:27 UTC the day before). Waiting for the Director: reschedule via Buffer or upload by hand.
+
 **Title:** A Blast 1,000x Hiroshima… and No Crater ☄️ #shorts
 
 **YouTube description:**
