@@ -405,9 +405,9 @@ def volcano_icon(img, x, y, s, t, col=(150, 96, 72), lava=(255, 110, 40), smoke_
         fill_mask(lay, m, (255, 120, 70), .42)
         d = ImageDraw.Draw(lay)
         import taiga
-        for a, b in zip(cone, cone[1:]): taiga.dashed(d, a, b, (255, 170, 120), w=int(10 * s + 3), dash=26, gap=14, phase=t * 30)
+        for a, b in zip(cone, cone[1:]): taiga.dashed(d, a, b, (255, 190, 140), w=int(min(12, 6 * s + 3)), dash=int(16 + 8 * s), gap=int(8 + 4 * s), phase=t * 30)
         # magma chamber + pipe
-        d.ellipse([x - w * .7, y - h * .22, x + w * .7, y + h * .1], fill=(255, 100, 40, 190), outline=(255, 200, 140), width=int(6 * s + 2))
+        d.ellipse([x - w * .7, y - h * .22, x + w * .7, y + h * .1], fill=(255, 100, 40, 190), outline=(255, 200, 140), width=int(min(10, 6 * s + 2)))
         d.rectangle([x - w * .07, y - h, x + w * .07, y - h * .1], fill=(255, 120, 60, 110))
     else:
         d.polygon(cone, fill=col, outline=INK, width=int(7 * s + 2))
@@ -437,17 +437,17 @@ def heat_col(f):
     return BANDS[-1][1]
 
 
-def earth_section(img, t, y_top, y_bot=H, cam=0.0, n=6, wav=26, glow_bottom=True, seed=4, ft=1.0, labels=True):
+def earth_section(img, t, y_top, y_bot=H, cam=0.0, n=6, wav=26, glow_bottom=True, seed=4, ft=1.0, labels=True, dark=0.0):
     """Strata from y_top down, coloured by depth heat (cool brown -> glowing red), wavy band edges, speckle
     texture and a pulsing heat glow at the bottom. ft = fraction of the heat ramp to use (shallower = cooler)."""
     d = ImageDraw.Draw(img); rng = np.random.default_rng(seed)
     for i in range(n):
         f0 = i / n; y0 = y_top + (y_bot - y_top) * f0
         pts = [(x, y0 + (wav * math.sin(x * .006 + i * 1.7 + cam * .002) if i else 0)) for x in range(-60, W + 80, 40)]
-        d.polygon(pts + [(W + 80, H + 10), (-60, H + 10)], fill=heat_col((i + .5) / n * ft), outline=INK, width=4 if i else 0)
+        d.polygon(pts + [(W + 80, H + 10), (-60, H + 10)], fill=lerp(heat_col((i + .5) / n * ft), (22, 26, 44), dark * (1 - i / n * .5)), outline=INK, width=4 if i else 0)
     for j in range(260):                                                 # speckle (pebbles / grains)
         x = rng.uniform(0, W); y = rng.uniform(y_top + 20, y_bot); f = (y - y_top) / max(1, y_bot - y_top)
-        r = rng.uniform(3, 9); c = lerp(heat_col(f * ft), (40, 20, 16), .35)
+        r = rng.uniform(3, 9); c = lerp(lerp(heat_col(f * ft), (22, 26, 44), dark), (40, 20, 16), .35)
         d.ellipse([x - r, y - r * .7, x + r, y + r * .7], fill=c)
     if glow_bottom:
         radial(img, W / 2, y_bot + 200, 1100, (255, 120, 50), .35 + .08 * math.sin(t * 2.2))
@@ -574,7 +574,8 @@ def mug(img, x, y, s, t, col=(232, 96, 70), coffee=(96, 56, 36)):
 def globe(img, cx, cy, r, t, cut=1.0, spin=0.0, glow_a=.55, land=(80, 160, 90), sea=(56, 120, 190)):
     """The Earth with a wedge cut out (crust, mantle, outer core, inner core glowing). cut 0..1 opens the wedge."""
     m = mask(); ImageDraw.Draw(m).ellipse([cx - r, cy - r, cx + r, cy + r], fill=255)
-    glow(img, m, (120, 190, 255), .5, blur=int(r * .12))
+    glow(img, m, (120, 190, 255), .7, blur=int(r * .12))
+    ImageDraw.Draw(img).ellipse([cx - r - 22, cy - r - 22, cx + r + 22, cy + r + 22], outline=(150, 210, 255), width=6)
     lay = layer(); d = ImageDraw.Draw(lay)
     d.ellipse([cx - r - 8, cy - r - 8, cx + r + 8, cy + r + 8], fill=INK)
     d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=sea)
@@ -585,6 +586,10 @@ def globe(img, cx, cy, r, t, cut=1.0, spin=0.0, glow_a=.55, land=(80, 160, 90), 
         px, py = cx + r * .8 * math.sin(a) * math.cos(b), cy + r * .8 * math.sin(b)
         q = r * rng.uniform(.14, .3) * (.5 + .5 * math.cos(a))
         d.ellipse([px - q, py - q * .7, px + q, py + q * .7], fill=land)
+    for i in range(6):                                                     # cloud swirls drifting
+        a = i * 1.1 + spin * 1.5 + t * .05; px, py = cx + r * .6 * math.sin(a), cy - r * .7 + i * r * .25
+        if (px - cx) ** 2 + (py - cy) ** 2 < (r * .9) ** 2:
+            d.arc([px - r * .25, py - r * .06, px + r * .25, py + r * .06], 180, 360, fill=(240, 248, 255), width=max(4, int(r * .025)))
     lit = mask(); ImageDraw.Draw(lit).ellipse([cx - r * 1.3, cy - r * 1.3, cx + r * .3, cy + r * .3], fill=120)
     lit = lit.filter(ImageFilter.GaussianBlur(r * .3))
     cm = mask(); ImageDraw.Draw(cm).ellipse([cx - r, cy - r, cx + r, cy + r], fill=255)
@@ -602,4 +607,25 @@ def globe(img, cx, cy, r, t, cut=1.0, spin=0.0, glow_a=.55, land=(80, 160, 90), 
         d = ImageDraw.Draw(lay)
         for a in (a0 + 45, a1 + 45):
             d.line([(cx, cy), (cx + r * math.cos(math.radians(a)), cy + r * math.sin(math.radians(a)))], fill=INK, width=6)
+    img.alpha_composite(lay)
+
+
+def boil(img, t, spots, seed=12, col=(250, 255, 252), heat=(255, 150, 80)):
+    """Rolling boil: churning white domes on the surface (each swells, breaks into foam and a ring, then
+    re-forms), with an orange heat glow under each. spots: [(x, y, r)]. Moves: every dome on its own phase."""
+    lay = layer(); d = ImageDraw.Draw(lay); m = mask(); dm = ImageDraw.Draw(m); rng = np.random.default_rng(seed)
+    for i, (x, y, r) in enumerate(spots):
+        ph = rng.uniform(0, 1); u = (ph + t * rng.uniform(.9, 1.4)) % 1
+        sw = math.sin(math.pi * u)
+        dm.ellipse([x - r * 1.4, y - r * .6, x + r * 1.4, y + r * .6], fill=255)
+        rr = r * (.5 + .6 * sw)
+        d.ellipse([x - rr, y - rr * .5, x + rr, y + rr * .5], fill=col + (int(150 + 90 * sw),))
+        for j in range(7):                                                 # foam beads around the dome
+            a = j / 7 * 2 * math.pi + t * 2 + i; q = r * .16 * (.6 + .4 * math.sin(t * 7 + j))
+            px, py = x + math.cos(a) * rr * 1.1, y + math.sin(a) * rr * .55
+            d.ellipse([px - q, py - q * .7, px + q, py + q * .7], fill=col + (230,), outline=(120, 170, 170, 200), width=2)
+        v = (u * 2) % 1; R = r * (1 + v * 1.3)                              # a spreading ring
+        d.ellipse([x - R, y - R * .45, x + R, y + R * .45], outline=col + (int(200 * (1 - v)),), width=max(2, int(r * .08)))
+        d.ellipse([x - rr * .5, y - rr * .4, x - rr * .05, y - rr * .15], fill=(255, 255, 255, 255))
+    glow(img, m, heat, .45, blur=30)
     img.alpha_composite(lay)

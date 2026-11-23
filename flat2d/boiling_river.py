@@ -130,6 +130,8 @@ def s01_world(u, cam=0.0, frog=None, steam_k=1.0, geo=None, walls_y1=1300):
     img.alpha_composite(fb, (int(-200 + cam * .6), 0))
     poly = J.river_band(img, u, 900, 1960, x_far=(-100, 1180), x_near=(-400, W + 400), cam=cam, heat=1.0)
     radial(img, 560 + cam * .5, 960, 620, (255, 170, 90), .28 + .05 * math.sin(u * 2.3))      # heat glow on the water
+    J.boil(img, u, [(180 + cam, 1330, 70), (800 + cam, 1250, 60), (470 + cam, 1500, 95), (930 + cam, 1560, 90),
+                    (300 + cam, 1760, 120), (760 + cam, 1820, 120), (640 + cam, 1130, 45), (120 + cam, 1110, 40)], seed=12)
     J.bubbles(img, u, poly, n=90, seed=3, rate=1.7, size=(14, 80))
     J.steam(img, u, [(-60, 520, 930), (480, 1140, 940), (-60, 1140, 1000), (-60, 1140, 1150), (0, 1080, 1400)], rise=820,
             dens=1.3 * steam_k, seed=7, n=90, size=(70, 190), wind=50, warm=.12)
@@ -294,8 +296,12 @@ def s03a(u, D, cue):
     J.steam(img, u, [(700, 1200, 1150)], rise=900, dens=.8, seed=11, n=34, size=(70, 170), wind=-30, warm=.1)
     mid = J.canopy_layer(31, 1300, [(22, 80, 150, ((40, 86, 56), (60, 116, 70), (92, 150, 84)), True, (66, 52, 40), 0)])
     img.alpha_composite(mid, (int(-200 + cam * .7), 0))
+    J.steam(img, u, [(620, 1180, 1330)], rise=900, dens=1.0, seed=12, n=40, size=(70, 180), wind=-30, warm=.15)
+    radial(img, 900, 1250, 360, (255, 170, 100), .3)
     forest_floor(img, u, cam)
-    d = ImageDraw.Draw(img)
+    d = ImageDraw.Draw(img)                                              # a trail toward the steam (right)
+    d.polygon([(-60 + cam, 1990), (420 + cam, 1990), (980 + cam * .8, 1590), (820 + cam * .8, 1575)], fill=(150, 120, 84), outline=INK, width=4)
+    kit.light_rays(img, 900, 120, (255, 250, 210), n=7, alpha=.22, spread=(100, 140), length=1900, seed=8, phase=2 * math.sin(u * .4))
     for i, x in enumerate((60, 330, 980)):                               # big trunks in the mid-ground
         xx = x + cam * .9
         d.polygon([(xx - 40, -20), (xx + 40, -20), (xx + 56, 1580), (xx - 60, 1580)], fill=(92, 70, 52), outline=INK, width=6)
@@ -304,13 +310,13 @@ def s03a(u, D, cue):
     J.vines(img, u, [200, 470, 760], y1=1000, cam=cam * .9)
     t_walk = 2.3; s = .98
     if u <= t_walk:
-        pose = anim.walk_pose(u); x = walk_x(u, t_walk, 560, s * .5); lean = 4; look = .7; expr = 'determined'
+        pose = anim.walk_pose(u); x = walk_x(u, t_walk, 420, s * .5); lean = 4; look = .7; expr = 'determined'
     else:
         v = u - t_walk; last = anim.walk_pose(t_walk)
         pose = mix(last, POSES['stand'], smooth(v / .35)); sw = damp(v, 12, 4.5, 14)
         pose = add(pose, armL=(sw, sw * 1.4), armR=(-sw, -sw * 1.4))
         if v < .25: pose['_side'] = True
-        x = walk_x(t_walk, t_walk, 560, s * .5) + 8 * smooth(v / .4); lean = 4 * (1 - smooth(v / .5)) + 2 * math.sin(v * 1.3)
+        x = walk_x(t_walk, t_walk, 420, s * .5) + 8 * smooth(v / .4); lean = 4 * (1 - smooth(v / .5)) + 2 * math.sin(v * 1.3)
         look = .7; expr = 'determined'
     x += cam * 1.0
     g = geologist(img, u, pose, expr, x, 1700, s, look=look, lean=lean)
@@ -332,7 +338,9 @@ def bank_scene(img, u, cam, warm=0.0, steam_k=1.0, horizon=760):
     img.alpha_composite(fb, (int(-200 + cam * .6), 0))
     poly = J.river_band(img, u, horizon + 140, 1960, x_far=(-100, 1180), x_near=(-300, W + 300), cam=cam, heat=1.0,
                         cols=J.JADE if not warm else ((236, 180, 150), (150, 120, 140), (70, 60, 100)))
-    J.bubbles(img, u, poly, n=36, seed=5, rate=1.3, size=(6, 36))
+    J.boil(img, u, [(560 + cam, 1300, 70), (900 + cam, 1420, 90), (760 + cam, 1700, 110), (1000 + cam, 1820, 110),
+                    (400 + cam, 1150, 50), (840 + cam, 1110, 45)], seed=14)
+    J.bubbles(img, u, poly, n=50, seed=5, rate=1.5, size=(10, 50))
     J.steam(img, u, [(-60, 1140, horizon + 150), (-60, 1140, horizon + 380)], rise=700, dens=steam_k, seed=13, n=56,
             size=(60, 160), wind=30, warm=warm * .6 + .1)
     return poly
@@ -371,13 +379,13 @@ def s03b(u, D, cue):
 
 # ---------------------------------------------------------------- s04: the obvious answer, a volcano underneath (line 4)
 def surface_section(img, u, cam, ground=760, river=(260, 820), depth=120, ft=.55, cold_left=False, hot=1.0, horizon=470,
-                    bands=6, steam_k=.8):
+                    bands=6, steam_k=.8, dark=0.0):
     """Side cutaway: jungle and sky above, a river channel cut into the ground, strata below. Returns the
     river bed points."""
     J.jungle_back(img, u, cam, horizon=horizon, sun=(840, 160), rays=False)
     fb = J.canopy_layer(51, ground + 10, [(26, 50, 100, ((44, 96, 62), (66, 124, 76), (98, 158, 88)), True, (70, 56, 44), 0)])
     img.alpha_composite(fb, (int(-200 + cam * .6), 0))
-    J.earth_section(img, u, ground, H, cam, n=bands, ft=ft)
+    J.earth_section(img, u, ground, H, cam, n=bands, ft=ft, dark=dark, glow_bottom=dark < .3)
     d = ImageDraw.Draw(img)
     d.rectangle([-10, ground - 14, W + 10, ground + 10], fill=(84, 140, 64), outline=INK, width=5)
     x0, x1 = river
@@ -405,7 +413,7 @@ def surface_section(img, u, cam, ground=760, river=(260, 820), depth=120, ft=.55
 
 def s04(u, D, cue):
     img = Image.new('RGBA', (W, H)); cam = 6 * math.sin(u * .5)
-    bed = surface_section(img, u, cam, ground=700, river=(250, 830), depth=130, ft=.45)
+    bed = surface_section(img, u, cam, ground=700, river=(250, 830), depth=130, ft=.45, dark=.85)
     tv = cue(4) - .2                                                     # "volcano": the imagined volcano glows in
     kv = smooth(seg(u, tv, tv + .5))
     if kv > 0:
@@ -429,8 +437,7 @@ def s05(u, D, cue):
     # the imagined volcano under the river (small, ghost) until "away", then it breaks
     tb = cue(10) - .05
     kb = smooth(seg(u, tb, tb + .4))
-    if kb < 1:
-        J.volcano_icon(img, rx, ry + 30, .5, u, ghost=True, alpha=(1 - kb) * .9, smoke_on=False)
+    J.volcano_icon(img, rx + 150, ry + 50, .7, u, ghost=True, alpha=1 - .25 * kb, smoke_on=False)
     J.map_pin(img, rx, ry, u, HOT, 1.0)
     tv = cue(4) - .15
     kv = pop(u, tv, .35, 2)
@@ -451,15 +458,16 @@ def s05(u, D, cue):
         d = ImageDraw.Draw(img)
         for j in range(7):
             a = -math.pi / 2 + (j - 3) * .45; dd = 160 * ease_out(kb)
-            px, py = rx + math.cos(a) * dd, ry - 40 + math.sin(a) * dd + 200 * kb * kb
+            px, py = rx + 150 + math.cos(a) * dd, ry - 40 + math.sin(a) * dd + 200 * kb * kb
             d.polygon([(px, py - 18), (px + 16, py + 6), (px - 12, py + 14)], fill=(255, 140, 90, 0) if False else (255, 140, 90), outline=INK, width=3)
     sx, sy = shake(u, tb, 8, .3)
     img = finish(img, u, 1.08 - .06 * smooth(u / D), (rx + vx) / 2, (ry + vy) / 2, dx=sx, dy=sy, vig=(.3, (20, 40, 60)))
     if not HIDE_UI:
-        chip(img, 'BOILING RIVER', (200, 90, 30), rx - 40, ry - 110, u, .1, size=42)
+        chip(img, 'BOILING RIVER', (200, 90, 30), rx - 130, ry - 100, u, .1, size=42)
         if kv > 0: chip(img, 'NEAREST ACTIVE VOLCANO', (150, 40, 34), 560, vy + 150, u, tv, size=40)
         if kr > .6: chip(img, '≈ 700 KM', (30, 30, 40), (rx + vx) / 2 - 150, (ry + vy) / 2, u, tr + .45, size=64)
-        if kb > 0: draw_x(img, rx, ry - 30, 70, seg(u, tb, tb + .4) * 2, w=18)
+        if not HIDE_UI and u < tb + .1: chip(img, 'VOLCANO?', (150, 60, 40), rx + 150, ry + 90, u, .2, size=34)
+        if kb > 0: draw_x(img, rx + 150, ry - 40, 80, seg(u, tb, tb + .4) * 2, w=18)
     return img, {'faces': [], 'avoid': [(rx - 240, ry - 170, rx + 200, ry + 60), (200, vy + 90, 920, vy + 210),
                                          (vx - 120, vy - 160, vx + 120, vy + 60), (160, 1000, 700, 1140)]}
 
@@ -530,8 +538,6 @@ def s06(u, D, cue):
     J.steam(img, u, src, rise=240, dens=1.3, seed=23, n=80, size=(40, 120), rate=.35, wind=60, warm=.15, alpha=.85)
     J.bubbles(img, u, [(330, 1500), (760, 1500), (800, 1950), (300, 1950)], n=30, seed=4, size=(8, 22))
     lc = .22 + .03 * math.sin(u * 3); lh = .95 + .02 * math.sin(u * 4)
-    J.thermometer(img, 190, 420, 380, lc, u, w=56, liquid=(60, 150, 230), glow_on=False, scale=((0, ''),), fs=26)
-    J.thermometer(img, 910, 1180, 380, lh, u, w=56, scale=((0, ''),), fs=26)
     kz = smooth(seg(u, cue(11) - .6, cue(16) + .2))
     img = finish(img, u, 1.3 - .3 * kz, 540, 520 + 440 * kz, vig=(.35, (10, 30, 20)))
     clue(img, 'CLUE 1', u)
@@ -545,10 +551,20 @@ def s06(u, D, cue):
 
 
 # ---------------------------------------------------------------- s07: CLUE 2, heat through the cracks (line 7)
+def _jag(F, seed, amp=18, n=5):
+    rng = np.random.default_rng(seed); out = []
+    for a, b in zip(F, F[1:]):
+        for k in range(n):
+            f = k / n; j = rng.uniform(-amp, amp) if k else 0
+            out.append((a[0] + (b[0] - a[0]) * f + j, a[1] + (b[1] - a[1]) * f + j * .3))
+    return out + [F[-1]]
+
+
 F1 = [(120, 1960), (330, 1500), (470, 1100), (560, 840)]
 F2 = [(1020, 1960), (860, 1480), (700, 1100), (610, 840)]
 F3 = [(420, 1960), (430, 1720), (330, 1500)]
 F4 = [(700, 1960), (760, 1700), (860, 1480)]
+F1, F2, F3, F4 = _jag(F1, 1), _jag(F2, 2), _jag(F3, 3, 12, 3), _jag(F4, 4, 12, 3)
 
 
 def s07(u, D, cue):
@@ -658,7 +674,13 @@ def s09(u, D, cue):
     poly = J.river_band(img, u, 900, 1960, x_far=(-100, 1180), x_near=(-300, W + 300), cam=cam, heat=1.0,
                         cols=((250, 180, 150), (170, 110, 130), (70, 50, 90)))
     radial(img, 540 + cam * .3, 920, 500, (255, 170, 110), .5)
-    J.bubbles(img, u, poly, n=30, seed=9, size=(6, 34), col=(255, 230, 220))
+    radial(img, 560 + cam * .3, 1500, 520, (255, 150, 110), .35)
+    d = ImageDraw.Draw(img)
+    for j in range(9):                                                   # the sun's broken reflection on the water
+        y = 960 + j * 70; w_ = 60 + j * 26 + 12 * math.sin(u * 2 + j)
+        d.line([(560 - w_ + cam * .3, y), (560 + w_ + cam * .3, y)], fill=(255, 200, 150), width=6 + j)
+    J.boil(img, u, [(640, 1250, 70), (900, 1450, 90), (720, 1700, 110), (500, 1500, 80)], seed=19, col=(255, 236, 226))
+    J.bubbles(img, u, poly, n=40, seed=9, size=(8, 40), col=(255, 230, 220))
     J.steam(img, u, [(-60, 1140, 920), (-60, 1140, 1150)], rise=820, dens=1.1, seed=31, n=60, size=(60, 170), wind=20,
             col=(255, 226, 220), shade=(170, 120, 150), warm=.3)
     tq = cue(1) - .05                                                    # "how": the question mark rises from the steam
@@ -669,7 +691,7 @@ def s09(u, D, cue):
     c = cam * 1.2
     J.ground_bank(img, [(-60 + c, 1500), (180 + c, 1540), (340 + c, 1660), (420 + c, 1800), (440 + c, 1990), (-60 + c, 1990)],
                   top=(60, 44, 44), mid=(54, 40, 46), moss=(70, 80, 70))
-    g = geologist(img, u, 'think', 'thinking', 240 + c, 1800, .9, look=.6, rim=(255, 170, 130), rim_dir=(1, -.3),
+    g = geologist(img, u, 'think', 'thinking', 240 + c, 1720, .9, look=.6, rim=(255, 170, 130), rim_dir=(1, -.3),
                   aura=(255, 140, 110))
     img = finish(img, u, 1.03 + .04 * smooth(u / D), 540, 1100, vig=(.45, (30, 10, 40)))
     return img, {'faces': [face_box(g, 1.3)], 'avoid': [(260, 260, 860, 1060), (220, 1440, 980, 1560)]}
@@ -722,11 +744,12 @@ def s11(u, D, cue):
     # the jungle and the steaming river, far right
     fb = J.canopy_layer(111, 1000, [(10, 50, 90, ((44, 96, 62), (66, 124, 76), (98, 158, 88)), True, (70, 56, 44), 0)], w=700)
     img.alpha_composite(fb, (int(560 + cam * .6), 0))
-    J.steam(img, u, [(800, 1000, 990)], rise=420, dens=.6, seed=37, n=26, size=(40, 110), wind=10)
+    J.steam(img, u, [(740, 1000, 1000)], rise=520, dens=.9, seed=37, n=26, size=(40, 110), wind=10)
     J.earth_section(img, u, 1000, H, cam, n=6, ft=.95, seed=8)
     d = ImageDraw.Draw(img)
     d.rectangle([-10, 986, W + 10, 1012], fill=(84, 140, 64), outline=INK, width=5)
-    d.rectangle([820, 990, 1000, 1030], fill=(150, 210, 190), outline=INK, width=4)                    # the river (far right)
+    d.polygon([(720, 992), (1000, 992), (980, 1050), (740, 1050)], fill=(150, 210, 190), outline=INK, width=5)       # the river (right)
+    taiga.dashed(d, (860, 1720), (860, 1070), (255, 200, 150), w=6, dash=22, gap=14, phase=-u * 60)
     # depth ruler (right edge)
     for kk, y in ((0, 1000), (1, 1300), (2, 1600), (3, 1900)):
         d.line([(1010, y), (1060, y)], fill=INK, width=8); d.line([(1012, y), (1058, y)], fill=(250, 240, 220), width=4)
@@ -734,12 +757,18 @@ def s11(u, D, cue):
     d.line([(1035, 1000), (1035, 1920)], fill=INK, width=8); d.line([(1035, 1000), (1035, 1920)], fill=(250, 240, 220), width=4)
     ks = smooth(seg(u, cue(1) - .2, cue(10) + .3))                         # soak in, sink deep, heat up
     pth = _smooth_path(RAIN_PATH, 6)
-    J.rising(img, u, pth, n=16, speed=.3, r=(11, 18), cold=J.COLD, hot=(255, 90, 40), seed=4, k=ks, glow_a=.35)
+    vis = pth[:max(2, int(len(pth) * ks))]
+    m = mask(); ImageDraw.Draw(m).line(vis, fill=255, width=30)
+    glow(img, m, (255, 150, 90), .3, blur=20)
+    d = ImageDraw.Draw(img)
+    for a_, b_ in zip(vis, vis[1:]):
+        f = pth.index(a_) / len(pth)
+        d.line([a_, b_], fill=INK, width=30); d.line([a_, b_], fill=lerp(J.COLD, (255, 80, 40), f), width=20)
+    J.rising(img, u, pth, n=12, speed=.3, r=(14, 22), cold=J.COLD, hot=(255, 90, 40), seed=4, k=ks, glow_a=.35)
     radial(img, 640, 1790, 300, (255, 110, 50), .4 * smooth(seg(u, cue(13) - .3, cue(14) + .2)) + .05 * math.sin(u * 4))
     img = finish(img, u, 1.02 + .03 * smooth(u / D), 540, 1100, vig=(.32, (20, 24, 40)))
     if not HIDE_UI:
         chip(img, 'RAIN', (60, 110, 170), 300, 560, u, cue(0) - .1, size=56)
-        chip(img, 'FAR AWAY', (60, 80, 100), 300, 680, u, cue(5) - .1, size=40)
         chip(img, 'KILOMETRES DEEP', (40, 40, 60), 700, 1420, u, cue(9) - .1, size=44, angle=-4)
         chip(img, 'THE ROCK HEATS IT', (200, 70, 30), 560, 1860, u, cue(14) - .1, size=44)
     return img, {'faces': [], 'avoid': [(160, 480, 460, 740), (440, 1360, 960, 1480), (260, 1800, 860, 1920)]}
@@ -759,6 +788,7 @@ def s12(u, D, cue):
     m = mask(); ImageDraw.Draw(m).line(cr, fill=255, width=40)
     glow(img, m, HOT, .6 + .15 * math.sin(u * 5), blur=28)
     d = ImageDraw.Draw(img); d.line(cr, fill=(255, 150, 60), width=16, joint='curve')
+    rad = radial(img, 545, 1900, 500, (255, 90, 40), .4 + .08 * math.sin(u * 3))
     kp = smooth(seg(u, cue(1) - .3, cue(1) + .3))
     J.rising(img, u, cr, n=14, speed=.6 + .5 * kp, r=(12, 20), seed=5, glow_a=.5)
     # pressure arrows beside the crack, pulsing upward
@@ -779,7 +809,6 @@ def s12(u, D, cue):
     if not HIDE_UI:
         chip(img, 'PRESSURE', (60, 40, 36), 270, 1420, u, cue(1) - .1, size=50, angle=-4)
         chip(img, 'BACK UP', (200, 70, 30), 870, 860, u, cue(4) - .1, size=50, angle=4)
-        chip(img, 'INTO THE RIVER', (40, 110, 130), 540, 250, u, cue(10) - .1, size=50)
     return img, {'faces': [], 'avoid': [(120, 1350, 420, 1490), (700, 790, 1040, 930), (180, 180, 900, 320), (460, 640, 640, 1960)]}
 
 
@@ -851,22 +880,21 @@ def s14(u, D, cue):
         stars(g, 5, 80, H, u)
         radial(g, 620, 1180, 800, (255, 110, 50), .35)
         J.globe(g, 620, 1200, 420, u, cut=1.0, spin=u * .05, glow_a=.9)
-        J.map_pin(g, 620 - 420 * .62, 1200 - 420 * .45, u, HOT, .9)
+        J.map_pin(g, 620 + 8, 1200 - 420 + 24, u, HOT, 1.1)
         g = anim.camera(g, 1.25 - .25 * smooth(seg(u, .5, D)), 620, 1100)
         ki = out_back(seg(u, .75, 1.15), 1.6)                         # the hot plate inset
         if ki > 0:
             ins = Image.new('RGBA', (440, 270)); ins.paste(crop.resize((440, 270)), (0, 0))
             dd = ImageDraw.Draw(ins); dd.rectangle([0, 0, 439, 269], outline=INK, width=10)
-            anim.scaled_paste(g, ins, 300, 560, ki, angle=-3)
-            if not HIDE_UI and ki > .5:
-                lay, _ = tlayer('eq14', [('=', 'white', 200)], 200)
-                anim.scaled_paste(g, lay, 560, 760, ki)
+            anim.scaled_paste(g, ins, 330, 540, ki * 1.45, angle=-3)
+            if ki > .6:
+                J.arrow(ImageDraw.Draw(g), [(560, 640), (620, 700), (628, 740)], (255, 200, 120), w=16, head=40)
         img = Image.blend(img.convert('RGBA'), g, kg)
     flash(img, u, .5, .3, .6, (255, 200, 140))
     img = finish(img, u, 1.0, 540, 960, vig=(.35, (20, 6, 10)))
     if not HIDE_UI:
-        chip(img, 'THE HOT PLATE', (200, 70, 30), 300 if u > .75 else 540, 380 if u > .75 else 300, u, .05, size=50)
-        stitle(img, 's14_t', [('THE PLANET', (255, 210, 90), 130)], 1660, u, cue(6) - .1)
+        chip(img, 'THE HOT PLATE', (200, 70, 30), 330 if u > .75 else 540, 340 if u > .75 else 300, u, .05, size=50)
+        stitle(img, 's14_t', [('= THE PLANET', (255, 210, 90), 120)], 1660, u, cue(6) - .1)
     return img, {'faces': [], 'avoid': [(40, 300, 560, 720), (0, 1640, W, 1860)]}
 
 
@@ -876,18 +904,19 @@ RIV15 = [(540, 760), (600, 840), (470, 960), (640, 1110), (430, 1300), (600, 152
 
 def s15(u, D, cue):
     img = Image.new('RGBA', (W, H)); cam = -30 * smooth(u / D)
-    J.jungle_back(img, u, cam, horizon=740, sky=((250, 220, 170), (250, 190, 140)), far=(150, 130, 150), mid=(70, 110, 70),
-                  haze_col=(255, 220, 180), sun=(260, 520), warm=.5)
+    J.jungle_back(img, u, cam, horizon=740, sky=((255, 200, 120), (255, 150, 90)), far=(170, 110, 120), mid=(70, 110, 70),
+                  haze_col=(255, 200, 150), sun=(260, 560), warm=.9)
+    radial(img, 260, 600, 360, (255, 250, 210), .8)
     for k, (y, rmin, rmax) in enumerate(((820, 30, 50), (980, 40, 70), (1200, 60, 100), (1500, 80, 140))):
         b = J.canopy_layer(150 + k, y, [(40 - 6 * k, rmin, rmax, ((50, 96, 56), (74, 130, 66), (130, 170, 80)), True, None, 0)])
         img.alpha_composite(b, (int(-200 + cam * (.3 + .3 * k)), 0))
     pts = _smooth_path(RIV15, 10)
     wf = lambda yy: 14 + 300 * max(0, (yy - 740) / 1260) ** 1.3
-    cf = lambda yy: lerp((250, 214, 180), (120, 196, 180), max(0, (yy - 740) / 1260))
+    cf = lambda yy: lerp((255, 214, 140), (110, 200, 190), max(0, (yy - 740) / 1260))
     river_path_draw(img, [(x + cam * .5, y_) for x, y_ in pts], wf, cf, 0, u)
     radial(img, 520, 1300, 500, HOT, .25)
     J.steam(img, u, [(x + cam * .5 - wf(y_) / 2, x + cam * .5 + wf(y_) / 2, y_) for x, y_ in pts[::4]], rise=420,
-            dens=1.3, seed=47, n=90, size=(30, 150), wind=30, warm=.3, col=(255, 244, 236))
+            dens=.9, seed=47, n=70, size=(30, 130), wind=30, warm=.4, col=(255, 244, 236), alpha=.75)
     J.side_walls(img, u, cam, seed=15, left=True, right=True, y0=1500, y1=2000, scale=1.2)
     img = finish(img, u, 1.02 + .05 * smooth(u / D), 540, 1000, vig=(.36, (60, 30, 20)))
     stitle(img, 's15_t', [('BIGGEST KNOWN', 'white', 104)], 150, u, cue(2) - .1)
@@ -909,7 +938,7 @@ def s16(u, D, cue):
         if not geo_on: return
         look = -.3 + .5 * smooth(seg(u, cue(2), cue(4)))
         J.ground_bank(img, [(600, 1990), (640, 1760), (760, 1700), (900, 1680), (1100, 1690), (1100, 1990)])
-        G['g'] = geologist(img, u, 'stand', 'thinking' if u < cue(14) else 'determined', 830, 1760, .72, look=-look,
+        G['g'] = geologist(img, u, 'stand', 'thinking' if u < cue(14) else 'determined', 880, 1760, .72, look=-look,
                            rim=(255, 200, 150), rim_dir=(1, -.4))
     img = s01_world(w, 0.0, frog=frog, geo=geo, walls_y1=760 if geo_on else 1300)
     # "deep under the jungle, the planet is still cooking": heat glow pulses up through the ground
@@ -939,5 +968,5 @@ SHOT_LIST = [('s01', 1, 0), ('s02', 2, 0), ('s03a', 3, 0), ('s03b', 3, 10), ('s0
 END = 1946 / 30                 # 64.867 s (length.json); with the 0.1 s cover ~64.97 s
 NO_PUNCH = ()
 BAND_AT = {'s16': 2.0}
-STILL_AT = {'s01': .55, 's02': .95, 's03a': .8, 's03b': .95, 's04': .9, 's05': .97, 's06': .9, 's07': .95, 's08': .95, 's09': .9,
+STILL_AT = {'s01': .55, 's02': .95, 's03a': .8, 's03b': .95, 's04': .9, 's05': .985, 's06': .9, 's07': .95, 's08': .95, 's09': .9,
             's10': .9, 's11': .95, 's12': .95, 's13': .95, 's14': .9, 's15': .95, 's16': .4}
