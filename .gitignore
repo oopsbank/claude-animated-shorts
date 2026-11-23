@@ -11,3 +11,4 @@ videos/*/tests/*.frames/
 
 # final cuts over 50 MB stay out of git (see videos/<slug>/NOTES.md)
 videos/*/*_captions_cover_1080x1920.mp4
+audio/*/stem_*.wav
