@@ -615,7 +615,7 @@ def globe(img, cx, cy, r, t, cut=1.0, spin=0.0, glow_a=.55, land=(80, 160, 90), 
     img.alpha_composite(lay)
 
 
-def boil(img, t, spots, seed=12, col=(250, 255, 252), heat=(255, 150, 80)):
+def boil(img, t, spots, seed=12, col=(250, 255, 252), heat=(255, 150, 80), heat_a=.45):
     """Rolling boil: churning white domes on the surface (each swells, breaks into foam and a ring, then
     re-forms), with an orange heat glow under each. spots: [(x, y, r)]. Moves: every dome on its own phase."""
     lay = layer(); d = ImageDraw.Draw(lay); m = mask(); dm = ImageDraw.Draw(m); rng = np.random.default_rng(seed)
@@ -632,5 +632,5 @@ def boil(img, t, spots, seed=12, col=(250, 255, 252), heat=(255, 150, 80)):
         v = (u * 2) % 1; R = r * (1 + v * 1.3)                              # a spreading ring
         d.ellipse([x - R, y - R * .45, x + R, y + R * .45], outline=col + (int(200 * (1 - v)),), width=max(2, int(r * .08)))
         d.ellipse([x - rr * .5, y - rr * .4, x - rr * .05, y - rr * .15], fill=(255, 255, 255, 255))
-    glow(img, m, heat, .45, blur=30)
+    glow(img, m, heat, heat_a, blur=30)
     img.alpha_composite(lay)
