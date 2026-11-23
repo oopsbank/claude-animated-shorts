@@ -96,7 +96,9 @@ The weakest shots reviewers repeat, as open notes:
 - captions over detail in s03, s11 and s13.
 
 ## Motion QA (`flat2d/motion_qa.py`)
-See the section below (filled after the render).
+On the 1945 rendered preview frames: `motion_qa.py FRAMES 5.32 8.37 11.21 14.34 16.4 18.7 22.73 27.88 30.19 34.1 36.04 38.89 43.24 47.21 51.82 55.49 57.82 60.6 --impacts 7.5 8.72 12.32 22.33 25.29 29.81 37.07 40.4 56.32 57.24 59.33 63.6 63.9` → **PASS** (longest frozen span 1 frame, median diff 2.89, no pops).
+- The impacts are designed beats on the word: BREATHING slams (7.5), the gust (8.72), A TUNNEL? (12.32), the hat sucked in (22.33), lightning on "storm" (25.29), A MAZE (29.81), the air blanket slam on "heavy" (37.07), RUSHES OUT (40.4), NOT BREATHING. / THE SKY IS. (56.32, 57.24), lightning in s16a (59.33), the loop gust (63.6, 63.9). The first run flagged only the two title slams (12.32, 29.81), which are designed.
+- Loop: s16b's last frame is `s01_frame(0, w=0)`, which is s01's frame 0. The gust ribbons sweep across while the world switches, and their alpha is 0 for the last 0.3 s.
 
 ## Sound
 The Producer's mix (`audio/wind-cave/mix.wav`, `sfx.json`, `music.json`) is used unchanged. Shot ids s01-s16 keep their cue anchors (the splits are inside lines, see Build). The picture lands on them: the whistle arcs on "whistle", the title slam on "breathing", the gust on "Wind" and the hat on "hat", the inhale on "breathed", Jesse's hat on "sucked", thunder and lightning on "storm" (s07, s11, s16a), the counter pop on "sixty", the blanket slam on "heavy", the bag puff on "puffing", and the two title impacts in s15.
