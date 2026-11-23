@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.join(ROOT, 'engine'))
 import captions as CAP  # noqa: E402  (same bold face as the captions)
 
 W, H = 1080, 1920
-COLORS = {'white': (255, 255, 255), 'yellow': (255, 210, 63), 'red': (239, 75, 58)}
+COLORS = {'white': (255, 255, 255), 'yellow': (255, 210, 63), 'red': (239, 75, 58), 'blue': (130, 206, 255)}
 INK = (36, 23, 38)
 
 

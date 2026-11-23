@@ -191,7 +191,7 @@ def hand_anchors(pose='stand', fixed=False, prop=None, prop_hand='R'):
 
 def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixed=False,
          shirt=None, coat=None, uniform=None, apron=None, pants=None, outfit=None,
-         prop=None, prop_hand='R', mouth=None, goggles=None, hair=None):
+         prop=None, prop_hand='R', mouth=None, goggles=None, hair=None, hat_col=None):
     # pose: a name from POSES, or a dict of joint angles (for animation); dict keys '_name' / '_side' set the style.
     # fixed=True keeps the hip at x=300 (no auto-centring) so animated frames don't jitter sideways.
     # Outfits: shirt / coat / uniform / apron / pants take a colour ('#rrggbb') or True for the default colour;
@@ -199,6 +199,7 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
     # prop: a name from PROPS held in prop_hand ('R' or 'L'), or a dict {'L': 'bag', 'R': 'sword'}.
     # mouth: a name from MOUTHS; replaces the expression's mouth (lip sync) and keeps its eyes and brows.
     # goggles: lab goggles pushed up on the forehead (True or a frame colour); never over the eyes.
+    # hat_col: the cowboy hat's colour ('#rrggbb' or an rgb tuple; default tan).
     # hair: a name from HAIRS ('wild' = scientist tufts at the sides and top), True for 'wild', or (name, colour).
     name, P, side = _pose(pose)
     if side and look == 0.0: look = 0.7      # side-on body: face turns toward the direction of travel
@@ -566,7 +567,7 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
         hpoly(_ell(0, -64, 70, 13, 0, 180) + [(-70, -64)], (24, 24, 30))               # visor, bottom at hy-51
         hpoly(_ell(0, -96, 14, 16), GOLD)                                              # badge
     elif hat == 'cowboy':
-        Cb = (196, 140, 82); Cbd = tone(Cb, 0.3)
+        Cb = hexrgb(hat_col) if hat_col else (196, 140, 82); Cbd = tone(Cb, 0.3)
         hpoly([(-60, -76), (-54, -138), (-22, -150), (0, -138), (22, -150), (54, -138), (60, -76)], Cb)
         hpoly([(-59, -96), (59, -96), (60, -80), (-60, -80)], Cbd)
         top = [(x, -64 - 34 * (x / 150) ** 2 - 12) for x in range(-150, 151, 10)]
