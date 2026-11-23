@@ -501,6 +501,75 @@ def amb_river(dur, r):
     return amb_jungle(dur, r) + st(lp(sim, 1600, 2))
 
 
+# ---------------------------------------------------------------- wind cave (video 7)
+def cave_breath(r, dur=2.4):
+    """the hole breathing: a hollow airy gust with a faint whistle that swells and fades (stereo)"""
+    t = tt(dur)
+    n = len(t)
+    env = np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 1.5
+    air = bp(colored(n, r, 0.5), 250, 2600, 2) * (0.75 + 0.25 * smooth_noise(n, r, 4.0))
+    f = 620 + 80 * smooth_noise(n, r, 1.2)
+    whistle = np.sin(phase(f)) * 0.05 * (0.5 + 0.5 * smooth_noise(n, r, 2.5))
+    m = (air + whistle) * env
+    return np.stack([m, np.roll(m, ns(0.01))])
+
+
+def cave_whistle(r, dur=1.8):
+    """a thin rising-falling whistle from a hole in the rock"""
+    t = tt(dur)
+    f = 900 + 160 * np.sin(np.pi * t / dur)
+    w = np.sin(phase(f)) * 0.3 + bp(colored(len(t), r, 0.2), 700, 1300, 2) * 0.2
+    return fades(w * np.sin(np.pi * t / dur), 0.0, 0.1)
+
+
+def thunder(r):
+    """a distant thunder roll"""
+    t = tt(3.5)
+    n = len(t)
+    crack = bp(r.standard_normal(n), 200, 2500, 2) * np.exp(-t / 0.15) * 0.5
+    roll = lp(colored(n, r, 1.8), 180, 2) * (1 - np.exp(-t / 0.1)) * np.exp(-t / 1.2) * (0.6 + 0.4 * smooth_noise(n, r, 3.0))
+    return fades(crack + 1.5 * roll, 0.0, 0.6)
+
+
+def bag_puff(r):
+    """a sealed snack bag tightening: crinkle and a soft stretch creak"""
+    t = tt(0.9)
+    n = len(t)
+    cr = bp(r.standard_normal(n), 2000, 9000, 2) * (smooth_noise(n, r, 30.0) > 0.55) * 0.4
+    creak = np.sin(phase(180 + 120 * t)) * 0.15 * np.exp(-t / 0.5)
+    return fades((cr + creak) * np.minimum(1, t / 0.05), 0.0, 0.2)
+
+
+def amb_prairie(dur, r):
+    """open prairie: a warm wide breeze through grass, sparse far birds"""
+    out = G.breeze(dur, r, 0.8, gust=0.22, bright=1200)
+    out += pan(G.bird_chirps(dur, r, 0.2) * 0.04, -0.3)
+    return out
+
+
+def amb_storm(dur, r):
+    """storm on the hills: gusty low wind and rain hiss"""
+    n = ns(dur)
+    out = G.breeze(dur, r, 1.1, gust=0.4, bright=700)
+    hiss = hp(colored(n, r, 0.3), 2500) * 0.07 * (0.7 + 0.3 * smooth_noise(n, r, 0.5))
+    return out + st(hiss)
+
+
+def amb_cave(dur, r):
+    """inside the cave: a deep still hum, faint air movement and rare drips"""
+    n = ns(dur)
+    hum = lp(colored(n, r, 1.6), 110, 2) * 0.7
+    air = bp(colored(n, r, 0.6), 300, 1200, 2) * 0.12 * (0.6 + 0.4 * smooth_noise(n, r, 0.3))
+    return st(hum + air)
+
+
+def amb_cabin(dur, r):
+    """airliner cabin: steady broadband engine roar"""
+    n = ns(dur)
+    roar = lp(colored(n, r, 1.0), 900, 2) * 0.6 + bp(colored(n, r, 0.5), 200, 400, 2) * 0.2
+    return st(roar)
+
+
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
     "whoosh_fast": (whoosh_fast, -16, "fast swish / speed lines"),
@@ -549,8 +618,12 @@ GEN = {
     "ice_groan": (ice_groan, -10, "an ice shelf giving way: groan, cracks, thud"),
     "boil": (boil, -12, "a river at the boil: bubbles, churn, steam hiss"),
     "steam_hiss": (steam_hiss, -15, "steam venting from a crack"),
+    "cave_breath": (cave_breath, -12, "the hole breathing: hollow gust + faint whistle"),
+    "cave_whistle": (cave_whistle, -15, "thin whistle from a hole in the rock"),
+    "thunder": (thunder, -12, "distant thunder roll"),
+    "bag_puff": (bag_puff, -15, "snack bag puffing tight"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
-        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under}
+        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie}

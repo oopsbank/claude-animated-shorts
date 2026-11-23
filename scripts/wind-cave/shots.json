@@ -1,0 +1,86 @@
+{
+ "title": "This Cave Has Been Breathing Since 1881",
+ "note": "Producer shot list (one shot per voice line) for audio/build_mix.py. The Animator may split shots; keep word counts.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "prairie",
+   "text": "In 1881, two brothers in South Dakota heard a whistle coming from the ground."
+  },
+  {
+   "id": "s02",
+   "set": "prairie",
+   "text": "They found a small hole in the rock. And the hole was breathing."
+  },
+  {
+   "id": "s03",
+   "set": "prairie",
+   "text": "Wind rushed out so hard it blew Tom Bingham's hat off."
+  },
+  {
+   "id": "s04",
+   "set": "earth",
+   "text": "The obvious answer: a tunnel, with another opening somewhere."
+  },
+  {
+   "id": "s05",
+   "set": "prairie",
+   "text": "But no other entrance was ever found. Just one hole, smaller than a sheet of paper."
+  },
+  {
+   "id": "s06",
+   "set": "prairie",
+   "text": "Clue one. Later, the hole breathed in. It sucked Jesse's hat inside."
+  },
+  {
+   "id": "s07",
+   "set": "storm",
+   "text": "Clue two. It follows the weather. Before a storm, it blows out. In fair weather, it pulls in."
+  },
+  {
+   "id": "s08",
+   "set": "cave",
+   "text": "Clue three. Behind the hole is a maze: over two hundred and sixty kilometres of tunnels, still not fully explored."
+  },
+  {
+   "id": "s09",
+   "set": "prairie",
+   "text": "So what makes a hole in the ground breathe?"
+  },
+  {
+   "id": "s10",
+   "set": "sky",
+   "text": "The air above us is heavy. It presses on everything."
+  },
+  {
+   "id": "s11",
+   "set": "storm",
+   "text": "When a storm comes, that pressure drops, so the cave's air pushes harder and rushes out."
+  },
+  {
+   "id": "s12",
+   "set": "sky",
+   "text": "When the storm passes, the pressure rises, and the sky pushes air back in."
+  },
+  {
+   "id": "s13",
+   "set": "cave",
+   "text": "With that many tunnels, a tiny change moves a huge amount of air through one small hole."
+  },
+  {
+   "id": "s14",
+   "set": "cabin",
+   "text": "Like a bag of chips on a plane, puffing up as the air outside thins."
+  },
+  {
+   "id": "s15",
+   "set": "storm",
+   "text": "The cave isn't breathing. The sky is."
+  },
+  {
+   "id": "s16",
+   "set": "prairie",
+   "text": "And whenever a storm rolls over those hills, the little hole still breathes out, just like in 1881."
+  }
+ ]
+}

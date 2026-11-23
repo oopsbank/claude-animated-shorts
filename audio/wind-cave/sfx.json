@@ -1,0 +1,210 @@
+[
+ {
+  "cue": "cave_whistle",
+  "shot": "s01",
+  "at_word": 9,
+  "level": -14,
+  "offset": -0.1,
+  "note": "the whistle from the ground"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s01",
+  "at_word": 1,
+  "level": -16,
+  "offset": 0,
+  "note": "1881 title"
+ },
+ {
+  "cue": "cave_breath",
+  "shot": "s02",
+  "at_word": 12,
+  "level": -10,
+  "offset": -0.3,
+  "note": "THE HOLE IS BREATHING (exhale)"
+ },
+ {
+  "cue": "impact",
+  "shot": "s02",
+  "at_word": 12,
+  "level": -15,
+  "offset": 0,
+  "note": "title slam"
+ },
+ {
+  "cue": "cave_breath",
+  "shot": "s03",
+  "at_word": 0,
+  "level": -9,
+  "offset": -0.1,
+  "note": "the gust that takes Tom's hat"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s03",
+  "at_word": 9,
+  "level": -15,
+  "offset": -0.1,
+  "note": "the hat flies off"
+ },
+ {
+  "cue": "question",
+  "shot": "s04",
+  "at_word": 4,
+  "level": -17,
+  "offset": 0,
+  "note": "imagined tunnel ?"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s05",
+  "at_word": 15,
+  "level": -16,
+  "offset": 0,
+  "note": "SMALLER THAN A SHEET OF PAPER"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 1"
+ },
+ {
+  "cue": "cave_breath",
+  "shot": "s06",
+  "at_word": 5,
+  "level": -11,
+  "offset": -0.2,
+  "note": "the hole inhales"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s06",
+  "at_word": 8,
+  "level": -14,
+  "offset": -0.1,
+  "note": "Jesse's hat sucked in"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 2"
+ },
+ {
+  "cue": "thunder",
+  "shot": "s07",
+  "at_word": 8,
+  "level": -14,
+  "offset": -0.1,
+  "note": "storm side"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s08",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 3"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s08",
+  "at_word": 12,
+  "level": -16,
+  "offset": 0,
+  "note": "260+ KM counter"
+ },
+ {
+  "cue": "cave_breath",
+  "shot": "s09",
+  "at_word": 8,
+  "level": -13,
+  "offset": -0.3,
+  "note": "the ? rising on the breath"
+ },
+ {
+  "cue": "impact",
+  "shot": "s10",
+  "at_word": 5,
+  "level": -15,
+  "offset": -0.05,
+  "note": "AIR PRESSURE weight"
+ },
+ {
+  "cue": "thunder",
+  "shot": "s11",
+  "at_word": 2,
+  "level": -13,
+  "offset": -0.1,
+  "note": "storm arrives"
+ },
+ {
+  "cue": "cave_breath",
+  "shot": "s11",
+  "at_word": 14,
+  "level": -10,
+  "offset": -0.2,
+  "note": "the cave exhales"
+ },
+ {
+  "cue": "cave_breath",
+  "shot": "s12",
+  "at_word": 12,
+  "level": -12,
+  "offset": -0.2,
+  "note": "the sky pushes air back in"
+ },
+ {
+  "cue": "cave_breath",
+  "shot": "s13",
+  "at_word": 9,
+  "level": -12,
+  "offset": -0.2,
+  "note": "the whole maze breathes through one hole"
+ },
+ {
+  "cue": "bag_puff",
+  "shot": "s14",
+  "at_word": 8,
+  "level": -14,
+  "offset": 0,
+  "note": "chips bag puffs"
+ },
+ {
+  "cue": "impact",
+  "shot": "s15",
+  "at_word": 2,
+  "level": -12,
+  "offset": -0.05,
+  "note": "NOT BREATHING."
+ },
+ {
+  "cue": "impact",
+  "shot": "s15",
+  "at_word": 5,
+  "level": -11,
+  "offset": -0.05,
+  "note": "THE SKY IS."
+ },
+ {
+  "cue": "thunder",
+  "shot": "s16",
+  "at_word": 3,
+  "level": -15,
+  "offset": 0,
+  "note": "storm over the hills"
+ },
+ {
+  "cue": "cave_breath",
+  "shot": "s16",
+  "at_word": 12,
+  "level": -11,
+  "offset": -0.2,
+  "note": "the hole breathes out into the loop"
+ }
+]
