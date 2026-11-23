@@ -1,0 +1,81 @@
+{
+ "title": "The Sound From the Deep",
+ "note": "Minimal shot list exported from flat2d/bloop.py SHOT_LIST for audio/build_mix.py (word counts + sets). The picture is rendered by flat2d/render.py --film bloop.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "ocean",
+   "text": "In 1997, the Pacific Ocean made a sound heard by microphones nearly five thousand kilometres apart."
+  },
+  {
+   "id": "s02",
+   "set": "room",
+   "text": "You see, it rose in pitch like an animal call, but no known animal is that loud."
+  },
+  {
+   "id": "s03",
+   "set": "ocean",
+   "text": "Scientists nicknamed it the Bloop. And the internet had an answer: \"Something huge is down there.\""
+  },
+  {
+   "id": "s04",
+   "set": "ocean",
+   "text": "But no creature fits. Even a blue whale, the loudest animal alive, isn't that loud."
+  },
+  {
+   "id": "s05",
+   "set": "chart",
+   "text": "Clue one. It came from far south, near the edge of Antarctica."
+  },
+  {
+   "id": "s06",
+   "set": "room",
+   "text": "Clue two. It didn't repeat like a song. It rumbled for about a minute, then stopped."
+  },
+  {
+   "id": "s07",
+   "set": "polar",
+   "text": "Clue three. In 2005, scientists put microphones near Antarctica, and heard it again. Thousands of times a year."
+  },
+  {
+   "id": "s08",
+   "set": "ocean",
+   "text": "So what down there roars thousands of times a year, and never needs to breathe?"
+  },
+  {
+   "id": "s09",
+   "set": "ocean",
+   "text": "Not a monster. Ice."
+  },
+  {
+   "id": "s10",
+   "set": "polar",
+   "text": "Around Antarctica, giant shelves of ice crack and break away into the sea."
+  },
+  {
+   "id": "s11",
+   "set": "ocean",
+   "text": "When a slab the size of a city splits, the crack sends a shudder through the water that travels thousands of kilometres."
+  },
+  {
+   "id": "s12",
+   "set": "room",
+   "text": "Like an ice cube cracking in your drink. Now make that ice cube the size of a mountain."
+  },
+  {
+   "id": "s13",
+   "set": "room",
+   "text": "Years later, scientists made it official: the Bloop was an icequake."
+  },
+  {
+   "id": "s14a",
+   "set": "polar",
+   "text": "The monster from the deep was the sound of Antarctica breaking."
+  },
+  {
+   "id": "s14b",
+   "set": "room",
+   "text": "And every day, the ocean still carries that sound to anyone listening."
+  }
+ ]
+}
