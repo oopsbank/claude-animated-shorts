@@ -95,7 +95,7 @@ The Producer's mix (`audio/boiling-river/mix.wav`, `sfx.json`, `music.json`) is 
 - File: `https://oopsbank.github.io/some-crazy-things-media/boiling_river_1080x1920.mp4` (= `boiling_river_final_1080x1920.mp4`).
 - YouTube (post 6b044a4dffec7536549a2f57, public, category 27): https://www.youtube.com/watch?v=_g6vvh5uh3g
 - Facebook reel (post 6b044a43fd2493f80cf817fa): https://facebook.com/1395801306957363_122107774275549918
-- TikTok (post 6b044a388a7a8742ba5d6133): sending at the time of writing.
+- TikTok (post 6b044a388a7a8742ba5d6133): https://tiktok.com/@somecrazythingzz/video/7711370116344073524
 - FB/TikTok caption (≤ 255 bytes): Deep in the Amazon, a river runs hot enough to kill animals that fall in. The nearest active volcano is 700 km away. So what heats it? 🔥 #boilingriver #amazon #science #mystery
 
 **Title:** This River Boils… and There's No Volcano 🔥 #shorts
