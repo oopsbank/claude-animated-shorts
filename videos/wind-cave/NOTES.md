@@ -7,7 +7,7 @@ Video 7. Same look, tone and pipeline as videos 3-6: white stickmen with a black
 |---|---|
 | `tests/preview_full_540.mp4` | 540x960 full-length preview with `audio/wind-cave/mix.wav` (no cover), 1945 frames = 64.83 s |
 | `tests/sheet_2s.jpg` | 2 s contact sheet of the preview |
-| `tests/stills_r1/` … `tests/stills_r11/` | the review stills per round (one per shot, 540x960, captions on) and `sheet.png` |
+| `tests/stills_r1/`, `tests/stills_r11/` | the first and last rounds review stills (one per shot, 540x960, captions on) + `sheet.png`; `stills_r2`-`r10` keep only their `sheet.png` (size) |
 | `tests/review_brief.md` | what each reviewer got: every still's voice-over line and planned picture |
 | `thumbnail.png` | house-style thumbnail: a caption-free s03 frame (`flat2d/wind_cave_thumb.py`, `HIDE_UI`) at the gust's peak: the hole blowing out hard, Tom's brown hat flying off, Tom recoiling. Headline THIS CAVE / IS BREATHING (key blue) / SINCE 1881 (yellow) |
 | `flat2d/wind_cave.py` | the shots `s01`-`s16b`, `SHOT_LIST`, `END`, `STILL_AT`, `HIDE_UI` |
