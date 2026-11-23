@@ -82,6 +82,12 @@ New cues in `audio/lib/sfx_x.py`: `bloop_rumble` (a deep sub rumble rising in pi
 Mix: −14.01 LUFS integrated, −1.20 dBTP, voice 9.9-11.0 LU over the bed per section; 1962 frames = 65.40 s (`length.json`).
 
 ## Publishing text (draft; never posted without the Director's OK)
+## Posted 2026-11-23 ~15:00 (Asia/Ho_Chi_Minh), with the Director's OK ("đăng đi"), via Buffer — Liam voice, thumbnail v4 cover
+- File: `https://oopsbank.github.io/some-crazy-things-media/bloop_1080x1920.mp4` (= `bloop_final_1080x1920.mp4`).
+- Facebook reel (post 6b03f26651038c931ba1cd89): https://www.facebook.com/reel/2576987676146928/
+- TikTok (post 6b03f2704d584ce2682ed3ad): https://tiktok.com/@somecrazythingzz/video/7711272792951360774
+- YouTube: the Director posts by hand.
+
 **Title:** The Ocean Made a Sound No Animal Could Make 🌊 #shorts
 
 **YouTube description:**
