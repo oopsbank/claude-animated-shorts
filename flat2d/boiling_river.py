@@ -715,7 +715,7 @@ def s10(u, D, cue):
     img = Image.new('RGBA', (W, H)); space(img, u)
     cx, cy, r = 540, 1080, 440
     kc = smooth(seg(u, .0, cue(2)))                                        # the wedge opens
-    J.globe(img, cx, cy, r, u, cut=.35 + .65 * kc, spin=u * .05)
+    J.globe(img, cx, cy, r, u, cut=.35 + .65 * kc, spin=u * .35)
     # "the deeper you go, the hotter": a probe dives from the surface toward the core along the wedge edge
     kd = smooth(seg(u, cue(7) - .2, cue(14)))
     a = math.radians(-45 - 45 * (.35 + .65 * kc) * 0 - 90 + 45 + 2)  # just inside the left edge of the wedge
@@ -728,8 +728,8 @@ def s10(u, D, cue):
         J.arrow(d, [p0, e], lerp((150, 220, 255), (255, 90, 40), kd), w=20, head=46)
         m = mask(); ImageDraw.Draw(m).ellipse([e[0] - 50, e[1] - 50, e[0] + 50, e[1] + 50], fill=255)
         glow(img, m, lerp((255, 200, 120), (255, 80, 30), kd), .6 * kd, blur=30)
-    zoom = 1.0 + .18 * smooth(seg(u, cue(6), D))
-    img = finish(img, u, zoom, cx + 120, cy - 160, vig=(.35, (4, 4, 16)))
+    zoom = 1.0 + .03 * u / D + .18 * smooth(seg(u, cue(6), D))
+    img = finish(img, u, zoom, cx + 120 + 20 * math.sin(u * .7), cy - 160, vig=(.35, (4, 4, 16)))
     stitle(img, 's10_t', [('THE EARTH IS', 'white', 96), ('THE STOVE', (255, 130, 50), 140)], 150, u, cue(3) - .1)
     if not HIDE_UI:
         if kd > .2: chip(img, 'DEEPER = HOTTER', (200, 70, 30), 540, 1640, u, cue(11) - .1, size=56)

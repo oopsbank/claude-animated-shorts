@@ -212,7 +212,7 @@ def steam(img, t, sources, rise=900, dens=1.0, seed=5, n=60, size=(50, 150), rat
     q = 4; w4, h4 = W // q, H // q
     mb = Image.new('L', (w4, h4), 0); db = ImageDraw.Draw(mb)
     rng = np.random.default_rng(seed)
-    nn = int(n * dens)
+    nn = int(n * dens); puffs = []
     for i in range(nn):
         x0, x1, y = sources[i % len(sources)]
         ph = rng.uniform(0, 1); sp = rate * rng.uniform(.75, 1.3); u = (ph + t * sp) % 1
@@ -220,6 +220,8 @@ def steam(img, t, sources, rise=900, dens=1.0, seed=5, n=60, size=(50, 150), rat
         x = bx + wind * u * 2 + 50 * math.sin(t * .9 + i * 1.3) * u
         yy = y - rise * u ** .85
         a = (math.sin(math.pi * min(1, u * 1.25)) ** .7) * (1 - u) ** .4
+        puffs.append((a, x, yy, s))
+    for a, x, yy, s in sorted(puffs):                                    # brightest last: overlaps act like max (no flicker)
         db.ellipse([(x - s) / q, (yy - s * .8) / q, (x + s) / q, (yy + s * .8) / q], fill=int(255 * min(1.0, a * 1.7)))
     blur = mb.filter(ImageFilter.GaussianBlur(5)).filter(ImageFilter.GaussianBlur(3))
     m = blur.resize((W, H), Image.BILINEAR)
@@ -473,9 +475,11 @@ def rising(img, t, pts, n=12, speed=.45, r=(10, 22), cold=None, hot=HOT, glow_a=
     is given. k scales how far along they have got (0..1, for a reveal)."""
     lay = layer(); d = ImageDraw.Draw(lay); rng = np.random.default_rng(seed); m = mask(); dm = ImageDraw.Draw(m)
     for i in range(n):
-        s = (i / n + t * speed) % 1
+        s = (i / n + t * speed) % 1; q = rng.uniform(*r)
         if s > k: continue
-        x, y = along(pts, s); q = rng.uniform(*r)
+        q *= min(1.0, s / .06, (1 - s) / .06, (k - s) / .06 + .3 if k < 1 else 1.0)       # grow in / shrink out: no pops
+        if q < 1: continue
+        x, y = along(pts, s)
         c = lerp(rgb(cold), rgb(hot), s) if cold else rgb(hot)
         d.ellipse([x - q - 4, y - q - 4, x + q + 4, y + q + 4], fill=INK + (255,))
         d.ellipse([x - q, y - q, x + q, y + q], fill=c + (255,))
@@ -582,10 +586,10 @@ def globe(img, cx, cy, r, t, cut=1.0, spin=0.0, glow_a=.55, land=(80, 160, 90), 
     d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=sea)
     rng = np.random.default_rng(7)
     for i in range(22):                                                  # continents (blobs that slide with spin)
-        a = rng.uniform(0, 2 * math.pi) + spin; b = rng.uniform(-1.1, 1.1)
-        if math.cos(a) < -.1: continue
+        a = rng.uniform(0, 2 * math.pi) + spin; b = rng.uniform(-1.1, 1.1); qq = rng.uniform(.14, .3)
+        if math.cos(a) <= 0: continue
         px, py = cx + r * .8 * math.sin(a) * math.cos(b), cy + r * .8 * math.sin(b)
-        q = r * rng.uniform(.14, .3) * (.5 + .5 * math.cos(a))
+        q = r * qq * math.cos(a) ** .5
         d.ellipse([px - q, py - q * .7, px + q, py + q * .7], fill=land)
     for i in range(6):                                                     # cloud swirls drifting
         a = i * 1.1 + spin * 1.5 + t * .05; px, py = cx + r * .6 * math.sin(a), cy - r * .7 + i * r * .25
