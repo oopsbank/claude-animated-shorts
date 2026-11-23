@@ -219,6 +219,10 @@ def s01a(u, D, cue):
     cam = anim.lerp(-14, 14, smooth(u / max(D, .1)))
     tb = cue(3) - .06                                                   # "blast"
     sky_dawn(img, u, cam)
+    cloud_bands(img, 7, 380, 900, (255, 170, 160), .45, n=5, drift=u * 14 + cam * .8)
+    radial(img, 300 + cam * .95, 1180, 420, (255, 236, 190), .35)
+    lay = layer(); stars(lay, 19, 70, 760, u)                           # the last dawn stars fade as it gets light
+    lay.putalpha(lay.getchannel('A').point(lambda a: int(a * .7 * (1 - smooth(seg(u, -.5, 2.5)))))); img.alpha_composite(lay)
     bx, by = BLAST_XY[0] + cam * .9, BLAST_XY[1]
     k = smooth(seg(u, tb, tb + 1.6))                                     # explosion grows
     if u >= tb:
@@ -227,25 +231,50 @@ def s01a(u, D, cue):
         radial(img, bx, by, 120 + 260 * ease_out(v / .6), (255, 250, 230), .95 * (1 - .5 * smooth(v / 2.5)), power=.8)
         # the fire column rises and mushrooms
         d = ImageDraw.Draw(img); rng = np.random.default_rng(8)
-        top = by - 120 - 520 * ease_out(v / 2.4)
+        top = by - 120 - 360 * ease_out(v / 2.4)
+        col_pts = []
         for i in range(26):
-            f = i / 25; y = by - (by - top) * f; r = 40 + 70 * f + 120 * f ** 4 * ease_out(v / 2.4)
-            x = bx + 30 * math.sin(f * 7 + v * 2) + rng.uniform(-20, 20)
+            f = i / 25; y = by - (by - top) * f; r = 40 + 70 * f + 90 * f ** 4 * ease_out(v / 2.4)
+            x = bx + 30 * math.sin(f * 7 + v * 2) + rng.uniform(-20, 20); col_pts.append((x, y, r, f))
+        for x, y, r, f in col_pts:                                       # ink silhouette first: a hard flat-2D edge
+            d.ellipse([x - r - 7, y - r * .8 - 7, x + r + 7, y + r * .8 + 7], fill=INK)
+        for x, y, r, f in col_pts:
             col = lerp((255, 240, 190), (190, 70, 40), f * .8 + .2 * smooth(v / 3))
             d.ellipse([x - r, y - r * .8, x + r, y + r * .8], fill=col)
-        T.smoke(img, 3, (bx - 380, top - 120, bx + 380, by), u, color=(120, 70, 70), n=16, alpha=120, rise=.18)
+        cx_, cy_, cr = col_pts[-1][0], col_pts[-1][1], col_pts[-1][2]   # the cap: banded fire and a hot core
+        for j, (kk, cc) in enumerate(((.75, (230, 110, 50)), (.5, (255, 170, 80)), (.28, (255, 236, 170)))):
+            d.ellipse([cx_ - cr * kk, cy_ - cr * .8 * kk + cr * .1, cx_ + cr * kk, cy_ + cr * .8 * kk + cr * .1], fill=cc)
+        radial(img, cx_, cy_, cr * 1.6, (255, 220, 150), .45)
+        T.smoke(img, 3, (bx - 380, top - 60, bx + 380, by), u, color=(120, 70, 70), n=12, alpha=90, rise=.18)
         T.shock_ring(img, bx, by + 40, 80 + 1300 * ease_out(v / 1.4), 30 * (1 - v / 1.6), alpha=.8 * (1 - smooth(v / 1.5)), squash=.1)
     else:
         f = ease_in(seg(u, -.35, tb)) ** .8                               # the bolide streaks in (already in frame at 0)
-        x0, y0 = -160, 90
+        x0, y0 = 210, 390
         fx, fy = x0 + (bx - x0) * f, y0 + (by - 60 - y0) * f
-        T.fireball(img, fx, fy, 26 + 20 * f, math.atan2(by - 60 - y0, bx - x0), 360 + 300 * f, u)
+        ang = math.atan2(by - 60 - y0, bx - x0); m = mask(); dm = ImageDraw.Draw(m)   # a long glowing trail behind it
+        tx, ty = fx - math.cos(ang) * 900, fy - math.sin(ang) * 900; nx, ny = -math.sin(ang), math.cos(ang)
+        dm.polygon([(fx + nx * 40, fy + ny * 40), (tx, ty), (fx - nx * 40, fy - ny * 40)], fill=255)
+        glow(img, m, (255, 190, 120), .55, blur=30, add=True)
+        dm.polygon([(fx + nx * 14, fy + ny * 14), (tx, ty), (fx - nx * 14, fy - ny * 14)], fill=255)
+        fill_mask(img, m, (255, 240, 200), .7, blur=6)
+        T.fireball(img, fx, fy, 74 + 10 * f, math.atan2(by - 60 - y0, bx - x0), 520 + 200 * f, u)
     wind = 1.0 * smooth(seg(u, tb + .25, tb + .7)) * (1 - .6 * smooth(seg(u, tb + 1.2, tb + 2.8)))
     taiga_horizon(img, u, cam, wind=-wind * .05)
     # near forest, bends away from the blast (left) as the shock arrives
     T.forest_row(img, 44, 1560, 260, 380, (40, 74, 58), (22, 42, 36), n=11, x_shift=cam * .3, iw=4, t=u,
                  wind=.014 - .09 * wind)
+    haze(img, 1440, 1620, (240, 170, 150), .35)                          # mist between the rows
     d = ImageDraw.Draw(img); d.rectangle([0, 1600, W, H], fill=(22, 36, 32))
+    rg = np.random.default_rng(46)
+    for i in range(7):                                                   # tonal bands in the near ground
+        y = 1620 + i * 46; d.ellipse([rg.uniform(-300, 600) + cam * .1, y, rg.uniform(700, 1400) + cam * .1, y + 40], fill=(30, 50, 42) if i % 2 else (26, 42, 36))
+    for i in range(60):                                                  # grass tufts
+        x, y = rg.uniform(0, W) - cam * .2, rg.uniform(1640, H); hgt = 18 + (y - 1600) * .06
+        for dx in (-6, 0, 6): d.line([(x, y), (x + dx * 1.5 + 3 * math.sin(u * 2 + i), y - hgt)], fill=(70, 110, 76), width=4)
+    for i in range(9):                                                   # rocks catching the dawn light
+        x, y, r = rg.uniform(0, W) - cam * .2, rg.uniform(1700, H - 40), rg.uniform(18, 46)
+        d.ellipse([x - r, y - r * .6, x + r, y + r * .6], fill=(60, 66, 70), outline=INK, width=4)
+        d.chord([x - r * .8, y - r * .55, x + r * .8, y + r * .3], 180, 360, fill=(170, 140, 140))
     T.forest_row(img, 45, 1960, 420, 560, (32, 58, 46), (16, 30, 28), n=6, x_shift=cam * -.2, iw=5, t=u, wind=.016 - .12 * wind,
                  fill_below=False)
     if u >= tb:
@@ -264,7 +293,7 @@ def s01a(u, D, cue):
 def s01b(u, D, cue):
     img = Image.new('RGBA', (W, H))
     cam = anim.lerp(10, -10, smooth(u / D))
-    img.paste(vgrad([(0, (60, 44, 60)), (.35, (150, 96, 90)), (.55, (214, 150, 120)), (.62, (180, 130, 110))]))
+    img.paste(vgrad([(0, (70, 50, 70)), (.35, (180, 112, 96)), (.55, (240, 168, 120)), (.62, (200, 140, 112))]))
     radial(img, 720 + cam * .9, 900, 700, (255, 170, 110), .5 + .04 * math.sin(u * 3))
     T.smoke(img, 11, (0, 300, W, 1000), u + 2, color=(90, 66, 70), n=18, alpha=150, rise=.1, size=(80, 200))
     d = ImageDraw.Draw(img)
@@ -275,7 +304,16 @@ def s01b(u, D, cue):
             T.bare_trunk(d, x, gy, hh * rng.uniform(.7, 1.1), 10 + 4 * k, col, lerp(col, (200, 150, 130), .3), iw=2 + k, seed=i, stubs=2)
     d.polygon([(0, 1150), (W, 1110), (W, H), (0, H)], fill=(110, 88, 70))
     haze(img, 1040, 1260, (214, 150, 120), .55)
-    d = ImageDraw.Draw(img)
+    radial(img, 540 + cam * .5, 1150, 600, (255, 150, 80), .6 + .06 * math.sin(u * 4))   # the scorched centre still glows
+    for j, sx in enumerate((180, 760, 980)):                             # smoke columns still rising off the ground
+        T.smoke(img, 50 + j, (sx - 120 + cam * .6, 400, sx + 120 + cam * .6, 1150), u + j, color=(70, 52, 56), n=10, alpha=130, rise=.14, size=(50, 130))
+    d = ImageDraw.Draw(img); ra = np.random.default_rng(55)
+    for i in range(40):                                                  # ash patches and cracks in the scorched ground
+        y = ra.uniform(1180, H); x = ra.uniform(-50, W + 50) + cam * .4; r = ra.uniform(30, 110) * (.5 + (y - 1150) / 900)
+        d.ellipse([x - r, y - r * .3, x + r, y + r * .3], fill=(88, 70, 58) if i % 2 else (126, 102, 82))
+        if i % 3 == 0: d.line([(x - r, y), (x - r * .3, y + 8), (x + r * .2, y - 6), (x + r, y + 4)], fill=(60, 46, 40), width=3)
+    for i, (x, hh, w) in enumerate(((50, 640, 40), (200, 540, 30), (890, 560, 34), (1040, 680, 44))):   # near burnt trunks frame the shot
+        T.bare_trunk(d, x + cam * 1.2, 1300 + i % 2 * 40, hh, w, (58, 40, 40), (190, 120, 96), iw=5, lean=(-3 if x < 540 else 3) + .5 * math.sin(u + i), seed=40 + i, stubs=4)
     # flattened logs on the ground, all lying away from the centre (left ones point left, right ones right)
     rng = np.random.default_rng(31)
     for i in range(16):
@@ -283,13 +321,22 @@ def s01b(u, D, cue):
         T.fallen_side(d, x, y, 160 + i * 14, 16 + i * 1.3, 0 if side > 0 else 180, seed=i,
                       col=(104, 78, 60), lit=(156, 122, 92))
     # the flat ground where a crater should be: a dashed outline, a "?" probe flag
-    cx, cy = 540 + cam * .5, 1560
+    cx, cy = 540 + cam * .5, 1580
     k = smooth(seg(u, 0, .6))
+    m = mask(); ImageDraw.Draw(m).ellipse([cx - 400 * k, cy - 140 * k, cx + 400 * k, cy + 140 * k], outline=255, width=30)
+    glow(img, m, (255, 220, 170), .35 * k * (.85 + .15 * math.sin(u * 3)), blur=24, add=True); d = ImageDraw.Draw(img)
+    d.ellipse([cx - 400 * k, cy - 140 * k, cx + 400 * k, cy + 140 * k], outline=(255, 200, 150), width=4)
     for j in range(36):
         if j % 2: continue
         a0, a1 = j * 10 + u * 12, j * 10 + 6 + u * 12
-        d.arc([cx - 330 * k, cy - 110 * k, cx + 330 * k, cy + 110 * k], a0, a1, fill=(255, 236, 200), width=9)
+        d.arc([cx - 400 * k, cy - 140 * k, cx + 400 * k, cy + 140 * k], a0, a1, fill=(255, 244, 220), width=14)
     rng = np.random.default_rng(2)
+    for i in range(16):                                                  # smouldering spots on the logs
+        x, y = rng.uniform(40, W - 40), rng.uniform(1200, 1850)
+        if 1280 < y < 1420: continue                                     # keep the caption band calm
+        q = 5 + 3 * math.sin(u * 5 + i)
+        radial(img, x, y, 80, (255, 120, 40), .6 + .2 * math.sin(u * 3 + i)); d = ImageDraw.Draw(img)
+        d.ellipse([x - q * 1.6, y - q, x + q * 1.6, y + q], fill=(255, 200, 120))
     for i in range(30):                                                  # embers float up
         v = (rng.random() + u * .5) % 1; x = rng.uniform(0, W) + 40 * math.sin(u + i); y = 1800 - 1300 * v; q = 3 + 3 * (1 - v)
         d.ellipse([x - q, y - q, x + q, y + q], fill=(255, 190, 110))
@@ -771,38 +818,64 @@ def diagram_disc(img, cx, cy, R0, R1, squash, u, glow_ring=1.0, glow_centre=1.0,
             d.line([(x + sw * k, sy), (x + sw * k + dd, sy - 12)], fill=INK, width=9); d.line([(x + sw * k, sy), (x + sw * k + dd, sy - 12)], fill=col, width=4)
 
 
+def _leader(img, a, b, col, k):
+    """A thin label leader line drawn from a toward b, k = 0..1 grown."""
+    if k <= .01: return
+    d = ImageDraw.Draw(img); e = (a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k)
+    d.line([a, e], fill=INK, width=9); d.line([a, e], fill=col, width=4)
+    if k > .95: d.ellipse([b[0] - 10, b[1] - 10, b[0] + 10, b[1] + 10], fill=col, outline=INK, width=3)
+
+
 def s08(u, D, cue):
+    """v3 layout (Director: composition 7 -> one clear composition): a vertical stack on the centre line,
+    ? (top) -> fireball -> the diagram disc, with margins on both sides; the two labels sit on the right with
+    leader lines, Kulik full figure bottom-left looking up at it; the caption band (~70%) is kept empty."""
     img = Image.new('RGBA', (W, H))
     img.paste(vgrad([(0, (6, 10, 30)), (.6, (14, 24, 56)), (1, (8, 12, 30))]))
     d = ImageDraw.Draw(img)
-    for x in range(0, W, 90): d.line([(x, 0), (x, H)], fill=(24, 40, 80), width=2)
-    for y in range(0, H, 90): d.line([(0, y), (W, y)], fill=(24, 40, 80), width=2)
-    cx, cy, sq = 540, 1010, .58
+    for x in range(0, W, 90): d.line([(x, 0), (x, H)], fill=(22, 36, 74), width=2)
+    for y in range(0, H, 90): d.line([(0, y), (W, y)], fill=(22, 36, 74), width=2)
+    stars(img, 88, 40, H, u)
+    cx, cy, sq = 540, 1070, .55
     t_ex, t_fl, t_st = cue(2) - .1, cue(3) - .1, cue(10) - .15
     g_ring = smooth(seg(u, t_fl, t_fl + .4)); g_c = smooth(seg(u, t_st - .5, t_st))
-    m = mask(); ImageDraw.Draw(m).ellipse([cx - 440, cy - 440 * sq, cx + 440, cy + 440 * sq], outline=255, width=90)
+    for j in range(3):                                                   # faint concentric shock rings on the ground
+        rr = 470 + j * 70; ImageDraw.Draw(img).ellipse([cx - rr, cy - rr * sq, cx + rr, cy + rr * sq], outline=(40, 60, 110), width=3)
+    m = mask(); ImageDraw.Draw(m).ellipse([cx - 420, cy - 420 * sq, cx + 420, cy + 420 * sq], outline=255, width=80)
     glow(img, m, (255, 130, 50), .4 * g_ring * (.8 + .2 * math.sin(u * 4)), blur=50, add=True)
-    diagram_disc(img, cx, cy, 165, 420, sq, u, .4 + .6 * g_ring, .4 + .6 * g_c)
-    radial(img, cx, cy - 70, 240, (100, 230, 255), .45 * g_c * (.8 + .2 * math.sin(u * 5)))
+    diagram_disc(img, cx, cy, 160, 400, sq, u, .3 + .5 * g_ring, .4 + .6 * g_c, n=110)
+    radial(img, cx, cy - 60, 200, (100, 230, 255), .45 * g_c * (.8 + .2 * math.sin(u * 5)))
+    by = 640
     if u > t_ex:                                                         # the burst above the disc
         v = u - t_ex
-        radial(img, cx, 590, 300 * ease_out(v / .4) + 60, (255, 230, 170), .8 * (1 - .3 * smooth(v / 2)))
-        fire_cloud(img, cx, 590, u, v, .52)
-        T.shock_ring(img, cx, 590, 60 + 380 * ease_out(v / .8), 20, (255, 220, 160), .6 * (1 - smooth(v / 1.2)), squash=.4)
-    chip_t(img, 'FLAT', (200, 100, 40), 870, 1420, u, t_fl + .1, size=88, angle=-3)
-    chip_t(img, 'STANDING', (30, 150, 170), cx + 250, 760, u, t_st, size=80, angle=3)
-    # Kulik, big in the bottom-left corner, thinking over the riddle
-    g = kulik(img, u, chain(u, [(0, STAND), (.4, dict(POSES['think']), lambda f: out_back(f, 1.4))]), 'thinking', 250, 1890, .74,
-              look=.6, label_on=False, rim=(150, 200, 255), aura_a=.5)
-    img = finish(img, u, 1.0 + .04 * smooth(u / D), 540, 1000, vig=(.45, (2, 4, 14)))
+        radial(img, cx, by, 260 * ease_out(v / .4) + 60, (255, 230, 170), .8 * (1 - .3 * smooth(v / 2)))
+        fire_cloud(img, cx, by, u, v, .44)
+        T.shock_ring(img, cx, by, 60 + 300 * ease_out(v / .8), 18, (255, 220, 160), .6 * (1 - smooth(v / 1.2)), squash=.4)
+        d = ImageDraw.Draw(img)                                           # the dashed blast lines down to the ground
+        k = smooth(seg(v, .2, .8))
+        for sx in (-1, 0, 1):
+            a0 = (cx + sx * 90, by + 120); a1 = (cx + sx * 250, cy - 200 + abs(sx) * 40)
+            for j in range(8):
+                f0, f1 = j / 8, j / 8 + .07
+                if f1 > k: break
+                d.line([(a0[0] + (a1[0] - a0[0]) * f0, a0[1] + (a1[1] - a0[1]) * f0), (a0[0] + (a1[0] - a0[0]) * f1, a0[1] + (a1[1] - a0[1]) * f1)], fill=(255, 210, 150), width=6)
+    # labels on the right, with leader lines into the diagram
+    k1 = smooth(seg(u, t_st, t_st + .3)); k2 = smooth(seg(u, t_fl + .1, t_fl + .4))
+    _leader(img, (850, 640), (680, 900), (130, 240, 255), k1)
+    _leader(img, (860, 1560), (860, 1250), (255, 170, 80), k2)
+    chip_t(img, 'STANDING', (30, 150, 170), 850, 600, u, t_st, size=58, angle=3)
+    chip_t(img, 'FLAT', (200, 100, 40), 860, 1600, u, t_fl + .1, size=76, angle=-3)
+    g = kulik(img, u, chain(u, [(0, STAND), (.4, dict(POSES['think']), lambda f: out_back(f, 1.4))]), 'thinking', 185, 1830, .62,
+              look=.5, label_on=False, rim=(150, 200, 255), aura_a=.5)
+    img = finish(img, u, 1.0 + .03 * smooth(u / D), 540, 1000, vig=(.45, (2, 4, 14)))
     q = slam(u, cue(1) - .05, .3, 1.5)
     if q > 0:
         lay = layer(520, 700); dl = ImageDraw.Draw(lay)
         dl.text((266, 366), '?', font=font(520), fill=(20, 6, 10), anchor='mm')
         dl.text((260, 350), '?', font=font(520), fill=(240, 60, 54), anchor='mm', stroke_width=14, stroke_fill=INK)
-        radial(img, 540, 290, 330, (255, 60, 50), .35 * smooth(seg(u, cue(1), cue(1) + .3)))
-        anim.scaled_paste(img, lay, 540, 290, q * .6, angle=damp(u - cue(1), 9, 4, 12) + 3 * math.sin(u * 3))
-    return img, {'faces': [face_box(g)], 'avoid': [(0, 160, W, 1300)]}
+        radial(img, 540, 330, 280, (255, 60, 50), .35 * smooth(seg(u, cue(1), cue(1) + .3)))
+        anim.scaled_paste(img, lay, 540, 330, q * .46, angle=damp(u - cue(1), 9, 4, 12) + 3 * math.sin(u * 3))
+    return img, {'faces': [face_box(g)], 'avoid': [(0, 120, W, 1360), (700, 1520, W, 1690)]}
 
 
 # ---------------------------------------------------------------- s09: comet? antimatter? alien ship?
@@ -1202,7 +1275,12 @@ def s14a(u, D, cue):
     cam = anim.lerp(-12, 12, smooth(u / D))
     img.paste(vgrad([(0, (60, 60, 110)), (.35, (210, 130, 110)), (.55, (255, 190, 120)), (.62, (255, 210, 150))]))
     radial(img, 820 + cam * .9, 1080, 700, (255, 200, 120), .55 + .03 * math.sin(u * 2))
+    stars(img, 41, 50, 520, u)
     cloud_bands(img, 41, 200, 900, (255, 210, 180), .3, n=6, drift=u * 16 + cam)
+    d = ImageDraw.Draw(img); rf = np.random.default_rng(77)
+    for i in range(34):                                                  # a far row of bare trunks in the haze
+        T.bare_trunk(d, rf.uniform(-30, W + 30) + cam * .9, 1150, rf.uniform(120, 220), 8, (150, 96, 104), (200, 140, 130), iw=2, seed=i, stubs=2, burnt=False)
+    haze(img, 900, 1160, (255, 190, 150), .45)
     d = ImageDraw.Draw(img); rng = np.random.default_rng(9)
     for k, (n, gy, hmin, hmax, w, col) in enumerate(((14, 1240, 300, 480, 14, (120, 70, 70)), (8, 1420, 600, 900, 26, (70, 40, 44)))):
         for i in range(n):
@@ -1211,24 +1289,33 @@ def s14a(u, D, cue):
             T.bare_trunk(d, x, gy, rng.uniform(hmin, hmax), w, col, lerp(col, (255, 180, 120), .45), iw=3 + k, seed=i + 20 * k, stubs=3)
         if k == 0: haze(img, 1080, 1260, (255, 190, 140), .5); d = ImageDraw.Draw(img)
     d.rectangle([0, 1400, W, H], fill=(96, 70, 56))
+    ra = np.random.default_rng(66)
+    for i in range(26):                                                  # ash and moss on the ground
+        y = ra.uniform(1420, H); x = ra.uniform(0, W) + cam * .3; r = ra.uniform(30, 90) * (.5 + (y - 1400) / 600)
+        d.ellipse([x - r, y - r * .25, x + r, y + r * .25], fill=(110, 80, 62) if i % 2 else (84, 62, 52))
+    haze(img, 1380, 1480, (255, 190, 140), .4); d = ImageDraw.Draw(img)
     for i in range(6):                                                   # long evening shadows
-        x = 120 + i * 180 + cam * .3; d.polygon([(x, 1400), (x + 26, 1400), (x - 260, H), (x - 330, H)], fill=(78, 56, 48))
+        x = 120 + i * 180 + cam * .3; d.polygon([(x, 1400), (x + 26, 1400), (x - 260, H), (x - 330, H)], fill=(88, 64, 54))
+    for i, (x, y, L, ang) in enumerate(((40, 1560, 300, 0), (760, 1520, 280, 0), (180, 1760, 340, 180), (1040, 1800, 360, 180))):
+        T.fallen_side(d, x + cam * .6, y, L * 1.2, 34 + i * 6, ang, col=(110, 72, 58), lit=(240, 170, 120), seed=60 + i)   # the ring, out here
+    dust(img, 12, 40, (0, 900, W, 1900), (255, 210, 160), 150, size=(2, 5), t=u * 2)
+    d = ImageDraw.Draw(img)
     t_ir, t_rock = cue(4) - .1, cue(6) - .2
     pose = chain(u, [(0, dict(POSES['hold'])), (t_ir, dict(POSES['shrug']), lambda f: out_back(f, 1.5)), (t_rock + .1, STAND),
                      (t_rock + .5, dict(POSES['point'], armR=(-150, -160)), lambda f: out_back(f, 1.6))])
-    g = kulik(img, u, pose, 'sad' if u < t_rock else 'thinking', 470 + cam * .2, 1830, .74, look=.3,
-              lean=-5 * smooth(seg(u, t_rock, t_rock + .5)), rim=(255, 190, 120), rim_dir=(1, -.2), prop='shovel' if u < t_ir - .1 else None)
+    g = kulik(img, u, pose, 'sad' if u < t_rock else 'thinking', 190 + cam * .2, 1840, .66, look=.3,
+              lean=-5 * smooth(seg(u, t_rock, t_rock + .5)), rim=(255, 210, 150), rim_dir=(1, -.2), prop='shovel' if u < t_ir - .1 else None, aura_a=.6)
     hx, hy = g['head']
     s = pop(u, cue(1) - .1, .35, 1.6) * (1 - smooth(seg(u, t_rock, t_rock + .3)))
-    lay = thought(img, 760, 470, 230, 170, (hx + 50, hy - 140), 1.0)
+    lay = thought(img, 700, 780, 230, 170, (hx + 190, hy + 10), 1.0)
     if lay is not None and s > .01:
-        dl = ImageDraw.Draw(lay); iron_lump(dl, 760, 440, 80); pill(lay, 'IRON', 760, 555, (90, 96, 116), size=40, pad=18)
-        draw_x(lay, 760, 460, 110, seg(u, t_ir, t_ir + .35) * 2, w=22)
-        paste_grown(img, lay, hx + 50, hy - 140, s)
+        dl = ImageDraw.Draw(lay); iron_lump(dl, 690, 750, 80); pill(lay, 'IRON', 690, 865, (90, 96, 116), size=40, pad=18)
+        draw_x(lay, 690, 770, 110, seg(u, t_ir, t_ir + .35) * 2, w=22)
+        paste_grown(img, lay, hx + 190, hy + 10, s)
     if u > t_rock:                                                        # he looks up: the empty sky where it burst
         v = u - t_rock; radial(img, 820, 360, 160 + 30 * math.sin(u * 4), (255, 240, 200), .35 * smooth(v / .5))
     img = finish(img, u, 1.04 + .04 * smooth(u / D), 520, 1300, dx=-cam, vig=(.4, (40, 16, 20)))
-    return img, {'faces': [face_box(g)], 'avoid': [(500, 250, W, 700)]}
+    return img, {'faces': [face_box(g)], 'avoid': [(440, 580, W, 1000)]}
 
 
 # ---------------------------------------------------------------- s14b: no crater, a ring of trees, loop to s01
@@ -1239,58 +1326,130 @@ def ring_scene(u, D, cue):
     hor = 660
     T.forest_row(img, 101, hor + 10, 30, 60, (110, 90, 100), (90, 72, 86), n=60, iw=0, t=u)
     haze(img, hor - 60, hor + 80, (255, 190, 140), .5)
-    cx, cy = 540, 1240
+    radial(img, 640, hor, 380, (255, 190, 120), .4); cloud_bands(img, 81, 380, 620, (255, 190, 170), .35, n=4, drift=u * 20)
+    cx, cy = 540, 1120
     ground_top_ring(img, cx, cy)
+    haze(img, hor, hor + 260, (220, 160, 120), .35)
     glow_r = smooth(seg(u, cue(17) - .2, cue(17) + .4))
     if glow_r > 0:
         m = mask(); ImageDraw.Draw(m).ellipse([cx - 600, cy - 300, cx + 600, cy + 300], outline=255, width=50)
         glow(img, m, (255, 170, 70), .5 * glow_r * (.85 + .15 * math.sin(u * 4)), blur=40, add=True)
-    logs, poles = T.treefall_items(21, 150, 620, 520, 46)
+    logs, poles = T.treefall_items(21, 170, 620, 300, 40)
     d = ImageDraw.Draw(img); sq = .48
     for r, a, lk, da in logs:
         x, y = cx + math.cos(a) * r, cy + math.sin(a) * r * sq
         ang = math.atan2(math.sin(a + da) * sq, math.cos(a + da))
-        T.log_top(d, x, y, ang, 50 * lk, 9 * lk, (120, 92, 66), (180, 146, 104), iw=3, twigs=False)
+        T.log_top(d, x, y, ang, 54 * lk, 12 * lk, (120, 92, 66), (180, 146, 104), iw=3, twigs=False)
+    radial(img, cx, cy - 60, 260, (255, 226, 170), .45 + .05 * math.sin(u * 3)); d = ImageDraw.Draw(img)   # the standing centre lit
     for r, a in sorted(poles, key=lambda p: math.sin(p[1]) * p[0]):
         x, y = cx + math.cos(a) * r, cy + math.sin(a) * r * sq
-        T.bare_trunk(d, x, y, 140 + 40 * math.sin(a * 5), 12, (96, 70, 58), (170, 130, 100), iw=3, seed=int(r), stubs=1, burnt=False)
-    g = kulik(img, u, dict(POSES['point'], armR=(-150, -160)), 'thinking', cx + 20, cy + 40, .26, look=.2, label_on=False, aura_a=.6)
+        T.bare_trunk(d, x, y, 210 + 40 * math.sin(a * 5), 16, (150, 112, 86), (255, 230, 190), iw=4, seed=int(r), stubs=2, burnt=False)
+    radial(img, cx + 20, cy - 20, 140, (255, 250, 230), .5)
+    g = kulik(img, u, dict(POSES['point'], armR=(-150, -160)), 'thinking', cx + 20, cy + 70, .48, look=.2, label_on=False, aura_a=.9,
+              rim=(255, 240, 200), rim_dir=(1, -.4))
+    d = ImageDraw.Draw(img)
+    for i, (x, y, L, ang) in enumerate(((-40, 1700, 420, 0), (760, 1660, 400, 0), (80, 1880, 520, 0), (1120, 1860, 500, 180))):
+        T.fallen_side(d, x, y, L, 40 + i * 6, ang, col=(92, 70, 52), lit=(200, 150, 104), seed=80 + i)   # near logs frame the bottom
     return img
 
 
 def ground_top_ring(img, cx, cy):
     d = ImageDraw.Draw(img); rng = np.random.default_rng(4)
-    for i in range(40):
-        x, y, r = rng.uniform(0, W), rng.uniform(720, H), rng.uniform(40, 120)
-        d.ellipse([x - r, y - r * .4, x + r, y + r * .4], fill=(110, 104, 66) if i % 2 else (84, 82, 54))
+    for i in range(70):                                                  # moss and bog patches, smaller toward the horizon
+        y = rng.uniform(700, H); f = (y - 660) / (H - 660); x, r = rng.uniform(0, W), rng.uniform(30, 120) * (.4 + f)
+        d.ellipse([x - r, y - r * .4, x + r, y + r * .4], fill=(110, 104, 66) if i % 3 == 0 else (84, 82, 54) if i % 3 == 1 else (70, 74, 50))
+    m = mask(); ImageDraw.Draw(m).rectangle([0, 1460, W, H], fill=255)
+    fill_mask(img, m, (36, 28, 24), .6, blur=90)                      # darker foreground ground
 
 
-def s14b(u, D, cue):
+def s14b_frame(u, D, cue):
     A = ring_scene(u, D, cue)
     A = finish(A, u, 1.0 + .06 * smooth(u / D), 540, 1200, vig=(.4, (30, 14, 20)))
     slam_title(A, 's14b', [('NO CRATER', (255, 76, 60), 140)], 260, u, cue(13) - .08)
-    # the loop: a vertical tilt into the film's opening frame, done before "pointing" so no caption sits on the
-    # seam; the tail is s01a's own lead-in (u < 0), ending one frame before s01a's frame 0
-    t0, t1 = cue(23) - .02, cue(24) - .04
+    return A
+
+
+def s14b(u, D, cue):
+    """The ring, then (last 0.22 s, after "ones,") the camera tilts up into s14c's low-angle shot."""
+    A = s14b_frame(u, D, cue)
+    k = smooth(seg(u, D - .22, D))
+    if k <= 0: return A, {'faces': [], 'avoid': [(0, 160, W, 460), (0, 840, W, 1440)]}
+    Bimg, _ = s14c(u - D, 1.0, cue_shift(cue, D))
+    return tilt_wipe(A, Bimg.convert('RGBA'), k), {'faces': [], 'avoid': [(0, 160, W, 460)], 'seam': int(k * H)}
+
+
+def cue_shift(cue, D):
+    return lambda i: cue(i) - D
+
+
+def tilt_wipe(A, Bimg, k):
+    """A vertical whip-tilt up: A slides down out of frame, B comes in from the top."""
+    out = Image.new('RGBA', (W, H)); off = int(round(k * H))
+    if off < H: out.alpha_composite(A.crop((0, 0, W, H - off)), (0, off))
+    if off > 0: out.alpha_composite(Bimg.crop((0, H - off, W, H)), (0, 0))
+    return out
+
+
+def lowangle_scene(u):
+    """'...pointing at the sky.': worm's-eye view up the bare upright trunks into a rich dusk sky; stars come
+    out, a warm glow hangs where the blast was, thin clouds drift; the trunks converge to the glow."""
+    img = Image.new('RGBA', (W, H))
+    img.paste(vgrad([(0, (14, 14, 46)), (.3, (44, 34, 92)), (.58, (150, 76, 110)), (.8, (240, 140, 96)), (1, (255, 196, 130))]))
+    k_st = smooth(seg(u, .1, 1.0))
+    lay = layer(); stars(lay, 140, 90, 1100, u)                         # the stars come out
+    lay.putalpha(lay.getchannel('A').point(lambda a: int(a * (.25 + .75 * k_st)))); img.alpha_composite(lay)
+    gx, gy = 540, 640                                                     # where the blast was
+    radial(img, gx, gy, 520, (255, 170, 110), .45 + .05 * math.sin(u * 3))
+    radial(img, gx, gy, 200, (255, 236, 200), .7 + .08 * math.sin(u * 5))
+    radial(img, gx, gy, 70, (255, 250, 235), .8)
+    T.shock_ring(img, gx, gy, 300 + 30 * u, 10, (255, 210, 170), .22, squash=.9)
+    cloud_bands(img, 61, 820, 1350, (255, 170, 140), .35, n=5, drift=u * 30)
+    # the trunks: bases along the bottom edge, splaying gently toward a vanishing point high above the frame;
+    # far ones short and hazy, near ones tall at the frame edges; the centre stays open on the glow
+    d = ImageDraw.Draw(img); rng = np.random.default_rng(14); vx, vy = 540, -2600
+    for layer_i, (n, base_y, wmin, wmax, top_lo, top_hi, col, lit) in enumerate((
+            (14, 2000, 16, 24, 900, 1150, (96, 58, 80), (190, 120, 120)),
+            (9, 2060, 32, 46, 560, 860, (62, 36, 50), (220, 130, 104)),
+            (4, 2120, 70, 96, -200, 120, (36, 20, 28), (196, 116, 92)))):
+        for i in range(n):
+            bx = -100 + (W + 200) * (i + rng.uniform(.15, .85)) / n
+            if layer_i == 2: bx = (-30, 170, 900, 1110)[i]
+            top_y = rng.uniform(top_lo, top_hi) + 30 * math.sin(u * .5 + i)
+            if 380 < bx < 700:                                           # the centre: only short far trunks, under the caption
+                if layer_i == 1: bx += 320 if bx > 540 else -320
+                elif layer_i == 0: top_y = max(top_y, 1400 + 60 * rng.random())
+            bx += 6 * math.sin(u * .9 + i) * (layer_i + 1)
+            f = (base_y - top_y) / (base_y - vy); tx = bx + (vx - bx) * f
+            L = math.hypot(tx - bx, base_y - top_y); lean = math.degrees(math.atan2(tx - bx, base_y - top_y))
+            T.bare_trunk(d, bx, base_y, L, rng.uniform(wmin, wmax), col, lit, iw=3 + layer_i, lean=lean, seed=i + 30 * layer_i, stubs=4 + layer_i)
+        if layer_i == 0: haze(img, 1500, 2000, (255, 190, 140), .35); d = ImageDraw.Draw(img)
+    dust(img, 9, 50, (0, 300, W, 1900), (255, 220, 180), 170, size=(2, 6), t=u * 2)
+    return img
+
+
+def s14c(u, D, cue):
+    """'pointing at the sky.' (low angle), then on the final beat a whip-tilt into the s01a opening frame (the
+    loop): the tail is s01a's own lead-in (u < 0), ending one frame before s01a's frame 0."""
+    A = finish(lowangle_scene(u), u, 1.02 + .05 * smooth(u / max(D, .1)), 540, 900, dy=-30 * smooth(u / max(D, .1)),
+               vig=(.38, (16, 10, 30)))
+    t0 = cue(27) + .37 if D > 1.2 else 99.0                              # after "sky." ends
+    t1 = D - .28
     k = smooth(seg(u, t0, t1))
-    if k <= 0: return A, {'faces': [], 'avoid': [(0, 160, W, 460)]}
+    if k <= 0: return A, {'faces': [], 'avoid': [(0, 0, W, 1150)]}
     Bimg, binfo = s01a(min(0.0, u - D), 4.27, lambda i: 99.0)
     Bimg = Bimg.convert('RGBA')
     if k >= 1: return Bimg, {'faces': [], 'avoid': binfo['avoid'], 'seam': None}
-    out = Image.new('RGBA', (W, H))
-    off = int(round(k * H))
-    if off < H: out.alpha_composite(A.crop((0, 0, W, H - off)), (0, off))
-    if off > 0: out.alpha_composite(Bimg.crop((0, H - off, W, H)), (0, 0))
-    return out, {'faces': [], 'avoid': [(0, 160, W, 460)], 'seam': off}
+    return tilt_wipe(A, Bimg, k), {'faces': [], 'avoid': [(0, 0, W, 1150)], 'seam': int(k * H)}
 
 
 SHOTS = {'s01a': s01a, 's01b': s01b, 's02': s02, 's03': s03, 's04a': s04a, 's04b': s04b, 's05': s05, 's06': s06,
          's07': s07, 's08': s08, 's09': s09, 's10': s10, 's11': s11, 's12a': s12a, 's12b': s12b, 's13': s13,
-         's14a': s14a, 's14b': s14b}
+         's14a': s14a, 's14b': s14b, 's14c': s14c}
 SHOT_LIST = [('s01a', 1, 0), ('s01b', 1, 12), ('s02', 2, 0), ('s03', 3, 0), ('s04a', 4, 0), ('s04b', 4, 11), ('s05', 5, 0),
              ('s06', 6, 0), ('s07', 7, 0), ('s08', 8, 0), ('s09', 9, 0), ('s10', 10, 0), ('s11', 11, 0), ('s12a', 12, 0),
-             ('s12b', 12, 14), ('s13', 13, 0), ('s14a', 14, 0), ('s14b', 14, 11)]
+             ('s12b', 12, 14), ('s13', 13, 0), ('s14a', 14, 0), ('s14b', 14, 11), ('s14c', 14, 24)]
 END = 65.4                     # 1962 frames; with the 0.1 s cover the posted cut is 65.5 s
-NO_PUNCH = ()
+BAND_AT = {'s14c': .9}          # caption band read on the low-angle frame, not the loop wipe
+NO_PUNCH = ('s14c',)            # s14c is entered by s14b's tilt, not a cut
 STILL_AT = {'s01a': .8, 's01b': .85, 's02': .97, 's03': .92, 's04a': .95, 's04b': .97, 's05': .97, 's06': .97, 's07': .97,
-            's08': .97, 's09': .97, 's10': .55, 's11': .6, 's12a': .97, 's12b': .97, 's13': .97, 's14a': .5, 's14b': .55}
+            's08': .97, 's09': .97, 's10': .55, 's11': .6, 's12a': .97, 's12b': .97, 's13': .97, 's14a': .5, 's14b': .55, 's14c': .45}

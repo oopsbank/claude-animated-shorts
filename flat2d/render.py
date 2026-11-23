@@ -138,7 +138,7 @@ class Film:
         moves off a body when a cleaner band is near (NOTES v3 open note)."""
         if name not in self.bands:
             s = [x for x in self.shots if x[0] == name][0]
-            (img, info), _ = self.raw(s[2] - .35)
+            (img, info), _ = self.raw(s[1] + getattr(bf, 'BAND_AT', {})[name] if name in getattr(bf, 'BAND_AT', {}) else s[2] - .35)
             f = kit.font(int(round(0.037 * kit.H)), bold=True)
             ws = [kit.text_w(g['text'], f) for g in self.caps if s[1] <= g['start'] < s[2]]
             self.bands[name] = place_band(img, info, w=max(ws + [0.2 * kit.W]))
