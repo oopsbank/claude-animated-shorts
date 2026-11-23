@@ -25,6 +25,17 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **One copy only (the Director, 2026-11-23, video 6):** YouTube can use the same <45 MB posting copy as TikTok/Facebook; no separate high-quality YouTube copy is needed (this replaces the CRF ~16 hand-upload note above).
 - **Cadence advice given:** max 1 video/day, ~24 h apart, ~6:30 VN (US evening peak); 2-3/week is sustainable.
 
+## The Blood Falls formula (video 3 went viral; the Director, 2026-11-23: "learn its presentation again" — apply to every new video)
+1. **Topic = one impossible image named with a body/life metaphor:** "a glacier that BLEEDS". Ice can't bleed → the contradiction is understood in 1 s, no number to decode.
+2. **Title and thumbnail = that metaphor + a time anchor**, metaphor in the key colour: THIS GLACIER / IS BLEEDING / SINCE 1911. The hero image fills the thumbnail (red stream on white ice) with the witness reacting beside it.
+3. **Line 1 = a human witness meets it:** "In 1911, geologist Griffith Taylor walked up to … and found it bleeding." Person + year + verb of discovery + the metaphor word.
+4. **One hero image, one colour motif, revisited** (the red fall is on screen in ~10 of 33 two-second frames, red in almost every shot); one recurring character reacting in nearly every shot.
+5. **Wrong answer stated with confidence, then killed in the next line:** "It's red algae. Mystery solved." → "But … there was no algae."
+6. **3 clues, each a single concrete fact** with one picture; a riddle question before the answer ("So if plants aren't making it red, what is?").
+7. **The reveal flips the metaphor in two short sentences:** "The glacier isn't bleeding. It's rusting." (big on-screen title). Then one everyday analogy (a wet nail turning orange).
+8. **Loop:** the last line returns to the opening year and image ("…still painting the snow red, like in 1911").
+Versus Tunguska (60% stayed): opened on a number comparison (1,000x Hiroshima), no single hero image, no metaphor flip.
+
 ## Status (2026-11-23)
 | # | Slug | Title | State |
 |---|---|---|---|
