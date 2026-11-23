@@ -5,7 +5,8 @@ Video 6. Same look, tone and pipeline as videos 3-5: white stickmen with a black
 ## Files
 | file | what |
 |---|---|
-| `tests/preview_full_540.mp4` | 540x960 full-length preview with `audio/boiling-river/mix.wav` (no cover), 1946 frames = 64.87 s |
+| `boiling_river_final_1080x1920.mp4` | v2 posting copy (see Final cut) |
+| `tests/preview_full_540.mp4` | 540x960 full-length preview of the v2 1080 render with `audio/boiling-river/mix.wav` (no cover), 1946 frames = 64.87 s |
 | `tests/sheet_2s.jpg` | 2 s contact sheet of the preview |
 | `tests/stills_r1/` … `tests/stills_r6/` | the review stills per round (one per shot, 540x960, captions on) and `sheet.png` |
 | `thumbnail.png` | house-style thumbnail: caption-free frame (`flat2d/boiling_river_thumb.py`, `HIDE_UI`): the GEOLOGIST with his probe in the steaming river, a thermometer at ~100°C, a small volcano far away on the horizon crossed out; headline THIS RIVER / BOILS (v2: the NO VOLCANO line dropped) |
@@ -74,6 +75,13 @@ On the 1946 rendered preview frames: `motion_qa.py FRAMES 4.442 6.521 9.94 13.44
 - The first run also flagged real pops, now fixed in `jungle.py`: steam puffs were drawn with overwrite, so a faint puff vanishing over a bright one jumped (now drawn brightest-last); globe continents popped at the limb and shifted the random stream (now shrink to the limb); `rising` blobs popped in/out at the path ends (now grow/shrink). s10 got a slow globe spin and camera drift (it was near-static for 2 s).
 - Loop: the last frame is the s01 world at its own frame 0 with the title (after a steam surge that hides the change), so the restart has no jump.
 - The frog slips right along the root and drops partly behind the right-hand fronds; the shot cuts at 4.44 s with it in the air (`strip` checked).
+
+## Final cut (v2)
+- `boiling_river_final_1080x1920.mp4` (**committed, the posting copy**): 1080x1920, 30 fps, H.264 High, yuv420p, 2-pass 5.2 Mb/s, AAC 192k, faststart. 1949 frames (3 cover frames from `thumbnail.png` + 1946), **64.98 s**, 44.6 MB (44,576,386 bytes), −14.1 LUFS / −1.1 dBTP after AAC (the mix itself: −14.0 LUFS / −1.2 dBTP).
+- `boiling_river_yt_1080x1920.mp4` (YouTube hand-upload copy, same master, 1080x1920, no upscale): **not committed** — CRF 16 came out at 146 MB and the CRF 18 fallback at 127 MB, both over the 95 MB limit (and GitHub's 100 MB file cap). Rebuild locally from the master with `-c:v libx264 -preset slow -crf 18 -profile:v high -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart`, or upload the posting copy.
+- Rebuild: `render.py audio/boiling-river/words.json OUT.mp4 --film boiling_river --size 1080x1920` (~45 min on 4 cores), mux `audio/boiling-river/mix.wav` (`-c:v copy -c:a aac -b:a 192k -shortest`), `tools/add_cover.sh <muxed> videos/boiling-river/thumbnail.png <master>`, then 2-pass `libx264 -profile:v high -b:v 5200k -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart`.
+- Motion QA on the 1080 frames (same cuts and impacts as below): **PASS** (longest frozen span 1 frame, median diff 2.44, no pops).
+- `tests/preview_full_540.mp4` is the muxed v2 render scaled to 540x960 (no cover); `tests/sheet_2s.jpg` is the v2 2 s sheet from the 1080 frames.
 
 ## Sound
 The Producer's mix (`audio/boiling-river/mix.wav`, `sfx.json`, `music.json`) is used unchanged; shot ids s01-s16 keep their cue anchors (the s03 split is inside line 3: `sfx.json` s03 word anchors 14 "thermometer" and 17 "hundred" land in s03b, as drawn).
