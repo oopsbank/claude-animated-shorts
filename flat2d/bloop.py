@@ -11,7 +11,7 @@ Render: .venv/bin/python flat2d/render.py audio/bloop/words.json OUT.mp4 --film 
 import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 import kit, props, anim
 import ocean as O
 from kit import (W, H, INK, vgrad, radial, cloud_bands, haze, peak_range, dust, label, title, pill, font, mask, glow,
@@ -190,6 +190,23 @@ def s02(u, D, cue):
     screen_frame(img, (SCREEN[0] + int(cam), SCREEN[1], SCREEN[2] + int(cam), SCREEN[1] + 818), sc)
     desk(img, cam)
     console(img, 760, 1390, u, cam)
+    # lower left: a reel-to-reel recorder on a cabinet under the desk, its reels turning (it is taping the sound)
+    rec = layer(); d = ImageDraw.Draw(rec); bx = 64
+    d.rounded_rectangle([bx, 1480, bx + 250, 1720], 14, fill=(92, 80, 78), outline=INK, width=6)
+    d.line([(bx + 10, 1660), (bx + 240, 1660)], fill=INK, width=4)
+    d.rectangle([bx + 20, 1676, bx + 70, 1700], fill=(255, 80, 60) if int(u * 2) % 2 == 0 else (120, 40, 34), outline=INK, width=3)
+    d.text((bx + 90, 1688), 'REC', font=font(26, True), fill=(220, 210, 200), anchor='lm')
+    for j, rx in enumerate((bx + 68, bx + 182)):
+        d.ellipse([rx - 52, 1520, rx + 52, 1624], fill=(30, 30, 36), outline=INK, width=5)
+        d.ellipse([rx - 40, 1532, rx + 40, 1612], fill=(70, 58, 52))
+        for kk in range(3):
+            aa = u * (5 + j) + kk * 2.094; d.line([(rx, 1572), (rx + 34 * math.cos(aa), 1572 + 34 * math.sin(aa))], fill=(30, 30, 36), width=7)
+        d.ellipse([rx - 9, 1563, rx + 9, 1581], fill=(200, 200, 210), outline=INK, width=3)
+    d.line([(bx + 68, 1624), (bx + 125, 1640), (bx + 182, 1624)], fill=(120, 90, 70), width=4)
+    k_ = 1.15; rec = rec.resize((int(W * k_), int(H * k_)), Image.BICUBIC)            # drawn at 1x, shown 1.15x with its top-left at (80, 1370)
+    rec = rec.crop((int(64 * k_) - 80, int(1480 * k_) - 1370, int(64 * k_) - 80 + W, int(1480 * k_) - 1370 + H))
+    radial(img, 170 + cam, 1500, 240, (255, 170, 120), .22); img.alpha_composite(rec, (int(cam * .95), 0))
+    radial(img, 120 + cam, 1590, 44, (255, 90, 60), .3)
     # scientist at the desk: leans in, then jolts back on "rose", a hand to the headphones
     tj = cue(3) - .05
     hop = 26 * math.exp(-max(0, u - tj) * 5) * math.sin(max(0, u - tj) * 14) if u > tj else 0
@@ -478,7 +495,6 @@ def s07(u, D, cue):
     return img, {'faces': [], 'avoid': [(0, 150, W, 460), (200, 1640, 880, 1800)]}
 
 
-# ---------------------------------------------------------------- s08 / s09: the riddle, then "Not a monster. Ice."
 def night_sea(img, u, wy=1000, cam=0.0):
     img.paste(vgrad([(0, (6, 6, 24)), (.35, (22, 18, 60)), (.52, (44, 34, 90))], h=wy + 40), (0, 0))
     lay = layer(); stars(lay, 31, 160, wy - 60, u); img.alpha_composite(lay)
@@ -493,24 +509,184 @@ def night_sea(img, u, wy=1000, cam=0.0):
         d.line([(x - 30, y), (x + 30, y)], fill=(200, 200, 240), width=3)
 
 
-def s08(u, D, cue):
-    img = Image.new('RGBA', (W, H)); cam = 10 * math.sin(u * .5)
-    night_sea(img, u, cam=cam)
+# ---------------------------------------------------------------- s08 + s09: one continuous riddle (lines 8-9)
+# s08 and s09 are one shot split at the line: a half-seen shape in the deep, sonar rings, question marks and a
+# descending camera (s08); on "Not a" bright ice fractures spread through it, it shatters on "monster." and the
+# shards resolve into glinting ice on "Ice." (s09). The shape is only ever blurred and half-seen.
+R8 = 3.86                       # s08 length (34.60-38.46 s, voice final); s09 continues the same clock
+R_ROAR = .72                    # s08-local time of "roars"
+PING = (150, 1060)              # a sonar pinger just under the surface (scan rings)
+_rg = {}
+
+
+def _shadow_xy(T):
+    return 540 + 30 * math.sin(T * .4), 1330 + 18 * math.sin(T * .7)
+
+
+def _shadow_mask(x, y, s, t):
+    m = mask(); d = ImageDraw.Draw(m)
+    d.ellipse([x - 300 * s, y - 220 * s, x + 300 * s, y + 160 * s], fill=255)
+    for i in range(5):                                                 # soft lobes that slowly shift: a featureless, unreadable mass
+        a = i * 1.257 + t * .3; d.ellipse([x + math.cos(a) * 190 * s - 150 * s, y + math.sin(a) * 110 * s - 110 * s,
+                                           x + math.cos(a) * 190 * s + 150 * s, y + math.sin(a) * 110 * s + 110 * s], fill=255)
+    return m
+
+
+def _cracks():
+    """A branching fracture tree in shadow-local units: segments (x0, y0, x1, y1, p) where p (0..1) is when
+    the crack front reaches the segment's end."""
+    if 'c' not in _rg:
+        rng = np.random.default_rng(11); seg_ = []
+        def grow(x, y, a, L, p, depth):
+            n = int(L / 70)                                                # long straight runs with sharp kinks: ice, not lightning
+            for k in range(n):
+                a += rng.uniform(-.35, .35); nx, ny = x + math.cos(a) * 70, y + math.sin(a) * 70
+                if (nx / 320) ** 2 + ((ny + 30) / 230) ** 2 > 1: break
+                p2 = p + 70 / 380; seg_.append((x, y, nx, ny, p2)); x, y, p = nx, ny, p2
+                if depth < 1 and k == 1: grow(x, y, a + rng.choice([-1, 1]) * rng.uniform(.7, 1.0), L * .45, p, depth + 1)
+        for a in np.linspace(0, 2 * math.pi, 8, endpoint=False): grow(0, -30, a + rng.uniform(-.2, .2), 340, 0, 0)
+        _rg['c'] = seg_
+    return _rg['c']
+
+
+def _dist(src):
+    if src not in _rg:
+        yy, xx = np.mgrid[0:H, 0:W].astype(np.float32); _rg[src] = np.hypot(xx - src[0], yy - src[1])
+    return _rg[src]
+
+
+def _qmarks(img, T, x0, y0, a_all):
+    """Small drifting question marks around the shape (the guess, never an answer)."""
+    if a_all <= .01: return
+    lay = layer(); d = ImageDraw.Draw(lay)
+    for i, (ox, oy, sz, ph) in enumerate(((-360, -230, 190, 0), (350, -270, 150, 1.7), (-330, 250, 130, 3.1), (380, 190, 170, 4.4), (60, -340, 110, 2.2))):
+        a = a_all * smooth(seg(T, .25 + i * .3, .65 + i * .3)) * (.75 + .25 * math.sin(T * 3 + ph))
+        if a <= .01: continue
+        x, y = x0 + ox + 14 * math.sin(T * 1.3 + ph), y0 + oy - 22 * T + 10 * math.cos(T * 1.1 + ph)
+        f = font(sz, bold=True)
+        d.text((x, y), '?', font=f, fill=(170, 225, 255, int(230 * a)), anchor='mm', stroke_width=8, stroke_fill=(0, 0, 0, int(230 * a)))
+    img.alpha_composite(lay)
+
+
+def riddle(T, c9):
+    """T = time since the start of s08; c9(i) = time (same clock) of word i of line 9, or None during s08."""
+    t_not = c9(0) - .05 if c9 else 99                                    # cracks start on "Not"
+    t_sh = c9(2) + .22 if c9 else 99                                      # it shatters on "monster."
+    t_ice = c9(3) - .05 if c9 else 99                                     # "Ice."
+    k = smooth(seg(T, t_ice, t_ice + .5))                                 # the scene floods with cold light
+    img = Image.new('RGBA', (W, H))
+    # camera: a slow descent from the moonlit surface toward the shape, a slight pull-back as it shatters
+    zc = 1.03 + .21 * smooth(T / R8) + .05 * smooth(seg(T, R8, R8 + 1.6)) - .1 * smooth(seg(T, t_sh, t_sh + .7))
+    dyc = -270 * smooth(T / (R8 + .6)) + 60 * smooth(seg(T, t_sh, t_sh + .7))
+    dyc = max(dyc, -(1905 - 960 - 960 / zc) * zc)                       # never past the frame's bottom edge (shake included)
+    cam = 12 * math.sin(T * .5)
+    night_sea(img, T, cam=cam)
     d = ImageDraw.Draw(img)
-    for j, (bx, bw, bh) in enumerate(((120, 220, 60), (380, 120, 34), (930, 260, 80))):   # far icebergs on the horizon
+    for j, (bx, bw, bh) in enumerate(((120, 220, 60), (380, 120, 34), (930, 260, 80))):   # far icebergs
         bx += cam * .6; d.polygon([(bx - bw / 2, 1000), (bx - bw * .2, 1000 - bh), (bx + bw * .1, 1000 - bh * .8), (bx + bw / 2, 1000)], fill=(70, 74, 130), outline=INK, width=4)
-    cloud_bands(img, 36, 120, 520, (90, 90, 170), .35, n=4, drift=u * 10)
-    sx, sy = 540 + 40 * math.sin(u * .4), 1300 + 20 * math.sin(u * .7)
-    O.pulse_train(img, sx, sy, u, t0=cue(4) - .2, every=.5, speed=500, n=8, w=12, clip=(1012, H), rmax=900, fade=800)
-    radial(img, sx, sy - 60, 700, (70, 110, 190), .35 + .05 * math.sin(u * 2))
-    m = mask(); O.sea_shadow(img, sx, sy, 1.0, u, col=(2, 4, 14), alpha=.95, blur=4, eye=0)
-    kit.dust(img, 8, 50, (0, 1020, W, H), (150, 170, 230), 100, size=(2, 4), t=u)
-    img = finish(img, u, 1.02 + .05 * smooth(u / D), 540, 1000, vig=(.5, (0, 0, 10)))
-    q = slam(u, .05, .3, 1.5)
-    tl = _q_title(); anim.scaled_paste(img, tl[0], 540, 560 + 8 * math.sin(u * 2), q, angle=4 * math.sin(u))
-    chip_t(img, 'ROARS 1,000s OF TIMES A YEAR', (190, 50, 44), 540, 170, u, cue(4) - .1, size=44)
-    chip_t(img, 'NEVER NEEDS TO BREATHE?', (80, 70, 150), 540, 280, u, cue(11) - .1, size=44)
+    cloud_bands(img, 36, 120, 520, (90, 90, 170), .35, n=4, drift=T * 10)
+    if k > 0:
+        lay = Image.new('RGBA', (W, H)); lay.paste(vgrad([(0, (120, 200, 240)), (.5, (200, 240, 255)), (1, (60, 140, 200))]))
+        lay.putalpha(int(235 * k)); img.alpha_composite(lay)
+    sx, sy = _shadow_xy(T); s = 1.0 + .05 * smooth(T / (R8 + 1))
+    kit.light_rays(img, 760 + cam * .9, 900, (150, 180, 250), n=7, alpha=.38 * (1 - k), spread=(70, 128), length=1200, seed=4, phase=2 * math.sin(T * .4))   # moonlight shafts into the water
+    d = ImageDraw.Draw(img)                                              # far seafloor ridges, two depth layers, in the haze
+    for li_, (base, col, amp, f_) in enumerate(((1790, (34, 52, 104), 130, .3), (1880, (16, 24, 60), 100, .55))):
+        pts = [(x_, base - amp * (.5 + .5 * math.sin(x_ / (170 + 60 * li_) + li_ * 2)) * (.6 + .4 * math.sin(x_ / 53))) for x_ in range(-60, W + 120, 40)]
+        d.polygon([(p_[0] + cam * f_, p_[1]) for p_ in pts] + [(W + 120, H), (-60, H)], fill=lerp(col, (120, 180, 220), k * .6))
+    kit.dust(img, 12, 90, (0, 1020, W, H), (120, 150, 210), 70, size=(1, 3), t=T * .6)
+    # the sonar pinger (blinks with each ping) and its scan rings
+    d = ImageDraw.Draw(img); px, py = PING[0] + cam * .3, PING[1]
+    d.line([(px, 1000), (px, py)], fill=(30, 40, 70), width=4)
+    d.rounded_rectangle([px - 22, py - 30, px + 22, py + 30], 10, fill=(60, 70, 96), outline=INK, width=4)
+    pings = [T - (-.4 + i * 1.05) for i in range(6) if T >= -.4 + i * 1.05]
+    blink = max([max(0.0, 1 - v / .3) for v in pings] + [0.0]) * (1 - k)
+    radial(img, px, py - 6, 70, (120, 240, 255), .25 + .6 * blink); ImageDraw.Draw(img).ellipse([px - 8, py - 14, px + 8, py + 2], fill=(160, 250, 255))
+    if T < t_sh:
+        O.pulse_train(img, sx, sy, T, t0=R_ROAR - .2, every=.5, speed=500, n=8, w=18, clip=(1012, H), rmax=950, fade=850)
+        radial(img, sx, sy - 60, 700, (70, 110, 190), .35 + .05 * math.sin(T * 2))
+        radial(img, sx, sy, 420, (255, 70, 60), .12 + .1 * max(0.0, math.sin((T - R_ROAR) * 12.57)) * (T > R_ROAR))   # it glows red as it roars
+        m = _shadow_mask(sx, sy, s, T)
+        mb = m.filter(ImageFilter.GaussianBlur(26))                      # never sharp: a blurred, half-seen shape
+        fill_mask(img, mb, (2, 4, 14), .78)
+        # sonar returns: where a scan ring crosses the shape's edge, a faint cyan arc shows (only a slice at a time)
+        bm = mask(); ImageDraw.Draw(bm).ellipse([sx - 300 * s, sy - 220 * s, sx + 300 * s, sy + 160 * s], fill=255)   # body outline only: no limbs ever 'confirmed'
+        e = np.asarray(bm.filter(ImageFilter.GaussianBlur(12)), np.float32) / 255
+        edge = np.clip(1 - np.abs(e * 2 - 1), 0, 1) ** 2
+        dist = _dist((int(PING[0]), PING[1])); ring = np.zeros_like(edge); rl = layer(); rd = ImageDraw.Draw(rl)
+        for v in pings:
+            r = v * 620; fa = max(0.0, 1 - r / 1500)
+            if fa <= 0: continue
+            ring = np.maximum(ring, np.exp(-((dist - r) / 46) ** 2) * fa)
+            rd.ellipse([px - r, py - r, px + r, py + r], outline=(120, 230, 255, int(150 * fa)), width=5)
+        rm = mask(); ImageDraw.Draw(rm).rectangle([0, 1012, W, H], fill=255)
+        img.paste(rl, (0, 0), Image.fromarray((np.asarray(rl.split()[3], np.float32) * np.asarray(rm, np.float32) / 255).astype(np.uint8)))
+        ret = Image.fromarray((np.clip(edge * ring * 2.6, 0, 1) * 255 * (1 - smooth(seg(T, t_not, t_sh)))).astype(np.uint8))
+        glow(img, ret, (120, 230, 255), 1.0, blur=10, add=True); fill_mask(img, ret, (150, 235, 255), .55, blur=3)
+        # the fractures: from "Not a" bright ice cracks spread through the shape, light leaking out of them
+        g = smooth(seg(T, t_not, t_sh - .04))
+        if g > 0:
+            cl = mask(); cd = ImageDraw.Draw(cl)
+            for x0, y0, x1, y1, p in _cracks():
+                if p > g * 1.25: continue
+                cd.line([(sx + x0 * s, sy + y0 * s), (sx + x1 * s, sy + y1 * s)], fill=255, width=int(7 + 5 * (1 - p)))
+            fl = layer(); fd = ImageDraw.Draw(fl); cs = _cracks()             # facets: the plates between the cracks frost over into ice
+            for j in range(len(cs)):
+                x0, y0, x1, y1, p = cs[j]
+                if p > g * 1.25 or j % 2: continue
+                c2 = (110, 170, 215, int(150 * g)) if j % 4 else (190, 230, 250, int(170 * g))
+                fd.polygon([(sx, sy - 30 * s), (sx + x0 * s, sy + y0 * s), (sx + x1 * s, sy + y1 * s)], fill=c2)
+            img.alpha_composite(fl)
+            glow(img, cl, (120, 220, 255), .9, blur=30, add=True)
+            glow(img, cl, (200, 245, 255), .9, blur=8, add=True)
+            fill_mask(img, cl, (245, 252, 255), 1.0)
+            radial(img, sx, sy - 30, 260 + 200 * g, (160, 230, 255), .35 * g)
+        sxk, syk = shake(T, t_not, 5, t_sh - t_not)
+    else:
+        v = T - t_sh; d = ImageDraw.Draw(img); settle = 1 - math.exp(-v * 2.2)
+        radial(img, sx, sy - 100, 640, (220, 245, 255), .7 * (1 - smooth(v / .9)))
+        for i, (x, y, pts, spin, sp) in enumerate(_shards()):
+            ex = ease_out(min(1.0, v / 1.0))
+            px = sx + x * s * (1 + 1.3 * ex * sp); py = sy + y * s * (1 + .8 * ex * sp) - 70 * settle - 18 * math.sin(T * 1.4 + i)
+            py = max(py, 1040 + 30 * math.sin(T * 2 + i))                   # stays in the sea; the top ones bob at the waterline as floes
+            a = spin * (2.2 * settle + .25 * v)
+            P = [(px + X * math.cos(a) - Y * math.sin(a), py + X * math.sin(a) + Y * math.cos(a)) for X, Y in pts]
+            ice = [(226, 246, 255), (170, 220, 245), (255, 255, 255), (120, 190, 230)][int(abs(x * 7 + y)) % 4]
+            fc = lerp((40, 70, 110), ice, smooth(v / .25)); cx_, cy_ = sum(p_[0] for p_ in P) / 3, sum(p_[1] for p_ in P) / 3
+            d.polygon(P, fill=fc, outline=INK, width=4)
+            d.polygon([P[0], P[1], (cx_, cy_)], fill=lerp(fc, (255, 255, 255), .55))         # facets: a lit face and a shaded face
+            d.polygon([P[1], P[2], (cx_, cy_)], fill=lerp(fc, (40, 90, 150), .35))
+            d.polygon(P, outline=INK, width=4)
+            d.line([P[0], P[1]], fill=(255, 255, 255), width=5); d.line([P[1], P[2]], fill=(200, 245, 255), width=3)   # the crack light on their edges
+            gl = math.sin(T * 5 + i * 1.7)                                 # glints on the ice once it has resolved
+            if k > .3 and gl > .55:
+                q = (gl - .55) / .45 * 30 * k; gx, gy = P[0]
+                d.polygon([(gx - q, gy), (gx, gy - q * .25), (gx + q, gy), (gx, gy + q * .25)], fill=(255, 255, 255))
+                d.polygon([(gx, gy - q), (gx + q * .25, gy), (gx, gy + q), (gx - q * .25, gy)], fill=(255, 255, 255))
+        sxk, syk = shake(T, t_sh, 16, .45)
+    _qmarks(img, T, sx, sy, (1 - smooth(seg(T, t_not - .1, t_not + .25))))
+    kit.dust(img, 8, 50, (0, 1020, W, H), lerp((150, 170, 230), (255, 255, 255), k), 100 + 80 * k, size=(2, 5), t=T)
+    flash(img, T, t_sh, .3, .8, (220, 245, 255)); flash(img, T, t_ice, .3, .6)
+    img = finish(img, T, zc, 540, 960, dx=sxk, dy=dyc + syk, vig=(.5 * (1 - k) + .2, lerp((0, 0, 10), (40, 90, 140), k)))
+    q = slam(T, .05, .3, 1.5) * (1 - smooth(seg(T, t_not - .1, t_not + .2)))     # the big ? gives way to the answer
+    tl = _q_title(); anim.scaled_paste(img, tl[0], 540, 560 + 8 * math.sin(T * 2), q, angle=4 * math.sin(T))
+    ch = 1 - smooth(seg(T, t_not - .1, t_not + .15))
+    if ch > .01:
+        chip_t(img, 'ROARS 1,000s OF TIMES A YEAR', (190, 50, 44), 540, 170, T, R_ROAR - .1, size=44)
+        chip_t(img, 'NEVER NEEDS TO BREATHE?', (80, 70, 150), 540, 280, T, 2.6, size=44)
+    if c9:
+        if T < t_ice + .3:                                                # NOT A MONSTER. lifts away as ICE. lands
+            ko = smooth(seg(T, t_ice - .05, t_ice + .3)); tl_ = layer()
+            slam_title(tl_, 's09_a', [('NOT A', 'white', 110)], 260, T, c9(0) - .02)
+            slam_title(tl_, 's09_m', [('MONSTER.', 'white', 120)], 385, T, c9(2) - .02)
+            if ko > 0: tl_.putalpha(tl_.getchannel('A').point(lambda a_: int(a_ * (1 - ko))))
+            img.alpha_composite(tl_, (0, int(-90 * ko)))
+        slam_title(img, 's09_b', [('ICE.', (120, 220, 255), 260)], 600, T, t_ice)
     return img, {'faces': [], 'avoid': [(0, 110, W, 900)]}
+
+
+def s08(u, D, cue):
+    return riddle(u, None)
 
 
 _qt = {}
@@ -524,42 +700,16 @@ def _shards():
     global SHARDS
     if SHARDS is None:
         rng = np.random.default_rng(5); SHARDS = []
-        for i in range(130):
+        for i in range(85):
             a = rng.uniform(0, 2 * math.pi); r = rng.uniform(0, 1) ** .5
             x, y = math.cos(a) * 300 * r, -40 + math.sin(a) * 200 * r + (rng.uniform(0, 500) if i % 3 == 0 else 0)
-            q = rng.uniform(22, 60); pts = [(math.cos(b) * q * rng.uniform(.6, 1.2), math.sin(b) * q * rng.uniform(.6, 1.2)) for b in (0, 2.1, 4.2)]
+            q = rng.uniform(18, 50) if i % 9 else rng.uniform(80, 130); pts = [(math.cos(b) * q * rng.uniform(.6, 1.2), math.sin(b) * q * rng.uniform(.6, 1.2)) for b in (0, 2.1, 4.2)]
             SHARDS.append((x, y, pts, rng.uniform(-1, 1), rng.uniform(.6, 1.4)))
     return SHARDS
 
 
 def s09(u, D, cue):
-    ti = cue(3) - .05                                                    # "Ice."
-    k = smooth(seg(u, ti, ti + .5))
-    img = Image.new('RGBA', (W, H)); cam = 0.0
-    night_sea(img, u + 3.9)
-    if k > 0:                                                            # the scene floods with cold light
-        lay = Image.new('RGBA', (W, H)); lay.paste(vgrad([(0, (120, 200, 240)), (.5, (200, 240, 255)), (1, (60, 140, 200))]))
-        lay.putalpha(int(235 * k)); img.alpha_composite(lay)
-    sx, sy = 540, 1380
-    if u < ti:
-        radial(img, sx, sy - 60, 700, (70, 110, 190), .4)
-        O.sea_shadow(img, sx, sy, 1.15 + .05 * smooth(seg(u, 0, ti)), u + 3.9, col=(2, 4, 14), alpha=.92, blur=12)
-    else:
-        v = u - ti; d = ImageDraw.Draw(img)
-        radial(img, sx, sy - 100, 600, (255, 255, 255), .6 * (1 - smooth(v / .8)))
-        for x, y, pts, spin, sp in _shards():
-            px = sx + x * (1 + 1.4 * ease_out(v / 1.2) * sp); py = sy + y * (1 + .9 * ease_out(v / 1.2) * sp) - 160 * v
-            a = spin * v * 3
-            P = [(px + X * math.cos(a) - Y * math.sin(a), py + X * math.sin(a) + Y * math.cos(a)) for X, Y in pts]
-            d.polygon(P, fill=lerp((10, 14, 30), [(226, 246, 255), (170, 220, 245), (255, 255, 255), (120, 190, 230)][int(abs(x * 7 + y)) % 4], smooth(v / .35)), outline=INK, width=4)
-            d.line([P[0], P[1]], fill=(255, 255, 255), width=3)
-    kit.dust(img, 9, 40, (0, 0, W, H), (255, 255, 255), 150 * k + 60, size=(2, 6), t=u)
-    flash(img, u, ti, .35)
-    sx_, sy_ = shake(u, ti, 14, .4)
-    img = finish(img, u, 1.05 + .04 * smooth(u / D), 540, 1100, dx=sx_, dy=sy_, vig=(.45 * (1 - k) + .2, lerp((0, 0, 10), (40, 90, 140), k)))
-    slam_title(img, 's09_a', [('NOT A MONSTER.', 'white', 110)], 300, u, .05)
-    slam_title(img, 's09_b', [('ICE.', (120, 220, 255), 260)], 520, u, ti)
-    return img, {'faces': [], 'avoid': [(0, 200, W, 820)]}
+    return riddle(u + R8, lambda i: cue(i) + R8)
 
 
 # ---------------------------------------------------------------- s10: an ice shelf cracks and calves (line 10)
@@ -724,11 +874,10 @@ def s12(u, D, cue):
             d.polygon([(780, 1150 - 380 * km), pk[1], (820, 1150 - 390 * km)], fill=(250, 252, 255))
             d.polygon([(935, 1150 - 470 * km), pk[3], (990, 1150 - 460 * km)], fill=(250, 252, 255))
             O.ship(Bm, 150, 1150, .13, u)
-            put_chip(Bm, 'MOUNTAIN', (60, 100, 150), 880, 1150 - 520 * km - 50, km, size=36)
         A = Image.blend(A, Bm, kg)
     img = A
     kc = smooth(seg(u, cue(4) - .1, cue(4) + .5))
-    r = 100 + (330 - 100) * ease_in(kg) ** .8
+    r = 100 + (250 - 100) * ease_in(kg) ** .8                           # a little under the mountain's height
     cx = 540 - 150 * kg; cy = ly - 30 + (980 - (ly - 30)) * kg
     jit = 4 * math.sin(u * 40) * math.exp(-max(0, u - cue(4)) * 4) if u > cue(4) else 0
     if kc > 0:
@@ -747,16 +896,17 @@ def s12(u, D, cue):
     if ki > 0:                                                           # inset: the glass it started in
         inset = Image.new('RGBA', (W, H)); kitchen(inset, u); O.glass(inset, 540, 1440, 420, 600, u, fill=.6)
         O.ice_cube(inset, 540, 1440 - 600 * .6 - 30, 100, u, crack=1.0, ang=6); O.glass(inset, 540, 1440, 420, 600, u, back=False)
-        ins = inset.crop((240, 600, 840, 1560)).resize((250, 400), Image.LANCZOS)
-        mm = mask(250, 400); ImageDraw.Draw(mm).rounded_rectangle([0, 0, 249, 399], 30, fill=255)
-        x0, y0 = 60, 1440; d = ImageDraw.Draw(img)
-        d.rounded_rectangle([x0 - 8, y0 - 8, x0 + 258, y0 + 408], 34, fill=INK)
+        IW, IH = 330, 528                                                # enlarged after R2
+        ins = inset.crop((240, 600, 840, 1560)).resize((IW, IH), Image.LANCZOS)
+        mm = mask(IW, IH); ImageDraw.Draw(mm).rounded_rectangle([0, 0, IW - 1, IH - 1], 34, fill=255)
+        x0, y0 = W - 44 - IW, 1330; d = ImageDraw.Draw(img)
+        d.rounded_rectangle([x0 - 9, y0 - 9, x0 + IW + 9, y0 + IH + 9], 40, fill=INK)
         lay = layer(); lay.paste(ins, (x0, y0), mm); lay.putalpha(lay.getchannel('A').point(lambda a: int(a * ki))); img.alpha_composite(lay)
-        import taiga; taiga.dashed(d, (x0 + 200, y0 + 40), (cx - r * .8, cy + r * .6), (255, 255, 255), w=5)
+        import taiga; taiga.dashed(d, (x0 + 60, y0 + 50), (cx - r * .8, cy + r * .6), (255, 255, 255), w=5)
     img = finish(img, u, 1.04 - .03 * kg + .02 * math.sin(u * .6), 540, 1100, vig=(.38, lerp((40, 20, 10), (10, 30, 60), kg)))
     chip_t(img, 'IN YOUR DRINK', (170, 100, 40), 540, 190, u, cue(2) - .1, size=50) if kg < .2 else None
     if kg >= .2: slam_title(img, 's12_t', [('THE SIZE OF', 'white', 90), ('A MOUNTAIN', (140, 220, 255), 120)], 200, u, cue(14) - .1)
-    return img, {'faces': [], 'avoid': [(0, 120, W, 480)]}
+    return img, {'faces': [], 'avoid': [(0, 120, W, 480)] + ([(W - 400, 1310, W, 1880)] if ki > 0 else [])}
 
 
 # ---------------------------------------------------------------- s13: official: ICEQUAKE (line 13)
@@ -889,6 +1039,7 @@ SHOT_LIST = [('s01', 1, 0), ('s02', 2, 0), ('s03', 3, 0), ('s04', 4, 0), ('s05',
              ('s08', 8, 0), ('s09', 9, 0), ('s10', 10, 0), ('s11', 11, 0), ('s12', 12, 0), ('s13', 13, 0), ('s14a', 14, 0),
              ('s14b', 14, 11)]
 END = 65.4                     # 1962 frames; with the 0.1 s cover the posted cut is 65.5 s
+NO_PUNCH = ('s09',)            # s09 continues s08's riddle shot (one transformation), not a cut
 BAND_AT = {'s14b': 2.5}        # caption band read before the loop push-in
 STILL_AT = {'s01': .9, 's02': .9, 's03': .93, 's04': .92, 's05': .95, 's06': .95, 's07': .97, 's08': .92, 's09': .8, 's10': .9,
             's11': .9, 's12': .95, 's13': .95, 's14a': .85, 's14b': .6}
