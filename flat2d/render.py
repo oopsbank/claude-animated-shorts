@@ -109,6 +109,8 @@ def place_band(img, info, w=0.42 * kit.W, search=0.15, step=6, k=0.012):
         cost += sum(60 for t_, l_ in bods if hit(a_, b_, t_)) + sum(14 for t_, l_ in bods if hit(a_, b_, l_))
         if best is None or cost < best[0]: best = (cost, b)
       if best: break
+    if best is None and search < .27:                                   # every band near 70% is blocked: look wider
+        return place_band(img, info, w, .27, step, k)
     return best[1] if best else base
 
 
