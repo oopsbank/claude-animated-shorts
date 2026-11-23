@@ -1,0 +1,315 @@
+[
+ {
+  "cue": "bloop_rumble",
+  "shot": "s01",
+  "at_word": 0,
+  "level": -7,
+  "note": "the Bloop rumble under the opening (already sounding at frame 0)",
+  "offset": -0.05
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s01",
+  "at_word": 8,
+  "level": -17,
+  "note": "station 1 lights up (\"heard\")",
+  "offset": 0.0
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s01",
+  "at_word": 10,
+  "level": -17,
+  "note": "station 2 lights up (\"microphones\")",
+  "offset": 0.0
+ },
+ {
+  "cue": "impact",
+  "shot": "s01",
+  "at_word": 7,
+  "level": -16,
+  "note": "A SOUND FROM THE DEEP slams",
+  "offset": -0.1
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s01",
+  "at_word": 12,
+  "level": -17,
+  "note": "4,800 KM APART",
+  "offset": 0.0
+ },
+ {
+  "cue": "riser",
+  "shot": "s02",
+  "at_word": 2,
+  "level": -18,
+  "note": "the pitch rises on the display",
+  "offset": 0.6
+ },
+ {
+  "cue": "impact",
+  "shot": "s02",
+  "at_word": 15,
+  "level": -15,
+  "note": "TOO LOUD slams",
+  "offset": -0.1
+ },
+ {
+  "cue": "impact",
+  "shot": "s03",
+  "at_word": 4,
+  "level": -13,
+  "note": "THE BLOOP slams",
+  "offset": -0.1
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s03",
+  "at_word": 7,
+  "level": -17,
+  "note": "the phone slides up",
+  "offset": -0.25
+ },
+ {
+  "cue": "pop",
+  "shot": "s03",
+  "at_word": 11,
+  "level": -17,
+  "note": "the ? on the post",
+  "offset": 0.0
+ },
+ {
+  "cue": "impact",
+  "shot": "s04",
+  "at_word": 2,
+  "level": -16,
+  "note": "NO CREATURE FITS",
+  "offset": -0.05
+ },
+ {
+  "cue": "impact",
+  "shot": "s04",
+  "at_word": 12,
+  "level": -15,
+  "note": "red X over the whale level",
+  "offset": -0.05
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s05",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 1 badge",
+  "offset": 0.0
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s05",
+  "at_word": 7,
+  "level": -16,
+  "note": "the source near Antarctica pulses",
+  "offset": 0.0
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 2 badge",
+  "offset": 0.0
+ },
+ {
+  "cue": "bloop_rumble",
+  "shot": "s06",
+  "at_word": 8,
+  "level": -13,
+  "note": "the rumble on the trace (cut at \"stopped\")",
+  "offset": -0.1,
+  "len": 1.6
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -15,
+  "note": "CLUE 3 badge",
+  "offset": 0.0
+ },
+ {
+  "cue": "splash",
+  "shot": "s07",
+  "at_word": 6,
+  "level": -18,
+  "note": "the microphone goes into the water",
+  "offset": 0.2
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s07",
+  "at_word": 10,
+  "level": -16,
+  "note": "it hears it again",
+  "offset": 0.0
+ },
+ {
+  "cue": "pop",
+  "shot": "s07",
+  "at_word": 13,
+  "level": -16,
+  "note": "1,000s / YEAR",
+  "offset": 0.0
+ },
+ {
+  "cue": "riser",
+  "shot": "s08",
+  "at_word": 0,
+  "level": -16,
+  "note": "into the big ?",
+  "offset": 0.3
+ },
+ {
+  "cue": "bloop_rumble",
+  "shot": "s08",
+  "at_word": 4,
+  "level": -12,
+  "note": "roars under the shadow",
+  "offset": -0.15
+ },
+ {
+  "cue": "impact",
+  "shot": "s09",
+  "at_word": 0,
+  "level": -14,
+  "note": "NOT A MONSTER.",
+  "offset": -0.05
+ },
+ {
+  "cue": "glass_shatter",
+  "shot": "s09",
+  "at_word": 3,
+  "level": -12,
+  "note": "the shadow shatters into ice",
+  "offset": -0.05
+ },
+ {
+  "cue": "deep_boom",
+  "shot": "s09",
+  "at_word": 3,
+  "level": -12,
+  "note": "ICE. hit",
+  "offset": -0.05
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s10",
+  "at_word": 6,
+  "level": -11,
+  "note": "the shelf cracks",
+  "offset": -0.15
+ },
+ {
+  "cue": "ice_groan",
+  "shot": "s10",
+  "at_word": 8,
+  "level": -9,
+  "note": "the slab breaks away",
+  "offset": -0.1
+ },
+ {
+  "cue": "splash",
+  "shot": "s10",
+  "at_word": 10,
+  "level": -12,
+  "note": "it hits the sea",
+  "offset": -0.05
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s11",
+  "at_word": 4,
+  "level": -16,
+  "note": "SIZE OF A CITY",
+  "offset": 0.0
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s11",
+  "at_word": 8,
+  "level": -11,
+  "note": "the slab splits",
+  "offset": -0.1
+ },
+ {
+  "cue": "deep_boom",
+  "shot": "s11",
+  "at_word": 10,
+  "level": -10,
+  "note": "the shudder through the water",
+  "offset": -0.1
+ },
+ {
+  "cue": "gps_ping",
+  "shot": "s11",
+  "at_word": 19,
+  "level": -16,
+  "note": "the far station hears it",
+  "offset": 0.0
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s12",
+  "at_word": 4,
+  "level": -13,
+  "note": "the ice cube cracks in the drink",
+  "offset": -0.1
+ },
+ {
+  "cue": "riser",
+  "shot": "s12",
+  "at_word": 8,
+  "level": -17,
+  "note": "the cube grows",
+  "offset": 1.0
+ },
+ {
+  "cue": "bloop_rumble",
+  "shot": "s12",
+  "at_word": 14,
+  "level": -12,
+  "note": "mountain-sized crack",
+  "offset": -0.1
+ },
+ {
+  "cue": "impact",
+  "shot": "s13",
+  "at_word": 10,
+  "level": -12,
+  "note": "ICEQUAKE stamp",
+  "offset": -0.1
+ },
+ {
+  "cue": "ice_crack",
+  "shot": "s14a",
+  "at_word": 1,
+  "level": -14,
+  "note": "cracks along the coast",
+  "offset": 0.0
+ },
+ {
+  "cue": "bloop_rumble",
+  "shot": "s14a",
+  "at_word": 6,
+  "level": -11,
+  "note": "the sound of Antarctica breaking",
+  "offset": -0.2
+ },
+ {
+  "cue": "riser",
+  "shot": "s14b",
+  "at_word": 22,
+  "level": -17,
+  "note": "push into the display (loop)",
+  "offset": 0.6
+ }
+]

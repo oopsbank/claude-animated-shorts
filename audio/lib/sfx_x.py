@@ -431,6 +431,38 @@ def amb_taiga(dur, r):
     return out + st(hiss)
 
 
+# ---------------------------------------------------------------- bloop (video 5)
+def bloop_rumble(r, dur=4.2):
+    """the Bloop, evoked: a deep sub rumble that rises in pitch (an 'up-sweep', like the 1997 recording sped up),
+    with a slow swell and a soft tail (stereo)"""
+    t = tt(dur)
+    n = len(t)
+    f = 32 + 58 * (t / dur) ** 1.6
+    tone = np.sin(phase(f)) + 0.35 * np.sin(phase(2 * f)) + 0.12 * np.sin(phase(3.01 * f))
+    rum = lp(colored(n, r, 1.8), 160, 2) * (0.7 + 0.3 * smooth_noise(n, r, 2.0))
+    env = np.minimum(1, t / 0.9) * np.minimum(1, (dur - t) / 1.0)
+    out = (1.1 * tone + 1.3 * rum) * env
+    return np.stack([out, np.roll(out, ns(0.015))])
+
+
+def ice_groan(r, dur=2.2):
+    """a big ice shelf giving way: a low groan, cracks and a deep thud"""
+    t = tt(dur)
+    n = len(t)
+    groan = np.sin(phase(70 + 25 * np.sin(TAU * 0.6 * t))) * np.exp(-t / 1.2) * 0.5
+    cr = bp(r.standard_normal(n), 400, 4000, 2) * (smooth_noise(n, r, 18.0) > 0.6) * np.exp(-t / 0.8) * 0.6
+    thud = np.sin(phase(45 * (1 + 0.5 * np.exp(-t / 0.05)))) * np.exp(-t / 0.5)
+    return fades(groan + cr + thud, 0.0, 0.3)
+
+
+def amb_ocean(dur, r):
+    """the deep sea: a low pressure hum, a slow swell and faint far clicks"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    rum = lp(colored(n, r, 1.7), 120, 2) * (0.7 + 0.3 * np.sin(TAU * 0.07 * t))
+    return st(rum) * 0.9
+
+
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
     "whoosh_fast": (whoosh_fast, -16, "fast swish / speed lines"),
@@ -475,8 +507,10 @@ GEN = {
     "sign_crash": (sign_crash, -9, "wooden sign splitting and slapping flat"),
     "live_ping": (live_ping, -15, "livestream notification chime"),
     "live_flurry": (live_flurry, -14, "a flurry of livestream notification chimes"),
+    "bloop_rumble": (bloop_rumble, -8, "the Bloop evoked: deep rising rumble"),
+    "ice_groan": (ice_groan, -10, "an ice shelf giving way: groan, cracks, thud"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
-        "room": amb_room, "taiga": amb_taiga}
+        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean}

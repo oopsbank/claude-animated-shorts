@@ -1,0 +1,36 @@
+{
+ "note": "serious mystery, no comedy: mystery for the sound and the monster guess, explain for the clues, mystery for the riddle, explain for the answer, payoff (thin) for the ice-cube analogy and the ruling, mystery into a loop end",
+ "sections": [
+  {
+   "style": "mystery",
+   "from": "s01"
+  },
+  {
+   "style": "explain",
+   "from": "s05"
+  },
+  {
+   "style": "mystery",
+   "from": "s08"
+  },
+  {
+   "style": "explain",
+   "from": "s10"
+  },
+  {
+   "style": "payoff",
+   "from": "s12"
+  },
+  {
+   "style": "mystery",
+   "from": "s14a"
+  }
+ ],
+ "end": "loop",
+ "reveal_riser": false,
+ "levels": {
+  "mystery": -10.5,
+  "explain": -10.5,
+  "payoff": -11.0
+ }
+}
