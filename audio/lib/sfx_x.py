@@ -463,6 +463,44 @@ def amb_ocean(dur, r):
     return st(rum) * 0.9
 
 
+# ---------------------------------------------------------------- boiling river (video 6)
+def boil(r, dur=3.0):
+    """a river at the boil: dense rolling bubbles, low churn and a steam hiss (stereo)"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    bub = G.bubbles(dur, r, 28.0, f_lo=180, f_hi=1400)
+    churn = lp(colored(n, r, 1.4), 300, 2) * (0.6 + 0.4 * smooth_noise(n, r, 3.0)) * 0.6
+    hiss = hp(colored(n, r, 0.2), 3000) * 0.12 * (0.7 + 0.3 * smooth_noise(n, r, 0.8))
+    env = np.minimum(1, t / 0.3) * np.minimum(1, (dur - t) / 0.6)
+    m = (bub + churn + hiss) * env
+    return np.stack([m, np.roll(m, ns(0.012))])
+
+
+def steam_hiss(r, dur=1.4):
+    """a burst of steam venting from a crack"""
+    t = tt(dur)
+    n = len(t)
+    h = bp(colored(n, r, 0.1), 1800, 9000, 2) * np.minimum(1, t / 0.05) * np.exp(-t / 0.7)
+    return fades(h, 0.0, 0.2)
+
+
+def amb_jungle(dur, r):
+    """rainforest: warm breeze, a thin insect drone and sparse far birds"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    out = G.breeze(dur, r, 0.6, gust=0.2, bright=1100)
+    drone = bp(colored(n, r, 0.4), 3800, 5200, 2) * (0.6 + 0.4 * np.sin(TAU * 11 * t) ** 2) * 0.06
+    out += st(drone)
+    out += pan(G.bird_chirps(dur, r, 0.25) * 0.05, 0.3)
+    return out
+
+
+def amb_river(dur, r):
+    """the boiling river bank: jungle bed plus a low steady simmer"""
+    sim = G.bubbles(dur, r, 10.0, f_lo=180, f_hi=1100) * 0.35
+    return amb_jungle(dur, r) + st(lp(sim, 1600, 2))
+
+
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
     "whoosh_fast": (whoosh_fast, -16, "fast swish / speed lines"),
@@ -509,8 +547,10 @@ GEN = {
     "live_flurry": (live_flurry, -14, "a flurry of livestream notification chimes"),
     "bloop_rumble": (bloop_rumble, -8, "the Bloop evoked: deep rising rumble"),
     "ice_groan": (ice_groan, -10, "an ice shelf giving way: groan, cracks, thud"),
+    "boil": (boil, -12, "a river at the boil: bubbles, churn, steam hiss"),
+    "steam_hiss": (steam_hiss, -15, "steam venting from a crack"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
-        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean}
+        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under}

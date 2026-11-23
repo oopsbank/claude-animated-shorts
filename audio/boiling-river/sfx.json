@@ -1,0 +1,178 @@
+[
+ {
+  "cue": "boil",
+  "shot": "s01",
+  "at_word": 0,
+  "level": -9,
+  "offset": -0.05,
+  "note": "the river boiling under the opening (sounding at frame 0)"
+ },
+ {
+  "cue": "impact",
+  "shot": "s01",
+  "at_word": 6,
+  "level": -15,
+  "offset": -0.1,
+  "note": "THIS RIVER BOILS slams ('river')"
+ },
+ {
+  "cue": "splash",
+  "shot": "s01",
+  "at_word": 12,
+  "level": -17,
+  "offset": 0.0,
+  "note": "the frog drops toward the water ('fall') - cut before contact"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s02",
+  "at_word": 6,
+  "level": -16,
+  "offset": 0.0,
+  "note": "LEGEND stamp"
+ },
+ {
+  "cue": "riser",
+  "shot": "s03",
+  "at_word": 14,
+  "level": -17,
+  "offset": 0.0,
+  "note": "thermometer climbing ('thermometer')"
+ },
+ {
+  "cue": "impact",
+  "shot": "s03",
+  "at_word": 17,
+  "level": -14,
+  "offset": -0.05,
+  "note": "~100°C ('hundred')"
+ },
+ {
+  "cue": "deep_boom",
+  "shot": "s04",
+  "at_word": 4,
+  "level": -14,
+  "offset": -0.1,
+  "note": "the imagined volcano under the river ('volcano')"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s05",
+  "at_word": 7,
+  "level": -15,
+  "offset": 0.0,
+  "note": "700 KM ruler ('seven')"
+ },
+ {
+  "cue": "impact",
+  "shot": "s05",
+  "at_word": 10,
+  "level": -15,
+  "offset": 0.0,
+  "note": "the volcano breaks, ✗ ('away.')"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0.0,
+  "note": "CLUE 1"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0.0,
+  "note": "CLUE 2"
+ },
+ {
+  "cue": "steam_hiss",
+  "shot": "s07",
+  "at_word": 7,
+  "level": -15,
+  "offset": 0.0,
+  "note": "heat pours through the cracks ('cracks,')"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s08",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0.0,
+  "note": "CLUE 3"
+ },
+ {
+  "cue": "question",
+  "shot": "s09",
+  "at_word": 6,
+  "level": -17,
+  "offset": 0.0,
+  "note": "the big ? ('hot,')"
+ },
+ {
+  "cue": "impact",
+  "shot": "s10",
+  "at_word": 5,
+  "level": -14,
+  "offset": -0.05,
+  "note": "THE EARTH IS THE STOVE ('stove.')"
+ },
+ {
+  "cue": "rain",
+  "shot": "s11",
+  "at_word": 0,
+  "level": -17,
+  "offset": 0.0,
+  "note": "rain on the far mountains"
+ },
+ {
+  "cue": "steam_hiss",
+  "shot": "s12",
+  "at_word": 5,
+  "level": -14,
+  "offset": 0.0,
+  "note": "hot water bursts up through the cracks ('up')"
+ },
+ {
+  "cue": "boil",
+  "shot": "s12",
+  "at_word": 9,
+  "level": -13,
+  "offset": 0.0,
+  "note": "the river bubbles ('straight into the river')"
+ },
+ {
+  "cue": "steam_hiss",
+  "shot": "s13",
+  "at_word": 15,
+  "level": -16,
+  "offset": 0.0,
+  "note": "coffee machine steam ('steaming.')"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s14",
+  "at_word": 0,
+  "level": -16,
+  "offset": -0.2,
+  "note": "hot plate zooms out to the planet core"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s15",
+  "at_word": 3,
+  "level": -16,
+  "offset": 0.0,
+  "note": "BIGGEST label ('known')"
+ },
+ {
+  "cue": "boil",
+  "shot": "s16",
+  "at_word": 13,
+  "level": -12,
+  "offset": 0.0,
+  "note": "steam thickens into the loop ('jungle,')"
+ }
+]

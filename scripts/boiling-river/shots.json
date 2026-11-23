@@ -1,0 +1,86 @@
+{
+ "title": "The River That Boils With No Volcano",
+ "note": "Producer shot list (one shot per voice line) for audio/build_mix.py. The Animator may split shots; keep word counts.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "river",
+   "text": "Deep in the Amazon, there's a river so hot that animals that fall in are cooked alive."
+  },
+  {
+   "id": "s02",
+   "set": "room",
+   "text": "For years, scientists called it a legend."
+  },
+  {
+   "id": "s03",
+   "set": "river",
+   "text": "Then in 2011, geologist Andrés Ruzo went to see it, and dipped in a thermometer. Nearly one hundred degrees."
+  },
+  {
+   "id": "s04",
+   "set": "river",
+   "text": "The obvious answer: a volcano underneath."
+  },
+  {
+   "id": "s05",
+   "set": "lab",
+   "text": "But the nearest active volcano is about seven hundred kilometres away."
+  },
+  {
+   "id": "s06",
+   "set": "river",
+   "text": "Clue one. The river starts as a small, cold jungle stream. It only turns hot farther down."
+  },
+  {
+   "id": "s07",
+   "set": "earth",
+   "text": "Clue two. The heat pours in through cracks, right where the river crosses faults in the rock."
+  },
+  {
+   "id": "s08",
+   "set": "lab",
+   "text": "Clue three. Tests show the water carries no sign of a volcano."
+  },
+  {
+   "id": "s09",
+   "set": "river",
+   "text": "So how does water get this hot, with no fire underneath?"
+  },
+  {
+   "id": "s10",
+   "set": "earth",
+   "text": "The Earth itself is the stove. The deeper you go, the hotter the rock gets, volcano or not."
+  },
+  {
+   "id": "s11",
+   "set": "earth",
+   "text": "Rain soaks into the ground far away, and sinks kilometres deep, where the rock heats it."
+  },
+  {
+   "id": "s12",
+   "set": "earth",
+   "text": "Then pressure pushes it back up through those cracks, straight into the river."
+  },
+  {
+   "id": "s13",
+   "set": "interior",
+   "text": "Like a coffee machine. Cold water goes in, runs past something hot, and comes out steaming."
+  },
+  {
+   "id": "s14",
+   "set": "earth",
+   "text": "Here, the hot plate is the planet."
+  },
+  {
+   "id": "s15",
+   "set": "river",
+   "text": "It's the biggest known hot river with no volcano behind it."
+  },
+  {
+   "id": "s16",
+   "set": "river",
+   "text": "And every animal that falls in is a reminder that, deep under the jungle, the planet is still cooking."
+  }
+ ]
+}

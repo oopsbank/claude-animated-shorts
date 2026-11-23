@@ -1,0 +1,36 @@
+{
+ "note": "serious mystery, no comedy: mystery for hook/legend/volcano guess, explain for the clues, mystery for the riddle, explain for the answer, payoff (thin) for the analogy and record, mystery into a loop end",
+ "sections": [
+  {
+   "style": "mystery",
+   "from": "s01"
+  },
+  {
+   "style": "explain",
+   "from": "s06"
+  },
+  {
+   "style": "mystery",
+   "from": "s09"
+  },
+  {
+   "style": "explain",
+   "from": "s10"
+  },
+  {
+   "style": "payoff",
+   "from": "s13"
+  },
+  {
+   "style": "mystery",
+   "from": "s16"
+  }
+ ],
+ "end": "loop",
+ "reveal_riser": false,
+ "levels": {
+  "mystery": -10.5,
+  "explain": -10.5,
+  "payoff": -11.0
+ }
+}
