@@ -68,6 +68,9 @@ After R4: NOT A MONSTER. lifts away as ICE. lands; s08 gets moonlight shafts, tw
 **Plateau rule (3 rounds) reached at ~7.0-7.25 richness / ~7.0-7.5 composition, below the 8 gate; shipped on the Producer's brief.** The three reviewers contradict each other on details (s12 cube "taller than the mountain" in R3 vs "make it clearly larger" in R5). No script contradiction remains. Left open from R5: a faint lit edge on the s08 mass (kept off on purpose: the Producer asked that it never look confirmed), s02 legs overlapping the recorder, a different palette for s12 vs s11, more refraction on the s09 shards.
 
 ## Motion QA (`flat2d/motion_qa.py`)
+**v2** (on the 1962 rendered 1080 frames): same cuts, `--impacts 6.83 11.66 15.68 39.02 39.47 45.70 57.22` → **PASS** (longest frozen span 1 frame; median diff 1.86). The first run flagged one pop at 39.03 s: the designed shatter on "monster." (flash + shake), now listed. The s08→s09 seam (38.46 s, no cut punch) has a frame diff of 5.8 against 3-7 for its neighbours. The only change there is the caption line, which moves from the 0.70 band to the 0.82 band.
+
+v1:
 Run on the 1962 rendered preview frames: `motion_qa.py FRAMES 6.03 10.32 15.29 20.04 23.58 28.02 34.60 38.46 39.99 44.20 49.96 54.29 58.08 61.20 --impacts 6.83 11.66 15.68 39.47 45.70 57.22` → **PASS** (longest frozen span 1 frame; frame diffs median 1.61).
 - First run (impacts 11.66, 39.47, 45.70 only) flagged three pops, all designed beats on the word, now listed as impacts: the SCIENTIST's jolt + shake on "rose" (6.83 s), the NO CREATURE FITS slam (15.68 s), the ICEQUAKE stamp + shake (57.22 s). The others: THE BLOOP flash (11.66), ICE. flash (39.47), SPLIT! flash (45.70).
 - The s14b push-in into the display (64.8-65.4 s) is smooth and passes without an impact. Last frame vs frame 0: mean diff 6.7/255, the opening caption "In 1997," (first word at 0.02 s) and the marine snow; the picture is the same framing (the loop).
@@ -96,3 +99,9 @@ Sources: Bloop (Wikipedia) https://en.wikipedia.org/wiki/Bloop · NOAA PMEL Acou
 - The acting and the feel are the Director's call on `tests/preview_full_540.mp4`.
 - s14b → s01 loop: the display shows the s01 world live (s01 drawn at negative time), then a push-in until it fills the frame, so the restart has no jump.
 - Render cost: about 3-4 frames/s on 4 cores at 540 output (frames drawn at 1080 and downscaled), ~10-15 min for the preview.
+
+## Final cut (v2)
+- `videos/bloop/bloop_final_1080x1920.mp4` (**committed, the posting copy**): 1080x1920, 30 fps, H.264 High, yuv420p, 2-pass 5.0 Mb/s, AAC 192k, faststart. 1965 frames (3 cover frames from `thumbnail.png` + 1962), **65.51 s**, 43.5 MB (43,478,913 bytes), −14.2 LUFS / −1.0 dBFS peak.
+- Rebuild: `render.py audio/bloop/words.json OUT.mp4 --film bloop --size 1080x1920` (~35 min on 4 cores), mux `audio/bloop/mix.wav` (`-c:v copy -c:a aac -b:a 192k -shortest`), `tools/add_cover.sh <muxed> videos/bloop/thumbnail.png <master>`, then 2-pass `libx264 -profile:v high -b:v 5000k -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart` (5200k came out at 45.2 MB, over the limit).
+- `tests/preview_full_540.mp4` is the same render scaled to 540x960 with the mix (no cover). `tests/sheet_2s.jpg` is rebuilt from it.
+
