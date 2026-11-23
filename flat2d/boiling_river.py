@@ -296,30 +296,33 @@ def s03a(u, D, cue):
     J.steam(img, u, [(700, 1200, 1150)], rise=900, dens=.8, seed=11, n=34, size=(70, 170), wind=-30, warm=.1)
     mid = J.canopy_layer(31, 1300, [(22, 80, 150, ((40, 86, 56), (60, 116, 70), (92, 150, 84)), True, (66, 52, 40), 0)])
     img.alpha_composite(mid, (int(-200 + cam * .7), 0))
-    J.steam(img, u, [(620, 1180, 1330)], rise=900, dens=1.0, seed=12, n=40, size=(70, 180), wind=-30, warm=.15)
+    d = ImageDraw.Draw(img)                                              # the river glimpsed ahead, steaming
+    d.polygon([(560 + cam * .7, 1340), (1100, 1320), (1100, 1400), (600 + cam * .7, 1390)], fill=(140, 206, 192), outline=INK, width=4)
+    J.boil(img, u, [(820 + cam * .7, 1365, 30), (980 + cam * .7, 1360, 34)], seed=31)
+    J.steam(img, u, [(600, 1180, 1340)], rise=1000, dens=1.3, seed=12, n=50, size=(70, 190), wind=-30, warm=.15)
     radial(img, 900, 1250, 360, (255, 170, 100), .3)
     forest_floor(img, u, cam)
     d = ImageDraw.Draw(img)                                              # a trail toward the steam (right)
     d.polygon([(-60 + cam, 1990), (420 + cam, 1990), (980 + cam * .8, 1590), (820 + cam * .8, 1575)], fill=(150, 120, 84), outline=INK, width=4)
     kit.light_rays(img, 900, 120, (255, 250, 210), n=7, alpha=.22, spread=(100, 140), length=1900, seed=8, phase=2 * math.sin(u * .4))
-    for i, x in enumerate((60, 330, 980)):                               # big trunks in the mid-ground
+    for i, x in enumerate((60, 1010)):                                   # big trunks in the mid-ground
         xx = x + cam * .9
         d.polygon([(xx - 40, -20), (xx + 40, -20), (xx + 56, 1580), (xx - 60, 1580)], fill=(92, 70, 52), outline=INK, width=6)
         d.line([(xx - 10, 0), (xx - 4, 1560)], fill=(120, 96, 70), width=10)
         d.polygon([(xx - 60, 1580), (xx - 130, 1610), (xx - 40, 1560)], fill=(92, 70, 52), outline=INK, width=4)
     J.vines(img, u, [200, 470, 760], y1=1000, cam=cam * .9)
-    t_walk = 2.3; s = .98
+    t_walk = 2.3; s = 1.08
     if u <= t_walk:
-        pose = anim.walk_pose(u); x = walk_x(u, t_walk, 420, s * .5); lean = 4; look = .7; expr = 'determined'
+        pose = anim.walk_pose(u); x = walk_x(u, t_walk, 360, s * .5); lean = 4; look = .7; expr = 'determined'
     else:
         v = u - t_walk; last = anim.walk_pose(t_walk)
         pose = mix(last, POSES['stand'], smooth(v / .35)); sw = damp(v, 12, 4.5, 14)
         pose = add(pose, armL=(sw, sw * 1.4), armR=(-sw, -sw * 1.4))
         if v < .25: pose['_side'] = True
-        x = walk_x(t_walk, t_walk, 420, s * .5) + 8 * smooth(v / .4); lean = 4 * (1 - smooth(v / .5)) + 2 * math.sin(v * 1.3)
+        x = walk_x(t_walk, t_walk, 360, s * .5) + 8 * smooth(v / .4); lean = 4 * (1 - smooth(v / .5)) + 2 * math.sin(v * 1.3)
         look = .7; expr = 'determined'
     x += cam * 1.0
-    g = geologist(img, u, pose, expr, x, 1700, s, look=look, lean=lean)
+    g = geologist(img, u, pose, expr, x, 1780, s, look=look, lean=lean)
     d = ImageDraw.Draw(img)
     for i in range(5):                                                   # foreground ferns
         J.frond(d, -40 + i * 270 + cam * 1.5, 1950, 360, -70 - 10 * (i % 2) + 140 * (i % 2 == 1) * 0, u, sway=5 * math.sin(u + i), droop=.4)
@@ -418,7 +421,11 @@ def s04(u, D, cue):
     kv = smooth(seg(u, tv, tv + .5))
     if kv > 0:
         radial(img, 540, 1500, 700, (255, 80, 40), .35 * kv + .06 * kv * math.sin(u * 4))
-        J.volcano_icon(img, 540, 1880, 3.85, u, ghost=True, wr=.5, alpha=kv * (.85 + .1 * math.sin(u * 5)), smoke_on=False)
+        m = mask(); ImageDraw.Draw(m).line([(540, 1100), (540, 840)], fill=int(255 * kv), width=30)
+        glow(img, m, (255, 140, 60), .7, blur=18)
+        taiga.dashed(ImageDraw.Draw(img), (540, 1100), (540, 840), (255, 200, 140), w=10, dash=22, gap=12, phase=u * 60)
+        radial(img, 540, 1100, 160, (255, 210, 130), .7 * kv)
+        J.volcano_icon(img, 540, 1800, 2.7, u, ghost=True, wr=.75, alpha=kv * (.85 + .1 * math.sin(u * 5)), smoke_on=False)
     J.steam(img, u, [(260, 820, 700)], rise=520, dens=.8, seed=19, n=30, size=(50, 130), wind=20)
     J.bubbles(img, u, [(250, 704), (830, 704), (830, 740), (250, 740)], n=20, seed=6, size=(6, 16))
     sx, sy = shake(u, tv + .05, 10, .4)
@@ -731,7 +738,7 @@ def s10(u, D, cue):
 
 
 # ---------------------------------------------------------------- s11: rain soaks in far away and sinks deep (line 11)
-RAIN_PATH = [(250, 1000), (230, 1250), (300, 1500), (420, 1700), (620, 1770), (820, 1740)]
+RAIN_PATH = [(250, 1000), (230, 1250), (300, 1500), (420, 1720), (620, 1800), (800, 1780)]
 
 
 def s11(u, D, cue):
@@ -748,7 +755,7 @@ def s11(u, D, cue):
     J.earth_section(img, u, 1000, H, cam, n=6, ft=.95, seed=8)
     d = ImageDraw.Draw(img)
     d.rectangle([-10, 986, W + 10, 1012], fill=(84, 140, 64), outline=INK, width=5)
-    d.polygon([(720, 992), (1000, 992), (980, 1050), (740, 1050)], fill=(150, 210, 190), outline=INK, width=5)       # the river (right)
+    d.polygon([(600, 992), (1000, 992), (970, 1060), (630, 1060)], fill=(150, 210, 190), outline=INK, width=5)       # the river (right)
     taiga.dashed(d, (860, 1720), (860, 1070), (255, 200, 150), w=6, dash=22, gap=14, phase=-u * 60)
     # depth ruler (right edge)
     for kk, y in ((0, 1000), (1, 1300), (2, 1600), (3, 1900)):
@@ -765,13 +772,13 @@ def s11(u, D, cue):
         f = pth.index(a_) / len(pth)
         d.line([a_, b_], fill=INK, width=30); d.line([a_, b_], fill=lerp(J.COLD, (255, 80, 40), f), width=20)
     J.rising(img, u, pth, n=12, speed=.3, r=(14, 22), cold=J.COLD, hot=(255, 90, 40), seed=4, k=ks, glow_a=.35)
-    radial(img, 640, 1790, 300, (255, 110, 50), .4 * smooth(seg(u, cue(13) - .3, cue(14) + .2)) + .05 * math.sin(u * 4))
+    radial(img, 760, 1790, 320, (255, 110, 50), .4 * smooth(seg(u, cue(13) - .3, cue(14) + .2)) + .05 * math.sin(u * 4))
     img = finish(img, u, 1.02 + .03 * smooth(u / D), 540, 1100, vig=(.32, (20, 24, 40)))
     if not HIDE_UI:
         chip(img, 'RAIN', (60, 110, 170), 300, 560, u, cue(0) - .1, size=56)
-        chip(img, 'KILOMETRES DEEP', (40, 40, 60), 700, 1420, u, cue(9) - .1, size=44, angle=-4)
-        chip(img, 'THE ROCK HEATS IT', (200, 70, 30), 560, 1860, u, cue(14) - .1, size=44)
-    return img, {'faces': [], 'avoid': [(160, 480, 460, 740), (440, 1360, 960, 1480), (260, 1800, 860, 1920)]}
+        chip(img, 'KILOMETRES DEEP', (40, 40, 60), 600, 1300, u, cue(9) - .1, size=44, angle=-4)
+        chip(img, 'THE ROCK HEATS IT', (200, 70, 30), 560, 1620, u, cue(14) - .1, size=44)
+    return img, {'faces': [], 'avoid': [(160, 480, 460, 740), (340, 1240, 860, 1360), (260, 1560, 860, 1680)]}
 
 
 # ---------------------------------------------------------------- s12: pressure pushes it back up (line 12)
@@ -911,8 +918,10 @@ def s15(u, D, cue):
         b = J.canopy_layer(150 + k, y, [(40 - 6 * k, rmin, rmax, ((50, 96, 56), (74, 130, 66), (130, 170, 80)), True, None, 0)])
         img.alpha_composite(b, (int(-200 + cam * (.3 + .3 * k)), 0))
     pts = _smooth_path(RIV15, 10)
-    wf = lambda yy: 14 + 300 * max(0, (yy - 740) / 1260) ** 1.3
+    wf = lambda yy: 18 + 420 * max(0, (yy - 740) / 1260) ** 1.2
     cf = lambda yy: lerp((255, 214, 140), (110, 200, 190), max(0, (yy - 740) / 1260))
+    m = mask(); ImageDraw.Draw(m).line([(x + cam * .5, y_) for x, y_ in pts], fill=255, width=120)
+    glow(img, m, (255, 190, 110), .5, blur=40)
     river_path_draw(img, [(x + cam * .5, y_) for x, y_ in pts], wf, cf, 0, u)
     radial(img, 520, 1300, 500, HOT, .25)
     J.steam(img, u, [(x + cam * .5 - wf(y_) / 2, x + cam * .5 + wf(y_) / 2, y_) for x, y_ in pts[::4]], rise=420,

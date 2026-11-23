@@ -402,7 +402,8 @@ def volcano_icon(img, x, y, s, t, col=(150, 96, 72), lava=(255, 110, 40), smoke_
     if ghost:
         m = mask(); ImageDraw.Draw(m).polygon(cone, fill=255)
         glow(lay, m, (255, 90, 50), .5, blur=int(30 * s + 4))
-        fill_mask(lay, m, (255, 120, 70), .42)
+        fill_mask(lay, m, (255, 120, 70), .6)
+        radial(lay, x, y - h, w * .5, (255, 200, 120), .7)
         d = ImageDraw.Draw(lay)
         import taiga
         for a, b in zip(cone, cone[1:]): taiga.dashed(d, a, b, (255, 190, 140), w=int(min(12, 6 * s + 3)), dash=int(16 + 8 * s), gap=int(8 + 4 * s), phase=t * 30)
