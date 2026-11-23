@@ -61,7 +61,11 @@ Fixes per round: R1 → s06 whole river in one frame (blue → orange), bigger g
 **Plateau rule (LESSONS: 3 rounds without improvement) reached at R4-R6 (overall 8.2 / 8.0 / 7.9; composition 7.9 / 7.9 / 7.6, just under the 8 gate). Stopped iterating on the Producer's tight-usage brief; no script contradiction and no 3+ run in any of the last four rounds.** Open notes from R6 (not done): s11 "far away" (mountains and river share one ground line), s13 label crowding, s08 caption under the title, s05 small map labels near the pin, s15 ribbon still pale, s14 inset tilted/cropped.
 
 ## Motion QA (`flat2d/motion_qa.py`)
-MOTION_QA_PLACEHOLDER
+On the 1946 rendered preview frames: `motion_qa.py FRAMES 4.442 6.521 9.94 13.448 15.955 19.743 24.907 29.535 33.137 36.116 41.135 45.589 49.009 53.851 55.686 59.082 --impacts 1.53 19.32 28.55 36.96 37.12 48.51` → **PASS** (longest frozen span 1 frame; median diff 2.46; no pops).
+- The impacts are designed beats on the word: the title punch on "river" (1.53), the ghost breaking + X on "away." (19.32), the shake on "faults" (28.55), THE EARTH IS / THE STOVE slams (36.96, 37.12), the river burst on "river." (48.51).
+- The first run also flagged real pops, now fixed in `jungle.py`: steam puffs were drawn with overwrite, so a faint puff vanishing over a bright one jumped (now drawn brightest-last); globe continents popped at the limb and shifted the random stream (now shrink to the limb); `rising` blobs popped in/out at the path ends (now grow/shrink). s10 got a slow globe spin and camera drift (it was near-static for 2 s).
+- Loop: the last frame is the s01 world at its own frame 0 with the title (after a steam surge that hides the change), so the restart has no jump.
+- The frog slips right along the root and drops partly behind the right-hand fronds; the shot cuts at 4.44 s with it in the air (`strip` checked).
 
 ## Sound
 The Producer's mix (`audio/boiling-river/mix.wav`, `sfx.json`, `music.json`) is used unchanged; shot ids s01-s16 keep their cue anchors (the s03 split is inside line 3: `sfx.json` s03 word anchors 14 "thermometer" and 17 "hundred" land in s03b, as drawn).
