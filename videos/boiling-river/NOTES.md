@@ -90,3 +90,14 @@ The Producer's mix (`audio/boiling-river/mix.wav`, `sfx.json`, `music.json`) is 
 - Acting and feel are the Director's call on `tests/preview_full_540.mp4`; the Producer reviews `tests/sheet_2s.jpg` against the script before any 1080 final.
 - The frog never touches the water: s01 cuts with it mid-air; in s16 it sits on its root.
 - Render cost: frames drawn at 1080 and downscaled; the 540 preview takes ~15-20 min on 4 cores.
+
+## Post draft (not posted; waiting for the Director's OK)
+**Title:** This River Boils… and There's No Volcano 🔥 #shorts
+
+**Description:**
+Deep in the Peruvian Amazon runs Shanay-Timpishka, a river hot enough that small animals that fall in die. For years, scientists dismissed a boiling river as a legend, until geologist Andrés Ruzo went to see it in 2011 and measured water close to 100 °C. The obvious answer would be a volcano, but the nearest active one is about 700 km away. The clues: the river starts as a cold stream and only turns hot downstream; the heat enters through cracks where it crosses faults; and the water carries no volcanic signature. The leading explanation: a non-volcanic hydrothermal system. Water sinks kilometres deep, is heated by the rock (the deeper you go, the hotter it gets), and is pushed back up through faults into the river.
+
+Sources: Shanay-Timpishka (Wikipedia) https://en.wikipedia.org/wiki/Shanay-timpishka · Atlas Obscura https://www.atlasobscura.com/places/the-boiling-river-of-the-amazon · The World (2016) https://theworld.org/stories/2016/04/13/what-young-scientist-found-when-he-started-researching-famous-boiling-river-peru · Science Friday https://www.sciencefriday.com/articles/the-search-for-perus-boiling-river/
+Simplified: "cooked alive" (small animals that fall in die); the rain-water origin is the leading hypothesis and is still being studied.
+
+#boilingriver #amazon #peru #science #mystery #shorts
