@@ -370,7 +370,7 @@ def s03b(u, D, cue):
             v = (u * 1.2 + j * .5) % 1; r = 20 + 60 * v
             d.ellipse([px - r, py - r * .35, px + r, py + r * .35], outline=(240, 255, 250), width=max(1, int(5 * (1 - v))))
     # the big read-out thermometer (right)
-    lvl = .1 + .89 * smooth(seg(u, cue(14) - .1, cue(17) + .1)) + .006 * math.sin(u * 9)
+    lvl = .1 + .9 * smooth(seg(u, cue(14) - .1, cue(17) + .1)) + .006 * math.sin(u * 9)
     J.steam(img, u, [(560, 1100, 1700)], rise=500, dens=.4, seed=17, n=16, size=(50, 120), wind=-20)
     sx, sy = shake(u, cue(17) - .05, 9, .35)
     img = finish(img, u, 1.03 + .04 * smooth(u / D), 540, 1200, dx=sx, dy=sy, vig=(.32, (20, 40, 30)))
@@ -432,8 +432,8 @@ def s04(u, D, cue):
     img = finish(img, u, 1.02 + .04 * smooth(u / D), 540, 1000, dx=sx, dy=sy, vig=(.38, (30, 10, 10)))
     chip(img, 'THE OBVIOUS ANSWER?', (90, 70, 60), 540, 170, u, cue(1) - .05, size=50)
     if kv > 0 and not HIDE_UI:
-        stitle(img, 's04_v', [('VOLCANO?', (255, 150, 90), 130)], 1120, u, tv + .1)
-    return img, {'faces': [], 'avoid': [(0, 100, W, 240), (100, 1080, 980, 1300)]}
+        stitle(img, 's04_v', [('VOLCANO?', (255, 150, 90), 120)], 1500, u, tv + .1)
+    return img, {'faces': [], 'avoid': [(0, 100, W, 240), (100, 1460, 980, 1680), (380, 1050, 700, 1200)]}
 
 
 # ---------------------------------------------------------------- s05: 700 km away (line 5)
@@ -602,8 +602,8 @@ def s07(u, D, cue):
     if not HIDE_UI:
         chip(img, 'COLD', (40, 120, 200), 260, 650, u, .3, size=40)
         chip(img, 'CRACKS', (60, 40, 36), 300, 1300, u, cue(7) - .1, size=48, angle=-8)
-        chip(img, 'FAULTS', (200, 70, 30), 800, 1560, u, cue(13) - .1, size=56, angle=6)
-    return img, {'faces': [], 'avoid': [(0, 150, W, 360), (160, 1230, 460, 1380), (620, 1480, 980, 1640)]}
+        chip(img, 'FAULTS', (200, 70, 30), 900, 1300, u, cue(13) - .1, size=56, angle=6)
+    return img, {'faces': [], 'avoid': [(0, 150, W, 360), (160, 1230, 460, 1380), (740, 1230, 1060, 1370)]}
 
 
 # ---------------------------------------------------------------- s08: CLUE 3, no sign of a volcano (line 8)
@@ -744,7 +744,7 @@ RAIN_PATH = [(250, 1000), (230, 1250), (300, 1500), (420, 1720), (620, 1800), (8
 def s11(u, D, cue):
     img = Image.new('RGBA', (W, H)); cam = 8 * math.sin(u * .4)
     img.paste(vgrad([(0, (120, 136, 160)), (.45, (186, 200, 206)), (.55, (190, 210, 200))]))
-    kit.peak_range(img, 7, 1000, 380, 640, (96, 128, 112), (58, 82, 84), ink=INK, ink_w=4, n=4, x_shift=-300 + cam * .3)
+    kit.peak_range(img, 7, 1000, 260, 480, (96, 128, 112), (58, 82, 84), ink=INK, ink_w=4, n=4, x_shift=-300 + cam * .3)
     J.storm_cloud(img, 260 + cam * .2, 330, 1.25, u)
     J.storm_cloud(img, 520 + cam * .25, 270, .8, u + 2)
     J.rain(img, u, (40, 380, 560, 1010), n=150, seed=3)
@@ -772,7 +772,7 @@ def s11(u, D, cue):
         f = pth.index(a_) / len(pth)
         d.line([a_, b_], fill=INK, width=30); d.line([a_, b_], fill=lerp(J.COLD, (255, 80, 40), f), width=20)
     J.rising(img, u, pth, n=12, speed=.3, r=(14, 22), cold=J.COLD, hot=(255, 90, 40), seed=4, k=ks, glow_a=.35)
-    radial(img, 760, 1790, 320, (255, 110, 50), .4 * smooth(seg(u, cue(13) - .3, cue(14) + .2)) + .05 * math.sin(u * 4))
+    radial(img, 780, 1790, 360, (255, 110, 50), .7 * smooth(seg(u, cue(13) - .3, cue(14) + .2)) + .05 * math.sin(u * 4))
     img = finish(img, u, 1.02 + .03 * smooth(u / D), 540, 1100, vig=(.32, (20, 24, 40)))
     if not HIDE_UI:
         chip(img, 'RAIN', (60, 110, 170), 300, 560, u, cue(0) - .1, size=56)
@@ -848,7 +848,7 @@ def coffee_scene(img, u, cam, kin, kheat, kout, ks):
         d = ImageDraw.Draw(img); sx, sy = P['shower']
         for j in range(4):
             v = (u * 2.2 + j / 4) % 1; d.ellipse([sx - 8 + (j - 1.5) * 18, sy + 10 + 90 * v, sx + 8 + (j - 1.5) * 18, sy + 30 + 90 * v], fill=(140, 80, 50), outline=INK, width=2)
-    J.mug(img, 860 + cam, 1470, 1.0, u)
+    J.mug(img, 900 + cam, 1470, 1.0, u)
     J.steam(img, u, [(780 + cam, 940 + cam, 1290), (x - 160 * s, x - 60 * s, 1470 - 560 * s)], rise=480, dens=.15 + .9 * ks,
             seed=43, n=30, size=(40, 100), wind=10, shade=(200, 190, 180))
     return P
@@ -921,7 +921,7 @@ def s15(u, D, cue):
     wf = lambda yy: 18 + 420 * max(0, (yy - 740) / 1260) ** 1.2
     cf = lambda yy: lerp((255, 214, 140), (110, 200, 190), max(0, (yy - 740) / 1260))
     m = mask(); ImageDraw.Draw(m).line([(x + cam * .5, y_) for x, y_ in pts], fill=255, width=120)
-    glow(img, m, (255, 190, 110), .5, blur=40)
+    glow(img, m, (255, 190, 110), .85, blur=40)
     river_path_draw(img, [(x + cam * .5, y_) for x, y_ in pts], wf, cf, 0, u)
     radial(img, 520, 1300, 500, HOT, .25)
     J.steam(img, u, [(x + cam * .5 - wf(y_) / 2, x + cam * .5 + wf(y_) / 2, y_) for x, y_ in pts[::4]], rise=420,
