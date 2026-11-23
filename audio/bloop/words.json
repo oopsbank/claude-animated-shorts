@@ -1,0 +1,1082 @@
+[
+ {
+  "word": "In",
+  "start": 0.023,
+  "end": 0.151
+ },
+ {
+  "word": "1997,",
+  "start": 0.199,
+  "end": 1.219
+ },
+ {
+  "word": "the",
+  "start": 1.335,
+  "end": 1.509
+ },
+ {
+  "word": "Pacific",
+  "start": 1.546,
+  "end": 1.927
+ },
+ {
+  "word": "Ocean",
+  "start": 1.975,
+  "end": 2.252
+ },
+ {
+  "word": "made",
+  "start": 2.3,
+  "end": 2.45
+ },
+ {
+  "word": "a",
+  "start": 2.475,
+  "end": 2.515
+ },
+ {
+  "word": "sound",
+  "start": 2.515,
+  "end": 2.879
+ },
+ {
+  "word": "heard",
+  "start": 2.927,
+  "end": 3.111
+ },
+ {
+  "word": "by",
+  "start": 3.148,
+  "end": 3.251
+ },
+ {
+  "word": "microphones",
+  "start": 3.262,
+  "end": 3.889
+ },
+ {
+  "word": "nearly",
+  "start": 3.926,
+  "end": 4.156
+ },
+ {
+  "word": "five",
+  "start": 4.156,
+  "end": 4.505
+ },
+ {
+  "word": "thousand",
+  "start": 4.529,
+  "end": 4.853
+ },
+ {
+  "word": "kilometres",
+  "start": 4.889,
+  "end": 5.364
+ },
+ {
+  "word": "apart.",
+  "start": 5.4,
+  "end": 5.816
+ },
+ {
+  "word": "You",
+  "start": 6.128,
+  "end": 6.237
+ },
+ {
+  "word": "see,",
+  "start": 6.285,
+  "end": 6.62
+ },
+ {
+  "word": "it",
+  "start": 6.732,
+  "end": 6.836
+ },
+ {
+  "word": "rose",
+  "start": 6.885,
+  "end": 7.127
+ },
+ {
+  "word": "in",
+  "start": 7.152,
+  "end": 7.22
+ },
+ {
+  "word": "pitch",
+  "start": 7.268,
+  "end": 7.498
+ },
+ {
+  "word": "like",
+  "start": 7.523,
+  "end": 7.672
+ },
+ {
+  "word": "an",
+  "start": 7.686,
+  "end": 7.754
+ },
+ {
+  "word": "animal",
+  "start": 7.802,
+  "end": 8.102
+ },
+ {
+  "word": "call,",
+  "start": 8.15,
+  "end": 8.434
+ },
+ {
+  "word": "but",
+  "start": 8.546,
+  "end": 8.682
+ },
+ {
+  "word": "no",
+  "start": 8.73,
+  "end": 8.902
+ },
+ {
+  "word": "known",
+  "start": 8.951,
+  "end": 9.181
+ },
+ {
+  "word": "animal",
+  "start": 9.218,
+  "end": 9.495
+ },
+ {
+  "word": "is",
+  "start": 9.543,
+  "end": 9.634
+ },
+ {
+  "word": "that",
+  "start": 9.659,
+  "end": 9.808
+ },
+ {
+  "word": "loud.",
+  "start": 9.856,
+  "end": 10.197
+ },
+ {
+  "word": "Scientists",
+  "start": 10.419,
+  "end": 10.953
+ },
+ {
+  "word": "nicknamed",
+  "start": 10.99,
+  "end": 11.371
+ },
+ {
+  "word": "it",
+  "start": 11.396,
+  "end": 11.499
+ },
+ {
+  "word": "the",
+  "start": 11.602,
+  "end": 11.72
+ },
+ {
+  "word": "Bloop.",
+  "start": 11.756,
+  "end": 12.112
+ },
+ {
+  "word": "And",
+  "start": 12.326,
+  "end": 12.453
+ },
+ {
+  "word": "the",
+  "start": 12.489,
+  "end": 12.568
+ },
+ {
+  "word": "internet",
+  "start": 12.605,
+  "end": 12.917
+ },
+ {
+  "word": "had",
+  "start": 12.953,
+  "end": 13.068
+ },
+ {
+  "word": "an",
+  "start": 13.092,
+  "end": 13.161
+ },
+ {
+  "word": "answer:",
+  "start": 13.197,
+  "end": 13.639
+ },
+ {
+  "word": "\"Something",
+  "start": 13.771,
+  "end": 14.173
+ },
+ {
+  "word": "huge",
+  "start": 14.221,
+  "end": 14.452
+ },
+ {
+  "word": "is",
+  "start": 14.465,
+  "end": 14.545
+ },
+ {
+  "word": "down",
+  "start": 14.581,
+  "end": 14.754
+ },
+ {
+  "word": "there.\"",
+  "start": 14.779,
+  "end": 15.081
+ },
+ {
+  "word": "But",
+  "start": 15.393,
+  "end": 15.529
+ },
+ {
+  "word": "no",
+  "start": 15.577,
+  "end": 15.727
+ },
+ {
+  "word": "creature",
+  "start": 15.727,
+  "end": 16.179
+ },
+ {
+  "word": "fits.",
+  "start": 16.227,
+  "end": 16.623
+ },
+ {
+  "word": "Even",
+  "start": 16.791,
+  "end": 17.034
+ },
+ {
+  "word": "a",
+  "start": 17.059,
+  "end": 17.104
+ },
+ {
+  "word": "blue",
+  "start": 17.152,
+  "end": 17.405
+ },
+ {
+  "word": "whale,",
+  "start": 17.43,
+  "end": 17.742
+ },
+ {
+  "word": "the",
+  "start": 17.79,
+  "end": 17.893
+ },
+ {
+  "word": "loudest",
+  "start": 17.893,
+  "end": 18.288
+ },
+ {
+  "word": "animal",
+  "start": 18.336,
+  "end": 18.648
+ },
+ {
+  "word": "alive,",
+  "start": 18.696,
+  "end": 19.1
+ },
+ {
+  "word": "isn't",
+  "start": 19.114,
+  "end": 19.333
+ },
+ {
+  "word": "that",
+  "start": 19.369,
+  "end": 19.553
+ },
+ {
+  "word": "loud.",
+  "start": 19.601,
+  "end": 19.935
+ },
+ {
+  "word": "Clue",
+  "start": 20.137,
+  "end": 20.369
+ },
+ {
+  "word": "one.",
+  "start": 20.417,
+  "end": 20.743
+ },
+ {
+  "word": "It",
+  "start": 20.908,
+  "end": 21.025
+ },
+ {
+  "word": "came",
+  "start": 21.061,
+  "end": 21.268
+ },
+ {
+  "word": "from",
+  "start": 21.293,
+  "end": 21.443
+ },
+ {
+  "word": "far",
+  "start": 21.443,
+  "end": 21.71
+ },
+ {
+  "word": "south,",
+  "start": 21.721,
+  "end": 22.167
+ },
+ {
+  "word": "near",
+  "start": 22.279,
+  "end": 22.456
+ },
+ {
+  "word": "the",
+  "start": 22.481,
+  "end": 22.56
+ },
+ {
+  "word": "edge",
+  "start": 22.608,
+  "end": 22.758
+ },
+ {
+  "word": "of",
+  "start": 22.771,
+  "end": 22.839
+ },
+ {
+  "word": "Antarctica.",
+  "start": 22.875,
+  "end": 23.507
+ },
+ {
+  "word": "Clue",
+  "start": 23.677,
+  "end": 23.951
+ },
+ {
+  "word": "two.",
+  "start": 23.976,
+  "end": 24.332
+ },
+ {
+  "word": "It",
+  "start": 24.542,
+  "end": 24.646
+ },
+ {
+  "word": "didn't",
+  "start": 24.671,
+  "end": 24.867
+ },
+ {
+  "word": "repeat",
+  "start": 24.892,
+  "end": 25.157
+ },
+ {
+  "word": "like",
+  "start": 25.194,
+  "end": 25.331
+ },
+ {
+  "word": "a",
+  "start": 25.344,
+  "end": 25.384
+ },
+ {
+  "word": "song.",
+  "start": 25.426,
+  "end": 25.827
+ },
+ {
+  "word": "It",
+  "start": 25.991,
+  "end": 26.106
+ },
+ {
+  "word": "rumbled",
+  "start": 26.154,
+  "end": 26.512
+ },
+ {
+  "word": "for",
+  "start": 26.537,
+  "end": 26.64
+ },
+ {
+  "word": "about",
+  "start": 26.664,
+  "end": 26.837
+ },
+ {
+  "word": "a",
+  "start": 26.85,
+  "end": 26.895
+ },
+ {
+  "word": "minute,",
+  "start": 26.92,
+  "end": 27.259
+ },
+ {
+  "word": "then",
+  "start": 27.371,
+  "end": 27.505
+ },
+ {
+  "word": "stopped.",
+  "start": 27.553,
+  "end": 27.955
+ },
+ {
+  "word": "Clue",
+  "start": 28.117,
+  "end": 28.322
+ },
+ {
+  "word": "three.",
+  "start": 28.347,
+  "end": 28.73
+ },
+ {
+  "word": "In",
+  "start": 28.92,
+  "end": 29.021
+ },
+ {
+  "word": "2005,",
+  "start": 29.069,
+  "end": 29.88
+ },
+ {
+  "word": "scientists",
+  "start": 29.905,
+  "end": 30.368
+ },
+ {
+  "word": "put",
+  "start": 30.381,
+  "end": 30.554
+ },
+ {
+  "word": "microphones",
+  "start": 30.554,
+  "end": 31.192
+ },
+ {
+  "word": "near",
+  "start": 31.229,
+  "end": 31.401
+ },
+ {
+  "word": "Antarctica,",
+  "start": 31.449,
+  "end": 32.127
+ },
+ {
+  "word": "and",
+  "start": 32.239,
+  "end": 32.343
+ },
+ {
+  "word": "heard",
+  "start": 32.391,
+  "end": 32.552
+ },
+ {
+  "word": "it",
+  "start": 32.577,
+  "end": 32.645
+ },
+ {
+  "word": "again.",
+  "start": 32.669,
+  "end": 33.046
+ },
+ {
+  "word": "Thousands",
+  "start": 33.209,
+  "end": 33.671
+ },
+ {
+  "word": "of",
+  "start": 33.696,
+  "end": 33.753
+ },
+ {
+  "word": "times",
+  "start": 33.801,
+  "end": 34.112
+ },
+ {
+  "word": "a",
+  "start": 34.149,
+  "end": 34.194
+ },
+ {
+  "word": "year.",
+  "start": 34.242,
+  "end": 34.533
+ },
+ {
+  "word": "So",
+  "start": 34.705,
+  "end": 34.864
+ },
+ {
+  "word": "what",
+  "start": 34.912,
+  "end": 35.062
+ },
+ {
+  "word": "down",
+  "start": 35.098,
+  "end": 35.282
+ },
+ {
+  "word": "there",
+  "start": 35.307,
+  "end": 35.48
+ },
+ {
+  "word": "roars",
+  "start": 35.516,
+  "end": 35.805
+ },
+ {
+  "word": "thousands",
+  "start": 35.853,
+  "end": 36.246
+ },
+ {
+  "word": "of",
+  "start": 36.271,
+  "end": 36.327
+ },
+ {
+  "word": "times",
+  "start": 36.364,
+  "end": 36.629
+ },
+ {
+  "word": "a",
+  "start": 36.666,
+  "end": 36.71
+ },
+ {
+  "word": "year,",
+  "start": 36.758,
+  "end": 37.028
+ },
+ {
+  "word": "and",
+  "start": 37.14,
+  "end": 37.253
+ },
+ {
+  "word": "never",
+  "start": 37.288,
+  "end": 37.567
+ },
+ {
+  "word": "needs",
+  "start": 37.592,
+  "end": 37.799
+ },
+ {
+  "word": "to",
+  "start": 37.824,
+  "end": 37.904
+ },
+ {
+  "word": "breathe?",
+  "start": 37.94,
+  "end": 38.319
+ },
+ {
+  "word": "Not",
+  "start": 38.556,
+  "end": 38.709
+ },
+ {
+  "word": "a",
+  "start": 38.734,
+  "end": 38.774
+ },
+ {
+  "word": "monster.",
+  "start": 38.804,
+  "end": 39.324
+ },
+ {
+  "word": "Ice.",
+  "start": 39.518,
+  "end": 39.925
+ },
+ {
+  "word": "Around",
+  "start": 40.095,
+  "end": 40.43
+ },
+ {
+  "word": "Antarctica,",
+  "start": 40.478,
+  "end": 41.219
+ },
+ {
+  "word": "giant",
+  "start": 41.331,
+  "end": 41.677
+ },
+ {
+  "word": "shelves",
+  "start": 41.714,
+  "end": 42.049
+ },
+ {
+  "word": "of",
+  "start": 42.085,
+  "end": 42.153
+ },
+ {
+  "word": "ice",
+  "start": 42.165,
+  "end": 42.455
+ },
+ {
+  "word": "crack",
+  "start": 42.492,
+  "end": 42.769
+ },
+ {
+  "word": "and",
+  "start": 42.805,
+  "end": 42.896
+ },
+ {
+  "word": "break",
+  "start": 42.944,
+  "end": 43.175
+ },
+ {
+  "word": "away",
+  "start": 43.211,
+  "end": 43.43
+ },
+ {
+  "word": "into",
+  "start": 43.455,
+  "end": 43.605
+ },
+ {
+  "word": "the",
+  "start": 43.653,
+  "end": 43.732
+ },
+ {
+  "word": "sea.",
+  "start": 43.769,
+  "end": 44.134
+ },
+ {
+  "word": "When",
+  "start": 44.301,
+  "end": 44.425
+ },
+ {
+  "word": "a",
+  "start": 44.45,
+  "end": 44.49
+ },
+ {
+  "word": "slab",
+  "start": 44.531,
+  "end": 44.925
+ },
+ {
+  "word": "the",
+  "start": 44.973,
+  "end": 45.052
+ },
+ {
+  "word": "size",
+  "start": 45.1,
+  "end": 45.366
+ },
+ {
+  "word": "of",
+  "start": 45.379,
+  "end": 45.435
+ },
+ {
+  "word": "a",
+  "start": 45.46,
+  "end": 45.5
+ },
+ {
+  "word": "city",
+  "start": 45.53,
+  "end": 45.749
+ },
+ {
+  "word": "splits,",
+  "start": 45.797,
+  "end": 46.364
+ },
+ {
+  "word": "the",
+  "start": 46.457,
+  "end": 46.608
+ },
+ {
+  "word": "crack",
+  "start": 46.645,
+  "end": 46.898
+ },
+ {
+  "word": "sends",
+  "start": 46.946,
+  "end": 47.165
+ },
+ {
+  "word": "a",
+  "start": 47.19,
+  "end": 47.23
+ },
+ {
+  "word": "shudder",
+  "start": 47.23,
+  "end": 47.56
+ },
+ {
+  "word": "through",
+  "start": 47.597,
+  "end": 47.781
+ },
+ {
+  "word": "the",
+  "start": 47.794,
+  "end": 47.874
+ },
+ {
+  "word": "water",
+  "start": 47.898,
+  "end": 48.141
+ },
+ {
+  "word": "that",
+  "start": 48.177,
+  "end": 48.303
+ },
+ {
+  "word": "travels",
+  "start": 48.316,
+  "end": 48.663
+ },
+ {
+  "word": "thousands",
+  "start": 48.711,
+  "end": 49.139
+ },
+ {
+  "word": "of",
+  "start": 49.164,
+  "end": 49.22
+ },
+ {
+  "word": "kilometres.",
+  "start": 49.268,
+  "end": 49.843
+ },
+ {
+  "word": "Like",
+  "start": 50.065,
+  "end": 50.234
+ },
+ {
+  "word": "an",
+  "start": 50.247,
+  "end": 50.315
+ },
+ {
+  "word": "ice",
+  "start": 50.363,
+  "end": 50.582
+ },
+ {
+  "word": "cube",
+  "start": 50.607,
+  "end": 50.838
+ },
+ {
+  "word": "cracking",
+  "start": 50.862,
+  "end": 51.209
+ },
+ {
+  "word": "in",
+  "start": 51.234,
+  "end": 51.29
+ },
+ {
+  "word": "your",
+  "start": 51.327,
+  "end": 51.43
+ },
+ {
+  "word": "drink.",
+  "start": 51.454,
+  "end": 51.752
+ },
+ {
+  "word": "Now",
+  "start": 51.973,
+  "end": 52.176
+ },
+ {
+  "word": "make",
+  "start": 52.224,
+  "end": 52.385
+ },
+ {
+  "word": "that",
+  "start": 52.41,
+  "end": 52.548
+ },
+ {
+  "word": "ice",
+  "start": 52.596,
+  "end": 52.803
+ },
+ {
+  "word": "cube",
+  "start": 52.839,
+  "end": 53.128
+ },
+ {
+  "word": "the",
+  "start": 53.128,
+  "end": 53.314
+ },
+ {
+  "word": "size",
+  "start": 53.362,
+  "end": 53.627
+ },
+ {
+  "word": "of",
+  "start": 53.652,
+  "end": 53.709
+ },
+ {
+  "word": "a",
+  "start": 53.745,
+  "end": 53.785
+ },
+ {
+  "word": "mountain.",
+  "start": 53.815,
+  "end": 54.178
+ },
+ {
+  "word": "Years",
+  "start": 54.389,
+  "end": 54.669
+ },
+ {
+  "word": "later,",
+  "start": 54.717,
+  "end": 55.075
+ },
+ {
+  "word": "scientists",
+  "start": 55.123,
+  "end": 55.621
+ },
+ {
+  "word": "made",
+  "start": 55.657,
+  "end": 55.818
+ },
+ {
+  "word": "it",
+  "start": 55.832,
+  "end": 55.9
+ },
+ {
+  "word": "official:",
+  "start": 55.913,
+  "end": 56.399
+ },
+ {
+  "word": "the",
+  "start": 56.531,
+  "end": 56.625
+ },
+ {
+  "word": "Bloop",
+  "start": 56.673,
+  "end": 56.962
+ },
+ {
+  "word": "was",
+  "start": 56.996,
+  "end": 57.217
+ },
+ {
+  "word": "an",
+  "start": 57.242,
+  "end": 57.321
+ },
+ {
+  "word": "icequake.",
+  "start": 57.321,
+  "end": 57.958
+ },
+ {
+  "word": "The",
+  "start": 58.178,
+  "end": 58.268
+ },
+ {
+  "word": "monster",
+  "start": 58.316,
+  "end": 58.651
+ },
+ {
+  "word": "from",
+  "start": 58.688,
+  "end": 58.825
+ },
+ {
+  "word": "the",
+  "start": 58.85,
+  "end": 58.93
+ },
+ {
+  "word": "deep",
+  "start": 58.93,
+  "end": 59.209
+ },
+ {
+  "word": "was",
+  "start": 59.212,
+  "end": 59.429
+ },
+ {
+  "word": "the",
+  "start": 59.477,
+  "end": 59.557
+ },
+ {
+  "word": "sound",
+  "start": 59.605,
+  "end": 59.847
+ },
+ {
+  "word": "of",
+  "start": 59.883,
+  "end": 59.94
+ },
+ {
+  "word": "Antarctica",
+  "start": 59.974,
+  "end": 60.59
+ },
+ {
+  "word": "breaking.",
+  "start": 60.638,
+  "end": 61.104
+ },
+ {
+  "word": "And",
+  "start": 61.295,
+  "end": 61.411
+ },
+ {
+  "word": "every",
+  "start": 61.46,
+  "end": 61.678
+ },
+ {
+  "word": "day,",
+  "start": 61.727,
+  "end": 62.088
+ },
+ {
+  "word": "the",
+  "start": 62.2,
+  "end": 62.314
+ },
+ {
+  "word": "ocean",
+  "start": 62.314,
+  "end": 62.662
+ },
+ {
+  "word": "still",
+  "start": 62.698,
+  "end": 62.906
+ },
+ {
+  "word": "carries",
+  "start": 62.954,
+  "end": 63.254
+ },
+ {
+  "word": "that",
+  "start": 63.279,
+  "end": 63.416
+ },
+ {
+  "word": "sound",
+  "start": 63.465,
+  "end": 63.695
+ },
+ {
+  "word": "to",
+  "start": 63.72,
+  "end": 63.788
+ },
+ {
+  "word": "anyone",
+  "start": 63.836,
+  "end": 64.171
+ },
+ {
+  "word": "listening.",
+  "start": 64.196,
+  "end": 64.641
+ }
+]

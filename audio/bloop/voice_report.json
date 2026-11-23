@@ -1,0 +1,208 @@
+{
+ "tempo": 0.9975,
+ "gap_scale": 1.0,
+ "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+ "model_id": "eleven_multilingual_v2",
+ "settings": {
+  "stability": 0.5,
+  "similarity_boost": 0.75,
+  "style": 0.2,
+  "use_speaker_boost": true,
+  "speed": 1.1
+ },
+ "duration_s": 64.841,
+ "pacing_api_raw": {
+  "words": 216,
+  "speech_span_s": 78.576,
+  "words_per_s": 2.749,
+  "gaps_over_0.25_s": 27,
+  "gaps_over_0.25_total_s": 16.067,
+  "max_gap_s": 0.871,
+  "mean_gap_s": 0.122
+ },
+ "pacing_refined": {
+  "words": 216,
+  "speech_span_s": 78.315,
+  "words_per_s": 2.758,
+  "gaps_over_0.25_s": 29,
+  "gaps_over_0.25_total_s": 18.744,
+  "max_gap_s": 0.949,
+  "mean_gap_s": 0.119
+ },
+ "pacing_final": {
+  "words": 216,
+  "speech_span_s": 64.618,
+  "words_per_s": 3.343,
+  "gaps_over_0.25_s": 2,
+  "gaps_over_0.25_total_s": 0.624,
+  "max_gap_s": 0.312,
+  "mean_gap_s": 0.056
+ },
+ "pause_cuts": [
+  [
+   6.06,
+   0.532,
+   "apart."
+  ],
+  [
+   7.242,
+   0.177,
+   "see,"
+  ],
+  [
+   9.2,
+   0.257,
+   "call,"
+  ],
+  [
+   11.306,
+   0.689,
+   "loud."
+  ],
+  [
+   13.82,
+   0.579,
+   "Bloop."
+  ],
+  [
+   15.953,
+   0.659,
+   "answer:"
+  ],
+  [
+   18.015,
+   0.316,
+   "there.\""
+  ],
+  [
+   19.942,
+   0.678,
+   "fits."
+  ],
+  [
+   23.961,
+   0.508,
+   "loud."
+  ],
+  [
+   25.245,
+   0.54,
+   "one."
+  ],
+  [
+   27.177,
+   0.112,
+   "south,"
+  ],
+  [
+   28.618,
+   0.584,
+   "Antarctica."
+  ],
+  [
+   30.115,
+   0.547,
+   "two."
+  ],
+  [
+   32.081,
+   0.526,
+   "song."
+  ],
+  [
+   34.014,
+   0.214,
+   "minute,"
+  ],
+  [
+   34.952,
+   0.658,
+   "stopped."
+  ],
+  [
+   36.383,
+   0.601,
+   "three."
+  ],
+  [
+   40.355,
+   0.174,
+   "Antarctica,"
+  ],
+  [
+   41.447,
+   0.529,
+   "again."
+  ],
+  [
+   43.471,
+   0.502,
+   "year."
+  ],
+  [
+   46.458,
+   0.061,
+   "year,"
+  ],
+  [
+   47.807,
+   0.46,
+   "breathe?"
+  ],
+  [
+   49.326,
+   0.366,
+   "monster."
+  ],
+  [
+   50.297,
+   0.665,
+   "Ice."
+  ],
+  [
+   52.237,
+   0.041,
+   "Antarctica,"
+  ],
+  [
+   55.145,
+   0.584,
+   "sea."
+  ],
+  [
+   61.495,
+   0.31,
+   "kilometres."
+  ],
+  [
+   63.778,
+   0.728,
+   "drink."
+  ],
+  [
+   66.835,
+   0.399,
+   "mountain."
+  ],
+  [
+   69.45,
+   0.25,
+   "official:"
+  ],
+  [
+   71.352,
+   0.226,
+   "icequake."
+  ],
+  [
+   74.673,
+   0.119,
+   "breaking."
+  ],
+  [
+   75.737,
+   0.108,
+   "day,"
+  ]
+ ]
+}
