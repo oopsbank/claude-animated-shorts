@@ -349,6 +349,12 @@ def s03(u, D, cue):
     lut = therm_lut()
     col = lut[(np.clip(v, 0, 1) * 255).astype(np.uint8)].astype(np.float32)
     col *= np.clip(L * 2.5, 0, 1)[..., None] * .4 + .6
+    # the standing leg in the water reads COLD: a clear cool blue with a soft glow (not lost in the dark water)
+    legm = (yy > bel + 20) & (a[..., 3] > 0)
+    cool = np.array((120, 190, 255), np.float32) * (.7 + .3 * np.clip(L * 1.4, 0, 1))[..., None]
+    col = np.where(legm[..., None], cool, col)
+    gl = Image.fromarray((legm * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(14))
+    img.paste(Image.new('RGBA', (W, H), (90, 160, 255, 255)), (0, 0), gl.point(lambda v_: int(min(255, v_ * 1.6))))
     out = np.dstack([col, a[..., 3]]).clip(0, 255).astype(np.uint8)
     img.alpha_composite(Image.fromarray(out, 'RGBA'))
     # heat shimmer rings around the tucked foot
@@ -591,11 +597,64 @@ def trace_panel(img, x, y, w, h, u, k_closed, t):
         d.text((x - w / 2 + 20, yy - h * .2), lbl, font=font(28, True), fill=col, anchor='lm')
 
 
+def zoo_enclosure(img, w, cam):
+    """The Zoo Atlanta flamingo yard in front of the backdrop: a wire fence behind the bird, a shallow pool with a stone
+    edge across the foreground, lily pads, ripples, and big leafy plants at both sides."""
+    d = ImageDraw.Draw(img)
+    # wire fence (mid ground)
+    fy0, fy1 = 1330, 1545
+    for x in range(-60, W + 160, 170):
+        xx = x + (cam * .8) % 170
+        d.rectangle([xx - 9, fy0 - 20, xx + 9, fy1], fill=(122, 96, 70), outline=INK, width=4)
+    m = mask(); dm = ImageDraw.Draw(m)
+    for x in range(-200, W + 200, 34):
+        xx = x + (cam * .8) % 34
+        dm.line([(xx, fy0), (xx + 120, fy1)], fill=255, width=2); dm.line([(xx + 120, fy0), (xx, fy1)], fill=255, width=2)
+    fill_mask(img, m, (200, 210, 206), .55)
+    for yy in (fy0, fy1 - 6): d.line([(-10, yy), (W + 10, yy)], fill=(170, 176, 172), width=5)
+    # pool: the foreground water with a stone rim
+    py0 = 1650
+    pool = vgrad([(0, (90, 170, 168)), (1, (40, 110, 130))], W, H - py0)
+    img.paste(pool, (0, py0))
+    d = ImageDraw.Draw(img)
+    rng = np.random.default_rng(21)
+    for i in range(40):
+        y = rng.uniform(py0 + 40, H); x = (rng.uniform(0, W) + w * 18) % (W + 200) - 100
+        d.line([(x, y), (x + rng.uniform(40, 120), y)], fill=(170, 226, 220), width=3)
+    x = -40
+    while x < W + 60:
+        r = rng.uniform(34, 56)
+        d.ellipse([x, py0 - r * .6, x + r * 2, py0 + r * .5], fill=tuple(int(v) for v in rng.uniform(150, 182, 3)), outline=INK, width=4)
+        d.arc([x + 6, py0 - r * .5, x + r * 2 - 6, py0 + r * .3], 200, 320, fill=(226, 222, 210), width=4)
+        x += r * 1.7
+    for (lx, ly, r) in ((150, 1860, 46), (260, 1905, 34), (620, 1880, 40)):
+        d.pieslice([lx - r, ly - r * .45, lx + r, ly + r * .45], 20, 340, fill=(70, 150, 80), outline=INK, width=4)
+    FL.ripples(img, 420, 1820, 160, w, col=(210, 245, 240), n=2, alpha=.45)
+    # big leaves (both sides)
+    def leaf(cx, cy, ln, ang, col):
+        a = math.radians(ang); ux, uy = math.cos(a), math.sin(a); nx, ny = -uy, ux
+        pts = [(cx, cy)]
+        for k in range(1, 9):
+            f = k / 8; wv = math.sin(f * math.pi) * ln * .26
+            pts.append((cx + ux * ln * f + nx * wv, cy + uy * ln * f + ny * wv))
+        for k in range(7, 0, -1):
+            f = k / 8; wv = math.sin(f * math.pi) * ln * .26
+            pts.append((cx + ux * ln * f - nx * wv, cy + uy * ln * f - ny * wv))
+        d.polygon(pts, fill=col, outline=INK)
+        d.line([(cx, cy), (cx + ux * ln * .92, cy + uy * ln * .92)], fill=lerp(col, (255, 255, 255), .3), width=4)
+    sw = 4 * math.sin(w * 1.3)
+    for (cx, cy, ln, ang, col) in ((-30, 1980, 360, -70 + sw, (46, 110, 60)), (-40, 1960, 320, -40 + sw, (60, 134, 70)),
+                                   (20, 1990, 280, -95 + sw, (74, 150, 80)), (1110, 1990, 360, -112 - sw, (46, 110, 60)),
+                                   (1120, 1960, 300, -140 - sw, (60, 134, 70)), (1060, 2000, 260, -86 - sw, (74, 150, 80))):
+        leaf(cx + cam * 1.4, cy, ln, ang, col)
+
+
 def s07(u, D, cue):
     w = u + 70
     cam = -20 * smooth(u / D)
     img = Image.new('RGBA', (W, H))
     LG.zoo(img, w, cam)
+    zoo_enclosure(img, w, cam)
     kc = smooth(seg(u, cue(8) - .3, cue(10) + .1))
     sway = (1 - kc) * 3.0 * math.sin(w * 5.3) + (1 - kc) * 2 * math.sin(w * 8.1)
     bx, gy = 400 + cam, 1560
@@ -607,8 +666,7 @@ def s07(u, D, cue):
            pose=dict(breath=q(.5 + .5 * math.sin(w * 2), .25), tilt=q(sway, .5), sway=q(.05 * (1 - kc) * math.sin(w * 3), .01),
                      eye=q(1 - kc, .1), sleep=q(.35 * kc, .05), fold=1))
     trace_panel(img, 720 + cam * .4, 560, 580, 330, u, smooth(seg(u, cue(8) - .3, cue(10) + .6)), w)
-    LG.rail(img, 1900, cam)
-    g = sci(img, w, 'A', 'point', 'thinking', 900 + cam * 1.3, 2060, .5, look=-.5, kw=dict(shirt='#3f7a5a', pants='#4a5a44', hat='cap'))
+    g = sci(img, w, 'A', 'point', 'thinking', 860 + cam * 1.3, 1648, .42, look=-.5, kw=dict(shirt='#3f7a5a', pants='#4a5a44', hat='cap'))
     img = finish(img, w, 1.02 + .02 * smooth(u / D), 540, 1200, vig=(.24, (20, 50, 30)))
     if not HIDE_UI:
         clue(img, 'CLUE 3', u, .05, 230)
@@ -942,6 +1000,6 @@ SHOT_LIST = [('s01', 1, 0), ('s01b', 1, 12), ('s02', 2, 0), ('s03', 3, 0), ('s04
 END = 1888 / 30                  # 62.933 s (length.json)
 NO_PUNCH = ()
 BAND_AT = {}
-BAND_FIX = {'s05': 1835, 's05b': 1835, 's09': 1835, 's10': 1835, 's11': 1835, 's12b': 1835, 's13': 1840}
+BAND_FIX = {'s03': 520, 's07': 1885, 's08': 1845, 's14': 1000, 's15': 1850, 's05': 1835, 's05b': 1835, 's09': 1835, 's10': 1835, 's11': 1835, 's12b': 1835, 's13': 1840}
 STILL_AT = {'s01': .02, 's01b': .9, 's02': .95, 's03': .9, 's04': .9, 's04b': .9, 's05': .95, 's05b': .9, 's06': .92,
             's07': .95, 's08': .9, 's09': .95, 's10': .9, 's11': .92, 's12': .9, 's12b': .75, 's13': .92, 's14': .95, 's15': .5}
