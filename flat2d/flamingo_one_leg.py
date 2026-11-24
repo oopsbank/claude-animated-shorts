@@ -250,8 +250,8 @@ def s01b(u, D, cue):
     LG.lab(img, w, -60)
     LG.bench(img, 600, 1400, 1120, 0)
     k_settle = smooth(seg(u, cue(13) - .3, cue(13) + .25))
-    drop = .02 * (1 - k_settle) - .005 * damp(max(0, u - cue(13)), 1, 7, 18)
-    info = specimen(img, w, 400, 1700, 1180, pose={'drop': q(-.02 + drop * 1.0, .002) if u < cue(13) + 1 else 0.0})
+    drop = -.02 * (1 - k_settle) + .004 * damp(max(0, u - cue(13) - .25), 1, 7, 18)     # raised -> settles down
+    info = specimen(img, w, 400, 1700, 1180, pose={'drop': q(drop, .002)})
     LG.monitor(img, 800, 470, 440, 290, w, k_flat=1.0, label='MUSCLE ACTIVITY')
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1000, vig=(.26, (50, 30, 30)))
     if not HIDE_UI:

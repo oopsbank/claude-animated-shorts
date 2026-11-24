@@ -79,7 +79,15 @@ Fixes per round:
 - (R1/R2) most hero frames show the bird asleep (head on the back), so the S-neck shows mainly in s04, s05, s06, s09, s10.
 
 ## Motion QA
-PENDING
+`motion_qa.py` on the 1888 preview frames with the 18 cut times and `--impacts 41.29 48.83 56.34 57.57` (designed hits:
+the s10 joints hitting their stop on "end" with a flash + shake, the s12b topple on "couldn't", the two s14 title slams)
+→ **PASS**: no pops, longest frozen span 1 frame (0.03 s), median frame diff 1.42.
+Fixed on the way: s01b's settle had `drop` jump from -0.02 to 0 one second after "held" (a 25 px jump of the whole bird
+at 6.17 s); it now starts raised and settles smoothly (frames 147-212 re-rendered into the preview).
 
 ## Loop
-PENDING
+Frame 1887 (the last) = frame 0: mean abs difference **0.0** (s15's last frame calls `s01_frame(0, 0)` with the idle
+clock `anim.NOW` reset to 0). Frame 0 checked by eye: the full hook (2017 / ATLANTA, the clamped bird, MUSCLES: OFF, the
+flat monitor, both scientists), no caption (the first word starts at 0.06 s).
+
+**Preview**: `tests/preview_full_540.mp4` (62.93 s, `mix.wav`, 13 MB) + `tests/sheet_2s.jpg`.
