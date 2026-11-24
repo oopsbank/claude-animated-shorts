@@ -48,6 +48,19 @@ Final (after the Producer's pass): `render.py ... --size 1080x1920`, mux `mix.wa
 | s17 | 57.23-59.64 | sunset window light, the cat big and calm on the mattress, Marey nodding; DIDN'T BREAK / PHYSICS. then IT USED IT. slams (shake + flash) on "used" |
 | s18 | 59.64-65.27 | today, in the deeper living room: a cat leaps off the top bookshelf, twists, lands on the rug on "lands"; the owner watches; on "that cat did" the sepia strip slides in, the camera dives into the first frame, which dissolves into **s01's frame 0 exactly** (last 7 frames, the loop) |
 
+## Fix pass + final (claude/area-cat-righting-final, 2026-11-24)
+What changed (Director's notes, one pass, audio and shot timing untouched):
+1. **The cat** (`flat2d/cat.py`) redrawn: a natural silhouette from a 3D sphere-chain body (rounded deep chest, narrow waist, haunches), tapered legs with oval cream paws and leg bands, a curved ringed tail with a dark tip; a proper head (round skull + cheek ruff + muzzle, two triangular ears with pink insides, two almond eyes on the face, small nose, mouth, whiskers, forehead M) that always turns toward the camera, so it reads upside down, mid-twist and landing; clean tabby rings that follow the body + a spine line, a soft cream belly/chest bib instead of white blocks; rim light inside the ink line. The Manx (`tail=False`), the s18 modern cat, the sepia film frames and the s11-s15 two-halves glow all use it unchanged.
+2. **s16** re-staged as a SIDE / three-quarter view: a white stickman on an office swivel chair, feet off the floor, swinging arms and legs in turns, the seat stepping round one way with motion trails and a turn arrow round the column, in the living room; A SPINNING CHAIR kept.
+3. **s01-s06 variety**: s01 wide with warm window light vs the dark velvet; s02 LOW ANGLE under the falling cat (keystone, big cat and mattress); s03 CLOSE-UP on Marey's reaction with a warm key; s05 strong warm window light; the camera's lens glints in every lab shot (and flares on "filmed").
+4. **Marey**: the side-hair tufts sat at eye level and hid an eye when he looked sideways; now at the head rim, skipped on the look side. Eyes and brows clear in every shot and the thumbnail; the beard stays on the chin.
+5. **Depth** in s07/s18 (living room: sun patch on the floor, floor haze, a shaded corner, an out-of-focus foreground plant; the NO TAIL pointer is now short and next to the cat) and s09 (1968 gym: high daylight windows + shafts, wall bars, clock, mat, floor shine, haze, a soft-focus 1968 film camera in the foreground).
+6. **Thumbnail** redone on the new cat: big, upside down mid-air, face visible; Marey below-left with his eyes clear; THIS CAT / BROKE PHYSICS? / IN 1894 via `tools/thumbnail.py`.
+
+Checks: `motion_qa.py` on the 1958 final frames → **PASS** (no pops, longest frozen span 11 frames = 0.37 s); loop: frame 1957 = frame 0 (mean abs diff 0.0); one sonnet sanity reviewer on the new `tests/sheet_2s.jpg` + thumbnail: no blocking problems (minor: the NOTHING TO PUSH ON chip is small at sheet size; s08 is a slow push-in).
+
+**Final**: `videos/cat-righting/cat_righting_final_1080x1920.mp4`, 1080x1920 30 fps, 2-pass libx264 High 5200k, AAC 192k, +faststart, **43.8 MB, 65.39 s** (0.1 s cover from `thumbnail.png` + 1958 frames, audio delayed 0.1 s by `tools/add_cover.sh`). Built: `render.py audio/cat-righting/words.json OUT --film cat_righting --size 1080x1920` → mux `mix.wav` → `add_cover.sh` → 2-pass encode. Not published. `tests/preview_full_540.mp4` is the OLD (pre-fix) preview.
+
 ## Review (stills only; one fresh sonnet reviewer per round, each still with its voice-over line and planned picture (`tests/review_brief.md`), the in-order sheet and the Wind Cave sheet as the reference)
 | Round | richness / readability / composition | overall | script contradiction | 3+ run | result |
 |---|---|---|---|---|---|
