@@ -251,15 +251,15 @@ def s01b(u, D, cue):
     LG.bench(img, 600, 1400, 1120, 0)
     k_settle = smooth(seg(u, cue(13) - .3, cue(13) + .25))
     drop = .02 * (1 - k_settle) - .005 * damp(max(0, u - cue(13)), 1, 7, 18)
-    info = specimen(img, w, 330, 1700, 1250, pose={'drop': q(-.02 + drop * 1.0, .002) if u < cue(13) + 1 else 0.0})
-    LG.monitor(img, 790, 620, 480, 330, w, k_flat=1.0, label='MUSCLE ACTIVITY')
+    info = specimen(img, w, 400, 1700, 1180, pose={'drop': q(-.02 + drop * 1.0, .002) if u < cue(13) + 1 else 0.0})
+    LG.monitor(img, 800, 470, 440, 290, w, k_flat=1.0, label='MUSCLE ACTIVITY')
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1000, vig=(.26, (50, 30, 30)))
     if not HIDE_UI:
         chip(img, 'HOLDS THE POSE', (60, 140, 110), 360, 230, u, cue(13) - .05, size=50)
-        chip(img, 'MUSCLES: OFF', (40, 40, 48), 790, 900, u, cue(17) - .1, size=54)
+        chip(img, 'MUSCLES: OFF', (40, 40, 48), 800, 730, u, cue(17) - .1, size=54)
         if u > cue(18):
-            tag(img, 'FLAT LINE', 790, 1000, 40, KEY, pop(u, cue(18), .3))
-    return img, {'faces': [], 'avoid': [(500, 400, 1080, 1060), (120, 160, 620, 300)]}
+            tag(img, 'FLAT LINE', 800, 830, 44, KEY, pop(u, cue(18), .3))
+    return img, {'faces': [], 'avoid': [(560, 280, 1080, 880), (120, 160, 620, 300)]}
 
 
 # ---------------------------------------------------------------- s02: live flamingos, hours, even asleep
@@ -720,8 +720,10 @@ def s10(u, D, cue):
     # the two dials (hip, knee), linked to the bird's knee region
     hx_, hy_ = 760, 640; kx_, ky_ = 760, 1120; r = 200
     lay = layer(); dl = ImageDraw.Draw(lay)
-    for (px, py) in ((hx_, hy_), (kx_, ky_)):
-        dl.line([(K[0], K[1] - 30), (px - r, py)], fill=(200, 220, 255, 200), width=5)
+    HP = (info['center'][0] - .04 * 900, info['center'][1] + .01 * 900)
+    for (jx, jy), (px, py) in ((HP, (hx_, hy_)), (K, (kx_, ky_))):
+        dl.line([(jx, jy), (px - r, py)], fill=(200, 220, 255, 220), width=6)
+        dl.ellipse([jx - 14, jy - 14, jx + 14, jy + 14], outline=(255, 255, 255, 230), width=5)
     img.alpha_composite(lay)
     th, tk = cue(3) - .1, cue(5) - .1
     te = cue(8)
@@ -760,7 +762,7 @@ def s11(u, D, cue):
     LG.reeds(img, w, -60, 260, 1950, 26, 140, 320, seed=6, col=(70, 50, 70), tip=(140, 90, 90))
     cx, cy = info['center']; K = info['knee']
     kg = smooth(seg(u, -.1, .5))
-    ax_ = cx - 150; yb = info['back'][1] - 30 + 10 * math.sin(w * 2)
+    ax_ = cx - 150; yb = info['back'][1] - 120 + 10 * math.sin(w * 2)
     arrow(img, (ax_, 230 + 40 * (1 - kg)), (ax_, yb), 90, (70, 120, 220), alpha=int(230 * kg))
     m = mask(); ImageDraw.Draw(m).line([info['knee'], info['ankle'], info['foot']], fill=255, width=34)
     glow(img, m, (140, 190, 255), .35 * kg, blur=20)
@@ -813,7 +815,7 @@ def s12b(u, D, cue):
     info = FL.put(tmp, x, gy, s, face=-1, kind='specimen', pose=pose)
     ang = 27 * kf
     if ang > .2:
-        gh = tmp.copy(); gh.putalpha(gh.split()[3].point(lambda v: int(v * .32)))
+        gh = tmp.copy(); gh.putalpha(gh.split()[3].point(lambda v: int(v * .18)))
         img.alpha_composite(gh)
         px, py = min(info['far_foot'][0], info['foot'][0]) - 30, gy
         tmp = tmp.rotate(ang, resample=Image.BICUBIC, center=(px, py))
@@ -830,7 +832,7 @@ def s12b(u, D, cue):
     if not HIDE_UI:
         chip(img, 'TWO LEGS', (40, 40, 48), 760, 300, u, cue(8) - .1, size=56)
         chip(img, 'UNSTEADY', (230, 80, 60), 760, 430, u, tf + .3, size=56)
-        if u > tf + .4: draw_x(img, 760, 590, 60, (u - tf - .4) / .12, w=18)
+        if u > tf + .4: draw_x(img, 980, 430, 46, (u - tf - .4) / .12, w=18)
     return img, {'faces': [], 'avoid': [(500, 240, 1040, 680)]}
 
 
