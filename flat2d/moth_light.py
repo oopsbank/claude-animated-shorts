@@ -306,7 +306,7 @@ def s03(u, D, cue):
     k1 = smooth(seg(u, cue(4) - .2, cue(4) + .5)); k2 = smooth(seg(u, cue(10) - .2, cue(10) + .5))
     dashed(img, (bx - 40, by + 40), (lamp[0] + 30, lamp[1] - 60), (255, 255, 255), 7, w, k1)
     dashed(img, (bx + 40, by - 60), (mx - 90, my + 90), (255, 255, 255), 7, w, k2)
-    M.put(img, bx, by, 240, view='side', elev=22, yaw=150 + 30 * math.sin(w * .5), roll=-10, flap=(w * 8) % 1, blur=.35,
+    M.put(img, bx, by, 320, view='side', elev=22, yaw=150 + 30 * math.sin(w * .5), roll=-10, flap=(w * 8) % 1, blur=.35,
           lamp=(lamp[0] - bx, lamp[1] - by, 0), lamp_k=.5, light=(.3, -.7, -.6))
     if u > cue(13):
         kk = u - cue(13)
@@ -422,7 +422,7 @@ def s05(u, D, cue):
         a = a0 + .42 * t
         return lamp[0] + R * math.cos(a), lamp[1] + R * 1.0 * math.sin(a), a
     pts = [pos(u - k * .12)[:2] for k in range(26)][::-1]
-    M.trail(img, pts, (210, 186, 255), 9, .9, wave=3, phase=w * 2)
+    M.trail(img, pts, (210, 186, 255), 14, 1.0, wave=3, phase=w * 2)
     x, y, a = pos(u)
     hd = math.degrees(a) + 90                                     # tangent (counter-clockwise on screen)
     kb = smooth(seg(u, cue(5) - .6, cue(6)))
@@ -549,6 +549,12 @@ def s08(u, D, cue):
     lamp = (240, 800)
     img = Image.new('RGBA', (W, H))
     CF.forest(img, w, 0, lamp=lamp, lamp_k=1.0)
+    img = img.filter(ImageFilter.GaussianBlur(9))
+    rng = np.random.default_rng(8)
+    for i in range(26):                                             # out-of-focus bokeh discs of lit mist and leaves
+        bx_, by_, br_ = rng.uniform(0, W), rng.uniform(200, 1800), rng.uniform(30, 90)
+        m = mask(); ImageDraw.Draw(m).ellipse([bx_ - br_, by_ - br_, bx_ + br_, by_ + br_], fill=255)
+        fill_mask(img, m, lerp((140, 110, 255), (120, 200, 160), rng.uniform(0, .6)), .12 + .1 * math.sin(w + i), blur=3)
     CF.uv_lamp(img, lamp[0], lamp[1], 1.1, t=w, ground=1900)
     CF.spores(img, w, lamp, 60)
     x, y = 680 + 16 * math.sin(w * .8), 1000 + 24 * math.sin(w * 1.1)
@@ -606,7 +612,9 @@ def s10(u, D, cue):
     w = u + 90
     img = Image.new('RGBA', (W, H))
     CF.night_stage(img, w, 0, moon_xy=(830, 280))
+    CF.milky_way(img, 6, .35, -.9)
     radial(img, 540, 120, 1000, (150, 160, 255), .3)
+    CF.mist(img, w, 1350, 1800, (120, 130, 190), .3, seed=4)
     x, y = 540 + 16 * math.sin(w * .7), 1080 + 20 * math.sin(w * 1.2)
     inf = M.put(img, x, y, 330, view='rear', elev=55, roll=4 * math.sin(w * .9), flap=(w * 1.1) % 1, spread=.5, blur=0, light=(0, -1, -.5))
     kb = smooth(seg(u, cue(4) - .3, cue(4) + .2))
@@ -634,12 +642,12 @@ def s11(u, D, cue):
     img = img.filter(ImageFilter.GaussianBlur(7))
     a = np.asarray(img, np.float32); a[..., :3] *= .6; img = Image.fromarray(a.astype(np.uint8), 'RGBA')
     stage_lamp(img, lamp[0], lamp[1], w)
-    x, y = 420 + 10 * math.sin(w * .7), 1000 + 14 * math.sin(w * 1.2)
+    x, y = 440 + 10 * math.sin(w * .7), 1060 + 14 * math.sin(w * 1.2)
     k_up = smooth(seg(u, cue(5) - .5, cue(5) + .1))                 # "sideways"
     k_tilt = smooth(seg(u, cue(8) - .15, cue(9) + .1))              # "tilts"
     roll = 70 * k_tilt + 3 * math.sin(w * 1.3)
     x += 70 * smooth(seg(u, cue(9), D))
-    inf = M.put(img, x, y, 300, view='rear', elev=55, roll=roll, flap=(w * 1.1) % 1, spread=.5, blur=0, light=(.6, -.3, -.5),
+    inf = M.put(img, x, y, 340, view='rear', elev=55, roll=roll, flap=(w * 1.1) % 1, spread=.5, blur=0, light=(.6, -.3, -.5),
                 lamp=(lamp[0] - x, lamp[1] - y, 0), lamp_k=.9)
     up_arrow(img, (x - 30, y - 230), 90 * ease_out(k_up) if k_up < 1 else 90, 380, 1.0, 'UP')
     if not HIDE_UI:
@@ -673,12 +681,12 @@ def s11b(u, D, cue):
             f = t / .6
             return (120 + (p_start[0] - 120) * f, 1760 + (p_start[1] - 1760) * f)
         return pos(t)[:2]
-    pts = [P(max(0, u - k * .05)) for k in range(int(min(u, 2.5) / .05) + 2)][::-1]
-    M.trail(img, pts, (210, 186, 255), 8, .95, wave=2, phase=w * 4)
+    pts = [P(max(0, u - k * .04)) for k in range(int(u / .04) + 2)][::-1]
+    M.trail(img, pts, (210, 186, 255), 11, 1.0, wave=2, phase=w * 4)
     x, y = P(u); x2, y2 = P(u + .03)
     hd = math.degrees(math.atan2(y2 - y, x2 - x))
     sg = M.bank_sign((lamp[0] - x, lamp[1] - y), view='top', heading=hd, roll=45)
-    inf = M.put(img, x, y, 210, heading=hd, view='top', spread=.6, roll=sg * 50 * smooth(seg(u, .4, .8)), flap=(w * 6) % 1, blur=.3,
+    inf = M.put(img, x, y, 260, heading=hd, view='top', spread=.6, roll=sg * 50 * smooth(seg(u, .4, .8)), flap=(w * 6) % 1, blur=.3,
                 lamp=(lamp[0] - x, lamp[1] - y, .6), lamp_k=.35)
     if not HIDE_UI and u > .5: M.back_arrow(img, inf['back'], inf['up'], 170, label='BACK', alpha=smooth(seg(u, .5, .8)))
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1000, vig=(.28, (4, 4, 20)))
@@ -789,7 +797,7 @@ def s14(u, D, cue):
     lamp = (540, 1120)
     img = Image.new('RGBA', (W, H))
     CF.forest(img, w, 0, lamp=lamp, lamp_k=1.0)
-    orbs = default_orbs(21, 11, R=(220, 420), s=(64, 96), y=(-160, 200))
+    orbs = default_orbs(21, 14, R=(220, 440), s=(110, 160), y=(-180, 220))
     orbiters(img, w, lamp, orbs, front=False, trail_t=1.6)
     CF.uv_lamp(img, lamp[0], lamp[1], 1.1, t=w, ground=2000)
     CF.spores(img, w, lamp, 80)
@@ -838,6 +846,6 @@ SHOT_LIST = [('s01', 1, 0), ('s01b', 1, 8), ('s02', 2, 0), ('s02b', 2, 8), ('s03
 END = 1915 / 30                  # 63.833 s (length.json)
 NO_PUNCH = ()
 BAND_AT = {}
-BAND_FIX = {'s01': 1400, 's15': 1400, 's13': 1650}
-STILL_AT = {'s01': .02, 's01b': .85, 's02': .9, 's02b': .95, 's03': .92, 's04': .92, 's05': .9, 's06': .9, 's07': .9,
+BAND_FIX = {'s01': 1400, 's15': 1400, 's05': 1470, 's08': 1520, 's13': 1650}
+STILL_AT = {'s01': .02, 's01b': .85, 's02': .9, 's02b': .95, 's03': .92, 's04': .92, 's05': .9, 's06': .82, 's07': .9,
             's08': .9, 's09': .95, 's10': .95, 's11': .92, 's11b': .9, 's12': .8, 's13': .92, 's14': .95, 's15': .5}
