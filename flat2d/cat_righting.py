@@ -787,9 +787,10 @@ def s08(u, D, cue):
             d = ImageDraw.Draw(img)
             d.line([(wx + math.cos(a1) * L, wy + math.sin(a1) * L - 40), (wx, wy - 40), (wx + math.cos(a2) * L, wy + math.sin(a2) * L - 40)], fill=col, width=wd, joint='curve')
     # Marey's loupe sweeping over the frames (the lens magnifies the region it covers)
-    lx = 300 + 420 * smooth(seg(u, .2, t_b)) + 0
+    lx = 300 + 300 * smooth(seg(u, .2, t_b - .35))
     ly = 900 + 30 * math.sin(u * 1.5)
-    if u > t_b: lx, ly = wx + 20 * math.sin(u * 2), wy + 10
+    kw_ = smooth(seg(u, t_b - .35, t_b + .1))
+    lx, ly = lx + (wx + 20 * math.sin(u * 2) - lx) * kw_, ly + (wy + 10 - ly) * kw_
     r = 150
     src = img.crop((int(lx - r / 1.4), int(ly - r / 1.4), int(lx + r / 1.4), int(ly + r / 1.4))).resize((2 * r, 2 * r), Image.BICUBIC)
     m = mask(2 * r, 2 * r); ImageDraw.Draw(m).ellipse([0, 0, 2 * r, 2 * r], fill=255)
@@ -989,11 +990,13 @@ def ex_cat(img, u, kw, glow_k=0.0, split=0.0, spine=0.0, cx=EX[0], cy=EX[1], s=E
     return info
 
 
-def panel(img, y0=1430, y1=1880, col=(14, 16, 30)):
-    """The lower-third diagram panel (rounded, inked, slightly glassy)."""
+def panel(img, y0=1430, y1=1880, col=(14, 16, 30), a=1.0):
+    """The lower-third diagram panel (rounded, inked, slightly glassy); a fades it in."""
+    if a <= 0: return
     lay = layer(); d = ImageDraw.Draw(lay)
     d.rounded_rectangle([40, y0 + 10, W - 40, y1 + 10], 40, fill=(0, 0, 0, 120))
     d.rounded_rectangle([40, y0, W - 40, y1], 40, fill=col + (215,), outline=(200, 210, 240, 160), width=4)
+    if a < 1: lay.putalpha(lay.split()[3].point(lambda v: int(v * a)))
     img.alpha_composite(lay)
 
 
@@ -1086,7 +1089,7 @@ def s12(u, D, cue):
             straight_arrow(img, (B[0] - 20, B[1] - 200), (B[0] - 20 - 160 * ks, B[1] - 200 - 160 * ks), KEY_O, w=16, head=40)
         chip(img, 'FRONT LEGS IN', KEY_B, 760, 300, u, t_t + .1, size=50)
         chip(img, 'BACK LEGS OUT', KEY_O, 320, 300, u, t_s + .1, size=50)
-        if u > t_t: panel(img, 1440, 1880)
+        panel(img, 1440, 1880, a=smooth(seg(u, t_t, t_t + .3)))
         tuck_icon(img, 800, 1700, 62, True, KEY_B, 'TUCKED: SMALL', u, t_t + .3)
         tuck_icon(img, 280, 1690, 62, False, KEY_O, 'STRETCHED: WIDE', u, t_s + .3)
     img = finish(img, u, 1.0, 540, 900, vig=(.45, (6, 6, 14)))
@@ -1118,7 +1121,7 @@ def s13(u, D, cue):
     if not HIDE_UI:
         chip(img, 'TUCKED: TURNS A LOT', KEY_B, 600, 230, u, cue(4) - .1, size=54)
         chip(img, 'STRETCHED: BARELY MOVES', KEY_O, 480, 345, u, t_back, size=54)
-        if u > t_turn: panel(img, 1440, 1880)
+        panel(img, 1440, 1880, a=smooth(seg(u, t_turn - .3, t_turn)))
         dial(img, 780, 1640, 120, -front_deg, KEY_B, 'FRONT', u, t_turn + .1)
         dial(img, 300, 1640, 120, back_deg, KEY_O, 'BACK', u, t_back)
     img = finish(img, u, 1.0, 540, 900, vig=(.45, (6, 6, 14)))
@@ -1146,7 +1149,7 @@ def s14(u, D, cue):
         stitle(img, 's14', [('SWAP!', 'white', 140)], 170, u, t_sw)
         chip(img, 'BACK LEGS IN', KEY_O, 320, 420, u, t_bin + .1, size=50)
         chip(img, 'FRONT LEGS OUT', KEY_B, 760, 420, u, t_fout + .1, size=50)
-        if u > t_bin: panel(img, 1440, 1880)
+        panel(img, 1440, 1880, a=smooth(seg(u, t_bin, t_bin + .3)))
         if u < t_up - .2:
             tuck_icon(img, 280, 1700, 62, True, KEY_O, 'BACK: SMALL', u, t_bin + .3)
             tuck_icon(img, 800, 1690, 62, False, KEY_B, 'FRONT: WIDE', u, t_fout + .3)
