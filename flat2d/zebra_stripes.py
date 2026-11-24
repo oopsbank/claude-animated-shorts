@@ -693,7 +693,7 @@ def s08(u, D, cue):
     img = finish(img, w, 1.02 + .03 * smooth(u / D), 560, 1200, vig=(.24, (30, 40, 30)))
     kr = smooth(seg(u, cue(13) - .2, cue(13) + .2))
     if kr > 0 and not HIDE_UI:
-        d = ImageDraw.Draw(img); r = 160 * kr + 6 * math.sin(u * 6)
+        d = ImageDraw.Draw(img); r = max(12.0, 160 * kr + 6 * math.sin(u * 6))
         z = 1.02 + .03 * smooth(u / D)
         cx, cy = 560 + (hd[0] - 560) * z, 1200 + (hd[1] - 1200) * z
         for wd, col in ((26, INK), (16, (255, 255, 255)), (9, (230, 50, 40))):
