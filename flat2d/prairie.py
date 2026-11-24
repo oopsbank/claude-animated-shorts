@@ -323,7 +323,8 @@ def flow_at(x, y, src):
     ux = dx / r
     # bias toward the main jet direction
     jx = math.cos(ang)
-    return k * fall * sign * (ux * .7 + jx * .5) * 1.0
+    near = math.exp(-r / 150.0) * 1.4                # flattened right around the mouth
+    return k * (fall + near) * sign * (ux * .7 + jx * .5) * 1.0
 
 
 def grass(img, t, box, n, hmin, hmax, cols=GOLD, wind=.25, gust=.35, seed=1, src=None, ytop=None, w0=5.0, ink=None,
@@ -337,7 +338,7 @@ def grass(img, t, box, n, hmin, hmax, cols=GOLD, wind=.25, gust=.35, seed=1, src
         if x < -60 or x > W + 60: continue
         gw = math.sin(x * .006 - t * 2.1) * .5 + .5                 # gust band travelling across the field
         b = wind + lean + gust * gw * (.6 + .4 * math.sin(t * 3.3 + ph)) + .08 * math.sin(t * 2.4 + ph)
-        b += flow_at(x, y, src) * (1 + .25 * math.sin(t * 9 + ph * 3))
+        b += flow_at(x, y, src) * (1 + .35 * math.sin(t * 9 + ph * 3 - x * .02))
         b = max(-1.6, min(1.6, b))
         a = b * 1.05                                                # bend angle (rad) at the tip
         tx, ty = x + math.sin(a) * h, y - math.cos(a) * h * (1 - .1 * abs(b))
@@ -498,100 +499,123 @@ def breath_point(r, hx, hy, ang, s, t, sign, scale):
     a = hs[i0]
     off = r['A'] * math.sin(2 * math.pi * r['k'] * s - sign * 4.0 * t * r['v'] + r['ph']) * s ** .9 * (1 - .7 * max(0, s - .62) / .38)
     L = r['L'] * scale
-    return hx + x * L - math.sin(a) * off * scale, hy + y * L + math.cos(a) * off * scale
+    dx = r.get('drift', 0.0) * s ** 1.6 * L * .9 if sign > 0 else 0.0
+    return hx + x * L - math.sin(a) * off * scale + dx, hy + y * L + math.cos(a) * off * scale
 
 
 def breath(img, t, hx, hy, ang=-2.2, sign=1, k=1.0, scale=1.0, n=9, spread=1.3, seed=7, Lr=(520, 900), Ar=(30, 70),
-           width=26, speed=.34, particles=40, bits=True, glow_a=.55, clip=None, edge=True, body=BREATH, plume=True, arrows=True, swirl=None):
+           width=26, speed=.34, particles=40, bits=True, glow_a=.55, clip=None, edge=True, body=BREATH, plume=True, arrows=True, swirl=None, drift=.5):
     """The hole breathing. sign +1 = OUT: long ribbons stream away from the hole, widen, curl and fade; sign -1 = IN:
     they come from far away, narrow and vanish into the hole. ang = main direction (rad, screen: -pi/2 = up).
     k = strength (0 calm, 1 normal, 1.6 a hard gust): alpha, speed and width."""
     if k <= .01: return
-    n = max(5, int(round(n * .72)))                     # fewer, cleaner streams
     if sign < 0:
         return breath_in(img, t, hx, hy, ang=ang, k=k, scale=scale, n=n, spread=spread, seed=seed, Lr=Lr, width=width, speed=speed,
                          particles=particles, glow_a=glow_a, clip=clip, swirl=.55 if swirl is None else swirl)
     if swirl is None: swirl = 0.0
+    n = max(7, int(round(n * 1.25)))                    # many thin wisps instead of a few solid jets
     rs = cached(('ribbons', seed, n, spread, Lr, Ar, swirl), lambda: _ribbons(seed, n, spread, Lr, Ar, swirl))
-    for i, r in enumerate(rs): r['key'] = (seed, n, spread, Lr, Ar, swirl, i)
-    if plume and sign > 0:                              # a faint cone of cold air: the breath as a whole
+    dr = drift * (1 + .25 * math.sin(t * .7))          # the prairie wind carries the breath sideways
+    for i, r in enumerate(rs): r['key'] = (seed, n, spread, Lr, Ar, swirl, i); r['drift'] = dr
+    shimmer(img, t, hx, hy, ang, scale, k, clip)
+    if plume and sign > 0:                              # a faint haze of cold air leaning with the wind
         pm = mask(); dp = ImageDraw.Draw(pm)
-        Lp = sum(Lr) / 2 * scale * .9
-        a0, a1 = ang - spread * .45, ang + spread * .45
-        dp.polygon([(hx, hy), (hx + math.cos(a0) * Lp, hy + math.sin(a0) * Lp), (hx + math.cos(ang) * Lp * 1.08, hy + math.sin(ang) * Lp * 1.08),
-                    (hx + math.cos(a1) * Lp, hy + math.sin(a1) * Lp)], fill=int(90 * min(1.2, k)))
+        Lp = sum(Lr) / 2 * scale * .75
+        a0, a1 = ang - spread * .35, ang + spread * .35
+        ex = dr * Lp * .6
+        dp.polygon([(hx - 20 * scale, hy), (hx + math.cos(a0) * Lp + ex, hy + math.sin(a0) * Lp), (hx + math.cos(ang) * Lp * 1.05 + ex, hy + math.sin(ang) * Lp * 1.05),
+                    (hx + math.cos(a1) * Lp + ex, hy + math.sin(a1) * Lp), (hx + 20 * scale, hy)], fill=int(60 * min(1.2, k)))
         if clip is not None: pm = ImageChops.multiply(pm, clip)
-        glow(img, pm, (200, 232, 255), .55, blur=int(70 * max(.4, scale)), add=True)
-    # the mouth: puffs of cold air bursting out (or swirling in) right at the hole
+        glow(img, pm, (200, 232, 255), .45, blur=int(80 * max(.4, scale)), add=True)
+    # the mouth: soft cold puffs right at the hole
     mm = mask(); dm = ImageDraw.Draw(mm); rng = np.random.default_rng(seed + 50)
-    for i in range(14):
+    for i in range(10):
         ph = rng.uniform(0, 1); a = ang + rng.uniform(-.5, .5) * spread
-        q = (ph + sign * t * (1.1 + .5 * min(1.5, k))) % 1.0
-        dist = q * 170 * scale; rr = (14 + 40 * q) * scale if sign > 0 else (12 + 34 * q) * scale
+        q = (ph + t * (1.1 + .5 * min(1.5, k))) % 1.0
+        dist = q * 150 * scale; rr = (12 + 36 * q) * scale
         al = math.sin(math.pi * q) * min(1.0, k)
-        x, y = hx + math.cos(a) * dist, hy + math.sin(a) * dist
-        dm.ellipse([x - rr, y - rr * .8, x + rr, y + rr * .8], fill=int(200 * al))
+        x, y = hx + math.cos(a) * dist + dr * dist * .5, hy + math.sin(a) * dist
+        dm.ellipse([x - rr, y - rr * .8, x + rr, y + rr * .8], fill=int(120 * al))
     if clip is not None: mm = ImageChops.multiply(mm, clip)
-    mm = mm.filter(ImageFilter.GaussianBlur(max(2, 6 * scale)))
-    fill_mask(img, mm, (236, 248, 255), .85)
-    radial(img, hx, hy, 150 * scale, (210, 236, 255), .5 * min(1.2, k))
-    if sign < 0:                                        # suction: rings tighten into the hole
-        lay = layer(); dl = ImageDraw.Draw(lay)
-        for i in range(3):
-            q = (i / 3 - t * .9) % 1.0
-            rr = (40 + 200 * q) * scale; al = int(200 * math.sin(math.pi * q) * min(1, k))
-            a0 = math.degrees(t * 2.5) + i * 120
-            dl.arc([hx - rr, hy - rr * .7, hx + rr, hy + rr * .7], a0, a0 + 230, fill=rgb(BREATH_EDGE) + (al,), width=max(4, int(12 * scale)))
-            dl.arc([hx - rr, hy - rr * .7, hx + rr, hy + rr * .7], a0, a0 + 230, fill=rgb(BREATH) + (al,), width=max(2, int(6 * scale)))
-        if clip is not None: lay.putalpha(ImageChops.multiply(lay.split()[3], clip))
-        img.alpha_composite(lay)
-    m = mask(); d = ImageDraw.Draw(m)
-    core = mask(); dc = ImageDraw.Draw(core)
+    fill_mask(img, mm.filter(ImageFilter.GaussianBlur(max(4, 12 * scale))), (236, 248, 255), .6)
+    radial(img, hx, hy, 130 * scale, (210, 236, 255), .32 * min(1.2, k))
+    hz = mask(); dh = ImageDraw.Draw(hz)               # translucent body of each wisp (blurred, low alpha)
+    st = mask(); ds = ImageDraw.Draw(st)               # thin bright streak lines along it
     for i, r in enumerate(rs):
         for j in range(r['dashes']):
-            c = (r['dph'] + j / r['dashes'] + sign * speed * (.55 + .45 * min(1.5, k)) * r['v'] * t) % 1.0
-            ln = r['ln']
+            c = (r['dph'] + j / r['dashes'] + speed * (.55 + .45 * min(1.5, k)) * r['v'] * t) % 1.0
+            ln = r['ln'] * .62
             s0, s1 = max(0.0, c - ln / 2), min(1.0, c + ln / 2)
             if s1 - s0 < .03: continue
-            if sign > 0:
-                env = min(1.0, c / .18) * (1 - max(0.0, (c - .62) / .38)) ** 1.1
-            else:
-                env = min(1.0, (1 - c) / .22) * min(1.0, c / .14)
+            env = min(1.0, c / .16) * (1 - max(0.0, (c - .55) / .45)) ** 1.2
             env = max(0.0, env) * min(1.0, k)
             if env < .03: continue
-            ss = np.linspace(s0, s1, 22)
-            ptsL, ptsR, mid = [], [], []
-            for q in ss:
-                x, y = breath_point(r, hx, hy, ang, q, t, sign, scale)
-                x2, y2 = breath_point(r, hx, hy, ang, min(1.0, q + .008), t, sign, scale)
-                if q >= .992: x2, y2 = 2 * x - breath_point(r, hx, hy, ang, q - .008, t, sign, scale)[0], 2 * y - breath_point(r, hx, hy, ang, q - .008, t, sign, scale)[1]
+            ss = np.linspace(s0, s1, 26)
+            P = [breath_point(r, hx, hy, ang, q, t, sign, scale) for q in ss]
+            P.append(breath_point(r, hx, hy, ang, min(1.0, s1 + .01), t, sign, scale))
+            body_L, body_R, lines = [], [], [[], [], []]
+            for qi, q in enumerate(ss):
+                x, y = P[qi]; x2, y2 = P[qi + 1]
+                if qi == len(ss) - 1 and abs(x2 - x) + abs(y2 - y) < 1e-3: x2, y2 = 2 * x - P[qi - 1][0], 2 * y - P[qi - 1][1]
                 tx, ty = x2 - x, y2 - y; tl = math.hypot(tx, ty) + 1e-6
                 nx, ny = -ty / tl, tx / tl
                 v = (q - s0) / max(1e-3, s1 - s0)
-                taper = (math.sin(math.pi * v) ** .45)
-                grow = (.5 + .7 * min(q, .6)) * (1 - .5 * max(0, q - .6) / .4) if sign > 0 else (.3 + .9 * q)
+                taper = math.sin(math.pi * v) ** .6
+                grow = .45 + 1.1 * q
                 hw = width * scale * r['w'] * taper * grow * (.75 + .25 * min(1.5, k))
-                ptsL.append((x + nx * hw, y + ny * hw)); ptsR.append((x - nx * hw, y - ny * hw)); mid.append((x + nx * hw * .45, y + ny * hw * .45))
-            d.polygon(ptsL + ptsR[::-1], fill=int(255 * env))
-            dc.line(mid[4:-5], fill=int(255 * env), width=max(2, int(width * scale * .14)), joint='curve')
-            if arrows and env > .25 and i % 2 == 0:                    # an arrowhead on the leading end: the flow direction reads in a still
-                if sign > 0: qa, qb = s1 - .035, s1
-                else: qa, qb = s0 + .035, s0
-                if (sign > 0 and s1 < .97) or (sign < 0 and s0 > .03) or True:
-                    ax_, ay_ = breath_point(r, hx, hy, ang, qa, t, sign, scale); bx_, by_ = breath_point(r, hx, hy, ang, qb, t, sign, scale)
-                    aa = math.atan2(by_ - ay_, bx_ - ax_); hs_ = width * scale * 1.25 * (.8 + .5 * (qb if sign > 0 else 1 - qb))
-                    tip = (bx_ + math.cos(aa) * hs_ * .9, by_ + math.sin(aa) * hs_ * .9)
-                    d.polygon([tip, (bx_ + math.cos(aa + 2.3) * hs_, by_ + math.sin(aa + 2.3) * hs_),
-                               (bx_ + math.cos(aa - 2.3) * hs_, by_ + math.sin(aa - 2.3) * hs_)], fill=int(255 * env))
+                body_L.append((x + nx * hw, y + ny * hw)); body_R.append((x - nx * hw, y - ny * hw))
+                for li, o in enumerate((-.55, .1, .6)):
+                    wob = math.sin(q * 23 + li * 2.1 - t * 5 + r['ph']) * hw * .15
+                    lines[li].append((x + nx * (hw * o + wob), y + ny * (hw * o + wob)))
+            dh.polygon(body_L + body_R[::-1], fill=int(165 * env))
+            lw = max(4, int(width * scale * .3))
+            for li, ln_ in enumerate(lines):
+                a0_, a1_ = (2, -2) if li == 1 else (5 + li * 2, -(4 + li))
+                seg = ln_[a0_:a1_ if a1_ else None]
+                if len(seg) > 2: ds.line(seg, fill=int((255 if li == 1 else 170) * env), width=lw if li == 1 else max(2, int(lw * .6)), joint='curve')
+            if r['curl'] and env > .2 and s1 > .7:     # a curling eddy where the wisp breaks up
+                ex_, ey_ = P[-2]; R0 = width * scale * (.9 + .5 * r['w']); a_ = t * 3.2 * (1 if r['curl'] > 0 else -1) + r['ph']
+                sp = [(ex_ + math.cos(a_ + u * 4.2 * (1 if r['curl'] > 0 else -1)) * R0 * (1 - .7 * u), ey_ + math.sin(a_ + u * 4.2 * (1 if r['curl'] > 0 else -1)) * R0 * (1 - .7 * u))
+                      for u in np.linspace(0, 1, 18)]
+                ds.line(sp, fill=int(190 * env), width=max(2, int(lw * .7)), joint='curve')
     if clip is not None:
-        m = ImageChops.multiply(m, clip); core = ImageChops.multiply(core, clip)
-    glow(img, m, BREATH_GLOW, glow_a * min(1.2, k), blur=int(24 * max(.5, scale)), add=True)
-    if edge:
-        fill_mask(img, m.filter(ImageFilter.MaxFilter(5)), BREATH_EDGE, .8)
-    fill_mask(img, m, body, .94)
-    fill_mask(img, core, (255, 255, 255), .95)
+        hz = ImageChops.multiply(hz, clip); st = ImageChops.multiply(st, clip)
+    hzb = hz.filter(ImageFilter.GaussianBlur(max(3, 9 * scale)))
+    glow(img, hzb, BREATH_GLOW, glow_a * .8 * min(1.2, k), blur=int(26 * max(.5, scale)), add=True)
+    fill_mask(img, hzb, body, .7)
+    stb = st.filter(ImageFilter.GaussianBlur(max(1.2, 2.0 * scale)))
+    glow(img, st, (170, 215, 255), .6, blur=max(3, int(8 * scale)), add=True)
+    fill_mask(img, stb, (255, 255, 255), .78)
     if particles:
         breath_particles(img, t, hx, hy, ang, sign, k, scale, rs, particles, seed, bits, speed, clip)
+
+
+def shimmer(img, t, hx, hy, ang, scale, k, clip=None):
+    """Heat-shimmer-like distortion right above the hole: rows of the picture wobble sideways, plus faint wavy lines."""
+    if k < .15: return
+    w2, hh = int(170 * scale), int(420 * scale)
+    cx, cy = hx + math.cos(ang) * hh * .45, hy + math.sin(ang) * hh * .45
+    x0, y0, x1, y1 = int(cx - w2), int(cy - hh / 2), int(cx + w2), int(cy + hh / 2)
+    x0, y0, x1, y1 = max(0, x0), max(0, y0), min(img.width, x1), min(img.height, y1)
+    if x1 - x0 < 20 or y1 - y0 < 20: return
+    a = np.asarray(img.crop((x0, y0, x1, y1))).copy()
+    out = a.copy(); amp = 5 * scale * min(1.3, k)
+    yy = np.arange(a.shape[0]); xs = np.arange(a.shape[1])
+    edge = np.minimum(1, np.minimum(xs, xs[::-1]) / (a.shape[1] * .25))
+    for i in yy:
+        f = math.sin(math.pi * i / len(yy))
+        sh = amp * f * math.sin(i * .09 / max(.4, scale) + t * 11)
+        src = np.clip((xs - sh * edge).astype(int), 0, a.shape[1] - 1)
+        out[i] = a[i, src]
+    img.paste(Image.fromarray(out), (x0, y0))
+    lay = mask(); d = ImageDraw.Draw(lay)
+    for j in range(5):
+        q = (j / 5 + t * .6) % 1.0
+        yb = hy - (40 + 340 * q) * scale; xb = hx + (j - 2) * 46 * scale + math.cos(ang) * (hy - yb)
+        pts = [(xb + u * 70 * scale, yb + math.sin(u * 6 + t * 8 + j) * 6 * scale) for u in np.linspace(-1, 1, 14)]
+        d.line(pts, fill=int(90 * math.sin(math.pi * q) * min(1, k)), width=max(1, int(3 * scale)), joint='curve')
+    if clip is not None: lay = ImageChops.multiply(lay, clip)
+    fill_mask(img, lay.filter(ImageFilter.GaussianBlur(1.2)), (240, 250, 255), .55)
 
 
 def breath_in(img, t, hx, hy, ang=-math.pi / 2, k=1.0, scale=1.0, n=10, spread=2.4, seed=7, Lr=(600, 900), width=24,
@@ -617,35 +641,42 @@ def breath_in(img, t, hx, hy, ang=-math.pi / 2, k=1.0, scale=1.0, n=10, spread=2
     def P_(pts, q):
         i = q * (len(pts) - 1); i0 = int(min(len(pts) - 2, i)); f = i - i0
         return (pts[i0][0] + (pts[i0 + 1][0] - pts[i0][0]) * f, pts[i0][1] + (pts[i0 + 1][1] - pts[i0][1]) * f)
-    for pts, w, ph, nd, ln in paths:
+    for pi_, (pts, w, ph, nd, ln) in enumerate(paths):
         for j in range(nd):
             c = (ph + j / nd + speed * (.6 + .4 * min(1.5, k)) * t) % 1.0      # 0 far -> 1 hole
             q0, q1 = max(0.0, c - ln), min(.9, c)
             if q1 - q0 < .04: continue
             env = min(1.0, c / .25) * min(1.0, (1 - c) / .15 + .2) * min(1.0, k)
             if env < .05: continue
-            L, R_, mid = [], [], []
-            qs = np.linspace(q0, q1, 18)
+            L, R_, lines = [], [], [[], [], []]
+            qs = np.linspace(q0, q1, 20)
             for q in qs:
                 x, y = P_(pts, q); x2, y2 = P_(pts, min(1, q + .01))
                 tx, ty = x2 - x, y2 - y; tl = math.hypot(tx, ty) + 1e-6; nx, ny = -ty / tl, tx / tl
                 v = (q - q0) / max(1e-3, q1 - q0)
                 hw = width * scale * w * (1.25 - .9 * q) * (math.sin(math.pi * min(1, v * 1.1)) ** .4 if v < .9 else 1) * (.75 + .25 * min(1.5, k))
-                L.append((x + nx * hw, y + ny * hw)); R_.append((x - nx * hw, y - ny * hw)); mid.append((x + nx * hw * .4, y + ny * hw * .4))
-            d.polygon(L + R_[::-1], fill=int(255 * env))
-            dc.line(mid[2:-3], fill=int(255 * env), width=max(2, int(width * scale * .14)))
-            # arrowhead at the leading (hole-side) end
-            x, y = P_(pts, q1); xa, ya = P_(pts, max(0, q1 - .03))
-            aa = math.atan2(y - ya, x - xa); hs_ = width * scale * w * (1.9 - .9 * q1) * (.85 + .2 * min(1.5, k))
-            tip = (x + math.cos(aa) * hs_ * 1.1, y + math.sin(aa) * hs_ * 1.1)
-            d.polygon([tip, (x + math.cos(aa + 2.2) * hs_, y + math.sin(aa + 2.2) * hs_), (x + math.cos(aa - 2.2) * hs_, y + math.sin(aa - 2.2) * hs_)],
-                      fill=int(255 * env))
+                L.append((x + nx * hw, y + ny * hw)); R_.append((x - nx * hw, y - ny * hw))
+                for li, o in enumerate((-.55, .05, .55)):
+                    wob = math.sin(q * 20 + li * 2 + t * 5 + ph * 6) * hw * .15
+                    lines[li].append((x + nx * (hw * o + wob), y + ny * (hw * o + wob)))
+            d.polygon(L + R_[::-1], fill=int(165 * env))
+            lw = max(4, int(width * scale * .3))
+            for li, ln_ in enumerate(lines):
+                seg = ln_[2 + li * 2:-1]
+                if len(seg) > 2: dc.line(seg, fill=int((255 if li == 1 else 170) * env), width=lw if li == 1 else max(2, int(lw * .6)), joint='curve')
+            if pi_ % 2 == 0:                            # an open chevron at the hole-side end: the flow points IN
+                x, y = P_(pts, q1); xa, ya = P_(pts, max(0, q1 - .03))
+                aa = math.atan2(y - ya, x - xa); hs_ = width * scale * w * (1.6 - .7 * q1)
+                tip = (x + math.cos(aa) * hs_ * .6, y + math.sin(aa) * hs_ * .6)
+                dc.line([(tip[0] + math.cos(aa + 2.5) * hs_, tip[1] + math.sin(aa + 2.5) * hs_), tip,
+                         (tip[0] + math.cos(aa - 2.5) * hs_, tip[1] + math.sin(aa - 2.5) * hs_)], fill=int(235 * env), width=lw + 1, joint='curve')
     if clip is not None:
         m = ImageChops.multiply(m, clip); core = ImageChops.multiply(core, clip)
-    glow(img, m, BREATH_GLOW, glow_a * min(1.2, k), blur=int(24 * max(.5, scale)), add=True)
-    fill_mask(img, m.filter(ImageFilter.MaxFilter(5)), BREATH_EDGE, .8)
-    fill_mask(img, m, BREATH, .94)
-    fill_mask(img, core, (255, 255, 255), .95)
+    mb = m.filter(ImageFilter.GaussianBlur(max(3, 9 * scale)))
+    glow(img, mb, BREATH_GLOW, glow_a * .8 * min(1.2, k), blur=int(26 * max(.5, scale)), add=True)
+    fill_mask(img, mb, BREATH, .7)
+    glow(img, core, (170, 215, 255), .6, blur=max(3, int(8 * scale)), add=True)
+    fill_mask(img, core.filter(ImageFilter.GaussianBlur(max(1.2, 2.0 * scale))), (255, 255, 255), .8)
     # chevrons around the mouth, marching inward
     lay = layer(); dl = ImageDraw.Draw(lay)
     for i in range(7):
@@ -657,8 +688,8 @@ def breath_in(img, t, hx, hy, ang=-math.pi / 2, k=1.0, scale=1.0, n=10, spread=2
             ai = a + math.pi; sz = 30 * scale * (1.2 - .5 * q)
             pts = [(x + math.cos(ai + 2.4) * sz, y + math.sin(ai + 2.4) * sz), (x + math.cos(ai) * sz * .5, y + math.sin(ai) * sz * .5),
                    (x + math.cos(ai - 2.4) * sz, y + math.sin(ai - 2.4) * sz)]
-            dl.line(pts, fill=rgb(BREATH_EDGE) + (al,), width=max(6, int(16 * scale)), joint='curve')
-            dl.line(pts, fill=(255, 255, 255, al), width=max(3, int(8 * scale)), joint='curve')
+            dl.line(pts, fill=rgb(BREATH_EDGE) + (al // 3,), width=max(4, int(9 * scale)), joint='curve')
+            dl.line(pts, fill=(255, 255, 255, int(al * .8)), width=max(2, int(4 * scale)), joint='curve')
     if clip is not None: lay.putalpha(ImageChops.multiply(lay.split()[3], clip))
     img.alpha_composite(lay)
     radial(img, hx, hy, 120 * scale, (190, 225, 255), .35 * min(1.2, k))
@@ -689,11 +720,18 @@ def breath_particles(img, t, hx, hy, ang, sign, k, scale, rs, n, seed, bits, spe
         ph = rng.uniform(0, 1); v = rng.uniform(.8, 1.5) * speed * (.6 + .5 * min(1.5, k)) * 1.3
         q = (ph + sign * v * t) % 1.0
         x, y = breath_point(r, hx, hy, ang, q * .8, t * 1.1, sign, scale)
-        jx, jy = rng.uniform(-40, 40), rng.uniform(-40, 40)
+        jx, jy = rng.uniform(-90, 90), rng.uniform(-60, 60)
         x += jx * scale * q; y += jy * scale * q
         env = min(1, q / .08) * (1 - q) ** .6 * min(1, k)
         if env < .05: continue
-        kind = i % 4 if bits else 0
+        kind = i % 5 if bits else 0
+        if kind == 4:                                   # a seed head: fluffy tuft with a stalk, tumbling
+            rr = rng.uniform(9, 15) * scale; a = t * rng.uniform(3, 7) + i
+            for m_ in range(7):
+                aa = a + m_ * .9
+                d.line([(x, y), (x + math.cos(aa) * rr, y + math.sin(aa) * rr)], fill=(255, 250, 236, int(200 * env)), width=max(1, int(2 * scale)))
+            d.line([(x, y), (x - math.cos(a) * rr * 1.4, y - math.sin(a) * rr * 1.4)], fill=(170, 124, 64, int(230 * env)), width=max(2, int(3 * scale)))
+            continue
         if kind == 1:                                   # grass bit: a golden sliver spinning
             L = rng.uniform(18, 36) * scale; a = t * rng.uniform(6, 14) + i
             dx, dy = math.cos(a) * L / 2, math.sin(a) * L / 2
@@ -705,8 +743,8 @@ def breath_particles(img, t, hx, hy, ang, sign, k, scale, rs, n, seed, bits, spe
                    (x - math.cos(a) * rr, y - math.sin(a) * rr * .5), (x + math.sin(a) * rr * .4, y - math.cos(a) * rr * .4)]
             d.polygon(pts, fill=(222, 156, 72, int(240 * env)), outline=(60, 40, 30, int(240 * env)))
         else:                                           # dust / breath mote
-            rr = rng.uniform(3, 7) * scale
-            d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=(240, 250, 255, int(220 * env)))
+            rr = rng.uniform(2, 5) * scale
+            d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=(240, 250, 255, int(170 * env)))
     if clip is not None:
         lay.putalpha(ImageChops.multiply(lay.split()[3], clip))
     img.alpha_composite(lay)
