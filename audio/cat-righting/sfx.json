@@ -1,0 +1,186 @@
+[
+ {
+  "cue": "film_clatter",
+  "shot": "s01",
+  "at_word": 10,
+  "level": -16,
+  "offset": -0.3,
+  "note": "the 1894 camera ticks"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s01",
+  "at_word": 1,
+  "level": -16,
+  "offset": 0,
+  "note": "1894 title"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s02",
+  "at_word": 9,
+  "level": -14,
+  "offset": -0.1,
+  "note": "the cat twists over"
+ },
+ {
+  "cue": "paw_land",
+  "shot": "s02",
+  "at_word": 15,
+  "level": -11,
+  "offset": -0.05,
+  "note": "lands on its feet"
+ },
+ {
+  "cue": "impact",
+  "shot": "s03",
+  "at_word": 8,
+  "level": -14,
+  "offset": 0,
+  "note": "BROKE PHYSICS? slam"
+ },
+ {
+  "cue": "question",
+  "shot": "s05",
+  "at_word": 5,
+  "level": -17,
+  "offset": 0,
+  "note": "pushed off the hands?"
+ },
+ {
+  "cue": "film_clatter",
+  "shot": "s06",
+  "at_word": 2,
+  "level": -17,
+  "offset": -0.2,
+  "note": "the film strip"
+ },
+ {
+  "cue": "impact",
+  "shot": "s06",
+  "at_word": 14,
+  "level": -15,
+  "offset": 0,
+  "note": "X on the hand theory / turn began in mid-air"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 1"
+ },
+ {
+  "cue": "paw_land",
+  "shot": "s07",
+  "at_word": 9,
+  "level": -13,
+  "offset": -0.05,
+  "note": "tailless cat lands"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s08",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 2"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s08",
+  "at_word": 8,
+  "level": -17,
+  "offset": 0,
+  "note": "the bend glows"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s09",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 3"
+ },
+ {
+  "cue": "boing",
+  "shot": "s09",
+  "at_word": 8,
+  "level": -20,
+  "offset": 0,
+  "note": "trampoline bounce (soft)"
+ },
+ {
+  "cue": "question",
+  "shot": "s10",
+  "at_word": 4,
+  "level": -16,
+  "offset": 0,
+  "note": "the riddle"
+ },
+ {
+  "cue": "glow_eyes",
+  "shot": "s11",
+  "at_word": 8,
+  "level": -17,
+  "offset": 0,
+  "note": "the cat splits into two glowing halves"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s13",
+  "at_word": 4,
+  "level": -15,
+  "offset": -0.1,
+  "note": "the front half turns"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s14",
+  "at_word": 13,
+  "level": -15,
+  "offset": -0.1,
+  "note": "the back half catches up"
+ },
+ {
+  "cue": "ding",
+  "shot": "s15",
+  "at_word": 14,
+  "level": -16,
+  "offset": 0,
+  "note": "twists cancel; flipped"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s16",
+  "at_word": 3,
+  "level": -17,
+  "offset": -0.1,
+  "note": "office chair spins"
+ },
+ {
+  "cue": "impact",
+  "shot": "s17",
+  "at_word": 6,
+  "level": -13,
+  "offset": 0,
+  "note": "IT USED IT slam"
+ },
+ {
+  "cue": "paw_land",
+  "shot": "s18",
+  "at_word": 4,
+  "level": -12,
+  "offset": -0.05,
+  "note": "a cat lands today"
+ },
+ {
+  "cue": "film_clatter",
+  "shot": "s18",
+  "at_word": 11,
+  "level": -17,
+  "offset": -0.2,
+  "note": "back to the 1894 film: loop"
+ }
+]

@@ -1,0 +1,96 @@
+{
+ "title": "Why Do Cats Always Land on Their Feet?",
+ "note": "Producer shot list (one shot per voice line) for audio/build_mix.py. The Animator may split shots; keep word counts.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "lab",
+   "text": "In 1894, a scientist in Paris dropped a cat and filmed it."
+  },
+  {
+   "id": "s02",
+   "set": "lab",
+   "text": "Upside down, with nothing to push against, the cat flipped over and landed on its feet."
+  },
+  {
+   "id": "s03",
+   "set": "lab",
+   "text": "And that seemed to break a law of physics."
+  },
+  {
+   "id": "s04",
+   "set": "lab",
+   "text": "Nothing falling can start to spin on its own."
+  },
+  {
+   "id": "s05",
+   "set": "lab",
+   "text": "The obvious answer: the cat pushed off the scientist's hands."
+  },
+  {
+   "id": "s06",
+   "set": "lab",
+   "text": "But the photos showed it dropping straight, with no spin. The turn began in mid-air."
+  },
+  {
+   "id": "s07",
+   "set": "room",
+   "text": "Clue one. Cats born without a tail do it too."
+  },
+  {
+   "id": "s08",
+   "set": "lab",
+   "text": "Clue two. In every frame, the cat is bent in the middle."
+  },
+  {
+   "id": "s09",
+   "set": "interior",
+   "text": "Clue three. In 1968, NASA-funded scientists put a gymnast in a spacesuit to copy it."
+  },
+  {
+   "id": "s10",
+   "set": "lab",
+   "text": "So how do you turn over with nothing to push on?"
+  },
+  {
+   "id": "s11",
+   "set": "lab",
+   "text": "The cat isn't one solid object. It's two halves, joined by a bendy spine."
+  },
+  {
+   "id": "s12",
+   "set": "lab",
+   "text": "First, it tucks its front legs in and stretches its back legs out."
+  },
+  {
+   "id": "s13",
+   "set": "lab",
+   "text": "Tucked, the front half turns easily. Stretched, the back half barely moves."
+  },
+  {
+   "id": "s14",
+   "set": "lab",
+   "text": "Then it swaps. Back legs in, front legs out. Now the back half catches up."
+  },
+  {
+   "id": "s15",
+   "set": "lab",
+   "text": "The twists cancel out, so no law is broken. But the cat ends up flipped."
+  },
+  {
+   "id": "s16",
+   "set": "room",
+   "text": "Like turning a spinning chair just by swinging your arms and legs in turns."
+  },
+  {
+   "id": "s17",
+   "set": "lab",
+   "text": "The cat didn't break physics. It used it."
+  },
+  {
+   "id": "s18",
+   "set": "room",
+   "text": "And every cat still lands the way that cat did in Paris, in 1894."
+  }
+ ]
+}

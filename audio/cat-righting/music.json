@@ -1,0 +1,36 @@
+{
+ "note": "serious, curious tone, no comedy: mystery for the 1894 drop and the wrong answer, explain for the clues, mystery for the riddle, explain for the answer, payoff (thin) for the analogy and the flip, mystery into a loop end",
+ "sections": [
+  {
+   "style": "mystery",
+   "from": "s01"
+  },
+  {
+   "style": "explain",
+   "from": "s07"
+  },
+  {
+   "style": "mystery",
+   "from": "s10"
+  },
+  {
+   "style": "explain",
+   "from": "s11"
+  },
+  {
+   "style": "payoff",
+   "from": "s16"
+  },
+  {
+   "style": "mystery",
+   "from": "s18"
+  }
+ ],
+ "end": "loop",
+ "reveal_riser": false,
+ "levels": {
+  "mystery": -10.5,
+  "explain": -10.5,
+  "payoff": -11.0
+ }
+}

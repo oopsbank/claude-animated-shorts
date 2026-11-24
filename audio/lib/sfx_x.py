@@ -540,6 +540,33 @@ def bag_puff(r):
     return fades((cr + creak) * np.minimum(1, t / 0.05), 0.0, 0.2)
 
 
+def film_clatter(r, dur=1.6):
+    """old chronophotograph camera: a fast mechanical shutter tick train (12 per second) with a soft motor hum"""
+    t = tt(dur)
+    n = len(t)
+    y = np.zeros(n)
+    for k in range(int(dur * 12)):
+        i = int(k / 12 * SR)
+        m = min(n - i, int(0.03 * SR))
+        if m <= 0:
+            break
+        y[i:i + m] += bp(r.standard_normal(m), 1500, 7000, 2) * np.exp(-np.arange(m) / (0.006 * SR)) * 0.8
+    hum = np.sin(phase(90 + 0 * t)) * 0.05
+    return fades(y + hum, 0.05, 0.2)
+
+
+def paw_land(r):
+    """four soft paws landing on a wooden floor: a padded double thump"""
+    t = tt(0.5)
+    y = np.zeros(len(t))
+    for d, a in [(0.0, 1.0), (0.06, 0.7)]:
+        i = int(d * SR)
+        tk = t[:len(t) - i]
+        y[i:] += lp(r.standard_normal(len(tk)), 500, 2) * np.exp(-tk / 0.04) * a
+        y[i:] += np.sin(phase(70 + 0 * tk)) * np.exp(-tk / 0.06) * 0.5 * a
+    return fades(y, 0.0, 0.1)
+
+
 def amb_prairie(dur, r):
     """open prairie: a warm wide breeze through grass, sparse far birds"""
     out = G.breeze(dur, r, 0.8, gust=0.22, bright=1200)
@@ -622,6 +649,8 @@ GEN = {
     "cave_whistle": (cave_whistle, -15, "thin whistle from a hole in the rock"),
     "thunder": (thunder, -12, "distant thunder roll"),
     "bag_puff": (bag_puff, -15, "snack bag puffing tight"),
+    "film_clatter": (film_clatter, -16, "1894 chronophotograph camera ticking"),
+    "paw_land": (paw_land, -12, "cat paws land softly"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
