@@ -140,7 +140,7 @@ The audio and shot timing are unchanged (`mix.wav`, 1945 frames).
 - File: `https://oopsbank.github.io/some-crazy-things-media/wind_cave_1080x1920.mp4` (= `wind_cave_final_1080x1920.mp4`). The first attempt failed ("Video could not be read from its URL") before Pages had deployed; a retry 2 min later worked.
 - YouTube (post 6b050b02db52b449cf22649d, public, category 27): https://www.youtube.com/watch?v=xDlmnvZ90mg
 - Facebook reel (post 6b050b069a4bd32ca3efbb2e): https://facebook.com/1395801306957363_122108353485549918
-- TikTok (post 6b050af86734c08a26ad0cdd): TIKTOK_LINK
+- TikTok (post 6b050af86734c08a26ad0cdd): https://tiktok.com/@somecrazythingzz/video/7711581424591064326
 - FB/TikTok caption (≤ 255 bytes): In 1881, a small hole in a South Dakota hill was blowing wind hard enough to knock a hat off. Later it sucked one in. What makes the ground breathe? 🌬️ #windcave #cave #science #mystery
 
 **Title:** This Cave Has Been Breathing Since 1881 🌬️ #shorts
