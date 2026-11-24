@@ -135,3 +135,8 @@ AAC 192k, +faststart, **44.2 MB, 65.15 s** (0.1 s cover from `thumbnail.png` + 1
 `tools/add_cover.sh`). Built: `render.py audio/zebra-stripes/words.json OUT --film zebra_stripes --size 1080x1920` →
 re-render frames 0 + 1950 in one process (single-process loop fix) → re-encode the frames (CRF 16) → mux `mix.wav` →
 `add_cover.sh` → 2-pass encode. Frame 0 (after the cover) and s14 checked by eye. Not published.
+
+## Posted 2026-11-24 (Buffer, media file `zebra_stripes_1080x1920.mp4`)
+- TikTok 6b057c65e2bac802e9a1c1f0 https://tiktok.com/@somecrazythingzz/video/7711706838231813397
+- Facebook 6b057c78e2bac802e9a1d965 https://facebook.com/1395801306957363_122108703447549918
+- YouTube: shareNow 6b057c76bc0aa082945408d8 failed (daily limit); scheduled in Buffer as 6b057c8ee2bac802e9a1e84f for 2026-11-25 04:30 UTC (11:30 Vietnam).
