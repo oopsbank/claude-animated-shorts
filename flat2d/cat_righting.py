@@ -54,26 +54,55 @@ def clue(img, txt, u, t0=.05, y=250):
 
 
 def beard(img, g, look=0.0, col=(128, 112, 104)):
-    """Marey's grey-brown full beard under the mouth + a moustache; side hair tufts (balding crown)."""
-    hx, hy = g['head']; R = g['R']; fx = hx + look * R * .62
-    hy = hy + R * .26
-    d = ImageDraw.Draw(img)
-    pts = [(fx - R * .66, hy + R * .38)]
-    for i in range(1, 12):
-        a = math.pi * i / 12
-        pts.append((fx - math.cos(a) * R * .66, hy + R * .38 + math.sin(a) * R * (1.05 + .1 * math.sin(i * 2.1))))
-    pts.append((fx + R * .66, hy + R * .38))
-    pts += [(fx + R * .4, hy + R * .62), (fx, hy + R * .7), (fx - R * .4, hy + R * .62)]
-    d.polygon(pts, fill=col, outline=INK, width=max(3, int(R * .07)))
-    for k in range(4):
-        x = fx + (k - 1.5) * R * .3
-        d.line([(x, hy + R * .85), (x + (k - 1.5) * R * .06, hy + R * 1.2)], fill=lerp(col, INK, .4), width=max(2, int(R * .05)))
-    for s_ in (-1, 1):                                         # moustache
-        d.pieslice([fx + s_ * R * .26 - R * .3, hy + R * .3, fx + s_ * R * .26 + R * .3, hy + R * .62], 180, 360, fill=lerp(col, INK, .15), outline=INK, width=3)
-    for s_ in (-1, 1):                                         # side hair at the rim, never over an eye
-        if abs(look) > .25 and s_ * look > 0: continue
-        cx_ = hx + s_ * R * 1.0
-        d.ellipse([cx_ - R * .15, hy - R * .42, cx_ + R * .15, hy + R * .02], fill=col, outline=INK, width=3)
+    """Marey's grey-brown full beard: it hugs the jaw along the head rim (cheek to cheek), stays BELOW the mouth
+    (the stickman mouth sits at ~0.49 R under the head centre), ends in a soft rounded point, plus a thin moustache
+    above the mouth. Drawn at 3x and downsampled so the edge is smooth; no straight edges, no side tufts."""
+    hx, hy = g['head']; R = g['R']
+    look = g.get('look', look); lean = g.get('lean', 0.0)
+    fx = hx + look * R * .35                       # the face (mouth) shifts with look, like stickman's fx
+    SS = 3
+    x0, y0 = int(hx - R * 1.3), int(hy - R * .2)
+    wpx, hpx = int(R * 2.6), int(R * 1.9)
+    lay = Image.new('RGBA', (wpx * SS, hpx * SS), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    P = lambda x, y: ((x - x0) * SS, (y - y0) * SS)
+    outer = []                                     # along the head rim, slightly outside it, from the right cheek round the chin
+    a0, a1 = math.radians(22), math.radians(158)
+    for i in range(25):
+        a = a0 + (a1 - a0) * i / 24
+        k = math.sin(a) ** 3                        # bulge down into a rounded point under the chin
+        r = R * (1.03 + .38 * k)
+        outer.append((hx + math.cos(a) * R * 1.03 + look * R * .12 * k, hy + math.sin(a) * r))
+    inner = []                                     # the top edge: a soft smile curve under the mouth, back to the right cheek
+    for i in range(17):
+        t = i / 16
+        x = outer[-1][0] + (outer[0][0] - outer[-1][0]) * t
+        dip = math.sin(math.pi * t)
+        y = outer[-1][1] + (outer[0][1] - outer[-1][1]) * t + dip * (hy + R * .74 - (outer[0][1] + outer[-1][1]) / 2)
+        inner.append((x + (fx - hx) * dip * .8, y))
+    poly = [P(*q) for q in outer + inner]
+    ow = max(3, int(R * .06)) * SS
+    d.polygon(poly, fill=col + (255,))
+    d.line(poly + [poly[0]], fill=INK + (255,) if len(INK) == 3 else INK, width=ow, joint='curve')
+    hair = lerp(col, INK, .35)
+    for k in range(5):                             # a few soft strands following the beard's flow
+        t = (k + 1) / 6
+        xa = hx + (t - .5) * R * 1.3 + (fx - hx) * .6
+        d.line([P(xa, hy + R * .92), P(xa + (t - .5) * R * .18, hy + R * 1.22)], fill=hair + (255,), width=max(2, int(R * .04)) * SS)
+    for s_ in (-1, 1):                             # thin moustache above the mouth, curving out
+        pts = []
+        for i in range(9):
+            t = i / 8
+            pts.append(P(fx + s_ * R * (.05 + .3 * t), hy + R * (.32 + .07 * t * t) ))
+        for i in range(9):
+            t = 1 - i / 8
+            pts.append(P(fx + s_ * R * (.05 + .3 * t), hy + R * (.40 + .03 * t)))
+        d.polygon(pts, fill=lerp(col, INK, .12) + (255,))
+        d.line(pts + [pts[0]], fill=INK + (255,) if len(INK) == 3 else INK, width=max(2, int(R * .03)) * SS, joint='curve')
+    if abs(lean) > .05:                            # tilt with the head (actor rotates the card by -lean)
+        lay = lay.rotate(-lean, resample=Image.BICUBIC, center=((hx - x0) * SS, (hy - y0) * SS))
+    lay = lay.resize((wpx, hpx), Image.LANCZOS)
+    img.alpha_composite(lay, (x0, y0)) if img.mode == 'RGBA' else img.paste(lay, (x0, y0), lay)
 
 
 def marey(img, t, pose, expr, cx, gy, s, look=0.0, lean=0.0, hop=0.0, label_on=True, rim=(255, 214, 160), rim_dir=(-1, -.4),

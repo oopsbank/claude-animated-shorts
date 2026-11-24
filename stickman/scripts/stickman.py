@@ -606,7 +606,9 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
         if props[h] not in PROPS: raise ValueError(f'unknown prop {props[h]!r}; use one of {PROPS}')
         if side and h == 'R': continue        # already drawn behind the body
         draw_prop(h); hand_over(LA if h == 'L' else RA)
-    return im.resize((W, H), Image.LANCZOS)
+    out = im.resize((W, H), Image.LANCZOS)
+    out.info['head'] = (hx, hy)              # the true head centre (card px); alpha-based guesses fail when hands are raised above the head
+    return out
 
 if __name__ == '__main__':
     a = sys.argv

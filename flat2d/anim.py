@@ -193,6 +193,7 @@ def actor(img, expr, pose, cx, gy, s, t=0.0, look=0.0, lean=0.0, hop=0.0, blink_
     g['head'] = tr(*head)
     ha = stickman.hand_anchors(pose, fixed=True)
     g['hands'] = {h: tr(v[0], v[1]) + (v[2] + lean,) for h, v in ha.items()}
+    g['look'], g['lean'] = look, lean           # the effective values (after the idle sway) for face add-ons
     return g
 
 # ---------------------------------------------------------------- camera + post (cached)
