@@ -98,3 +98,10 @@ The Producer's mix is used unchanged. The picture lands on its cues: the 1894 ti
 - Cause: `kit.head_of` guessed the head centre from the card's top alpha row, which is a hand when Marey raises his arms, so the beard landed off the face; it was also a box-like polygon with a straight top edge and floating side tufts.
 - Fix: `stickman.draw` now stores the true head centre in `card.info['head']`; `anim.actor` returns the effective `look`/`lean`; `cat_righting.beard` hugs the jaw along the head rim below the mouth (~0.49 R), ends in a rounded point, has a thin moustache above the mouth, tilts with the head, drawn at 3x and downsampled; no side tufts.
 - Re-rendered the 1080 final (same audio/timing), cover and 2-pass encode: `cat_righting_final_1080x1920.mp4` 43.7 MB, 65.39 s; thumbnail rebuilt (no zoom).
+
+## Posted 2026-11-24 (Asia/Ho_Chi_Minh), with the Director's OK ("đăng đi"), via Buffer, shareNow
+- File: `https://oopsbank.github.io/some-crazy-things-media/cat_righting_1080x1920.mp4` (= `cat_righting_final_1080x1920.mp4`).
+- Facebook reel (post 6b054617286252d738455aa0): https://facebook.com/1395801306957363_122108532057549918
+- TikTok (post 6b05460b31056e7b6e8657c8): https://tiktok.com/@somecrazythingzz/video/7711646928924118278
+- YouTube: Buffer post 6b05461631056e7b6e865a2e FAILED ("daily posting limit for this channel has been reached"; video 7 went out ~5 h earlier, so the real YouTube limit is 1/day despite `dailyPostingLimits` saying 2). The Director uploads it by hand; title/description in `youtube_upload.txt`.
+- FB/TikTok caption: In 1894, a scientist dropped a cat upside down and filmed it. With nothing to push on, it flipped and landed on its feet. Did it break physics? 🐈 #cats #physics #science #mystery

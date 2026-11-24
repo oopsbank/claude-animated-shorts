@@ -1,0 +1,9 @@
+TITLE:
+Why Do Cats Always Land on Their Feet? 🐈 #shorts
+
+DESCRIPTION:
+In 1894, the French scientist Étienne-Jules Marey dropped a cat upside down and filmed it at 12 frames a second. With nothing to push against, the cat turned over and landed on its feet, which seemed to break a law of physics: a falling body with no spin can't start spinning on its own. The obvious answer was that the cat pushed off his hands, but the photos showed it falling with no spin at all; the turn began in mid-air. The clues: cats without a tail do it too; in every frame the cat is bent in the middle; and in the 1960s NASA-funded scientists studied the trick for astronauts, even putting a gymnast in a spacesuit to copy it. The answer: a cat isn't one rigid object. It tucks its front legs and stretches its back legs, so the front half turns a lot and the back half barely moves the other way; then it swaps. The twists cancel out, so angular momentum is conserved, but the cat ends up flipped. The cat didn't break physics. It used it.
+
+Sources: Falling cat problem (Wikipedia) https://en.wikipedia.org/wiki/Falling_cat_problem · Science Museum Group, Marey's chronophotograph of a falling cat https://collection.sciencemuseumgroup.org.uk/objects/co8421879/chronophotographic-film-of-cat-falling · Public Domain Review, Photographs of a Falling Cat (1894) https://publicdomainreview.org/collection/photographs-of-a-falling-cat-1894 · Cat righting reflex (Wikipedia) https://en.wikipedia.org/wiki/Cat_righting_reflex · Kane & Scher (1969), A dynamical explanation of the falling cat phenomenon, doi:10.1016/0020-7683(69)90086-9
+
+Settings: Public · Not made for kids · Category: Education · Thumbnail: pick the first frame (or upload thumbnail.png if available)
