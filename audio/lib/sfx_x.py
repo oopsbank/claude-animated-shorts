@@ -628,6 +628,60 @@ def amb_cabin(dur, r):
     return st(roar)
 
 
+
+# ---------------------------------------------------------------- flamingo (video 10)
+def flamingo_honk(r, n=2):
+    """a flamingo call: short nasal goose-like honks (a buzzy ~520 Hz voice through two formants)"""
+    out = np.zeros(ns(0.25 * n + 0.4))
+    for k in range(n):
+        d = 0.16 + 0.05 * r.random()
+        t = tt(d)
+        f = (480 + 80 * r.random()) * (1 + 0.08 * np.sin(np.pi * t / d))
+        ph = phase(f)
+        v = sum(np.sin(h * ph) / h ** 0.7 for h in range(1, 12))
+        v = bp(v, 700, 1400, 2) * 1.2 + bp(v, 1900, 2800, 2) * 0.6
+        env = np.minimum(1, t / 0.015) * np.exp(-np.maximum(0, t - d * 0.6) / 0.03)
+        i = int((0.22 * k + 0.03 * r.random()) * SR)
+        out[i:i + len(t)] += v * env * (0.9 - 0.2 * k)
+    return fades(out, 0.0, 0.05)
+
+
+def water_step(r):
+    """a long thin leg lifting out of / setting into shallow water: a small drip-splash"""
+    t = tt(0.6)
+    n = len(t)
+    sw = bp(r.standard_normal(n), 900, 5000, 2) * np.exp(-t / 0.07) * 0.6
+    drips = np.zeros(n)
+    for d in (0.12, 0.21, 0.33):
+        i = int((d + 0.03 * r.random()) * SR); tk = t[:n - i]
+        drips[i:] += np.sin(phase(1400 + 900 * r.random() + 2500 * np.exp(-tk / 0.01))) * np.exp(-tk / 0.025) * 0.3
+    return fades(sw + drips, 0.005, 0.1)
+
+
+def joint_settle(r):
+    """a joint settling to the end of its range: a soft, dry, woody knock"""
+    t = tt(0.4)
+    y = \
+        sum(np.sin(TAU * f * t) * np.exp(-t / dk) * a for f, dk, a in [(190, 0.06, 1.0), (430, 0.03, 0.5), (910, 0.015, 0.25)])
+    y += lp(r.standard_normal(len(t)), 2500, 2) * np.exp(-t / 0.006) * 0.4
+    return fades(y, 0.0, 0.05)
+
+
+def amb_lagoon(dur, r):
+    """a shallow salt lagoon: soft lapping, a light breeze and a distant murmuring flamingo flock"""
+    n = ns(dur)
+    out = G.breeze(dur, r, 0.5, gust=0.12, bright=1100)
+    lap = bp(colored(n, r, 0.8), 250, 1400, 2) * (0.5 + 0.5 * np.sin(2 * np.pi * 0.18 * np.arange(n) / SR) ** 2) * 0.08
+    out += st(lap)
+    flock = np.zeros(n)
+    t0 = 0.3
+    while t0 < dur - 0.8:
+        h = flamingo_honk(r, n=1 + int(r.random() * 2)) * (0.05 + 0.04 * r.random())
+        i = int(t0 * SR); flock[i:i + len(h)] += h[:n - i]
+        t0 += 0.5 + 1.4 * r.random()
+    out += pan(lp(flock, 2600, 2), 0.25 * (2 * r.random() - 1))
+    return out
+
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
     "whoosh_fast": (whoosh_fast, -16, "fast swish / speed lines"),
@@ -684,8 +738,11 @@ GEN = {
     "paw_land": (paw_land, -12, "cat paws land softly"),
     "fly_buzz": (fly_buzz, -18, "a horse fly passing"),
     "fly_bonk": (fly_bonk, -16, "a fly bumping into a striped coat"),
+    "flamingo_honk": (flamingo_honk, -18, "a flamingo call"),
+    "water_step": (water_step, -17, "a thin leg in shallow water"),
+    "joint_settle": (joint_settle, -16, "a joint settling to the end of its range"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
-        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie, "savanna": amb_savanna, "farm": amb_outdoor}
+        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie, "savanna": amb_savanna, "farm": amb_outdoor, "lagoon": amb_lagoon}

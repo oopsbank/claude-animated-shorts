@@ -1,0 +1,81 @@
+{
+ "title": "Why Do Flamingos Stand on One Leg?",
+ "note": "Producer shot list (one shot per voice line) for audio/build_mix.py. The Animator may split shots; keep word counts.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "lab",
+   "text": "In 2017, scientists in Atlanta balanced a dead flamingo on one leg. It held the pose, with no muscles working."
+  },
+  {
+   "id": "s02",
+   "set": "lagoon",
+   "text": "Live flamingos stand like this for hours. Even asleep."
+  },
+  {
+   "id": "s03",
+   "set": "lagoon",
+   "text": "The usual answer: tucking one leg up keeps it warm."
+  },
+  {
+   "id": "s04",
+   "set": "room",
+   "text": "That may explain why. It doesn't explain how. Stand on one leg with your eyes closed, and you wobble in seconds."
+  },
+  {
+   "id": "s05",
+   "set": "lab",
+   "text": "Clue one. That backward bend in the middle of the leg isn't a knee. It's the ankle. The knee is hidden up in the feathers."
+  },
+  {
+   "id": "s06",
+   "set": "lagoon",
+   "text": "Clue two. On one leg, the flamingo moves its foot right under the middle of its body."
+  },
+  {
+   "id": "s07",
+   "set": "park",
+   "text": "Clue three. Live flamingos swayed least when their eyes were closed."
+  },
+  {
+   "id": "s08",
+   "set": "lagoon",
+   "text": "So how does a sleeping bird stay up on one thin leg?"
+  },
+  {
+   "id": "s09",
+   "set": "lab",
+   "text": "With the foot under its body, all the weight presses straight down the leg."
+  },
+  {
+   "id": "s10",
+   "set": "lab",
+   "text": "That pushes the hip and knee to the end of their bend, so the leg can't fold."
+  },
+  {
+   "id": "s11",
+   "set": "lab",
+   "text": "Gravity holds it in place. The muscles barely work."
+  },
+  {
+   "id": "s12",
+   "set": "lab",
+   "text": "That's why the dead bird stayed up. On two legs, it couldn't stand steady."
+  },
+  {
+   "id": "s13",
+   "set": "room",
+   "text": "It's like locking your knees in a long queue: your bones carry the weight, not your muscles."
+  },
+  {
+   "id": "s14",
+   "set": "lagoon",
+   "text": "For us, one leg is the hard way to stand. For a flamingo, it's the easy way."
+  },
+  {
+   "id": "s15",
+   "set": "lab",
+   "text": "And in 2017, a flamingo with no working muscles proved it."
+  }
+ ]
+}

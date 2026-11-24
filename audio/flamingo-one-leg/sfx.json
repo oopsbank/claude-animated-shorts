@@ -1,0 +1,154 @@
+[
+ {
+  "cue": "card_pop",
+  "shot": "s01",
+  "at_word": 1,
+  "level": -16,
+  "offset": 0,
+  "note": "2017 · ATLANTA title"
+ },
+ {
+  "cue": "joint_settle",
+  "shot": "s01",
+  "at_word": 13,
+  "level": -17,
+  "offset": 0,
+  "note": "the specimen settles into the one-leg pose"
+ },
+ {
+  "cue": "flamingo_honk",
+  "shot": "s02",
+  "at_word": 0,
+  "level": -19,
+  "offset": -0.2,
+  "note": "the sleeping flock"
+ },
+ {
+  "cue": "water_step",
+  "shot": "s02",
+  "at_word": 3,
+  "level": -18,
+  "offset": 0,
+  "note": "a leg tucks up out of the water"
+ },
+ {
+  "cue": "question",
+  "shot": "s03",
+  "at_word": 2,
+  "level": -17,
+  "offset": 0,
+  "note": "WARMTH?"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s04",
+  "at_word": 7,
+  "level": -17,
+  "offset": -0.1,
+  "note": "NOT HOW: cut to the person"
+ },
+ {
+  "cue": "sweat_drop",
+  "shot": "s04",
+  "at_word": 18,
+  "level": -18,
+  "offset": 0,
+  "note": "the person wobbles"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s05",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 1"
+ },
+ {
+  "cue": "ding",
+  "shot": "s05",
+  "at_word": 16,
+  "level": -17,
+  "offset": 0,
+  "note": "ANKLE label"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 2"
+ },
+ {
+  "cue": "water_step",
+  "shot": "s06",
+  "at_word": 7,
+  "level": -17,
+  "offset": 0,
+  "note": "the foot shifts under the body"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 3"
+ },
+ {
+  "cue": "question",
+  "shot": "s08",
+  "at_word": 1,
+  "level": -17,
+  "offset": 0,
+  "note": "the riddle"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s09",
+  "at_word": 8,
+  "level": -18,
+  "offset": -0.1,
+  "note": "weight arrow down the leg"
+ },
+ {
+  "cue": "joint_settle",
+  "shot": "s10",
+  "at_word": 8,
+  "level": -15,
+  "offset": 0,
+  "note": "hip and knee hit the end of their bend"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s11",
+  "at_word": 0,
+  "level": -19,
+  "offset": 0,
+  "note": "gravity holds it"
+ },
+ {
+  "cue": "impact",
+  "shot": "s12",
+  "at_word": 11,
+  "level": -17,
+  "offset": 0,
+  "note": "two legs: it slumps"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s14",
+  "at_word": 10,
+  "level": -17,
+  "offset": -0.1,
+  "note": "the flip"
+ },
+ {
+  "cue": "flamingo_honk",
+  "shot": "s15",
+  "at_word": 4,
+  "level": -19,
+  "offset": -0.1,
+  "note": "back to 2017"
+ }
+]
