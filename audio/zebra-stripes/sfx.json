@@ -1,0 +1,186 @@
+[
+ {
+  "cue": "card_pop",
+  "shot": "s01",
+  "at_word": 1,
+  "level": -16,
+  "offset": 0,
+  "note": "2016 \u00b7 ENGLAND title"
+ },
+ {
+  "cue": "fly_buzz",
+  "shot": "s01",
+  "at_word": 14,
+  "level": -17,
+  "offset": -0.4,
+  "note": "flies circle the striped horse"
+ },
+ {
+  "cue": "question",
+  "shot": "s02",
+  "at_word": 7,
+  "level": -17,
+  "offset": 0,
+  "note": "why stripes?"
+ },
+ {
+  "cue": "question",
+  "shot": "s03",
+  "at_word": 3,
+  "level": -17,
+  "offset": 0,
+  "note": "CAMOUFLAGE?"
+ },
+ {
+  "cue": "impact",
+  "shot": "s04",
+  "at_word": 7,
+  "level": -15,
+  "offset": 0,
+  "note": "X: lions spot zebras"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s04",
+  "at_word": 16,
+  "level": -17,
+  "offset": -0.1,
+  "note": "stripes blur to grey at 50 m"
+ },
+ {
+  "cue": "impact",
+  "shot": "s05",
+  "at_word": 14,
+  "level": -15,
+  "offset": 0,
+  "note": "X: barrels just as hot"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 1"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 2"
+ },
+ {
+  "cue": "fly_buzz",
+  "shot": "s07",
+  "at_word": 3,
+  "level": -17,
+  "offset": -0.3,
+  "note": "horse fly close-up"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s08",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 3"
+ },
+ {
+  "cue": "fly_buzz",
+  "shot": "s08",
+  "at_word": 14,
+  "level": -18,
+  "offset": -0.3,
+  "note": "flies on the bare head"
+ },
+ {
+  "cue": "question",
+  "shot": "s09",
+  "at_word": 7,
+  "level": -16,
+  "offset": 0,
+  "note": "the riddle"
+ },
+ {
+  "cue": "fly_buzz",
+  "shot": "s10",
+  "at_word": 5,
+  "level": -15,
+  "offset": -0.2,
+  "note": "fly comes in fast"
+ },
+ {
+  "cue": "fly_buzz",
+  "shot": "s11",
+  "at_word": 7,
+  "level": -18,
+  "offset": -0.3,
+  "note": "brakes and lands"
+ },
+ {
+  "cue": "fly_bonk",
+  "shot": "s12",
+  "at_word": 7,
+  "level": -13,
+  "offset": -0.03,
+  "note": "bonk into the coat"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s12",
+  "at_word": 12,
+  "level": -17,
+  "offset": -0.1,
+  "note": "zooms past"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s13",
+  "at_word": 2,
+  "level": -18,
+  "offset": 0,
+  "note": "compound-eye scramble"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s14",
+  "at_word": 6,
+  "level": -16,
+  "offset": 0,
+  "note": "painted cow"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s15",
+  "at_word": 1,
+  "level": -18,
+  "offset": -0.1,
+  "note": "striped stairs"
+ },
+ {
+  "cue": "impact",
+  "shot": "s16",
+  "at_word": 5,
+  "level": -14,
+  "offset": 0,
+  "note": "NOT HIDING THE ZEBRA slam"
+ },
+ {
+  "cue": "impact",
+  "shot": "s16",
+  "at_word": 9,
+  "level": -13,
+  "offset": 0,
+  "note": "HIDING THE LANDING slam"
+ },
+ {
+  "cue": "fly_buzz",
+  "shot": "s17",
+  "at_word": 8,
+  "level": -17,
+  "offset": -0.3,
+  "note": "loop: flies keep missing"
+ }
+]

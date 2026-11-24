@@ -567,6 +567,37 @@ def paw_land(r):
     return fades(y, 0.0, 0.1)
 
 
+def fly_buzz(r, dur=1.6):
+    """a horse fly passing: a rough ~180 Hz wing buzz with flutter, swelling in and out with a small Doppler drop"""
+    t = tt(dur)
+    f = 190 - 30 * t / dur + 6 * np.sin(2 * np.pi * 9 * t)
+    saw = np.zeros(len(t)); ph = phase(f)
+    for k in range(1, 8):
+        saw += np.sin(k * ph) / k
+    env = np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 1.5 * (0.8 + 0.2 * smooth_noise(len(t), r, 25.0))
+    return fades(bp(saw, 120, 3000, 2) * env * 0.5, 0.05, 0.1)
+
+
+def fly_bonk(r):
+    """a fly bumping into a coat: a tiny soft tap and the buzz cutting off"""
+    t = tt(0.35)
+    tap = lp(r.standard_normal(len(t)), 1800, 2) * np.exp(-t / 0.012) * 0.8
+    bz = np.zeros(len(t)); ph = phase(200 + 0 * t)
+    for k in range(1, 6): bz += np.sin(k * ph) / k
+    bz *= np.exp(-t / 0.06) * 0.25
+    return fades(tap + bp(bz, 120, 3000, 2), 0.0, 0.05)
+
+
+def amb_savanna(dur, r):
+    """African grassland: warm wide breeze, a cicada shimmer, sparse far birds"""
+    out = G.breeze(dur, r, 0.75, gust=0.18, bright=1500)
+    n = ns(dur)
+    cic = bp(r.standard_normal(n), 4200, 6500, 2) * (0.5 + 0.5 * np.sin(2 * np.pi * 0.25 * np.arange(n) / SR)) * 0.012
+    out += st(cic)
+    out += pan(G.bird_chirps(dur, r, 0.2) * 0.04, 0.3)
+    return out
+
+
 def amb_prairie(dur, r):
     """open prairie: a warm wide breeze through grass, sparse far birds"""
     out = G.breeze(dur, r, 0.8, gust=0.22, bright=1200)
@@ -651,8 +682,10 @@ GEN = {
     "bag_puff": (bag_puff, -15, "snack bag puffing tight"),
     "film_clatter": (film_clatter, -16, "1894 chronophotograph camera ticking"),
     "paw_land": (paw_land, -12, "cat paws land softly"),
+    "fly_buzz": (fly_buzz, -18, "a horse fly passing"),
+    "fly_bonk": (fly_bonk, -16, "a fly bumping into a striped coat"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
-        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie}
+        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie, "savanna": amb_savanna, "farm": amb_outdoor}

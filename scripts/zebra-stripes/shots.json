@@ -1,0 +1,91 @@
+{
+ "title": "Why Do Zebras Have Stripes?",
+ "note": "Producer shot list (one shot per voice line) for audio/build_mix.py. The Animator may split shots; keep word counts.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "farm",
+   "text": "In 2016, scientists in England dressed horses in zebra-striped coats. Then they watched the flies."
+  },
+  {
+   "id": "s02",
+   "set": "savanna",
+   "text": "Because nobody could agree why zebras have stripes at all."
+  },
+  {
+   "id": "s03",
+   "set": "savanna",
+   "text": "The obvious answer: camouflage, to hide from lions."
+  },
+  {
+   "id": "s04",
+   "set": "savanna",
+   "text": "But on open grassland, lions spot zebras easily. Past fifty metres, they can't even see the stripes."
+  },
+  {
+   "id": "s05",
+   "set": "savanna",
+   "text": "Maybe stripes keep them cool? But barrels wrapped in zebra skin got just as hot."
+  },
+  {
+   "id": "s06",
+   "set": "room",
+   "text": "Clue one. Zebras have the boldest stripes where biting flies are worst."
+  },
+  {
+   "id": "s07",
+   "set": "savanna",
+   "text": "Clue two. Horse flies spread deadly diseases, and zebra hair is too short to stop a bite."
+  },
+  {
+   "id": "s08",
+   "set": "farm",
+   "text": "Clue three. On the horses in costume, fewer flies landed, except on their bare heads."
+  },
+  {
+   "id": "s09",
+   "set": "farm",
+   "text": "So what do stripes do to a fly?"
+  },
+  {
+   "id": "s10",
+   "set": "farm",
+   "text": "A horse fly comes in fast, then slows down at the last moment to land."
+  },
+  {
+   "id": "s11",
+   "set": "farm",
+   "text": "On a plain horse, it brakes and touches down."
+  },
+  {
+   "id": "s12",
+   "set": "farm",
+   "text": "On stripes, it doesn't slow down. It bumps into the coat or zooms past."
+  },
+  {
+   "id": "s13",
+   "set": "farm",
+   "text": "The stripes scramble its sense of where the surface is."
+  },
+  {
+   "id": "s14",
+   "set": "farm",
+   "text": "Farmers in Japan painted stripes on cows. Far fewer bites."
+  },
+  {
+   "id": "s15",
+   "set": "room",
+   "text": "Like stairs painted with stripes: you can't tell where to put your foot."
+  },
+  {
+   "id": "s16",
+   "set": "savanna",
+   "text": "The stripes aren't hiding the zebra. They're hiding the landing spot."
+  },
+  {
+   "id": "s17",
+   "set": "farm",
+   "text": "And on those striped horses in 2016, the flies kept missing."
+  }
+ ]
+}

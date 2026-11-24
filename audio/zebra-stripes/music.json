@@ -1,0 +1,36 @@
+{
+ "note": "serious, curious tone, no comedy: mystery for the experiment and the two wrong answers, explain for the clues, mystery for the riddle, explain for the mechanism, payoff (thin) for the analogy and the flip, mystery into a loop end",
+ "sections": [
+  {
+   "style": "mystery",
+   "from": "s01"
+  },
+  {
+   "style": "explain",
+   "from": "s06"
+  },
+  {
+   "style": "mystery",
+   "from": "s09"
+  },
+  {
+   "style": "explain",
+   "from": "s10"
+  },
+  {
+   "style": "payoff",
+   "from": "s14"
+  },
+  {
+   "style": "mystery",
+   "from": "s17"
+  }
+ ],
+ "end": "loop",
+ "reveal_riser": false,
+ "levels": {
+  "mystery": -10.5,
+  "explain": -10.5,
+  "payoff": -11.0
+ }
+}
