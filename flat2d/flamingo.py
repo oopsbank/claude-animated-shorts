@@ -141,8 +141,8 @@ def geometry(pose, kind='adult'):
     beak = _cr(up, 4, False) + _cr(lo, 4, False)
     G['beak'] = [Hf(x, y) for x, y in beak]
     tip = [q for q in beak if q[0] > 0.092 or (q[0] > 0.084 and q[1] > 0.030)]
-    G['beak_tip'] = [Hf(x, y) for x, y in _cr([(0.094, -0.022), (0.110, -0.012), (0.122, 0.010), (0.130, 0.040),
-                                               (0.126, 0.076), (0.112, 0.078), (0.100, 0.050), (0.088, 0.036)], 4)]
+    G['beak_tip'] = [Hf(x, y) for x, y in _cr([(0.106, -0.016), (0.117, -0.004), (0.124, 0.016), (0.131, 0.040),
+                                               (0.127, 0.076), (0.112, 0.079), (0.105, 0.058), (0.099, 0.042)], 4)]
     G['gape'] = [Hf(x, y) for x, y in [(0.036, 0.006), (0.066, 0.010), (0.092, 0.016), (0.110, 0.036)]]
     G['eye'] = Hf(-0.006, -0.012)
     G['beak_tip_pt'] = Hf(0.125, 0.074)
@@ -375,8 +375,16 @@ def bird(s, pose=None, kind='adult', light=(-.5, -1.0), cache=True, ink_w=None):
         for xx in np.arange(wb[0] + off - rr, wb[2] + rr, rr * 1.8):
             # a covert feather: rounded tip pointing back (-x), darker under-edge, pale fringe
             box = [xx - rr * 1.3, yy - rr * .75, xx + rr * .5, yy + rr * .75]
-            dt.chord(box, 100, 260, fill=lerpc(C['wing'], C['wing_lo'], .35 + .3 * f) + (90,))
-            dt.arc(box, 110, 250, fill=lerpc(C['wing_hi'], (255, 255, 255), .25) + (150,), width=max(1, int(S * .0035)))
+            dt.chord(box, 100, 260, fill=lerpc(C['wing'], C['wing_lo'], .3 + .3 * f) + (60,))
+            dt.arc(box, 120, 240, fill=lerpc(C['wing_hi'], (255, 255, 255), .2) + (95,), width=max(1, int(S * .003)))
+    # long scapular plumes drooping back over the black flight feathers
+    for i in range(6):
+        f = i / 5
+        a0 = (lerp(wb[0] + (wb[2] - wb[0]) * .55, wb[0] + (wb[2] - wb[0]) * .2, f), lerp(wb[1] + (wb[3] - wb[1]) * .45, wb[1] + (wb[3] - wb[1]) * .6, f))
+        a1 = (a0[0] - (wb[2] - wb[0]) * (.35 + .1 * f), a0[1] + (wb[3] - wb[1]) * (.25 + .05 * f))
+        mid = ((a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2 - (wb[3] - wb[1]) * .08)
+        dt.line([a0, mid, a1], fill=lerpc(C['wing_lo'], (0, 0, 0), .15) + (110,), width=max(1, int(S * .0045)), joint='curve')
+        dt.line([(a0[0], a0[1] - S * .004), (mid[0], mid[1] - S * .004)], fill=lerpc(C['wing_hi'], (255, 255, 255), .3) + (90,), width=max(1, int(S * .003)))
     tex.putalpha(ImageChops.multiply(tex.split()[3], mw))
     lay.alpha_composite(tex)
     # ruffle: a few loose covert tips over the lower wing edge (wind / settling)

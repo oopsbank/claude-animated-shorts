@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageChops
 import kit
-from kit import W, H, INK, vgrad, radial, mask, fill_mask, glow, layer, lerp, rgb, font
+from kit import W, H, INK, vgrad, radial, mask, fill_mask, glow, layer, lerp, rgb, font, soft_layer
 import flamingo as FL
 
 _C = {}
@@ -110,20 +110,19 @@ def _lagoon_static(kind, hz, sun):
         for i in range(7):
             y = hz + 30 + i * 22 + rng.uniform(0, 14); x = rng.uniform(-100, W + 100); L = rng.uniform(200, 520)
             d.ellipse([x, y, x + L, y + 10 + i * 2], fill=lerp(SKY[kind][-1][1], (250, 240, 230), .5) + (200,))
-        if kind != 'night':
-            # the sun's broken reflection path
-            for i in range(26):
-                y = hz + 12 + i ** 1.5 * 9
-                if y > H: break
-                wv = 40 + i * 9 + rng.uniform(-20, 20)
-                d.rounded_rectangle([sx - wv / 2 + rng.uniform(-30, 30), y, sx + wv / 2, y + 4 + i * .4], 4,
-                                    fill=c_in + (int(200 * (1 - i / 26)),))
-        else:
-            for i in range(22):
-                y = hz + 12 + i ** 1.5 * 10
-                if y > H: break
-                wv = 30 + i * 8 + rng.uniform(-20, 20)
-                d.rounded_rectangle([sx - wv / 2 + rng.uniform(-30, 30), y, sx + wv / 2, y + 3 + i * .3], 3, fill=(220, 226, 255, int(170 * (1 - i / 22))))
+        # the sun's / moon's broken reflection: scattered glints, wider and sparser with distance from the horizon
+        gl = layer(W + 240, H); dg = ImageDraw.Draw(gl)
+        gcol = c_in if kind != 'night' else (220, 226, 255)
+        rng = np.random.default_rng(77)
+        for i in range(160):
+            f = rng.uniform(0, 1) ** 1.6
+            y = hz + 8 + f * (H - hz)
+            spread = 30 + f * 260
+            x = sx + rng.normal(0, spread * .45)
+            L = rng.uniform(8, 30) + f * rng.uniform(10, 70)
+            a = int(rng.uniform(80, 210) * (1 - .7 * f) * math.exp(-((x - sx) / (spread + 1)) ** 2))
+            dg.line([(x - L / 2, y), (x + L / 2, y)], fill=gcol + (a,), width=max(2, int(2 + f * 4)))
+        img.alpha_composite(soft_layer(gl, 1.2))
         return img
     return cached(('lagoon', kind, hz, sun), build)
 
@@ -507,6 +506,14 @@ def _stage_static(kind):
             for y in range(0, H, 60): d.line([(0, y), (W, y)], fill=(222, 206, 180), width=2)
             for x in range(0, W, 300): d.line([(x, 0), (x, H)], fill=(210, 188, 160), width=3)
             for y in range(0, H, 300): d.line([(0, y), (W, y)], fill=(210, 188, 160), width=3)
+        elif kind == 'blue':   # a blueprint plate
+            img = vgrad([(0, (28, 58, 110)), (1, (18, 40, 84))], W, H)
+            d = ImageDraw.Draw(img)
+            for x in range(0, W, 60): d.line([(x, 0), (x, H)], fill=(44, 78, 134), width=2)
+            for y in range(0, H, 60): d.line([(0, y), (W, y)], fill=(44, 78, 134), width=2)
+            for x in range(0, W, 300): d.line([(x, 0), (x, H)], fill=(66, 104, 164), width=3)
+            for y in range(0, H, 300): d.line([(0, y), (W, y)], fill=(66, 104, 164), width=3)
+            radial(img, 640, 900, 900, (90, 150, 230), .3, power=1.5)
         else:   # x-ray lightbox
             img = vgrad([(0, (14, 30, 52)), (1, (8, 18, 34))], W, H)
             d = ImageDraw.Draw(img)
