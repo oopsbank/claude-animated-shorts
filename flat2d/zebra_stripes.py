@@ -124,7 +124,7 @@ def bonk_star(img, x, y, k, s=1.0):
 
 
 # ---------------------------------------------------------------- s01: the hook (2016 · ENGLAND)
-HX, HGY, HS = 570, 1450, 450                  # the striped-coat horse in the s01 framing (faces left)
+HX, HGY, HS = 570, 1390, 450                  # the striped-coat horse in the s01 framing (faces left)
 
 
 def horse_pose(w, graze=0.0):
@@ -142,7 +142,7 @@ def field_world(u, cam=0.0, horse=True, kind='coat', hs=HS, hx=HX, hgy=HGY, char
         info = A.put(img, kind, x, hgy, hs, face=-1, pose=horse_pose(u))
         if flies:
             fx, fy = x + 40, hgy - hs * .78
-            if fly_a > .02: swarm(img, u, fx, fy, hs * .95, hs * .45, 8, 62 * hs / 400, seed=3, speed=.9, r=6, alpha=fly_a)
+            if fly_a > .02: swarm(img, u, fx, fy, hs * 1.0, hs * .5, 8, 93 * hs / 400, seed=3, speed=.9, r=8, alpha=fly_a)
         if extra: extra(img)
     if chars: chars(img)
     if fg: SV.field_front(img, u, cam)
@@ -172,9 +172,9 @@ def s01_frame(u, w, cue=None):
     cam = 8 * math.sin(w * .45)
     G = {}
     def chars(img):
-        SV.tripod_camera(img, 860 + cam * 1.1, 1905, .78, t=w)
-        G['b'] = sci(img, w, 'B', 'hold', 'thinking', 250 + cam * 1.1, 1930, .5, look=.35, board=True, counts=(1, 3), bphase=.4)
-        G['a'] = sci(img, w, 'A', dict(POSES['stand'], armR=(-60, -100)), 'neutral', 960 + cam * 1.1, 1950, .5, look=-.6)
+        SV.tripod_camera(img, 860 + cam * 1.1, 1965, .78, t=w)
+        G['b'] = sci(img, w, 'B', 'hold', 'thinking', 250 + cam * 1.1, 1990, .5, look=.35, board=True, counts=(1, 3), bphase=.4)
+        G['a'] = sci(img, w, 'A', dict(POSES['stand'], armR=(-60, -100)), 'neutral', 960 + cam * 1.1, 2010, .5, look=-.6)
     img, hi = field_world(w, cam, chars=chars)
     z = 1.0 + .04 * smooth(u / 6)
     img = finish(img, w, z, 540, 1200, vig=(.24, (30, 40, 30)))
@@ -198,15 +198,16 @@ def s01b(u, D, cue):
     G = {}
     img = Image.new('RGBA', (W, H))
     SV.english_field(img, w, cam, horizon=700)
-    x = 760 + cam
-    hgy = 2420
-    A.put(img, 'coat', x, hgy, 1050, face=-1, pose=horse_pose(w))
-    fc = (x + 60, hgy - 1050 * .74)
-    for i, (ph, ww, L) in enumerate(((0, 1.3, 120), (2.2, -1.1, 104), (4.1, 1.5, 96), (1.3, -1.6, 88))):
-        fly_at(img, orbit(fc[0] - 80, fc[1] - 120, 420, 300, ww, ph), w, L, trail=.5, r=9)
-    G['b'] = sci(img, w, 'B', 'hold', 'thinking', 190 + cam * 1.3, 2010, .95, look=.55, board=True, counts=(1, 3), label_on=True,
+    x = 690 + cam
+    hgy = 1300
+    A.contact(img, x + 40, hgy + 6, 1000, .35, (40, 70, 30))
+    A.put(img, 'coat', x, hgy, 620, face=-1, pose=horse_pose(w))
+    fc = (x + 20, hgy - 620 * .74)
+    for i, (ph, ww, L) in enumerate(((0, 1.3, 130), (2.2, -1.1, 116), (4.1, 1.5, 108), (1.3, -1.6, 100))):
+        fly_at(img, orbit(fc[0] - 40, fc[1] - 60, 470, 300, ww, ph), w, L, trail=.5, r=10)
+    G['b'] = sci(img, w, 'B', 'hold', 'thinking', 200 + cam * 1.3, 2150, .8, look=.55, board=True, counts=(1, 3), label_on=True,
                  rim_dir=(1, -.3))
-    img = finish(img, w, 1.02 + .04 * smooth(u / D), 540, 1100, vig=(.26, (30, 40, 30)))
+    img = finish(img, w, 1.02 + .04 * smooth(u / D), 540, 1290, vig=(.26, (30, 40, 30)))
     if not HIDE_UI:
         chip(img, 'WATCH THE FLIES', (40, 40, 48), 600, 300, u, cue(12) - .15, size=58)
     return img, {'faces': [face_box(G['b'], 1.3)], 'avoid': [(200, 230, 1000, 370)]}
@@ -298,9 +299,9 @@ def s04(u, D, cue):
     zx, zgy = 850 + cam * .6, 1250
     A.contact(img, zx, zgy + 4, 250 * 1.6, .3, (90, 60, 30))
     zi = A.put(img, 'zebra', zx, zgy, 250, face=-1, pose=zebra_pose(w, .7, graze=.6 * smooth(seg(u, .3, 1.2))))
-    lx, lgy = 250 + cam * 1.2, 1800
+    lx, lgy = 370 + cam * 1.2, 1800
     A.contact(img, lx, lgy + 6, 760, .35, (90, 60, 30))
-    li = A.put(img, 'lion', lx, lgy, 470, face=1, pose={'tail': q(18 * math.sin(w * 1.3), 6), 'breath': q(.5 + .5 * math.sin(w * 2), .5)})
+    li = A.put(img, 'lion', lx, lgy, 430, face=1, pose={'tail': q(18 * math.sin(w * 1.3), 6), 'breath': q(.5 + .5 * math.sin(w * 2), .5)})
     SV.savanna_grass(img, w, (-80, 1760, W + 80, 2000), 90, 40, 90, seed=112, ink=INK, w0=7)
     # sight line: lion eye -> zebra
     ks = smooth(seg(u, cue(4) - .1, cue(5) + .1))
@@ -338,7 +339,7 @@ def s04b(u, D, cue):
     zx, zgy = 860, 1300
     A.contact(img, zx, zgy + 3, 260, .3, (90, 60, 30))
     A.put(img, 'zebra', zx, zgy, 200, face=-1, pose=zebra_pose(w, .7))
-    lx, lgy = 260, 1800
+    lx, lgy = 330, 1800
     A.contact(img, lx, lgy + 4, 420, .3, (90, 60, 30))
     li = A.put(img, 'lion', lx, lgy, 360, face=1, pose={'tail': q(16 * math.sin(w * 1.3), 6)})
     SV.savanna_grass(img, w, (-80, 1800, W + 80, 2000), 60, 40, 80, seed=113, ink=INK, w0=6)
@@ -346,7 +347,7 @@ def s04b(u, D, cue):
     km = smooth(seg(u, cue(9) - .3, cue(10)))
     if km > 0:
         d = ImageDraw.Draw(img)
-        a = (lx + 200, 1640); b = (zx - 60, 1310)
+        a = (li['muzzle'][0] + 60, li['muzzle'][1] - 70); b = (zx - 60, 1310)
         e = (a[0] + (b[0] - a[0]) * km, a[1] + (b[1] - a[1]) * km)
         for wd, col in ((18, INK), (9, (255, 255, 255))):
             d.line([a, e], fill=col, width=wd)
@@ -354,7 +355,7 @@ def s04b(u, D, cue):
             for p, dirn in ((a, 1), (b, -1)):
                 d.ellipse([p[0] - 14, p[1] - 14, p[0] + 14, p[1] + 14], fill=(255, 255, 255), outline=INK, width=5)
         if not HIDE_UI:
-            put_chip(img, '50+ METRES', (220, 120, 40), (a[0] + b[0]) / 2 + 170, (a[1] + b[1]) / 2 + 90, pop(u, cue(10) - .1, .3), size=52, angle=-12)
+            put_chip(img, '50+ METRES', (220, 120, 40), min(830, (a[0] + b[0]) / 2 + 120), (a[1] + b[1]) / 2 + 110, pop(u, cue(10) - .1, .3), size=52, angle=-12)
     # the lion's-eye view inset
     kin = out_back(seg(u, .15, .55), 1.4)
     if kin > 0:
@@ -759,31 +760,53 @@ def speed_bar(img, x, y, v, label_txt='SPEED'):
     d.text((x - w_ / 2, y - h_ / 2 - 30), label_txt, font=font(40, True), fill='white', anchor='ls', stroke_width=5, stroke_fill=INK)
 
 
+def _hide_strip(sy):
+    """The plain horse-hide surface for the diagram (cached): a warm gradient, short hair lying in one direction,
+    a lit bevel along the top edge."""
+    def build():
+        lay = layer(); d = ImageDraw.Draw(lay)
+        lay.paste(vgrad([(0, (176, 104, 60)), (.3, (150, 86, 50)), (1, (96, 54, 34))], W, H - sy), (0, sy))
+        rng = np.random.default_rng(1)
+        for i in range(2600):
+            x = rng.uniform(-20, W + 20); y = sy + 8 + (H - sy) * rng.uniform(0, 1) ** 1.4
+            L_ = rng.uniform(12, 28) * (1 - .4 * (y - sy) / (H - sy))
+            c = lerp((120, 66, 38), (200, 128, 76), rng.uniform(0, 1)) if i % 3 else (88, 48, 30)
+            d.line([(x, y), (x + L_ * .8, y - L_ * .45)], fill=c, width=3)
+        hl = mask(); ImageDraw.Draw(hl).rectangle([0, sy, W, sy + 22], fill=255)
+        fill_mask(lay, hl, (236, 170, 110), .5, blur=6)
+        d.line([(-20, sy), (W + 20, sy)], fill=INK, width=8)
+        return lay
+    return P.cached(('hide', sy), build)
+
+
 def s10(u, D, cue):
     w = u + 80
     img = Image.new('RGBA', (W, H))
     stage_bg(img, u)
     sy = 1360
-    d = ImageDraw.Draw(img)
-    # the surface: a strip of plain brown horse hide
-    d.rectangle([-20, sy, W + 20, H], fill=(150, 86, 48))
-    rng = np.random.default_rng(1)
-    for i in range(400):
-        x = rng.uniform(0, W); y = rng.uniform(sy + 10, H)
-        d.line([(x, y), (x + 5, y - 18)], fill=(120, 66, 38) if i % 2 else (176, 108, 64), width=4)
-    d.line([(-20, sy), (W + 20, sy)], fill=INK, width=8)
+    p0, p1 = (-160, 520), (690, sy - 96)
+    # a soft spotlight from above onto the landing spot
+    cone = mask(); ImageDraw.Draw(cone).polygon([(620, -40), (780, -40), (980, sy), (400, sy)], fill=255)
+    fill_mask(img, cone, (210, 226, 255), .10 + .015 * math.sin(u * 2), blur=40)
+    img.alpha_composite(_hide_strip(sy))
+    pool = mask(); ImageDraw.Draw(pool).ellipse([420, sy - 40, 960, sy + 110], fill=255)
+    fill_mask(img, pool, (255, 236, 200), .32, blur=30)
     t0, t1 = .1, cue(14) - .05
-    p0, p1 = (-160, 520), (700, sy - 70)
     pos = lambda t: approach_path(t, t0, t1, p0, p1, 3.2) if t < t1 else (p1[0], p1[1] + 0 * t)
     v = max(0.0, min(1.0, (u - t0) / (t1 - t0)))
     sp = 3.2 * (1 - v) ** 2.2 if u < t1 else 0.0
     legs = smooth(seg(u, cue(10), t1))
-    fly_at(img, pos, u, 220, trail=6, dt=.1, legs=legs, wing='blur' if u < t1 + .15 else 'fold', r=12, t_min=t0, tcol=(255, 236, 120))
+    # the fly's shadow on the hide grows sharper as it comes down
+    fx_, fy_ = pos(u)
+    k_sh = max(0.0, min(1.0, 1 - (sy - fy_) / 900))
+    shm = mask(); ImageDraw.Draw(shm).ellipse([fx_ - 120, sy + 18, fx_ + 120, sy + 48], fill=255)
+    fill_mask(img, shm, (40, 20, 14), .45 * k_sh, blur=14 - 8 * k_sh)
+    fly_at(img, pos, u, 300, trail=6, dt=.1, legs=legs, wing='blur' if u < t1 + .15 else 'fold', r=13, t_min=t0, tcol=(255, 236, 120))
     if not HIDE_UI:
         speed_bar(img, 540, 300, min(1, sp / 3.0))
         chip(img, 'FAST', (230, 80, 60), 200, 520, u, cue(5) - .2, size=56)
-        chip(img, 'SLOWS DOWN', (90, 170, 110), 540, 1060, u, cue(7) - .1, size=56)
-        chip(img, 'LANDS', (60, 140, 220), 880, 1180, u, cue(14) - .1, size=60)
+        chip(img, 'SLOWS DOWN', (90, 170, 110), 520, 1010, u, cue(7) - .1, size=56)
+        chip(img, 'LANDS', (60, 140, 220), 900, 1150, u, cue(14) - .1, size=60)
         chip(img, 'DOTS = EVERY 0.1 S', (60, 70, 90), 540, 1720, u, .4, size=40)
     img = finish(img, w, 1.0 + .02 * smooth(u / D), 540, 1000, vig=(.3, (10, 10, 30)))
     dust(img, 21, 30, (0, 300, W, 1350), (200, 220, 255), 110, size=(2, 5), t=u)
@@ -915,158 +938,325 @@ def s13(u, D, cue):
 
 
 # ---------------------------------------------------------------- s14: painted cows in Japan
-def japan_farm(img, u, cam=0.0, horizon=980):
-    P.sky(img, 'morning')
-    P.cumulus(img, u, [(200, 380, .8, 41, 5), (860, 300, 1.0, 42, 4)], lit=(255, 255, 250), shade=(196, 210, 232), mid=(232, 240, 250))
-    for k, (col, h, sd) in enumerate((((150, 176, 196), 330, 151), ((110, 146, 150), 250, 152), ((80, 120, 96), 170, 153))):
-        lay = P.cached(('jp_m', k), lambda col=col, h=h, sd=sd, k=k: _mtn(col, h, sd, horizon - 40 + 50 * k))
-        P.paste_band(img, lay, cam, .1 + .1 * k)
-        haze(img, horizon - h, horizon + 40, (230, 240, 244), .22)
-    # barn with a dark curved roof
+def _cloud_band(seed, y, h, col=(252, 253, 255), shade=(222, 232, 244), w=W + 900, alpha=.88):
+    """A long soft stratus band (cached): lumpy tops, a flat soft base, a pale shaded underside."""
+    def build():
+        rng = np.random.default_rng(seed)
+        m = mask(w, H); dm = ImageDraw.Draw(m)
+        x = -60
+        while x < w + 60:
+            r = rng.uniform(.55, 1.0) * h; yy = y + rng.uniform(-.2, .15) * h
+            dm.ellipse([x - r * 1.6, yy - r * .8, x + r * 1.6, yy + r * .5], fill=255)
+            x += r * rng.uniform(1.1, 1.9)
+        dm.rectangle([-60, y - h * .1, w + 60, y + h * .45], fill=255)
+        m = m.filter(ImageFilter.GaussianBlur(h * .25))
+        lo = mask(w, H); ImageDraw.Draw(lo).rectangle([0, int(y + h * .05), w, H], fill=255)
+        lo = ImageChops.multiply(lo.filter(ImageFilter.GaussianBlur(h * .35)), m)
+        k = np.asarray(lo, np.float32)[..., None] / 255 * .8
+        rgb_ = np.array(col, np.float32) * (1 - k) + np.array(shade, np.float32) * k
+        arr = np.concatenate([rgb_, np.asarray(m, np.float32)[..., None] * alpha], 2)
+        lay = Image.fromarray(arr.clip(0, 255).astype(np.uint8), 'RGBA')
+        return lay
+    return P.cached(('cband', seed, y, h, col, shade, w, alpha), build)
+
+
+def _terraces(seed, horizon, w=W + 600):
+    """Rice terraces stepped up a hillside on the right: water-bright flats, dark grassy lips, a few farmers' huts."""
+    def build():
+        lay = layer(w, H); d = ImageDraw.Draw(lay)
+        x0, x1 = 820, w
+        top = lambda x: horizon - 40 - 330 * P.smooth((x - x0) / 620)
+        xs = np.arange(x0 - 40, x1 + 20, 10)
+        d.polygon([(x, top(x)) for x in xs] + [(x1 + 20, horizon + 140), (x0 - 40, horizon + 140)], fill=(96, 140, 92))
+        n = 9
+        for i in range(n):
+            f0, f1 = i / n, (i + 1) / n
+            yA = lambda x, f=f0: top(x) + (horizon + 120 - top(x)) * f + 10 * math.sin(x / 90 + i)
+            yB = lambda x, f=f1: top(x) + (horizon + 120 - top(x)) * f + 10 * math.sin(x / 90 + i + .7)
+            pts = [(x, yA(x)) for x in xs] + [(x, yB(x)) for x in xs[::-1]]
+            flat = lerp((150, 196, 120), (186, 214, 150), (i % 3) / 2)
+            d.polygon(pts, fill=flat)
+            # the water sheen on the flat and the dark lip below it
+            d.line([(x, yA(x) + (yB(x) - yA(x)) * .35) for x in xs], fill=(214, 234, 226), width=3)
+            d.line([(x, yB(x) - 4) for x in xs], fill=(70, 108, 70), width=7)
+            d.line([(x, yB(x) + 2) for x in xs], fill=(120, 160, 104), width=3)
+        al = lay.split()[3]
+        fill_mask(lay, al.point(lambda v: int(v * .18)), (210, 226, 232))
+        return lay
+    return P.cached(('terr', seed, horizon, w), build)
+
+
+def _farmhouse(img, x, y, s):
+    """A small farmhouse with a dark curved (irimoya-style) roof and white plaster walls, far off."""
     d = ImageDraw.Draw(img)
-    bx, by = 120 + cam * .5, horizon + 120
-    d.rectangle([bx - 160, by - 200, bx + 200, by], fill=(150, 112, 80), outline=INK, width=6)
-    for x in range(int(bx - 150), int(bx + 200), 34): d.line([(x, by - 196), (x, by - 4)], fill=(126, 92, 66), width=4)
-    d.polygon([(bx - 220, by - 190), (bx - 160, by - 300), (bx + 200, by - 300), (bx + 260, by - 190), (bx + 20, by - 210)], fill=(56, 60, 72), outline=INK)
-    d.line([(bx - 220, by - 190), (bx - 160, by - 300), (bx + 200, by - 300), (bx + 260, by - 190)], fill=INK, width=6)
-    d.rectangle([bx - 10, by - 130, bx + 80, by], fill=(70, 50, 40), outline=INK, width=5)
+    iw = max(2, int(4 * s))
+    d.rectangle([x - 120 * s, y - 90 * s, x + 120 * s, y], fill=(238, 232, 218), outline=INK, width=iw)
+    for k in range(5): d.line([(x - 120 * s + k * 60 * s, y - 90 * s), (x - 120 * s + k * 60 * s, y)], fill=(110, 80, 60), width=iw)
+    d.line([(x - 120 * s, y - 45 * s), (x + 120 * s, y - 45 * s)], fill=(110, 80, 60), width=iw)
+    roof = [(x - 175 * s, y - 80 * s), (x - 130 * s, y - 120 * s), (x - 70 * s, y - 175 * s), (x + 70 * s, y - 175 * s), (x + 130 * s, y - 120 * s),
+            (x + 175 * s, y - 80 * s), (x + 150 * s, y - 95 * s), (x - 150 * s, y - 95 * s)]
+    d.polygon(roof, fill=(58, 62, 76), outline=INK)
+    d.line(roof[:6], fill=INK, width=iw)
+    d.line([(x - 70 * s, y - 175 * s), (x + 70 * s, y - 175 * s)], fill=(120, 126, 140), width=iw + 2)
+    d.rectangle([x - 20 * s, y - 60 * s, x + 25 * s, y], fill=(70, 50, 40), outline=INK, width=iw)
+
+
+def japan_farm(img, u, cam=0.0, horizon=1000, house=(250, .55)):
+    """Rural Japan: a morning sky with a cloud band, layered blue-green mountains with cedar forest, rice terraces on
+    the right, a tree line, a farmhouse, a fenced paddock. Returns the paddock's ground line."""
+    P.sky(img, 'morning')
+    radial(img, 900 + cam * .05, 260, 760, (255, 246, 214), .4)
+    P.cumulus(img, u, [(180, 300, .75, 41, 5), (900, 200, .95, 42, 4)], lit=(255, 255, 250), shade=(196, 210, 232), mid=(232, 240, 250))
+    P.paste_band(img, P.pine_ridge(181, horizon - 330, 300, (168, 190, 210), tree=(10, 22), dens=.7, haze_col=(214, 228, 238), haze_a=.35), cam, .05)
+    img.alpha_composite(_cloud_band(182, horizon - 470, 40), (int(-450 + cam * .07 + (u * 6) % 300 - 150), 0))
+    P.paste_band(img, P.pine_ridge(183, horizon - 170, 260, (122, 160, 170), tree=(16, 36), dens=.9, lit=(150, 186, 190),
+                                   haze_col=(200, 222, 232), haze_a=.35), cam, .1)
+    img.alpha_composite(_cloud_band(184, horizon - 300, 26, col=(244, 248, 252), shade=(206, 222, 232)), (int(-450 + cam * .12 - (u * 4) % 300), 0))
+    haze(img, horizon - 420, horizon - 60, (226, 238, 242), .16)
+    P.paste_band(img, P.pine_ridge(185, horizon - 40, 200, (84, 128, 110), tree=(22, 48), dens=1.1, lit=(112, 156, 124),
+                                   haze_col=(190, 214, 214), haze_a=.25), cam, .18)
+    P.paste_band(img, _terraces(186, horizon), cam, .25)
+    P.paste_band(img, SV.hedgerow(187, horizon + 40, 30, cols=((92, 140, 84), (70, 116, 72), (52, 92, 62)),
+                                  oaks=((200, .42, 4), (760, .5, 5), (1300, .4, 6)), haze_a=.15), cam, .3)
+    if house: _farmhouse(img, house[0] + cam * .35, horizon + 60, house[1])
     P.paste_band(img, P.hill(161, horizon + 120, 18, SV.FIELD, ink=None, waves=(.6, 1.4)), cam, .5)
     ground = lambda x: P.edge_y(161, horizon + 120, 18, x - cam * .5, waves=(.6, 1.4))
     SV.fence(img, lambda x: ground(x) + 40, -100, W + 100, cam, .6, post_h=110, gap=240, s=.8)
     P.grass(img, u, (-60, horizon + 100, W + 60, H), 380, 16, 46, cols=SV.FIELD, seed=162, clump=(3, 6))
+    SV.flowers(img, 164, (-40, horizon + 180, W + 40, H - 100), 50, u, cam, .7, size=(4, 9))
     return ground
 
 
-def _mtn(col, h, seed, y):
-    lay = layer(W + 600, H); d = ImageDraw.Draw(lay)
-    rng = np.random.default_rng(seed)
-    xs = np.arange(0, W + 620, 20)
-    ys = y - h * (.5 + .3 * np.sin(xs / 300 + rng.uniform(0, 6)) + .2 * np.sin(xs / 110 + rng.uniform(0, 6)))
-    d.polygon(list(zip(xs, ys)) + [(W + 600, H), (0, H)], fill=col)
-    return lay
+# the stripe columns of the painted cow: boundaries between white stripes (unit X), see animals._paint (pb = X * 6.2)
+def _cow_reveal(paint_lay, o, cs, cur, y_top=-1.06, y_bot=-0.30):
+    """Mask of the painted part on a face=-1 cow layer: every column behind `cur` (unit X, rump -> head) fully painted,
+    the current column painted down to its progress. Returns (mask, (x_col_mid, y_brush) in unit, column [Xa, Xb])."""
+    k = math.floor(cur * 6.2 - .75); fr = cur * 6.2 - .75 - k
+    Xa, Xb = (.75 + k) / 6.2, (1.75 + k) / 6.2
+    yb = y_top + (y_bot - y_top) * fr
+    Wd, Hd = paint_lay.size
+    xx = np.arange(Wd)[None, :]; yy = np.arange(Hd)[:, None]
+    Xl = (o[0] - xx) / cs; Yl = (yy - o[1]) / cs
+    m = (Xl < Xa) | ((Xl < Xb) & (Yl < yb))
+    return Image.fromarray((m * 255).astype(np.uint8)), ((Xa + Xb) / 2, yb), (Xa, Xb)
 
 
 def s14(u, D, cue):
+    """Japan: the farmer stands BESIDE the cow (right of the rump) and paints white stripes on it from the rump
+    forward with a long brush: the rump is done, a wet stroke runs down the current stripe."""
     w = u + 120
     cam = -14 * smooth(u / D)
     img = Image.new('RGBA', (W, H))
-    japan_farm(img, w, cam)
-    cx, cgy, cs = 600 + cam * .8, 1560, 370
-    A.contact(img, cx, cgy + 6, cs * 1.7, .35, (40, 70, 30))
-    pose = {'tail': q(14 * math.sin(w * 1.7), 7), 'ear': q(max(0, math.sin(w * 2)) ** 6, .5), 'neck': q(3 * math.sin(w), 1.5)}
-    kp = smooth(seg(u, cue(3) - .3, cue(6) + .2))            # the paint wipe: front to back
+    ground = japan_farm(img, w, cam, house=(130, .5))
+    cx, cgy, cs = 455 + cam * .8, 1640, 310
+    A.contact(img, cx + 20, cgy + 6, cs * 1.9, .38, (40, 70, 30))
+    pose = {'tail': q(10 * math.sin(w * 1.7), 5), 'ear': q(max(0, math.sin(w * 2)) ** 6, .5), 'neck': q(2 * math.sin(w * .8), 1),
+            'breath': q(.5 + .5 * math.sin(w * 2.1), .5)}
     plain, o = A.quad('cow', cs, pose=pose, face=-1, painted=False)
     paint, _ = A.quad('cow', cs, pose=pose, face=-1, painted=True)
-    ox, oy = int(cx - o[0]), int(cgy - o[1])
-    edge_x = None
+    cur = -0.42 + 0.46 * smooth(seg(u, .0, D - .1)) ** .9                 # rump done at the start, mid-barrel by the end
+    mk, (bxu, byu), (Xa, Xb) = _cow_reveal(paint, o, cs, cur)
     lay = plain.copy()
-    if kp > 0:
-        m = Image.new('L', paint.size, 0)
-        ex = o[0] + (0.85 - 1.75 * kp) * cs
-        ImageDraw.Draw(m).rectangle([ex, 0, paint.width, paint.height], fill=255)
-        lay.paste(paint, (0, 0), ImageChops.multiply(m, paint.split()[3]))
-        edge_x = ox + ex
+    lay.paste(paint, (0, 0), ImageChops.multiply(mk, paint.split()[3]))
+    # the wet stroke: the current column glistens
+    wet = mask(*lay.size); dw = ImageDraw.Draw(wet)
+    xa_px, xb_px = o[0] - Xb * cs, o[0] - Xa * cs
+    dw.rectangle([xa_px, 0, xb_px, o[1] + byu * cs], fill=150)
+    wet = ImageChops.multiply(ImageChops.multiply(wet, mk), paint.split()[3])
+    lay.paste(Image.new('RGBA', lay.size, (255, 255, 255, 255)), (0, 0), wet.point(lambda v: int(v * .35)))
+    ox, oy = int(cx - o[0]), int(cgy - o[1])
     A._paste(img, lay, ox, oy)
-    G = {}
-    fx = (edge_x if edge_x is not None else cx + .85 * cs) + 120
-    fx = min(950, max(600, fx))
-    pp = add(dict(POSES['hold']), armR=(10 * math.sin(u * 9), 14 * math.sin(u * 9)))
-    G['f'] = sci(img, w, 'F', pp, 'determined' if u > cue(3) else 'neutral', fx, 1890, .56, look=-.7, label_on=True, lbl='FARMER', lbl_dy=-40)
-    hx, hy, _ = G['f']['hands']['R']
+    # drips under the wet stroke
     d = ImageDraw.Draw(img)
-    bx_, by_ = hx - 150, hy - 120                                   # a long-handled paint brush to the wet edge
-    d.line([(hx + 20, hy + 20), (bx_, by_)], fill=INK, width=18); d.line([(hx + 20, hy + 20), (bx_, by_)], fill=(176, 126, 74), width=9)
-    d.polygon([(bx_ - 50, by_ - 40), (bx_ + 20, by_ - 60), (bx_ + 40, by_ + 10), (bx_ - 30, by_ + 30)], fill=(246, 246, 240), outline=INK)
-    for k in range(4):
-        dy_ = (u * 160 + k * 40) % 140
-        d.ellipse([bx_ - 20 + k * 12, by_ + 30 + dy_, bx_ - 10 + k * 12, by_ + 44 + dy_], fill=(246, 246, 240))
-    bkx = fx + 110                                                   # the paint bucket
-    d.polygon([(bkx - 60, 1800), (bkx + 60, 1800), (bkx + 48, 1900), (bkx - 48, 1900)], fill=(170, 176, 190), outline=INK)
-    d.ellipse([bkx - 60, 1785, bkx + 60, 1815], fill=(246, 246, 240), outline=INK, width=5)
-    P.grass(img, w, (-80, 1840, W + 80, 2000), 60, 70, 140, cols=(SV.FIELD[1], SV.FIELD[2], SV.FIELD[3], lerp(SV.FIELD[3], INK, .3)), seed=163, w0=9, ink=INK)
-    img = finish(img, w, 1.02 + .03 * smooth(u / D), 540, 1250, vig=(.24, (30, 40, 30)))
+    bx, by = cx - bxu * cs, cgy + byu * cs
+    for k in range(5):
+        dx_ = (k - 2) * 9
+        L_ = (u * 70 + k * 23) % 60
+        top_y = cgy - .36 * cs if byu > -.4 else by
+        d.line([(bx + dx_, by - 10), (bx + dx_, min(top_y, by) + L_ * .6)], fill=(246, 246, 240), width=5)
+    # paint bucket on the grass between the cow's hind legs and the farmer
+    bkx, bky = 770 + cam * .8, 1700
+    d.polygon([(bkx - 52, bky - 92), (bkx + 52, bky - 92), (bkx + 42, bky), (bkx - 42, bky)], fill=(170, 176, 190), outline=INK, width=5)
+    d.ellipse([bkx - 52, bky - 106, bkx + 52, bky - 78], fill=(248, 248, 242), outline=INK, width=5)
+    d.arc([bkx - 50, bky - 170, bkx + 50, bky - 60], 200, 340, fill=INK, width=5)
+    for k in range(3): d.line([(bkx - 30 + k * 26, bky - 80), (bkx - 32 + k * 26, bky - 50 - k * 8)], fill=(248, 248, 242), width=6)
+    # the farmer beside the rump, both hands on a long brush reaching the flank
+    G = {}
+    fx = 905 + cam * .8
+    st = math.sin(u * 7)                                                     # the stroke rhythm
+    pp = dict(POSES['stand'], armL=(58 + 6 * st, 70 + 8 * st), armR=(44 + 6 * st, 84 + 6 * st), legL=(14, 2), legR=(-6, -1))
+    G['f'] = sci(img, w, 'F', pp, 'determined' if u > cue(3) else 'neutral', fx, 1740, .5, look=-.8, lean=-4, label_on=True,
+                 lbl='FARMER', lbl_dy=-30)
+    hL, hR = G['f']['hands']['L'], G['f']['hands']['R']
+    hx, hy = (hL[0] + hR[0]) / 2, (hL[1] + hR[1]) / 2
+    tx, ty = bx + 26, by + 8 * st                                             # the brush head rides the wet stroke
+    vx, vy = tx - hx, ty - hy; ln = math.hypot(vx, vy) or 1; ux, uy = vx / ln, vy / ln
+    butt = (hx - ux * 70, hy - uy * 70)
+    neck_ = (tx - ux * 46, ty - uy * 46)
+    d.line([butt, neck_], fill=INK, width=17); d.line([butt, neck_], fill=(184, 134, 82), width=8)
+    nx_, ny_ = -uy, ux
+    head = [(neck_[0] + nx_ * 34, neck_[1] + ny_ * 34), (neck_[0] - nx_ * 34, neck_[1] - ny_ * 34),
+            (tx - nx_ * 40, ty - ny_ * 40), (tx + nx_ * 40, ty + ny_ * 40)]
+    d.polygon(head, fill=(196, 150, 96), outline=INK, width=5)
+    bristle = [(tx - ux * 6 + nx_ * 40, ty - uy * 6 + ny_ * 40), (tx - ux * 6 - nx_ * 40, ty - uy * 6 - ny_ * 40),
+               (tx + ux * 22 - nx_ * 38, ty + uy * 22 - ny_ * 38), (tx + ux * 22 + nx_ * 38, ty + uy * 22 + ny_ * 38)]
+    d.polygon(bristle, fill=(248, 248, 242), outline=INK, width=4)
+    for hh in (hL, hR):                                                     # hands over the pole
+        d.ellipse([hh[0] - 13, hh[1] - 13, hh[0] + 13, hh[1] + 13], fill=(246, 246, 242), outline=INK, width=4)
+    P.grass(img, w, (-80, 1860, W + 80, 2000), 60, 70, 140, cols=(SV.FIELD[1], SV.FIELD[2], SV.FIELD[3], lerp(SV.FIELD[3], INK, .3)),
+            seed=163, w0=9, ink=INK)
+    img = finish(img, w, 1.02 + .03 * smooth(u / D), 540, 1300, vig=(.22, (30, 40, 30)))
     if not HIDE_UI:
         chip(img, 'JAPAN', (200, 50, 60), 540, 250, u, cue(2) - .1, size=64)
         chip(img, 'PAINTED STRIPES', (40, 40, 48), 540, 400, u, cue(4) - .1, size=52)
-    return img, {'faces': [face_box(G['f'], 1.3)], 'avoid': [(0, 160, W, 470)]}
+    return img, {'faces': [face_box(G['f'], 1.3)], 'avoid': [(0, 160, W, 470), (0, 1240, 820, 1760)]}
 
 
 def s14b(u, D, cue):
-    """Far fewer bites: plain black cow (many flies) over the striped cow (few)."""
+    """Far fewer bites: the plain black cow (swarmed) up top, the striped cow (two flies) below."""
     w = u + 125
     img = Image.new('RGBA', (W, H))
-    japan_farm(img, w, 0)
-    d = ImageDraw.Draw(img)
-    for i, (painted, gy, n) in enumerate(((False, 1080, 12), (True, 1720, 2))):
-        x = 540
-        A.contact(img, x, gy + 6, 560, .35, (40, 70, 30))
-        A.put(img, 'cow', x, gy, 330, face=1 if i else -1, painted=painted, pose={'tail': q(14 * math.sin(w * 2 + i), 7)})
-        cy = gy - 330 * .7
-        swarm(img, w, x, cy, 330, 160, n, 62, seed=7 + i, speed=1.2, trail=.3, r=5)
+    japan_farm(img, w, 0, horizon=760, house=(900, .42))
+    for i, (painted, gy, n) in enumerate(((False, 1180, 12), (True, 1780, 2))):
+        x = 560 if i == 0 else 520
+        A.contact(img, x + 20, gy + 6, 600, .38, (40, 70, 30))
+        A.put(img, 'cow', x, gy, 300, face=1 if i else -1, painted=painted,
+              pose={'tail': q(14 * math.sin(w * 2 + i), 7), 'ear': q(max(0, math.sin(w * 2.4 + i)) ** 6, .5), 'neck': q(3 * math.sin(w + i), 1.5)})
+        cy = gy - 300 * .72
+        swarm(img, w, x, cy, 330, 170, n, 74, seed=7 + i, speed=1.2, trail=.3, r=6)
     if not HIDE_UI:
-        put_chip(img, 'PLAIN: MANY BITES', (220, 60, 50), 540, 470, pop(u, .0, .25), size=48)
-        put_chip(img, 'STRIPED: FAR FEWER', (60, 150, 90), 540, 1230, pop(u, cue(8) - .1, .25), size=48)
+        put_chip(img, 'PLAIN: MANY BITES', (220, 60, 50), 540, 560, pop(u, .0, .25), size=48)
+        put_chip(img, 'STRIPED: FAR FEWER', (60, 150, 90), 540, 1300, pop(u, cue(8) - .1, .25), size=48)
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1200, vig=(.24, (30, 40, 30)))
-    return img, {'faces': [], 'avoid': [(150, 500, 930, 620), (150, 1170, 930, 1290)]}
+    return img, {'faces': [], 'avoid': [(150, 500, 930, 620), (150, 1240, 930, 1360)]}
 
 
 # ---------------------------------------------------------------- s15: striped stairs
+ST_TOP, ST_EDGE = 470, 760                     # the landing: back edge, front edge (frame y)
+
+
+def _st_x(y):
+    """Half-width of the staircase at frame y (one-point perspective: wider toward the camera)."""
+    return 300 + (y - ST_TOP) * .27
+
+
+def _stairs_set():
+    """The static stairwell (cached): back wall with a window, side walls with handrails and a lamp, the landing and
+    the steps coming down toward us. Returns (layer, step list [(y_riser_top, y_tread_top, y_next)])."""
+    def build():
+        img = layer(); d = ImageDraw.Draw(img)
+        # back wall + side walls (warm plaster)
+        img.paste(vgrad([(0, (226, 208, 184)), (1, (204, 184, 160))], W, ST_TOP + 10), (0, 0))
+        for side in (-1, 1):
+            pts = [(540 + side * _st_x(ST_TOP), 0), (540 + side * _st_x(ST_TOP), ST_TOP), (540 + side * _st_x(H), H),
+                   (540 + side * 900, H), (540 + side * 900, 0)]
+            d.polygon(pts, fill=(196, 174, 150) if side < 0 else (212, 190, 164))
+        rng = np.random.default_rng(15)
+        for i in range(900):                                          # plaster texture
+            x, y = rng.uniform(0, W), rng.uniform(0, H)
+            c = (180, 158, 136) if i % 2 else (232, 214, 192)
+            d.ellipse([x - 2, y - 2, x + 2, y + 2], fill=c)
+        for side in (-1, 1):                                         # wall/stair corner lines
+            d.line([(540 + side * _st_x(ST_TOP), 0), (540 + side * _st_x(ST_TOP), ST_TOP), (540 + side * _st_x(H), H)], fill=(130, 110, 96), width=6)
+        # skirting along the walls
+        for side in (-1, 1):
+            d.line([(540 + side * (_st_x(ST_TOP) + 4), ST_TOP - 30), (540 + side * (_st_x(ST_TOP) + 4), ST_TOP)], fill=(150, 120, 96), width=8)
+        # the window on the back wall
+        wx0, wy0, wx1, wy1 = 600, 110, 800, 380
+        d.rectangle([wx0 - 14, wy0 - 14, wx1 + 14, wy1 + 14], fill=(150, 116, 90), outline=INK, width=6)
+        img.paste(vgrad([(0, (150, 200, 240)), (1, (226, 240, 246))], wx1 - wx0, wy1 - wy0), (wx0, wy0))
+        d.line([((wx0 + wx1) / 2, wy0), ((wx0 + wx1) / 2, wy1)], fill=(150, 116, 90), width=10)
+        d.line([(wx0, (wy0 + wy1) / 2), (wx1, (wy0 + wy1) / 2)], fill=(150, 116, 90), width=10)
+        d.rectangle([wx0 - 24, wy1 + 10, wx1 + 24, wy1 + 28], fill=(236, 222, 200), outline=INK, width=4)
+        # landing (wooden floor boards)
+        L0 = [(540 - _st_x(ST_TOP), ST_TOP), (540 + _st_x(ST_TOP), ST_TOP), (540 + _st_x(ST_EDGE), ST_EDGE), (540 - _st_x(ST_EDGE), ST_EDGE)]
+        d.polygon(L0, fill=(196, 158, 118))
+        for k in range(1, 9):
+            f = k / 9
+            d.line([(540 + (-_st_x(ST_TOP) + 2 * _st_x(ST_TOP) * f), ST_TOP), (540 + (-_st_x(ST_EDGE) + 2 * _st_x(ST_EDGE) * f), ST_EDGE)], fill=(170, 132, 96), width=3)
+        # steps: riser (faces us, shaded) then tread (lit), spacing grows toward the camera
+        steps = []; y = ST_EDGE; dk = 118
+        while y < H + 40:
+            yr, yt, yn = y, y + dk * .40, y + dk
+            steps.append((yr, yt, yn)); y = yn; dk *= 1.11
+        for yr, yt, yn in steps:
+            xa, xb = _st_x(yr), _st_x(yt); xc = _st_x(yn)
+            d.polygon([(540 - xa, yr), (540 + xa, yr), (540 + xb, yt), (540 - xb, yt)], fill=(150, 140, 132))      # riser
+            d.polygon([(540 - xb, yt), (540 + xb, yt), (540 + xc, yn), (540 - xc, yn)], fill=(222, 214, 202))      # tread
+            d.line([(540 - xa, yr), (540 + xa, yr)], fill=(252, 248, 240), width=6)                               # nosing highlight
+            d.line([(540 - xa, yr + 5), (540 + xa, yr + 5)], fill=(70, 62, 58), width=4)                         # crisp edge
+            sh = mask(); ImageDraw.Draw(sh).polygon([(540 - xb, yt), (540 + xb, yt), (540 + xb, yt + 26), (540 - xb, yt + 26)], fill=255)
+            fill_mask(img, sh, (90, 80, 76), .45, blur=8)                                                         # shadow under the nosing
+        for i in range(500):                                         # stone speckle on the steps
+            x, y_ = rng.uniform(0, W), rng.uniform(ST_EDGE, H)
+            if abs(x - 540) < _st_x(y_): d.point((x, y_), fill=(176, 168, 160))
+        # handrails along both walls, with brackets
+        for side in (-1, 1):
+            p0 = (540 + side * (_st_x(ST_TOP) - 10), ST_TOP - 140); p1 = (540 + side * (_st_x(H) + 150), H - 300)
+            for k in range(1, 5):
+                f = k / 5; bx, by = p0[0] + (p1[0] - p0[0]) * f, p0[1] + (p1[1] - p0[1]) * f
+                d.line([(bx, by), (bx + side * 26, by - 8)], fill=(70, 60, 56), width=8)
+            d.line([p0, p1], fill=INK, width=26); d.line([p0, p1], fill=(150, 98, 62), width=16)
+            d.line([(p0[0] - side * 2, p0[1] - 5), (p1[0] - side * 2, p1[1] - 5)], fill=(200, 146, 100), width=4)
+        # a brass wall lamp on the left wall
+        lx, ly = 130, 560
+        d.rectangle([lx - 14, ly - 4, lx + 14, ly + 60], fill=(120, 90, 50), outline=INK, width=4)
+        d.polygon([(lx - 44, ly - 70), (lx + 44, ly - 70), (lx + 30, ly), (lx - 30, ly)], fill=(255, 232, 170), outline=INK)
+        return img, steps
+    return P.cached('stairs_set', build)
+
+
 def s15(u, D, cue):
-    """A wide staircase seen from the top landing, going down toward us. The LEFT half stays plain (every step edge
-    clear); the RIGHT half gets painted with bold stripes (on "painted ... stripes") and its edges vanish. A person on
-    the striped side hovers a foot over the first step."""
+    """Looking down a wide staircase from above. The LEFT half stays plain (every step edge crisp, with a shadow);
+    the RIGHT half gets painted with bold diagonal stripes (on "painted ... stripes") that hide the edges. A person on
+    the top landing at the edge of the painted half hovers a foot over the first step, leaning back, worried."""
     w = u + 130
     img = Image.new('RGBA', (W, H))
-    img.paste(vgrad([(0, (206, 200, 188)), (.5, (182, 174, 162)), (1, (128, 120, 114))]), (0, 0))
-    d = ImageDraw.Draw(img)
-    d.polygon([(0, 0), (150, 360), (150, 1920), (0, 1920)], fill=(150, 144, 136))
-    d.polygon([(W, 0), (930, 360), (930, 1920), (W, 1920)], fill=(162, 156, 146))
-    for x_ in (150, 930): d.line([(x_, 360), (x_, H)], fill=(110, 104, 98), width=6)
-    kit.light_rays(img, 900, -100, (255, 240, 210), n=7, alpha=.22, spread=(100, 150), length=2400, seed=3, phase=math.sin(u * .4))
-    n = 8
-    top_y, bot_y = 760, 1980
-    stair = layer(); ds = ImageDraw.Draw(stair)
-    ds.polygon([(150, 560), (930, 560), (930, top_y), (150, top_y)], fill=(210, 204, 192, 255))          # landing
-    edges = []
-    for i in range(n):
-        f0 = (i / n) ** 1.2; f1 = ((i + 1) / n) ** 1.2
-        y0 = top_y + (bot_y - top_y) * f0; y1 = top_y + (bot_y - top_y) * f1
-        ym = y0 + (y1 - y0) * .45
-        ds.polygon([(150, y0), (930, y0), (930, ym), (150, ym)], fill=(150, 142, 132, 255))              # riser (shade)
-        ds.polygon([(150, ym), (930, ym), (930, y1), (150, y1)], fill=(220, 212, 198, 255))              # tread (lit)
-        ds.line([(150, ym), (930, ym)], fill=(250, 246, 236, 255), width=5)                              # nosing highlight
-        ds.line([(150, y0), (930, y0)], fill=(90, 84, 78, 255), width=6)
-        edges.append(y0)
-    img.alpha_composite(stair)
+    lay, steps = _stairs_set()
+    img.alpha_composite(lay)
+    # window light falling onto the landing and the first steps; the lamp glow
+    lm = mask(); ImageDraw.Draw(lm).polygon([(600, ST_TOP + 10), (800, ST_TOP + 10), (760, ST_EDGE + 230), (480, ST_EDGE + 230)], fill=255)
+    fill_mask(img, lm, (255, 244, 214), .22 + .03 * math.sin(u * 1.3), blur=26)
+    kit.light_rays(img, 700, 250, (255, 240, 210), n=6, alpha=.14, spread=(80, 140), length=1400, seed=3, phase=math.sin(u * .4))
+    radial(img, 130, 520, 260, (255, 214, 140), .45 + .04 * math.sin(u * 5))
+    # the paint: the right half of the steps, wiped in top -> bottom
     kp = smooth(seg(u, cue(1) - .1, cue(4)))
     if kp > 0:
-        sa = mask(); ImageDraw.Draw(sa).rectangle([548, 560, 930, H], fill=255)
-        wipe = mask(); ImageDraw.Draw(wipe).rectangle([0, 0, W, 560 + (H - 560) * kp], fill=255)
+        sa = mask(); ImageDraw.Draw(sa).polygon([(540, ST_EDGE), (540 + _st_x(ST_EDGE), ST_EDGE), (540 + _st_x(H), H), (540, H)], fill=255)
+        wipe = mask(); ImageDraw.Draw(wipe).rectangle([0, 0, W, ST_EDGE + (H - ST_EDGE) * kp], fill=255)
         mm = ImageChops.multiply(sa, wipe)
-        fill_mask(img, mm, (240, 238, 230), .82)                      # white paint (the step shading still glimmers)
+        fill_mask(img, mm, (242, 240, 232), .94)
         sl = mask(); dd = ImageDraw.Draw(sl)
-        for k in range(-30, 40):
-            y0_ = 400 + k * 92
-            dd.polygon([(500, y0_), (980, y0_ - 210), (980, y0_ - 164), (500, y0_ + 46)], fill=255)
-        fill_mask(img, ImageChops.multiply(sl, mm), (24, 22, 28), .93)
-        for y0, ym, y1 in [(e, e, e) for e in edges]:                     # faint ghosts of the step edges
-            ImageDraw.Draw(img).line([(552, y0), (926, y0)], fill=(120, 116, 112), width=2)
-        d.line([(544, 560), (544, H)], fill=INK, width=8)
+        for k in range(-20, 30):
+            y0_ = ST_EDGE - 200 + k * 120
+            dd.polygon([(500, y0_), (1100, y0_ - 330), (1100, y0_ - 270), (500, y0_ + 60)], fill=255)
+        fill_mask(img, ImageChops.multiply(sl, mm), (26, 24, 30), .95)
+        dd2 = ImageDraw.Draw(img)
+        for yr, yt, yn in steps:                                       # the edges barely survive under the paint
+            if yr < ST_EDGE + (H - ST_EDGE) * kp:
+                dd2.line([(546, yr + 3), (540 + _st_x(yr) - 4, yr + 3)], fill=(150, 146, 140), width=2)
+        d = ImageDraw.Draw(img); d.line([(540, ST_EDGE), (540, H)], fill=(120, 112, 104), width=4)
+    # the person on the top landing, at the edge of the painted half
     G = {}
     kf = smooth(seg(u, cue(5) - .3, cue(7)))
-    lift = .5 + .5 * math.sin(u * 3.2)
-    pose = dict(POSES['stand'], legR=(-18 - 26 * kf - 8 * lift * kf, 20 + 10 * lift * kf), armL=(40, 50), armR=(-40, -50))
-    G['p'] = actor(img, 'worried' if u > cue(5) else 'neutral', pose, 760, top_y - 6, .56, w, look=0.0, aura=(255, 240, 210), aura_alpha=.3,
-                   rim=(255, 240, 210), shirt='#d0743c', pants='#3e4660')
-    dust(img, 15, 30, (150, 300, 930, 1500), (255, 250, 230), 120, size=(2, 5), t=u)
-    img = finish(img, w, 1.0 + .04 * smooth(u / D), 540, 1000, vig=(.3, (30, 24, 30)))
+    hov = .5 + .5 * math.sin(u * 3.4)
+    pose = dict(POSES['stand'], legL=(8, 2), legR=(-12 - 48 * kf - 6 * hov * kf, -2 + 10 * kf + 6 * hov * kf),
+                armL=(70 + 10 * kf, 40), armR=(-70 - 10 * kf, -40))
+    fx, gy = 640, ST_EDGE - 14
+    A.contact(img, fx + 30, gy + 4, 150, .35, (90, 70, 50))
+    fsh = mask(); ImageDraw.Draw(fsh).ellipse([fx + 50, ST_EDGE + 60, fx + 150, ST_EDGE + 84], fill=255)     # the hovering foot's shadow below
+    fill_mask(img, fsh, (40, 40, 50), .25 * kf, blur=8)
+    G['p'] = actor(img, 'worried' if u > cue(5) else 'neutral', pose, fx, gy, .5, w, look=-.3 * kf, lean=4 * kf,
+                   aura=(255, 240, 210), aura_alpha=.25, rim=(255, 240, 210), shirt='#d0743c', pants='#3e4660')
+    dust(img, 15, 30, (100, 100, 980, 1500), (255, 250, 230), 120, size=(2, 5), t=u)
+    img = finish(img, w, 1.0 + .04 * smooth(u / D), 540, 900, vig=(.3, (40, 28, 24)))
     if not HIDE_UI:
-        put_chip(img, 'PLAIN', (110, 104, 98), 340, 470, pop(u, .1, .3), size=50)
-        put_chip(img, 'PAINTED', (40, 40, 48), 740, 470, pop(u, cue(2) - .1, .3), size=50)
-        chip(img, "WHERE'S THE STEP?", (220, 70, 50), 740, 1240, u, cue(7), size=48)
+        put_chip(img, 'PLAIN', (110, 104, 98), 300, 1220, pop(u, .1, .3), size=50)
+        put_chip(img, 'PAINTED', (40, 40, 48), 790, 1220, pop(u, cue(2) - .1, .3), size=50)
+        chip(img, "WHERE'S THE STEP?", (220, 70, 50), 760, 1000, u, cue(7), size=46)
         hx, hy = G['p']['head']
-        qmark(img, hx + 160, hy - 100, .8, u, cue(8))
-    return img, {'faces': [face_box(G['p'], 1.3)], 'avoid': [(500, 1170, 1000, 1310), (200, 400, 900, 540)]}
+        qmark(img, hx + 150, hy - 60, .8, u, cue(8))
+    return img, {'faces': [face_box(G['p'], 1.3)], 'avoid': [(500, 930, 1020, 1070), (150, 1150, 950, 1290)]}
 
 
 # ---------------------------------------------------------------- s16: the flip
@@ -1115,9 +1305,9 @@ def s17(u, D, cue):
     cam = 8 * math.sin(w * .45)
     G = {}
     def chars(img):
-        SV.tripod_camera(img, 860 + cam * 1.1, 1905, .78, t=w)
-        G['b'] = sci(img, w, 'B', 'hold', 'thinking', 250 + cam * 1.1, 1930, .5, look=.35, board=True, counts=(1, 3), bphase=.4)
-        G['a'] = sci(img, w, 'A', dict(POSES['stand'], armR=(-60, -100)), 'neutral', 960 + cam * 1.1, 1950, .5, look=-.6)
+        SV.tripod_camera(img, 860 + cam * 1.1, 1965, .78, t=w)
+        G['b'] = sci(img, w, 'B', 'hold', 'thinking', 250 + cam * 1.1, 1990, .5, look=.35, board=True, counts=(1, 3), bphase=.4)
+        G['a'] = sci(img, w, 'A', dict(POSES['stand'], armR=(-60, -100)), 'neutral', 960 + cam * 1.1, 2010, .5, look=-.6)
     fa = smooth(seg(u, D - .7, D - 2 / 30))
     def extra(img):
         # flies overshoot the coat: they dive at it, fail to brake, bounce off or fly straight past
@@ -1131,14 +1321,14 @@ def s17(u, D, cue):
                     return (tx - sd * 620 * (1 - e), ty - 200 * (1 - e))
                 k = t - tb
                 return (tx + sd * 520 * k, ty - 430 * k + 360 * k * k)
-            if u < tb: fly_at(img, pos, u, 64, trail=.6, dt=.08, r=7, t_min=tb - .7)
+            if u < tb: fly_at(img, pos, u, 92, trail=.6, dt=.08, r=8, t_min=tb - .7)
             else:
                 pts = [pos(t) for t in np.arange(tb - .5 + min(.5, (u - tb) * .8), tb, .08)]
                 if pts: SV.dots_trail(img, pts, r=7)
-                A.put_fly(img, *pos(u), 64 * sd, ang=-(u - tb) * 500, wing='blur', ph=u * 7, alpha=max(0.0, 1 - fa) * (1 - smooth(seg(u, tb + 1.1, tb + 1.6))))
+                A.put_fly(img, *pos(u), 92 * sd, ang=-(u - tb) * 500, wing='blur', ph=u * 7, alpha=max(0.0, 1 - fa) * (1 - smooth(seg(u, tb + 1.1, tb + 1.6))))
             bonk_star(img, tx, ty, (u - tb) / .4, .6)
     img, hi = field_world(w, cam, chars=chars, fly_a=fa, extra=extra)
-    img = finish(img, w, z, 540 + (HX - 540) * (1 - kz), 1200 - 120 * (1 - kz), vig=(.24, (30, 40, 30)))
+    img = finish(img, w, z, 540 + (HX - 540) * (1 - kz), HGY - 20, vig=(.24, (30, 40, 30)))
     if not HIDE_UI:
         k = smooth(seg(u, D - .9, D - .2))
         if k > 0: opening_title(img, 0.0, k)
@@ -1155,6 +1345,7 @@ SHOT_LIST = [('s01', 1, 0), ('s01b', 1, 10), ('s02', 2, 0), ('s03', 3, 0), ('s04
 END = 1951 / 30                 # 65.033 s (length.json)
 NO_PUNCH = ()
 BAND_AT = {}
+BAND_FIX = {'s01': 1500, 's01b': 1405, 's17': 1500}        # caption on the grass under the horse, above the scientists
 STILL_AT = {'s01': .02, 's01b': .8, 's02': .95, 's03': .95, 's04': .9, 's04b': .95, 's05': .9, 's05b': .97, 's06': .9,
             's07': .9, 's07b': .97, 's08': .95, 's09': .8, 's10': .97, 's11': .95, 's12': .62, 's13': .9, 's14': .55, 's14b': .9,
             's15': .9, 's16': .95, 's17': .5}

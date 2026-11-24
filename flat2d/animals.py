@@ -197,103 +197,147 @@ def _equine(pose, kind):
     return out
 
 
+def _shag(base, amp, seed, closed=True, k=4, lock=.075):
+    """A shaggy outline: the base contour with rounded hair locks pushed out along its outward normal (each lock
+    ~`lock` units wide, swept a little along the contour, with a notch between locks)."""
+    sm = _cr(base, k, closed)
+    pts = np.array(sm + ([sm[0]] if closed else []))
+    seg_ = np.hypot(*np.diff(pts, axis=0).T); cum = np.concatenate([[0], np.cumsum(seg_)])
+    n = max(8, int(cum[-1] / (lock / 8)))
+    ss = np.linspace(0, cum[-1], n, endpoint=not closed)
+    P_ = np.stack([np.interp(ss, cum, pts[:, 0]), np.interp(ss, cum, pts[:, 1])], 1)
+    area = sum(P_[i][0] * P_[(i + 1) % n][1] - P_[(i + 1) % n][0] * P_[i][1] for i in range(n))
+    sg = 1 if area > 0 else -1
+    rng = np.random.default_rng(seed)
+    nl = int(cum[-1] / lock) + 1; hl = rng.uniform(.7, 1.25, nl + 1); sw = rng.uniform(.6, 1.0, nl + 1)
+    out = []
+    for i in range(n):
+        a_ = P_[(i - 1) % n]; b_ = P_[(i + 1) % n]
+        dx, dy = b_[0] - a_[0], b_[1] - a_[1]; ln = math.hypot(dx, dy) or 1
+        nx, ny = dy / ln * sg, -dx / ln * sg
+        li = int(ss[i] / lock); fr = ss[i] / lock - li
+        am = amp(ss[i] / cum[-1]) if callable(amp) else amp
+        h = am * hl[li] * (math.sin(math.pi * fr) ** .55) - am * .12
+        sweep = am * .5 * sw[li] * fr * (math.sin(math.pi * fr) ** .5)
+        out.append((P_[i][0] + nx * h + dx / ln * sweep, P_[i][1] + ny * h + dy / ln * sweep))
+    return out
+
+
 def _lion(pose):
+    """A stalking lion, side view: shoulder blades up, the head low and forward, a shaggy mane framing the face and
+    hanging under the neck, muscled forelegs (the far one lifted mid-step), a long low tail with a dark tuft."""
     br = pose.get('breath', 0.0) * .01
-    cr = pose.get('crouch', 1.0)                       # 1 = stalking low, 0 = standing
-    dy = .18 * (1 - cr)
-    torso = [(0.50, -0.34 - dy), (0.47, -0.52 - dy), (0.36, -0.665 - dy), (0.20, -0.62 - dy), (0.02, -0.565 - dy), (-0.20, -0.575 - dy),
-             (-0.40, -0.625 - dy), (-0.56, -0.57 - dy), (-0.62, -0.44 - dy), (-0.56, -0.30 - dy), (-0.36, -0.245 - dy + br),
-             (-0.05, -0.235 - dy + br), (0.22, -0.26 - dy), (0.42, -0.29 - dy)]
-    poll = (0.60, -0.60 - dy * .9)
-    th = math.radians(18 + pose.get('head', 0.0))
+    torso = [(0.27, -0.775), (0.36, -0.72), (0.47, -0.58), (0.52, -0.44), (0.46, -0.33), (0.30, -0.30), (0.08, -0.295 + br),
+             (-0.16, -0.30 + br), (-0.34, -0.285), (-0.47, -0.32), (-0.60, -0.40), (-0.665, -0.50), (-0.635, -0.595), (-0.52, -0.64),
+             (-0.36, -0.625), (-0.16, -0.585), (0.0, -0.585), (0.12, -0.63), (0.20, -0.72)]
+    poll = (0.58, -0.58)
+    th = math.radians(16 + pose.get('head', 0.0))
     hf = _head_tf(poll, th)
-    head_uv = [(-.05, -.12), (.06, -.16), (.18, -.15), (.27, -.09), (.31, -.02), (.33, .05), (.31, .11), (.24, .15), (.15, .165),
-               (.06, .15), (-.03, .1), (-.07, .01)]
+    head_uv = [(-.07, -.10), (.01, -.15), (.11, -.165), (.20, -.145), (.27, -.11), (.33, -.08), (.375, -.05), (.395, -.005),
+               (.385, .045), (.355, .075), (.31, .09), (.29, .115), (.24, .14), (.16, .16), (.06, .15), (-.03, .10), (-.08, .01)]
+    HK = 1.18                                              # a big head: lions have long heavy skulls
+    hf0 = hf
+    hf = lambda u, v: hf0(u * HK, v * HK)
     head = [hf(u, v) for u, v in head_uv]
-    neck = [(0.30, -0.62 - dy), hf(-.05, -.12), hf(-.07, .1), (0.50, -0.38 - dy)]
+    neck = [(0.22, -0.72), hf(-.06, -.12), hf(.02, .14), (0.50, -0.38), (0.48, -0.56)]
     legs = pose.get('legs', {})
     def L(k): return [math.radians(v) for v in legs.get(k, (0, 0))]
     def fleg(root, k):
-        o = L(k)
-        return _chain(root, [(.22 + .08 * (1 - cr), .25 * cr), (.15 + .05 * (1 - cr), -.1 * cr), (.07, 1.45)], [o[0], o[1], 0])
+        o = L(k)          # humerus back to the elbow, forearm forward, a short wrist, the paw
+        return _chain(root, [(.235, -.50), (.27, .22), (.08, .45), (.06, 1.5)], [o[0], o[1], -o[1] * .6, 0])
     def hleg(root, k):
-        o = L(k)
-        return _chain(root, [(.26, -1.0 * cr - .3 * (1 - cr)), (.24 + .06 * (1 - cr), .35 * cr), (.07, 1.5)], [o[0], o[1], 0])
-    fw = [.14, .09, .08, .09]; hw = [.17, .095, .075, .09]
-    out = {'torso': torso, 'neck': neck, 'head': head, 'hf': hf, 'poll': poll, 'th': th,
-           'legs': [('ff', fleg((0.38, -0.38 - dy), 'ff'), fw, False), ('hf', hleg((-0.36, -0.42 - dy), 'hf'), hw, False),
-                    ('hn', hleg((-0.42, -0.42 - dy), 'hn'), hw, True), ('fn', fleg((0.33, -0.38 - dy), 'fn'), fw, True)]}
-    # mane: a shaggy ruff around the head and down the neck
-    cx, cy = hf(.04, 0.0)
-    pts = []
-    rng = np.random.default_rng(3)
-    for i in range(26):
-        ang = math.radians(100 + 230 * i / 25) + th
-        r = (.25 if i % 2 else .228) + .012 * rng.uniform(-1, 1)
-        if 160 < 100 + 230 * i / 25 < 280: r *= 1.1
-        pts.append((cx + math.cos(ang) * r * 1.05, cy + math.sin(ang) * r))
-    pts += [(0.16, -0.50 - dy), (0.22, -0.66 - dy)]
-    out['mane'] = pts
-    out['ear_n'] = _cr([hf(.04, -.14), hf(.06, -.22), hf(.13, -.21), hf(.14, -.14)], 4)
-    out['ear_f'] = _cr([hf(.0, -.13), hf(.0, -.2), hf(.06, -.2), hf(.07, -.13)], 4)
+        o = L(k)          # thigh forward to the stifle, gaskin back to the hock, metatarsal, paw
+        return _chain(root, [(.25, .55), (.22, -.75), (.12, .15), (.06, 1.5)], [o[0], o[1], -o[1] * .5, 0])
+    fw = [.22, .165, .10, .085, .085]; hw = [.27, .16, .095, .075, .085]
+    lf = dict(legs); lf.setdefault('ff', (18, 75))          # the far foreleg lifted mid-stalk
+    legs = lf
+    out = {'torso': torso, 'neck': neck, 'head': head, 'hf': hf, 'poll': poll, 'th': th, 'hk': HK,
+           'legs': [('ff', fleg((0.40, -0.55), 'ff'), fw, False), ('hf', hleg((-0.44, -0.50), 'hf'), hw, False),
+                    ('hn', hleg((-0.50, -0.50), 'hn'), hw, True), ('fn', fleg((0.35, -0.55), 'fn'), fw, True)]}
+    # the mane: a shaggy ruff behind the face, over the neck and shoulders, hanging long under the chest
+    base = [hf(.10, -.17), hf(.03, -.24), hf(-.08, -.25), (0.46, -0.83), (0.36, -0.77), (0.31, -0.64), (0.32, -0.50),
+            (0.36, -0.36), (0.43, -0.24), (0.53, -0.22), hf(.24, .22), hf(.17, .15), hf(.08, .07), hf(.06, -.06)]
+    amp = lambda q: .03 if q > .88 or q < .03 else .07 + .025 * math.sin(q * 11)
+    out['mane'] = _shag(base, amp, 5, k=6, lock=.10)
+    out['mane_c'] = hf(.20, .02)                         # hair flows back from the face
+    out['ear_n'] = _cr([hf(.02, -.14), hf(.0, -.215), hf(.06, -.245), hf(.11, -.21), hf(.10, -.15)], 4)
+    out['ear_f'] = _cr([hf(-.04, -.13), hf(-.06, -.20), hf(-.01, -.22), hf(.03, -.15)], 4)
     sw = math.radians(pose.get('tail', 0.0))
-    root = (-0.58, -0.52 - dy)
-    tp = [root, (-0.74, -0.50 - dy), (-0.86, -0.40 - dy), (-0.92, -0.26 - dy), (-0.90, -0.14 - dy)]
+    root = (-0.62, -0.56)
+    tp = [root, (-0.80, -0.50), (-0.95, -0.37), (-1.06, -0.25), (-1.15, -0.21)]
     tp = [_rot(p, root, sw * (i / 4)) for i, p in enumerate(tp)]
     sm = _cr(tp, 4, False)
-    out['tail'] = _limb_poly(sm, np.linspace(.05, .03, len(sm)))
-    e = tp[-1]
-    out['tuft'] = _cr([(e[0] - .05, e[1] - .02), (e[0] + .04, e[1] - .03), (e[0] + .03, e[1] + .07), (e[0] - .03, e[1] + .08)], 4)
+    out['tail'] = _limb_poly(sm, np.linspace(.055, .03, len(sm)))
+    e = tp[-1]; dd = (e[0] - tp[-2][0], e[1] - tp[-2][1]); ln = math.hypot(*dd) or 1; ux, uy = dd[0] / ln, dd[1] / ln
+    out['tuft'] = (_shag([(e[0] - ux * .02 - uy * .045, e[1] - uy * .02 + ux * .045), (e[0] + ux * .09, e[1] + uy * .09),
+                         (e[0] + ux * .16, e[1] + uy * .16), (e[0] - ux * .02 + uy * .045, e[1] - uy * .02 - ux * .045)], .03, 9, lock=.04))
     out['tail_pts'] = tp
     return out
 
 
 def _cow(pose):
-    br = pose.get('breath', 0.0) * .012
-    torso = [(0.70, -0.56), (0.62, -0.82), (0.42, -1.0), (0.10, -0.985), (-0.25, -0.99), (-0.50, -1.03), (-0.70, -0.98),
-             (-0.78, -0.86), (-0.76, -0.62), (-0.62, -0.46), (-0.30, -0.38 + br), (0.05, -0.36 + br), (0.35, -0.39), (0.55, -0.42),
-             (0.68, -0.48)]
-    pivot = (0.58, -0.80)
+    """Japanese Black (Wagyu): a deep rounded barrel with a sagging belly, a straight back with the hip bone (hook) and
+    pin bone showing, a short thick neck with a dewlap, a broad short head with small curved horns, ears sticking out
+    sideways, a pink-grey muzzle, a high tail set with a tassel, legs with knees / hocks tapering to cloven hooves."""
+    br = pose.get('breath', 0.0) * .014
+    torso = [(0.68, -0.66), (0.65, -0.84), (0.54, -0.97), (0.40, -1.03), (0.24, -1.005), (0.02, -0.975), (-0.22, -0.985),
+             (-0.38, -1.01), (-0.47, -1.05), (-0.56, -1.025), (-0.68, -1.0), (-0.765, -0.965), (-0.81, -0.88), (-0.825, -0.76),
+             (-0.79, -0.63), (-0.71, -0.55), (-0.60, -0.475), (-0.48, -0.405), (-0.30, -0.34 + br), (-0.10, -0.31 + br),
+             (0.10, -0.315 + br), (0.30, -0.35), (0.47, -0.39), (0.63, -0.48)]
+    pivot = (0.56, -0.86)
     a = math.radians(pose.get('neck', 0.0))
-    poll = _rot((0.90, -0.98), pivot, a)
-    th = math.radians(68 + pose.get('neck', 0.0) * .9 + pose.get('head', 0.0))
+    poll = _rot((0.97, -0.95), pivot, a)
+    th = math.radians(74 + pose.get('neck', 0.0) * .9 + pose.get('head', 0.0))
     hf = _head_tf(poll, th)
-    head_uv = [(-.03, -.11), (.10, -.12), (.24, -.11), (.36, -.10), (.43, -.085), (.47, -.03), (.475, .05), (.45, .11),
-               (.38, .14), (.26, .16), (.14, .18), (.04, .17), (-.04, .11), (-.06, .0)]
+    head_uv = [(-.05, -.135), (.05, -.165), (.16, -.16), (.26, -.14), (.35, -.13), (.42, -.125), (.465, -.085), (.475, -.01),
+               (.47, .07), (.44, .12), (.39, .13), (.32, .135), (.24, .17), (.15, .21), (.05, .205), (-.03, .15), (-.07, .03)]
     head = [hf(u, v) for u, v in head_uv]
-    neck = [(0.40, -1.0), hf(-.03, -.1), hf(-.04, .14), (0.76, -0.62), (0.70, -0.50), (0.62, -0.66)]
-    dew = _cr([(0.66, -0.66), hf(.0, .17), (0.82, -0.62), (0.74, -0.44), (0.66, -0.48)], 4)
+    # neck: short and thick, crest from the withers, the dewlap hanging from the throat to the brisket
+    nk_top = _bez((0.36, -1.0), (0.70, -1.08), hf(-.04, -.10), 10)
+    throat = hf(.02, .17)
+    dew = _bez(throat, (0.88, -0.52), (0.68, -0.43), 10)
+    neck = nk_top + [hf(-.07, .02), hf(-.03, .14)] + dew + [(0.58, -0.50), (0.50, -0.80)]
     legs = pose.get('legs', {})
     def L(k): return [math.radians(v) for v in legs.get(k, (0, 0))]
     def fleg(root, k):
-        o = L(k)
-        return _chain(root, [(.25, .03), (.17, 0.0), (.07, .3)], [o[0], 0, o[1]])
+        o = L(k)          # forearm -> knee -> cannon -> fetlock -> pastern
+        return _chain(root, [(.20, .04), (.13, -.03), (.20, .0), (.075, .38)], [o[0], -o[0] * .2, o[1], 0])
     def hleg(root, k):
-        o = L(k)
-        return _chain(root, [(.26, -.42), (.2, .08), (.07, .3)], [o[0], 0, o[1]])
-    fw = [.19, .12, .095, .1]; hw = [.24, .12, .095, .1]
-    out = {'torso': torso, 'neck': neck + dew[:0], 'dew': dew, 'head': head, 'hf': hf, 'poll': poll, 'th': th,
-           'legs': [('ff', fleg((0.50, -0.50), 'ff'), fw, False), ('hf', hleg((-0.48, -0.55), 'hf'), hw, False),
-                    ('hn', hleg((-0.54, -0.55), 'hn'), hw, True), ('fn', fleg((0.44, -0.50), 'fn'), fw, True)]}
+        o = L(k)          # gaskin back to the hock, cannon straight down, pastern
+        return _chain(root, [(.22, .32), (.21, -.62), (.26, .04), (.075, .38)], [o[0], 0, o[1], 0])
+    fw = [.25, .15, .14, .08, .09]
+    hw = [.34, .19, .14, .08, .09]
+    out = {'torso': torso, 'neck': neck, 'head': head, 'hf': hf, 'poll': poll, 'th': th,
+           'legs': [('ff', fleg((0.50, -0.60), 'ff'), fw, False), ('hf', hleg((-0.56, -0.72), 'hf'), hw, False),
+                    ('hn', hleg((-0.62, -0.72), 'hn'), hw, True), ('fn', fleg((0.44, -0.60), 'fn'), fw, True)]}
+    # ears: stick out sideways (seen side-on: a leaf pointing back and a little down from under the horn)
     ef = pose.get('ear', 0.0)
-    def ear(back):
-        b = hf(.06, -.1); d = th - math.radians(150 + 20 * ef + back)
-        tip = (b[0] + math.cos(d) * .17, b[1] + math.sin(d) * .17)
-        n_ = (math.cos(d + 1.57) * .05, math.sin(d + 1.57) * .05)
-        return _cr([(b[0] + n_[0] * .6, b[1] + n_[1] * .6), ((b[0] + tip[0]) / 2 + n_[0], (b[1] + tip[1]) / 2 + n_[1]), tip,
-                    ((b[0] + tip[0]) / 2 - n_[0], (b[1] + tip[1]) / 2 - n_[1]), (b[0] - n_[0] * .6, b[1] - n_[1] * .6)], 4)
-    out['ear_n'] = ear(0); out['ear_f'] = ear(-30)
-    hb = hf(.02, -.12)
-    out['horn'] = _cr([(hb[0] - .03, hb[1] + .01), (hb[0] - .01, hb[1] - .09), (hb[0] + .06, hb[1] - .13), (hb[0] + .02, hb[1] - .07),
-                       (hb[0] + .03, hb[1] + .0)], 4)
+    def ear(du, dv, ang, ln, wd):
+        b = hf(du, dv); d = math.radians(ang + 25 * ef)
+        tip = (b[0] + math.cos(d) * ln, b[1] + math.sin(d) * ln)
+        n_ = (-math.sin(d) * wd, math.cos(d) * wd)
+        m1 = (b[0] + math.cos(d) * ln * .55, b[1] + math.sin(d) * ln * .55)
+        return _cr([(b[0] + n_[0] * .5, b[1] + n_[1] * .5), (m1[0] + n_[0], m1[1] + n_[1]), tip,
+                    (m1[0] - n_[0] * .9, m1[1] - n_[1] * .9), (b[0] - n_[0] * .5, b[1] - n_[1] * .5)], 4)
+    out['ear_n'] = ear(.03, .0, 186, .25, .05)
+    out['ear_f'] = ear(.0, -.11, 190, .17, .032)
+    # horns: short, curving up and forward, cream with dark tips
+    def horn(du, dv, sc):
+        b = hf(du, dv)
+        pts = [b, (b[0] + .015 * sc, b[1] - .06 * sc), (b[0] + .05 * sc, b[1] - .11 * sc), (b[0] + .10 * sc, b[1] - .13 * sc)]
+        sm = _cr(pts, 4, False)
+        return _limb_poly(sm, np.linspace(.055 * sc, .012 * sc, len(sm)))
+    out['horn'] = horn(.02, -.125, 1.0)
+    out['horn_f'] = horn(-.02, -.13, .85)
     sw = math.radians(pose.get('tail', 0.0))
-    root = (-0.74, -0.96)
-    tp = [root, (-0.80, -0.82), (-0.82, -0.62), (-0.81, -0.42), (-0.80, -0.30)]
-    tp = [_rot(p, root, sw * (i / 4)) for i, p in enumerate(tp)]
+    root = (-0.75, -0.985)
+    tp = [root, (-0.83, -0.90), (-0.855, -0.72), (-0.85, -0.52), (-0.84, -0.36)]
+    tp = [_rot(p, root, sw * (i / 4) ** .9) for i, p in enumerate(tp)]
     sm = _cr(tp, 4, False)
-    out['tail'] = _limb_poly(sm, np.linspace(.035, .025, len(sm)))
-    e = tp[-1]
-    out['tuft'] = _cr([(e[0] - .03, e[1] - .06), (e[0] + .03, e[1] - .06), (e[0] + .035, e[1] + .08), (e[0] - .035, e[1] + .08)], 4)
+    out['tail'] = _limb_poly(sm, np.linspace(.05, .028, len(sm)))
+    e = tp[-1]; dd = (e[0] - tp[-2][0], e[1] - tp[-2][1]); ln = math.hypot(*dd) or 1; ux, uy = dd[0] / ln, dd[1] / ln
+    tq = [(e[0] - ux * .03, e[1] - uy * .03), (e[0] + ux * .1, e[1] + uy * .1), (e[0] + ux * .2, e[1] + uy * .2)]
+    out['tuft'] = _limb_poly(_cr(tq, 4, False), [.03, .06, .085, .09, .085, .07, .05, .03, .01])
     out['tail_pts'] = tp
     return out
 
@@ -336,7 +380,7 @@ def quad(kind, s, pose=None, face=1, painted=True, light=(-.55, -1.0), rim=(255,
     eq = kind in ('zebra', 'horse', 'coat')
     G = _equine(pose, 'zebra' if kind == 'zebra' else 'horse') if eq else _lion(pose) if kind == 'lion' else _cow(pose)
     iw = ink_w or max(2, int(round(s * .016)))
-    x0u, x1u, y0u = (-1.15 if kind == 'lion' else -0.95), (1.25 if kind != 'cow' else 1.25), -1.95
+    x0u, x1u, y0u = (-1.35 if kind == 'lion' else -0.95), (1.25 if kind != 'cow' else 1.35), -1.95
     Wd, Hd = int((x1u - x0u) * s) + 2 * iw + 8, int((-y0u + .08) * s) + 2 * iw + 8
     o = (-x0u * s + iw + 4, -y0u * s + iw + 4)               # unit origin (ground point under the body centre)
     lab = Image.new('L', (Wd, Hd), 0); d = ImageDraw.Draw(lab)
@@ -347,15 +391,15 @@ def quad(kind, s, pose=None, face=1, painted=True, light=(-.55, -1.0), rim=(255,
         _poly(df, _limb_poly(sm, wv), s, o, T_LEGF)
         _hoof(df, pts, ws, s, o, kind, T_HOOF, T_LEGF)
     _poly(df, G['ear_f'], s, o, T_EARF)
+    if kind == 'cow': _poly(df, G['horn_f'], s, o, T_HORN)
     # near group, back to front
     _poly(d, G['tail'], s, o, T_TAIL)
     if 'tuft' in G: _poly(d, G['tuft'], s, o, T_TUFT)
     _poly(d, _cr(G['torso'], 6), s, o, T_TORSO)
     _poly(d, G['neck'] if kind in ('lion', 'cow') else G['neck'], s, o, T_NECK)
-    if kind == 'cow': _poly(d, G['dew'], s, o, T_NECK)
-    if kind == 'lion': _poly(d, _cr(G['mane'][:26], 4), s, o, T_MANE)
     if kind in ('zebra', 'horse'): _poly(d, G['mane'], s, o, T_MANE)
     _poly(d, _cr(G['head'], 5), s, o, T_HEAD)
+    if kind == 'lion': _poly(d, G['mane'], s, o, T_MANE)        # the mane over the back of the head: it frames the face
     if kind == 'cow': _poly(d, G['horn'], s, o, T_HORN)
     _poly(d, G['ear_n'], s, o, T_EARN)
     for nm, pts, ws, near in G['legs']:
@@ -390,6 +434,11 @@ def _paint(kind, G, lab, labf, s, o, iw, pose, painted, light, rim, rim_a, sun_k
     L = np.asarray(lab); Lf = np.asarray(labf)
     yy, xx = np.mgrid[0:Hd, 0:Wd]
     X = (xx - o[0]) / s; Y = (yy - o[1]) / s
+    cut = {'lion': -0.44, 'cow': -0.50}.get(kind)
+    L0 = L
+    if cut is not None:                      # leg tops inside the body are body: one continuous surface, no boxy leg roots
+        L = L.copy(); L[(L == T_LEGN) & (Y < cut)] = T_TORSO
+        Lf = Lf.copy(); Lf[(Lf == T_LEGF) & (Y < cut) & (L == T_TORSO)] = 0
     rgb = np.zeros((Hd, Wd, 3), np.float32)
     zeb = kind == 'zebra'
     hf, th, poll = G['hf'], G['th'], G['poll']
@@ -397,6 +446,7 @@ def _paint(kind, G, lab, labf, s, o, iw, pose, painted, light, rim, rim_a, sun_k
     c, s_ = math.cos(th), math.sin(th)
     U = (X - poll[0]) * c + (Y - poll[1]) * s_
     V = -(X - poll[0]) * s_ + (Y - poll[1]) * c
+    U = U / G.get('hk', 1.0); V = V / G.get('hk', 1.0)
 
     def fill(mask_, col):
         rgb[mask_] = col
@@ -486,42 +536,78 @@ def _paint(kind, G, lab, labf, s, o, iw, pose, painted, light, rim, rim_a, sun_k
                 rgb[hood] = (34, 30, 38)
                 G['coat'] = coat
     elif kind == 'lion':
-        for m_ in (m_torso, m_neck, m_leg, m_tail, m_earn): fill(m_, LION)
-        fill(m_head, LION); fill(m_hoof, LION); fill(m_mane, MANE); fill(m_tuft, MANE_D)
-        rgbf[mf_leg] = LION; rgbf[mf_hoof] = LION; rgbf[mf_ear] = MANE
-        bw = (_sstep(-0.42, -0.26, Y) * .55)[..., None]
+        for m_ in (m_torso, m_neck, m_leg, m_tail, m_earn, m_head, m_hoof): fill(m_, LION)
+        fill(m_mane, MANE); fill(m_tuft, MANE_D)
+        rgbf[mf_leg] = LION; rgbf[mf_hoof] = LION; rgbf[mf_ear] = (120, 74, 40)
+        # a slightly darker, greyer back; a pale belly and inner legs
+        top = _sstep(-0.50, -0.70, Y)[..., None]
+        rgb[m_torso] = (rgb * (1 - .18 * top) + np.array((168, 118, 66), np.float32) * .18 * top)[m_torso]
+        bw = (_sstep(-0.42, -0.30, Y) * .6)[..., None]
         bel = m_torso | m_leg
         rgb[bel] = (rgb * (1 - bw) + np.array(LION_BELLY, np.float32) * bw)[bel]
-        muz = m_head & (U > .18) & (V > -.04)
-        rgb[muz] = rgb[muz] * .35 + np.array(LION_BELLY) * .65
-        # mane shading: darker toward the outside, wisps
-        mm = m_mane
-        cxm, cym = hf(.04, .0)
+        paw = m_leg & (Y > -.08)
+        rgb[paw] = rgb[paw] * .5 + np.array(LION_BELLY, np.float32) * .5
+        mz = (_sstep(.17, .26, U) * _sstep(-.10, -.02, V) * .75)[..., None]
+        rgb[m_head] = (rgb * (1 - mz) + np.array((246, 230, 200), np.float32) * mz)[m_head]
+        cz = (_sstep(.06, .12, V) * .7)[..., None]
+        rgb[m_head] = (rgb * (1 - cz) + np.array((246, 234, 210), np.float32) * cz)[m_head]
+        # mane: golden near the face, dark brown at the edges, combed into strands
+        cxm, cym = G['mane_c']
         r = np.hypot(X - cxm, Y - cym)
-        k = np.clip((r - .12) / .16, 0, 1)
-        wisp = .5 + .5 * np.sin(np.arctan2(Y - cym, X - cxm) * 13 + r * 30)
-        mcol = np.array(MANE, np.float32) * (1 - .45 * k[..., None]) + np.array((176, 110, 52), np.float32) * (.25 * wisp[..., None] * (1 - k[..., None]))
-        rgb[mm] = mcol[mm]
-        rgb[m_earn] = (150, 96, 56)
-    else:   # cow
-        for m_ in (m_torso, m_neck, m_head, m_leg, m_earn, m_tail): fill(m_, COW)
-        fill(m_hoof, (60, 56, 62)); fill(m_tuft, (24, 22, 26)); fill(m_horn, (226, 214, 186))
-        rgbf[mf_leg] = (30, 28, 34); rgbf[mf_hoof] = (50, 46, 52); rgbf[mf_ear] = (30, 28, 34)
-        muz = m_head & (U > .38)
-        rgb[muz] = (104, 92, 98)
+        k = np.clip((r - .22) / .32, 0, 1) ** .8
+        ang = np.arctan2(Y - cym, X - cxm)
+        wisp = .5 + (.5 * np.sin(ang * 23 + r * 26 + 2 * np.sin(ang * 5))) * _sstep(.05, .16, r)
+        light_c = np.array((206, 146, 70), np.float32); dark_c = np.array((92, 48, 26), np.float32)
+        mcol = light_c * (1 - k[..., None]) + dark_c * k[..., None]
+        mcol = mcol * (.82 + .26 * wisp[..., None])
+        rgb[m_mane] = mcol[m_mane]
+        rgb[m_earn] = (176, 118, 62)
+        rgb[m_tuft] = (60, 34, 22)
+    else:   # cow: Japanese Black, a warm black-brown coat with sheen
+        COWC = np.array((50, 43, 46), np.float32)
+        for m_ in (m_torso, m_neck, m_head, m_leg, m_earn, m_tail): fill(m_, COWC)
+        fill(m_hoof, (58, 52, 56)); fill(m_tuft, (22, 18, 22))
+        rgbf[mf_leg] = (52, 46, 52); rgbf[mf_hoof] = (60, 54, 60); rgbf[mf_ear] = (48, 42, 46)
+        # horns: cream with dark tips (near and far)
+        def horn_col(m_, arr, base_y):
+            t = np.clip((base_y - Y) / .13, 0, 1)
+            hc = np.array((232, 220, 192), np.float32)[None, None] * (1 - _sstep(.55, .95, t))[..., None] + \
+                 np.array((70, 58, 50), np.float32)[None, None] * _sstep(.55, .95, t)[..., None]
+            arr[m_] = hc[m_]
+        hb = hf(.02, -.125)
+        horn_col(m_horn, rgb, hb[1]); horn_col(Lf == T_HORN, rgbf, hb[1])
+        # sheen: soft light lobes on the shoulder, back, hook, thigh and neck crest (a black coat shows form by sheen)
+        lift = np.zeros((Hd, Wd), np.float32)
+        for (cx_, cy_, rx_, ry_, a_) in ((0.40, -0.80, .15, .17, .55), (0.02, -0.90, .42, .09, .45), (-0.47, -0.93, .13, .1, .4),
+                                         (-0.66, -0.76, .12, .16, .5), (0.66, -0.96, .14, .08, .45), (0.47, -0.52, .06, .12, .35),
+                                         (-0.60, -0.42, .05, .1, .3)):
+            lift = np.maximum(lift, a_ * np.exp(-(((X - cx_) / rx_) ** 2 + ((Y - cy_) / ry_) ** 2)))
+        lift *= (m_torso | m_neck | m_leg) * .8
+        sheen = np.array((126, 122, 138), np.float32)
+        rgb[...] = rgb * (1 - lift[..., None]) + sheen * lift[..., None]
+        # head: a lighter forehead plane, the pink-grey muzzle
+        hl = m_head & (V < -.02)
+        rgb[hl] = rgb[hl] * .78 + np.array((92, 86, 96), np.float32) * .22
+        muz = m_head & (U > .37 - .03 * np.clip(V, 0, 1))
+        mz = np.array((176, 150, 152), np.float32) * (1 - .25 * _sstep(-.02, .12, V))[..., None]
+        rgb[muz] = mz[muz]
+        lowleg = m_leg & (Y > -.30)
+        rgb[lowleg] *= .82
         if painted:
-            rng = np.random.default_rng(7)
-            rough = .05 * np.sin(Y * 37 + X * 7) + .03 * np.sin(Y * 90 + 2.0)
-            pb = X * 6.2 + .06 * np.sin(Y * 9) + rough * .5
-            stp = _stripe(pb, .25, .18)
+            rough = .05 * np.sin(Y * 37 + X * 7) + .03 * np.sin(Y * 90 + 2.0) + .02 * np.sin(Y * 151 + X * 40)
+            pb = X * 6.2 + .07 * np.sin(Y * 8 + 1) + rough * .5
+            stp = _stripe(pb, .22, .14)
             pl = Y * 9 + rough * .4
-            stl = _stripe(pl, .25, .2)
+            stl = _stripe(pl, .22, .16)
             pn = ((X - .5) * .6 + (Y + .9) * .8) * 7 + rough * .5
-            stn = _stripe(pn, .25, .18)
+            stn = _stripe(pn, .22, .14)
             wm = np.zeros((Hd, Wd), np.float32)
-            wm[m_torso] = stp[m_torso]; wm[m_leg & (Y < -.12)] = stl[m_leg & (Y < -.12)]; wm[m_neck] = stn[m_neck]
-            fbw = np.zeros((Hd, Wd), np.float32); fbw[mf_leg & (Y < -.12)] = stl[mf_leg & (Y < -.12)]
-            paint = np.array((240, 240, 236), np.float32)
+            lg = m_leg & (Y < -.12) & (Y > -.46); lt = m_leg & (Y <= -.46)
+            wm[m_torso] = stp[m_torso]; wm[lg] = stl[lg]; wm[lt] = stp[lt]; wm[m_neck] = stn[m_neck]
+            fl = mf_leg & (Y < -.12) & (Y > -.46)
+            fbw = np.zeros((Hd, Wd), np.float32); fbw[fl] = stl[fl]
+            streak = 1 - .10 * (.5 + .5 * np.sin(X * 210 + 3 * np.sin(Y * 40)))      # dry-brush streaks
+            paint = np.array((244, 242, 234), np.float32)[None, None] * streak[..., None]
             rgb[...] = rgb * (1 - wm[..., None]) + paint * wm[..., None]
             rgbf[...] = rgbf * (1 - .85 * fbw[..., None]) + paint * .85 * fbw[..., None]
             G['paint'] = wm
@@ -539,7 +625,10 @@ def _paint(kind, G, lab, labf, s, o, iw, pose, painted, light, rim, rim_a, sun_k
     f = _sstep(y_top + (y_bot - y_top) * .45, y_bot + .02, Y)
     shade[m_torso] -= .30 * f[m_torso]
     shade[m_neck] -= .16 * _sstep(-1.1, -0.7, Y)[m_neck]
-    shade[m_leg] -= .14 * _sstep(-.6, -.35, Y)[m_leg]
+    if kind in ('lion', 'cow'):
+        shade[m_leg] -= (.30 * f * (1 - .5 * _sstep(-.30, -.08, Y)))[m_leg]
+    else:
+        shade[m_leg] -= .14 * _sstep(-.6, -.35, Y)[m_leg]
     shade[m_head] -= .14 * _sstep(-.02, .18, V)[m_head]
     # a shadow under the head on the neck (jowl) and where the near leg meets the body
     rgb *= shade[..., None]
@@ -561,13 +650,16 @@ def _paint(kind, G, lab, labf, s, o, iw, pose, painted, light, rim, rim_a, sun_k
         for a_, b_ in inner_pairs:
             if not a_: continue
             A = Lm == a_; B = Lm == b_
+            if a_ == T_LEGN and b_ == T_TORSO: B = L0 == T_TORSO
             Bd = np.asarray(_dilate(Image.fromarray((B * 255).astype(np.uint8)), max(1, iw // 2))) > 0
             edge = A & Bd
             arr[edge, :3] = INK
         return Image.fromarray(arr, 'RGBA')
+    leg_cut = {'lion': -0.44, 'cow': -0.56}.get(kind, -9)
     far = group(Lf, rgbf, [])
-    near = group(L, rgb, [(T_LEGN, T_TORSO) if kind != 'lion' else (0, 0), (T_HEAD, T_NECK), (T_HEAD, T_MANE), (T_EARN, T_HEAD),
+    near = group(L, rgb, [(T_LEGN, T_TORSO), (T_HEAD, T_NECK), (T_HEAD, T_MANE), (T_EARN, T_HEAD),
                           (T_HOOF, T_LEGN), (T_TAIL, T_TORSO), (T_NECK, T_MANE) if kind in ('lion', 'zebra') else (0, 0),
+                          (T_EARN, T_NECK) if kind == 'cow' else (0, 0),
                           (T_HORN, T_HEAD), (T_MANE, T_TORSO) if kind == 'lion' else (0, 0)])
     # ---- rim light on the lit edge (inside the ink), sun side
     a = (L > 0).astype(np.float32)
@@ -604,23 +696,101 @@ def _paint(kind, G, lab, labf, s, o, iw, pose, painted, light, rim, rim_a, sun_k
         dn.line([P(.34, .108), P(.27, .045), P(.17, .03), P(.09, .07)], fill=INK if not zeb else (60, 56, 64), width=max(2, lw - 1), joint='curve')
         ei = ImageDraw.Draw(near)
     elif kind == 'lion':
-        ex, ey = P(.17, -.07); er = s * .022
-        dn.ellipse([ex - er * 1.3, ey - er * .9, ex + er * 1.3, ey + er * .9], fill=(214, 170, 60) if not blink else LION, outline=INK, width=max(1, lw // 2))
+        U_ = lambda x, y: (o[0] + x * s, o[1] + y * s)
+        # muscle and form lines (warm brown, not ink): elbow, forearm, thigh, belly skin
+        ml = Image.new('RGBA', near.size, (0, 0, 0, 0)); dm = ImageDraw.Draw(ml)
+        mc = (150, 96, 48, 255)
+        for pts in (((0.25, -0.50), (0.215, -0.42), (0.25, -0.34)), ((-0.33, -0.60), (-0.27, -0.47), (-0.32, -0.35)),
+                    ((-0.28, -0.305), (-0.08, -0.30), (0.10, -0.31)), ((0.10, -0.66), (-0.05, -0.62))):
+            dm.line([U_(*p) for p in _cr(pts, 6, False)], fill=mc, width=lw, joint='curve')
+        ml.putalpha(ImageChops.multiply(ml.split()[3], Image.fromarray(((L == T_TORSO) * 200).astype(np.uint8))))
+        near.alpha_composite(ml)
+        # eye: amber almond, a pale patch under it, the dark tear line down the muzzle, a hard brow
+        ex, ey = P(.175, -.075); er = s * .024
+        dn.polygon([P(.13, -.035), P(.20, -.03), P(.27, .02), P(.22, -.005)], fill=(250, 238, 214))
+        dn.line([P(.20, -.055), P(.26, -.005), P(.30, .04)], fill=(90, 56, 36), width=max(2, lw - 1), joint='curve')
+        eye = [P(.135, -.07), P(.17, -.098), P(.21, -.085), P(.225, -.07), P(.19, -.052), P(.15, -.055)]
+        dn.polygon(eye, fill=(222, 170, 52) if not blink else LION, outline=INK)
+        dn.line(eye + [eye[0]], fill=INK, width=max(2, lw - 1), joint='curve')
         if not blink:
-            dn.ellipse([ex - er * .45, ey - er * .8, ex + er * .55, ey + er * .8], fill=(20, 16, 18))
-        dn.line([(ex - er * 1.6, ey - er * 1.1), (ex + er * 1.2, ey - er * 1.5)], fill=INK, width=lw)   # brow: intent
-        nx_, ny_ = P(.31, .0)
-        dn.polygon([P(.335, -.03), P(.335, .04), P(.29, .025), P(.285, -.015)], fill=(60, 36, 34))
-        dn.line([P(.30, .04), P(.30, .09), P(.23, .12)], fill=INK, width=lw, joint='curve')
+            dn.ellipse([ex - er * .5, ey - er * .75, ex + er * .55, ey + er * .6], fill=(20, 16, 18))
+            dn.ellipse([ex + er * .05, ey - er * .55, ex + er * .35, ey - er * .2], fill=(255, 250, 235))
+        dn.line([P(.11, -.10), P(.17, -.125), P(.25, -.10)], fill=INK, width=lw, joint='curve')     # brow: intent
+        # nose pad, mouth, chin, whisker spots
+        dn.polygon([P(.345, -.06), P(.395, -.035), P(.392, .015), P(.36, .0), P(.34, -.03)], fill=(170, 100, 86), outline=INK)
+        dn.line([P(.392, .015), P(.375, .06), P(.33, .085), P(.27, .10), P(.22, .105)], fill=INK, width=lw, joint='curve')
+        dn.line([P(.33, .085), P(.30, .12)], fill=INK, width=max(2, lw - 1))
         for k in range(3):
-            dn.line([P(.27, .07 + k * .02), P(.40, .05 + k * .035)], fill=(250, 240, 220), width=max(1, lw // 2))
+            for j in range(3):
+                cx_, cy_ = P(.27 + j * .03, .03 + k * .022); rr = max(1.5, s * .005)
+                dn.ellipse([cx_ - rr, cy_ - rr, cx_ + rr, cy_ + rr], fill=(110, 74, 50))
+        for k in range(3):
+            dn.line([P(.30, .045 + k * .02), P(.45, .02 + k * .045)], fill=(252, 246, 230), width=max(1, lw // 2))
+        # ear: dark back rim
+        ep = G['ear_n']
+        dn.line([(o[0] + x * s, o[1] + y * s) for x, y in ep[:len(ep) * 2 // 3]], fill=(60, 34, 22), width=lw * 2, joint='curve')
+        # mane strands: dark curved strokes following the tufts
+        cxm, cym = G['mane_c']; rng = np.random.default_rng(11)
+        sl = Image.new('RGBA', near.size, (0, 0, 0, 0)); ds_ = ImageDraw.Draw(sl)
+        for i in range(70):
+            a_ = rng.uniform(-math.pi, math.pi); r0 = rng.uniform(.2, .5)
+            p0 = (cxm + math.cos(a_) * r0, cym + math.sin(a_) * r0 * 1.1)
+            p1 = (cxm + math.cos(a_ + .12) * (r0 + .09), cym + math.sin(a_ + .12) * (r0 + .09) * 1.1)
+            ds_.line([U_(*p0), U_(*p1)], fill=(70, 36, 18, 200) if i % 3 else (236, 180, 96, 170), width=max(1, lw - 1))
+        sl.putalpha(ImageChops.multiply(sl.split()[3], Image.fromarray(((L == T_MANE) * 255).astype(np.uint8))))
+        near.alpha_composite(sl)
     else:
-        ex, ey = P(.14, -.03); er = s * .025
-        dn.ellipse([ex - er * 1.2, ey - er, ex + er * 1.2, ey + er], fill=(30, 22, 22) if not blink else COW, outline=(200, 190, 190), width=max(1, lw // 2))
-        if not blink: dn.ellipse([ex - er * .2, ey - er * .6, ex + er * .3, ey - er * .1], fill=(230, 224, 220))
-        nx_, ny_ = P(.44, .0); nr = s * .022
-        dn.ellipse([nx_ - nr, ny_ - nr * 1.2, nx_ + nr, ny_ + nr * 1.2], fill=(40, 30, 34))
-        dn.line([P(.47, .09), P(.40, .11)], fill=INK, width=lw)
+        U_ = lambda x, y: (o[0] + x * s, o[1] + y * s)
+        # sheen strokes (lighter than the coat): shoulder blade, elbow, thigh / flank fold, hook bone, ribs, dewlap fold
+        hl = Image.new('RGBA', near.size, (0, 0, 0, 0)); dh = ImageDraw.Draw(hl)
+        hc = (132, 124, 140, 255)
+        strokes = [((0.33, -0.96), (0.40, -0.80), (0.50, -0.66)), ((0.36, -0.58), (0.40, -0.50), (0.46, -0.47)),
+                   ((-0.42, -0.88), (-0.45, -0.70), (-0.52, -0.53)), ((-0.54, -1.0), (-0.47, -0.975), (-0.40, -0.99)),
+                   ((0.70, -0.74), (0.75, -0.62), (0.72, -0.52)), ((-0.74, -0.93), (-0.70, -0.85))]
+        for i, pts in enumerate(strokes):
+            dh.line([U_(*p) for p in _cr(pts, 6, False)], fill=hc, width=lw, joint='curve')
+        for k in range(3):
+            x_ = .14 - k * .13
+            dh.line([U_(*p) for p in _cr(((x_ + .03, -0.80), (x_, -0.66), (x_ + .02, -0.54)), 6, False)], fill=(90, 84, 98, 90), width=max(1, lw - 1), joint='curve')
+        for nm, pts, ws, near_ in G['legs']:
+            if not near_: continue
+            j = pts[2] if nm[0] == 'f' else pts[2]
+            dh.arc([U_(j[0] - .04, j[1] - .03)[0], U_(j[0] - .04, j[1] - .03)[1], U_(j[0] + .04, j[1] + .03)[0], U_(j[0] + .04, j[1] + .03)[1]],
+                   100 if nm[0] == 'f' else 260, 260 if nm[0] == 'f' else 420, fill=hc, width=max(1, lw - 1))
+        body_m = Image.fromarray((((L == T_TORSO) | (L == T_NECK) | (L == T_LEGN)) * 170).astype(np.uint8))
+        hl.putalpha(ImageChops.multiply(hl.split()[3], body_m))
+        near.alpha_composite(hl)
+        # cloven hooves: the cleft at the toe and a pale coronet line
+        for nm, pts, ws, near_ in G['legs']:
+            if not near_: continue
+            b = pts[-1]; w_ = ws[-1] * 1.15
+            dn.line([U_(b[0] + w_ * .22, b[1] - .045), U_(b[0] + w_ * .40, b[1] + .004)], fill=INK, width=lw)
+            dn.line([U_(b[0] - w_ * .5, b[1] - .066), U_(b[0] + w_ * .45, b[1] - .066)], fill=(100, 94, 104), width=max(1, lw - 1))
+        # eye: dark and soft, a pale crescent, a highlight, a lid line and a brow bump
+        ex, ey = P(.15, -.06); er = s * .026
+        if blink:
+            dn.line([P(.12, -.06), P(.18, -.055)], fill=(150, 140, 150), width=lw)
+        else:
+            dn.ellipse([ex - er * 1.3, ey - er * 1.0, ex + er * 1.3, ey + er * 1.0], fill=(228, 218, 210))
+            dn.ellipse([ex - er * .95, ey - er * .95, ex + er * 1.25, ey + er * .95], fill=(42, 26, 22), outline=INK, width=max(1, lw // 2))
+            dn.ellipse([ex + er * .1, ey - er * .6, ex + er * .55, ey - er * .15], fill=(250, 246, 240))
+        dn.arc([ex - er * 1.6, ey - er * 1.6, ex + er * 1.6, ey + er * .9], 195, 330, fill=(150, 140, 152), width=max(1, lw // 2))
+        dn.line([P(.10, -.10), P(.16, -.112), P(.22, -.10)], fill=(110, 102, 116), width=lw, joint='curve')
+        # muzzle: outline, nostril comma, mouth
+        dn.line([P(.375, -.12), P(.365, -.02), P(.38, .07), P(.41, .12)], fill=(120, 96, 100), width=max(1, lw - 1), joint='curve')
+        nx_, ny_ = P(.445, -.035); nr = s * .02
+        dn.ellipse([nx_ - nr * 1.1, ny_ - nr * .8, nx_ + nr * 1.1, ny_ + nr * .8], fill=(56, 36, 42), outline=(40, 26, 30))
+        dn.line([P(.465, .075), P(.43, .095), P(.39, .10)], fill=INK, width=lw, joint='curve')
+        # ear inside: pink-grey with a pale hair fringe
+        ep = G['ear_n']; cx_ = sum(p[0] for p in ep) / len(ep); cy_ = sum(p[1] for p in ep) / len(ep)
+        dn.polygon([U_(cx_ + (x - cx_) * .62 - .02, cy_ + (y - cy_) * .35 + .01) for x, y in ep], fill=(140, 106, 112))
+        for x, y in ep[2:-2:2]:
+            dn.line([U_(cx_ + (x - cx_) * .62, cy_ + (y - cy_) * .62 + .008), U_(cx_ + (x - cx_) * .9, cy_ + (y - cy_) * .9)], fill=(214, 200, 196), width=max(1, lw // 2))
+        # tail tassel strands
+        tq = G['tuft']; tb = G['tail_pts'][-1]
+        for k in range(6):
+            p = tq[3 + k] if 3 + k < len(tq) else tq[-1]
+            dn.line([U_(*tb), U_(p[0] + (k - 3) * .006, p[1] + .02)], fill=(78, 70, 80), width=max(1, lw // 2))
     # ear insides
     if kind in ('zebra', 'horse', 'coat'):
         ep = G['ear_n']; cx_ = sum(p[0] for p in ep) / len(ep); cy_ = sum(p[1] for p in ep) / len(ep)
@@ -651,7 +821,7 @@ def put(img, kind, x, y, s, alpha=1.0, **kw):
     def P(u):
         return (x + face * u[0] * s, y + u[1] * s)
     hf = G['hf']
-    eye = hf(.15, -.035) if kind != 'lion' else hf(.17, -.07)
+    eye = hf(.175, -.075) if kind == 'lion' else hf(.15, -.06) if kind == 'cow' else hf(.15, -.035)
     head_c = hf(.25, .03) if kind != 'lion' else hf(.12, 0)
     return {'eye': P(eye), 'head': P(head_c), 'muzzle': P(hf(.5, .03) if kind != 'lion' else hf(.3, .03)), 'flank': P((0.0, -0.72)),
             'back': P((0.0, -0.98)), 'haunch': P((-0.45, -0.78)), 'shoulder': P((0.4, -0.78)), 'neck': P((0.62, -1.15)),

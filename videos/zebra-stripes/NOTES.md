@@ -84,3 +84,44 @@ Fixed on the way: an s08 ring radius went negative for a few frames (render cras
 
 ## Loop
 Frame 1950 (the last) = frame 0: mean abs difference **0.0** (s17's last frame calls `s01_frame(0, 0)` with the idle clock `anim.NOW` reset to 0, so the stickmen's secondary motion matches too). Note: in the parallel render the two frames differed by 0.13 (cached cards/layers built from neighbouring pose values in each worker), so frames 0 and 1950 were re-rendered in one process; for the 1080 final do the same (or render those two frames last in one process).
+
+## Fix pass + final (claude/fix-zebra-stripes, 2026-11-24)
+One pass on the Producer's review of `tests/sheet_2s.jpg` + `stills_r3`. Audio, timing and shot ids untouched; the
+savanna palette (s02-s05b) untouched. New review stills: `tests/stills_r4/` (540, captions on, checked by eye, no
+reviewer subagents).
+- **Cow (s14, s14b)** — `animals._cow` redrawn as a Japanese Black: deep rounded barrel with a sagging belly that
+  tucks up at the flank, a withers hump, the hip bone (hook) and pin bone on a straight back, a short thick neck with
+  a dewlap to the brisket, a broad short head carried low, small cream horns with dark tips curving up and forward,
+  ears sticking out sideways (pink-grey inside, hair fringe), a pink-grey muzzle with a nostril, a high tail set with a
+  tassel, knees / hocks (a real hock angle) tapering to cloven hooves (cleft + coronet). A black coat shows form by
+  sheen: soft light lobes on the shoulder, back, hook, thigh and neck, lighter strokes for the shoulder blade, elbow,
+  flank fold, hook bone, dewlap fold and faint ribs, plus the rim light and form shadow. The painted stripes have
+  dry-brush streaks; the leg tops inside the body are painted as body (no boxy leg roots).
+- **s14** — the farmer stands BESIDE the cow (right of the rump, nothing in front of the cow), both hands on a long
+  brush whose head rides the wet stroke on the flank (well away from his face). Painting goes stripe by stripe from the
+  rump forward (`_cow_reveal`: finished columns behind, the current column painted top-down, glistening, with drips),
+  rump + hind leg already striped at the first frame, mid-barrel by the end. New Japan set `japan_farm`: morning sky,
+  two soft cloud bands across layered blue-green cedar-covered ridges, rice terraces on the right, a tree line, a
+  white-walled farmhouse with a dark curved roof, the fenced paddock with flowers. s14b uses it too (higher horizon).
+- **Lion (s03, s04, s04b)** — `animals._lion` redrawn as a stalking side view: shoulder blades up as the high point,
+  the back dipping to the hips, the big head low and forward, a shaggy mane of rounded locks (`_shag`) drawn over the
+  back of the head so it frames the face and hangs long under the chest (golden near the face, dark brown outside,
+  strands flowing back from the face), muscled forelegs with the far one lifted mid-stalk, elbow/thigh/belly lines, an
+  amber almond eye with a hard brow, a tear line, nose pad, chin, whisker spots, a long low tail with a dark tuft.
+  Sight line + ring + SPOTTED unchanged; the lion moved right (s04) so more of it shows; the 50+ METRES measure now
+  starts at the lion's nose.
+- **s15** — rebuilt as a one-point view looking down a wide staircase: a back wall with a window (light patch + rays on
+  the landing), plaster walls, wooden handrails with brackets on both sides, a brass wall lamp with a glow, a wooden
+  landing, steps widening toward us (riser shade, lit tread, nosing highlight, crisp edge line, shadow under each
+  nosing, stone speckle). The person stands fully visible on the landing at the edge of the painted half, one foot
+  lifted and hovering (its shadow on the first step), arms out, worried. The right half is wiped white with bold
+  diagonal stripes that hide every edge.
+- **s01 / s01b / s17** — flies 1.5x bigger (s01 swarm, s17 divers) with bigger trail dots; the horse moved up
+  (HGY 1450 → 1390), the scientists down (+60 px); captions fixed on the grass under the horse, above the scientists
+  (`BAND_FIX` in the film, read by `render.Film.band`). s01b pulled back so the horse's legs and the grass show (the
+  caption sits under it). s17 zooms about the hoof line so the horse never drops into the caption. The last frame of
+  s17 is still `s01_frame(0, 0)`.
+- **s10** — depth: a soft spotlight cone onto the landing spot and a light pool, the hide is a cached hair-textured
+  strip (gradient + 2,600 hair strokes + a lit bevel), the fly is bigger (220 → 300 px) and casts a shadow that
+  sharpens as it comes down; grid kept, chips re-spaced.
+- `thumbnail.png`: rebuilt with the same lines, came out pixel-identical (its frame doesn't use the s01 layout), kept.

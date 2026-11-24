@@ -138,6 +138,7 @@ class Film:
         """Caption baseline per shot: the cleanest band within +-10% of 70% on a late frame of the shot.
         Faces are never covered; torsos and legs (body boxes under each face) cost extra, so the caption
         moves off a body when a cleaner band is near (NOTES v3 open note)."""
+        if name in getattr(bf, 'BAND_FIX', {}): return bf.BAND_FIX[name]                  # a hand-placed band (shot-specific)
         if name not in self.bands:
             s = [x for x in self.shots if x[0] == name][0]
             (img, info), _ = self.raw(s[1] + getattr(bf, 'BAND_AT', {})[name] if name in getattr(bf, 'BAND_AT', {}) else s[2] - .35)
