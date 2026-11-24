@@ -6,8 +6,8 @@ Producer's `audio/zebra-stripes/` (Kokoro `am_adam` 1.16), unchanged: 1951 frame
 Falls formula: ONE hero image (a brown horse in a fitted zebra-striped coat, head bare, in a green English field in
 2016, horse flies circling it with dotted trails), the black-and-white stripe motif against fresh green / warm gold,
 the scientists reacting in most shots, big titles, the flip (NOT HIDING THE ZEBRA. / HIDING THE LANDING SPOT.), and a
-loop back to the 2016 field. **Status: build + 540 preview + thumbnail done. The 1080 final has NOT been rendered, and
-nothing is published.**
+loop back to the 2016 field. **Status: fix pass done and the 1080 final rendered:
+`videos/zebra-stripes/zebra_stripes_final_1080x1920.mp4` (see "Fix pass + final"). Nothing is published.**
 
 ## Files
 | file | what |
@@ -125,3 +125,13 @@ reviewer subagents).
   strip (gradient + 2,600 hair strokes + a lit bevel), the fly is bigger (220 → 300 px) and casts a shadow that
   sharpens as it comes down; grid kept, chips re-spaced.
 - `thumbnail.png`: rebuilt with the same lines, came out pixel-identical (its frame doesn't use the s01 layout), kept.
+
+**Preview**: `tests/preview_full_540.mp4` (fix-pass build, 65.03 s, `mix.wav`) + `tests/sheet_2s.jpg`. Motion QA with the
+21 cut times and `--impacts 45.71` → **PASS** (no pops, longest frozen span 1 frame). Loop: frames 0 and 1950
+re-rendered in one process after the parallel render → mean abs difference **0.0** (540 and 1080).
+
+**Final**: `videos/zebra-stripes/zebra_stripes_final_1080x1920.mp4`, 1080x1920 30 fps, 2-pass libx264 High 5200k,
+AAC 192k, +faststart, **44.2 MB, 65.15 s** (0.1 s cover from `thumbnail.png` + 1951 frames, audio delayed 0.1 s by
+`tools/add_cover.sh`). Built: `render.py audio/zebra-stripes/words.json OUT --film zebra_stripes --size 1080x1920` →
+re-render frames 0 + 1950 in one process (single-process loop fix) → re-encode the frames (CRF 16) → mux `mix.wav` →
+`add_cover.sh` → 2-pass encode. Frame 0 (after the cover) and s14 checked by eye. Not published.
