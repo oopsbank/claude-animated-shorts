@@ -345,13 +345,13 @@ def _q(v, step): return round(v / step) * step
 
 def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur=0.0, sweep=None, spread=1.0,
            light=(-.4, -.7, -.6), lamp=None, lamp_col=(190, 150, 255), lamp_k=0.0, ink_w=None, fur=1.0, rest=False,
-           legs_fold=1.0, cache=True):
+           legs_fold=1.0, cache=True, small=False):
     """Render the moth. s = forewing length px. flap: wing-beat phase 0..1 (amp set by `spread`); rest=True: wings
     swept back flat (a resting delta). lamp: camera-space unit vector toward a light (adds lamp_col by lamp_k)."""
     if s < 40: SSl = 3
     else: SSl = SS
     key = (int(s), view, _q(elev, 2), _q(yaw, 2), _q(roll, 3), _q(pitch, 3), _q(flap % 1, 1 / 24), _q(blur, .05),
-           sweep, spread, light, lamp and tuple(_q(x, .1) for x in lamp), lamp_col, _q(lamp_k, .05), ink_w, fur, rest, legs_fold)
+           sweep, spread, light, lamp and tuple(_q(x, .1) for x in lamp), lamp_col, _q(lamp_k, .05), ink_w, fur, rest, legs_fold, small)
     if cache and key in _LAY: return _LAY[key]
     M = view_matrix(view, elev, yaw, roll, pitch)
     S = s * SSl
@@ -374,6 +374,10 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
         sw = math.radians(sweep if sweep is not None else 12)
         nb = 1 if blur <= .02 else max(3, int(blur * 14))
         phases = [flap + (i / max(1, nb - 1) - .5) * blur for i in range(nb)] if nb > 1 else [flap]
+        if small:                                                # small moths: the full beat as a faint ghost, plus
+            nb = max(5, nb)                                      # one sharp, opaque wing near the top of the stroke
+            phases = [i / nb for i in range(nb)]
+            sharp_ph = .05 + .05 * math.sin(2 * math.pi * flap)
     def flap_angle(ph):
         if rest: return math.radians(-4)
         return math.radians(14 + 52 * spread * math.sin(2 * math.pi * ph))
@@ -396,7 +400,16 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
                 cu, cv, cr = M @ eu, M @ ev, M @ root
                 ncam = M @ nrm
                 subs.append((cu, cv, cr, ncam))
-            cu, cv, cr, ncam = subs[len(subs) // 2]
+            if small:
+                phi = flap_angle(sharp_ph) * (.92 if wing == 'hind' else 1)
+                eu = np.array([-math.sin(sw), side * math.cos(sw), 0.0]); ev = np.array([math.cos(sw), side * math.sin(sw), 0.0])
+                if wing == 'hind':
+                    swh = sw * .7
+                    eu = np.array([-math.sin(swh), side * math.cos(swh), 0.0]); ev = np.array([math.cos(swh), side * math.sin(swh), 0.0])
+                Rf = rx(side * phi)
+                root = np.array([0.06 if wing == 'fore' else -0.01, side * 0.055, 0.03 if wing == 'fore' else 0.022])
+                subs = [('sharp', M @ (Rf @ eu), M @ (Rf @ ev), M @ root, M @ (Rf @ np.array([0, 0, 1.0])))] + subs
+            cu, cv, cr, ncam = subs[len(subs) // 2][-4:]
             cen = cr + cu * .16 + cv * -.08                          # a point near the root decides wing vs body
             parts.append((cen[2] + (0.004 if wing == 'hind' else 0), 'wing', (side, wing, subs)))
     # ---- body: one group of spheres (one ink outline round the union)
@@ -427,8 +440,12 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
     for depth, kind, pay in parts:
         if kind == 'wing':
             side, wing, subs = pay
+            sharp = None; sharp_img = None
+            if subs and len(subs[0]) == 5:
+                sharp = subs[0][1:]; subs = subs[1:]
             acc = None; n_ = len(subs)
-            for cu, cv, cr, ncam in subs:
+            for sub in ([sharp] if sharp is not None else []) + list(subs):
+                cu, cv, cr, ncam = sub
                 vis_top, k, lk = shade_k(ncam)
                 t = tex[(0 if wing == 'fore' else 2) + (0 if vis_top else 1)]
                 # tex px -> screen px
@@ -444,11 +461,14 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
                 rgbv = a[..., :3] * k
                 if lk > 0: rgbv = rgbv * (1 - .45 * lk) + np.array(lamp_col, np.float32) * (.45 * lk) * (k + .2)
                 pre = np.dstack([rgbv * a[..., 3:] / 255, a[..., 3:]])
+                if sharp is not None and sub is sharp:
+                    sharp_img = Image.fromarray(np.dstack([rgbv.clip(0, 255), a[..., 3:]]).astype(np.uint8), 'RGBA')
+                    continue
                 acc = pre if acc is None else acc + pre
             if acc is None: continue
             acc /= n_
             if n_ > 1:                                             # blurred wings: denser near the slow ends of the beat
-                acc[..., 3] = np.clip(acc[..., 3] * 1.25, 0, 255)
+                acc[..., 3] = np.clip(acc[..., 3] * (.55 if sharp is not None else 1.25), 0, 255)
             al = acc[..., 3:]
             col = np.where(al > 0, acc[..., :3] / np.maximum(al, 1e-3) * 255, 0)
             wimg = Image.fromarray(np.dstack([col.clip(0, 255), al]).astype(np.uint8), 'RGBA')
@@ -457,6 +477,11 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
                 ink = m.filter(ImageFilter.BoxBlur(iw)).point(lambda v: 255 if v > 10 else 0)
                 lay.paste(ink_img, (0, 0), ink)
             lay.alpha_composite(wimg)
+            if sharp_img is not None:                              # the readable triangle on top, inked
+                sm = sharp_img.split()[3]
+                ink = sm.filter(ImageFilter.BoxBlur(iw)).point(lambda v: 255 if v > 10 else 0)
+                lay.paste(ink_img, (0, 0), ink)
+                lay.alpha_composite(sharp_img)
         elif kind == 'body':
             sph = sorted(pay, key=lambda t: -t[1][2])
             bl = Image.new('RGBA', (Wd, Hd), (0, 0, 0, 0))
@@ -466,7 +491,7 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
             for tag, c, r, i in sph:
                 R = r * S; x, y = o[0] + c[0] * S, o[1] + c[1] * S
                 if tag != 'eye': du.ellipse([x - R, y - R, x + R, y + R], fill=255)
-                if tag in ('thx', 'head', 'palp'):
+                if tag in ('thx', 'head', 'palp') or (small and tag == 'abd'):
                     for _ in range(int(20 + R * .9)):                 # fine fur tufts breaking the outline
                         a_ = rng.uniform(0, 2 * math.pi); r0 = R * .85; r1 = R * rng.uniform(1.03, 1.12 if tag == 'thx' else 1.08)
                         dfz.line([(x + math.cos(a_) * r0, y + math.sin(a_) * r0), (x + math.cos(a_ + .1) * r1, y + math.sin(a_ + .1) * r1)],
@@ -475,11 +500,14 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
                 R = r * S
                 col = {'abd': ABD, 'thx': FUR, 'head': FUR, 'eye': EYE, 'palp': FUR_L}[tag]
                 stripe = None
-                if tag == 'abd':
+                if tag == 'abd' and small:                         # soft furry abdomen, warm toward the tip, no rings
+                    f_ = i / 13
+                    col = tuple(int(a_ * (1 - f_) + b_ * f_) for a_, b_ in zip((150, 112, 88), FUR))
+                elif tag == 'abd':
                     col = (ABD[0] + 12 * (i % 2), ABD[1] + 8 * (i % 2), ABD[2] + 4 * (i % 2))
                     stripe = ABD_PINK if i % 2 == 0 and 2 <= i <= 12 else (190, 178, 140)
                 if tag == 'thx' and i == 1: col = (140, 128, 90)
-                spr = sphere_sprite(R, col, tuple(Lc), fur * (0 if tag == 'eye' else 1.0), seed=i, stripe=stripe)
+                spr = sphere_sprite(R, col, tuple(Lc), fur * (0 if tag == 'eye' else (1.8 if small and tag == 'abd' else 1.0)), seed=i, stripe=stripe)
                 x, y = o[0] + c[0] * S, o[1] + c[1] * S
                 bl.alpha_composite(spr, (int(x - spr.width / 2), int(y - spr.height / 2)))
                 if tag == 'eye':
@@ -511,12 +539,12 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
             side, pts = pay
             d = ImageDraw.Draw(lay)
             sp = [(o[0] + p[0] * S, o[1] + p[1] * S) for p in pts]
-            wsh = max(1, int(S * .010))
+            wsh = max(1, int(S * (.016 if small else .010)))
             # barbs: in the plane of the shaft and the moth's y axis, angled forward, tapering
             if s > 60:
                 for i in range(1, len(pts) - 1):
                     f = i / (len(pts) - 1)
-                    bl = .06 * (1 - f) ** .7 + .008
+                    bl = (.06 * (1 - f) ** .7 + .008) * (1.9 if small else 1)
                     t3 = np.array(pts[i + 1]) - np.array(pts[i - 1]); t3 /= np.linalg.norm(t3)
                     side3 = M @ np.array([0.0, 0, 1.0]); side3 = np.cross(t3, side3)
                     if np.linalg.norm(side3) < 1e-3: continue
@@ -526,7 +554,7 @@ def render(s, view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, flap=0.0, blur
                             q = np.array(pts[i]) + (np.array(pts[i + 1]) - np.array(pts[i])) * j / 3
                             e = q + (side3 * sgn * .85 + t3 * .5) * bl
                             d.line([(o[0] + q[0] * S, o[1] + q[1] * S), (o[0] + e[0] * S, o[1] + e[1] * S)],
-                                   fill=(150, 136, 100), width=max(1, int(S * .004)))
+                                   fill=(186, 170, 128) if small else (150, 136, 100), width=max(1, int(S * (.009 if small else .004))))
             d.line(sp, fill=INK, width=wsh + int(iw * .9), joint='curve')
             d.line(sp, fill=(186, 170, 128), width=max(1, wsh), joint='curve')
         elif kind == 'leg':

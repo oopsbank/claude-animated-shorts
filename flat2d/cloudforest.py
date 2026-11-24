@@ -681,7 +681,7 @@ def desk_wall(img, w, cam=0.0):
 
 
 def desk_top(img, w, cam=0.0, top=980):
-    """s13 desk surface (perspective) with a map, a pencil and a warm desk lamp pool."""
+    """s13 desk surface (perspective) with a map and a warm desk lamp pool."""
     d = ImageDraw.Draw(img)
     d.polygon([(-60, top), (W + 60, top), (W + 260, H), (-260, H)], fill=(126, 80, 46))
     for k in range(10):
@@ -693,7 +693,6 @@ def desk_top(img, w, cam=0.0, top=980):
     for k in range(6):
         d.line([(110 + k * 16, 1390 + k * 70), (480 + k * 12, 1340 + k * 70)], fill=(176, 156, 116), width=3)
     d.line([(150, 1500), (300, 1420), (420, 1560)], fill=(200, 80, 70), width=5)
-    d.line([(820, 1700), (1000, 1560)], fill=INK, width=22); d.line([(820, 1700), (1000, 1560)], fill=(230, 180, 60), width=14)
     radial(img, 560, 1150, 1100, (255, 190, 110), .42)
     d = ImageDraw.Draw(img)
     d.line([(1010, top - 10), (960, 560)], fill=INK, width=22); d.line([(1010, top - 10), (960, 560)], fill=(60, 64, 76), width=12)

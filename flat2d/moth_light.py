@@ -117,7 +117,7 @@ def orbiters(img, w, lamp, orbs, front, trail_t=1.1, scale=1.0, lamp_col=VIO, la
         roll = 42 if o.om > 0 else -42
         sz = max(16, q(o.s * scale * (1 - .28 * Z / o.R), 4))
         lv = (lamp[0] - x, lamp[1] - y, -Z * .6)
-        M.put(img if mimg is None else mimg, x, y, sz, view='side', elev=24, yaw=q(yaw, 3), roll=roll, flap=q((w * 23 + i * .37) % 1, 1 / 24), blur=blur,
+        M.put(img if mimg is None else mimg, x, y, sz, view='side', elev=50, small=True, yaw=q(yaw, 3), roll=roll, flap=q((w * 23 + i * .37) % 1, 1 / 24), blur=blur,
               lamp=lv, lamp_k=lamp_k, lamp_col=lamp_col, alpha=alpha)
 
 
@@ -244,7 +244,7 @@ def s02(u, D, cue):
     img = Image.new('RGBA', (W, H))
     cam = -20 * smooth(u / D)
     fx, fy = CF.candle_room(img, w, cam)
-    flame_moths(img, w, (fx, fy - 40), 5, 220, 70, seed=4)
+    flame_moths(img, w, (fx, fy - 40), 5, 240, 104, seed=4)
     # one moth flutters right into the flame on "flames"
     k = smooth(seg(u, cue(5) - .6, cue(6) + .1))
     mx = fx - 260 * (1 - k) + 6 * math.sin(w * 20); my = fy - 60 - 120 * (1 - k) * math.sin(k * 3)
@@ -277,7 +277,7 @@ def s02b(u, D, cue):
     img = Image.new('RGBA', (W, H))
     cam = 24 * smooth(u / D)
     hx, hy = CF.street_lamp(img, w, cam)
-    flame_moths(img, w, (hx, hy), 9, 300, 64, seed=7)
+    flame_moths(img, w, (hx, hy), 7, 320, 100, seed=7)
     sh = smooth(seg(u, cue(16) - .4, cue(16) + .1))
     g = sci(img, w, 'P', anim.mix(dict(POSES['stand']), dict(POSES['shrug']), sh), 'thinking' if sh < .5 else 'worried', 300 + cam * 1.2, 1900, .62,
             look=.5, lamp=False, rim=(255, 190, 110), rim_dir=(1, -.5))
@@ -345,7 +345,10 @@ def s04(u, D, cue):
     p0, p1 = (140, 520), (lamp[0] - 40, lamp[1] - 40)
     k1 = smooth(seg(u, .1, cue(5) - .2))
     if not HIDE_UI:
-        dashed(img, p0, p1, (255, 255, 255), 8, w, k1)
+        dashed(img, p0, p1, (255, 255, 255), 10, w, k1)
+        if k1 > .95:
+            ang0 = math.atan2(p1[1] - p0[1], p1[0] - p0[0])
+            F.arrow(img, (p1[0] - math.cos(ang0) * 90, p1[1] - math.sin(ang0) * 90), p1, 30, (255, 255, 255))
         if u > cue(4) - .1:
             mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
             draw_x(img, mx, my, 70, seg(u, cue(4) - .1, cue(4) + .3) * 2)
@@ -361,7 +364,7 @@ def s04(u, D, cue):
         M.trail(img, pts, KEY, 8, 1.0, (255, 250, 220))
         hx, hy = pts[-1]; hx2, hy2 = pts[-2]
         ang = math.atan2(hy - hy2, hx - hx2)
-        F.arrow(img, (hx - math.cos(ang) * 50, hy - math.sin(ang) * 50), (hx + math.cos(ang) * 20, hy + math.sin(ang) * 20), 26, KEY)
+        if kr > .25: F.arrow(img, (hx - math.cos(ang) * 60, hy - math.sin(ang) * 60), (hx + math.cos(ang) * 30, hy + math.sin(ang) * 30), 34, KEY)
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 900, vig=(.3, (0, 10, 0)))
     if not HIDE_UI:
         chip(img, 'NOT AT IT', (200, 50, 50), 300, 400, u, cue(4) + .1, size=54)
@@ -421,6 +424,9 @@ def s05(u, D, cue):
     def pos(t):
         a = a0 + .42 * t
         return lamp[0] + R * math.cos(a), lamp[1] + R * 1.0 * math.sin(a), a
+    radial(img, lamp[0], lamp[1], 620, (150, 120, 255), .35)
+    ring = [(lamp[0] + R * math.cos(k / 60 * 2 * math.pi), lamp[1] + R * math.sin(k / 60 * 2 * math.pi)) for k in range(61)]
+    M.trail(img, ring, (170, 150, 240), 5, .45, wave=1, phase=w)
     pts = [pos(u - k * .12)[:2] for k in range(26)][::-1]
     M.trail(img, pts, (210, 186, 255), 14, 1.0, wave=3, phase=w * 2)
     x, y, a = pos(u)
@@ -468,7 +474,7 @@ def s06(u, D, cue):
     img = Image.new('RGBA', (W, H))
     lamp_gx, gy = 600, 1640
     CF.forest(img, w, 0, lamp=(lamp_gx, gy - 300), lamp_k=.7, mist_a=.8)
-    ground_lamp(img, lamp_gx, gy, w, s=1.0)
+    ground_lamp(img, lamp_gx, gy, w, s=1.4)
     # the moth: flies in level, flips over the lamp on "flipped", falls on "fell"
     t_in, t_flip, t_fall = cue(2) - .9, cue(8) - .15, cue(12) - .1
     fx = lamp_gx - 40
@@ -503,10 +509,10 @@ def s06(u, D, cue):
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1000, vig=(.3, (0, 10, 0)))
     if not HIDE_UI:
         clue(img, 'CLUE 2', u, .05)
-        chip(img, 'LAMP POINTING UP', (110, 80, 200), 330, 1440, u, cue(5) - .1, size=48)
+        chip(img, 'LAMP POINTING UP', (110, 80, 200), 330, 1200, u, cue(5) - .1, size=48)
         chip(img, 'FLIPS', (200, 60, 60), 860, 440, u, cue(8) - .05, size=60)
         chip(img, 'FALLS', (200, 60, 60), 860, 560, u, cue(12) - .05, size=60)
-    return img, {'faces': [], 'avoid': [(200, 170, 880, 330), (700, 380, 1020, 620), (60, 1380, 600, 1500)]}
+    return img, {'faces': [], 'avoid': [(200, 170, 880, 330), (700, 380, 1020, 620), (60, 1140, 600, 1260)]}
 
 
 # ---------------------------------------------------------------- s07: CLUE 3 (a glowing sheet overhead)
@@ -578,7 +584,7 @@ def s09(u, D, cue):
     # brightness markers
     ks = smooth(seg(u, cue(12) - .2, cue(12) + .3)); kg = smooth(seg(u, cue(15) - .2, cue(15) + .3))
     if ks > 0: radial(img, 540, 300, 900, (150, 160, 255), .25 * ks)
-    x, y = 540 + 140 * math.sin(w * .25), 1100 + 30 * math.sin(w * 1.1)
+    x, y = 540 + 140 * math.sin(w * .25), 860 + 30 * math.sin(w * 1.1)
     inf = M.put(img, x, y, 320, view='rear', elev=58, spread=.5, roll=6 * math.sin(w * .9), flap=(w * 5) % 1, blur=.3, light=(0, -1, -.4))
     img = finish(img, w, 1.02 + .03 * smooth(u / D), 540, 900, vig=(.28, (4, 4, 20)))
     if not HIDE_UI:
@@ -586,7 +592,7 @@ def s09(u, D, cue):
         chip(img, 'NO LAMPS', (90, 60, 60), 540, 340, u, cue(4) - .1, size=44)
         if ks > 0: tag(img, 'SKY: BRIGHTEST', 540, 560, 64, KEY, pop(u, cue(12) - .1, .3))
         if kg > 0: tag(img, 'GROUND: DARK', 540, 1640, 56, (180, 190, 230), pop(u, cue(15) - .1, .3))
-    return img, {'faces': [], 'avoid': [(150, 150, 930, 620), (200, 1580, 880, 1700)]}
+    return img, {'faces': [], 'avoid': [(150, 150, 930, 620), (200, 1580, 880, 1700), (240, 640, 840, 1080)]}
 
 
 # ---------------------------------------------------------------- the mechanism stage: UP and BACK
@@ -649,7 +655,7 @@ def s11(u, D, cue):
     x += 70 * smooth(seg(u, cue(9), D))
     inf = M.put(img, x, y, 340, view='rear', elev=55, roll=roll, flap=(w * 1.1) % 1, spread=.5, blur=0, light=(.6, -.3, -.5),
                 lamp=(lamp[0] - x, lamp[1] - y, 0), lamp_k=.9)
-    up_arrow(img, (x - 30, y - 230), 90 * ease_out(k_up) if k_up < 1 else 90, 380, 1.0, 'UP')
+    up_arrow(img, (x - 60, y - 330), 90 * ease_out(k_up) if k_up < 1 else 90, 300, 1.0, 'UP')
     if not HIDE_UI:
         M.back_arrow(img, inf['back'], inf['up'], 230, label='BACK', label_side=-1 if roll > 35 else 1)
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1000, vig=(.26, (4, 4, 20)))
@@ -682,7 +688,9 @@ def s11b(u, D, cue):
             return (120 + (p_start[0] - 120) * f, 1760 + (p_start[1] - 1760) * f)
         return pos(t)[:2]
     pts = [P(max(0, u - k * .04)) for k in range(int(u / .04) + 2)][::-1]
-    M.trail(img, pts, (210, 186, 255), 11, 1.0, wave=2, phase=w * 4)
+    ring = [(lamp[0] + 275 * math.cos(k / 90 * 2 * math.pi), lamp[1] - 275 * math.sin(k / 90 * 2 * math.pi)) for k in range(91)]
+    if u > .6: M.trail(img, ring, (180, 160, 250), 6, .4 * smooth(seg(u, .6, 1.2)), wave=0, phase=w)
+    M.trail(img, pts, (226, 206, 255), 16, 1.0, wave=2, phase=w * 4)
     x, y = P(u); x2, y2 = P(u + .03)
     hd = math.degrees(math.atan2(y2 - y, x2 - x))
     sg = M.bank_sign((lamp[0] - x, lamp[1] - y), view='top', heading=hd, roll=45)
@@ -694,7 +702,7 @@ def s11b(u, D, cue):
         tag(img, 'FROM ABOVE', 540, 230, 40, (210, 210, 255))
         chip(img, 'TURNS...', (190, 150, 30), 300, 380, u, .05, size=54)
         chip(img, 'ENDS UP CIRCLING', (110, 80, 200), 540, 520, u, cue(15) - .1, size=56)
-    return img, {'faces': [], 'avoid': [(120, 180, 960, 600)]}
+    return img, {'faces': [], 'avoid': [(120, 180, 960, 600), (int(x - 200), int(y - 200), int(x + 200), int(y + 200))]}
 
 
 def s12(u, D, cue):
@@ -716,7 +724,7 @@ def s12(u, D, cue):
     roll = 180 * k_roll + 10 * math.sin(w * 1.3) * (1 - k_roll)
     inf = M.put(img, x, y, 290 - 60 * k_fall, view='rear', elev=55, spread=.5, roll=roll, pitch=-30 * k_fall, flap=(w * 1.2) % 1 if k_fall < .2 else (w * 4) % 1,
                 blur=0 if k_fall < .05 else .3 * k_fall, lamp=(540 - x, 1600 - y, 0), lamp_k=.9)
-    up_arrow(img, (x + 250, y - 200), 180 * k_up, 360, 1.0 - .6 * k_fall, 'UP')
+    up_arrow(img, (x + 270, y - 20 - 200 * (1 - k_up)), 180 * k_up, 340, 1.0 - .6 * k_fall, 'UP')
     if not HIDE_UI and k_fall < .6:
         M.back_arrow(img, inf['back'], inf['up'], 230, label='BACK', label_side=1, alpha=1 - k_fall)
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1000, vig=(.26, (4, 4, 20)))
@@ -724,8 +732,8 @@ def s12(u, D, cue):
         chip(img, 'LAMP BELOW', (110, 80, 200), 540, 250, u, .05, size=50)
         chip(img, '"UP" POINTS DOWN', (60, 110, 170), 540, 370, u, cue(6) - .1, size=50)
         chip(img, 'ROLLS OVER', (190, 150, 30), 820, 600, u, cue(10) - .1, size=50)
-        chip(img, 'FALLS', (200, 60, 60), 820, 1220, u, cue(13) - .1, size=60)
-    return img, {'faces': [], 'avoid': [(160, 180, 920, 440), (600, 540, 1040, 660), (600, 1150, 1040, 1290)]}
+        chip(img, 'FALLS', (200, 60, 60), 260, 1220, u, cue(13) - .1, size=60)
+    return img, {'faces': [], 'avoid': [(160, 180, 920, 440), (600, 540, 1040, 660), (60, 1150, 480, 1290), (620, 660, 1000, 1240)]}
 
 
 # ---------------------------------------------------------------- s13: the analogy (a compass beside a magnet)
@@ -786,7 +794,6 @@ def s13(u, D, cue):
     if not HIDE_UI:
         chip(img, 'COMPASS + MAGNET', (60, 110, 170), 540, 160, u, cue(3) - .1, size=50)
         chip(img, 'NOTHING BROKEN', (40, 140, 80), 540, 1750, u, cue(8) - .1, size=52)
-        if u > cue(11): check(img, 840, 1750, 40, seg(u, cue(11), cue(11) + .3))
         chip(img, 'WRONG WAY', (200, 60, 60), 540, 1860, u, cue(16) - .1, size=56)
     return img, {'faces': [face_box(g, 1.3)], 'avoid': [(200, 90, 880, 230), (200, 1630, 900, 1890)]}
 
@@ -797,11 +804,17 @@ def s14(u, D, cue):
     lamp = (540, 1120)
     img = Image.new('RGBA', (W, H))
     CF.forest(img, w, 0, lamp=lamp, lamp_k=1.0)
-    orbs = default_orbs(21, 14, R=(220, 440), s=(110, 160), y=(-180, 220))
+    orbs = default_orbs(23, 6, R=(250, 440), s=(120, 160), y=(-200, 240))
     orbiters(img, w, lamp, orbs, front=False, trail_t=1.6)
     CF.uv_lamp(img, lamp[0], lamp[1], 1.1, t=w, ground=2000)
     CF.spores(img, w, lamp, 80)
     orbiters(img, w, lamp, orbs, front=True, trail_t=1.6)
+    a0 = math.radians(40 + 8 * u)                                    # the hero: big, banking round the lamp in front
+    hp = [(lamp[0] + 360 * math.cos(a0 + k * .05), lamp[1] + 330 * math.sin(a0 + k * .05)) for k in range(30)][::-1]
+    M.trail(img, hp, (214, 190, 255), 11, 1.0, wave=3, phase=w * 3)
+    hx, hy = hp[-1]
+    M.put(img, hx, hy, 250, heading=math.degrees(a0) - 95, view='top', roll=-24, flap=(.5 + .12 * math.sin(w * 2.4)) % 1, spread=.5, blur=0,
+          lamp=(lamp[0] - hx, lamp[1] - hy, -.4), lamp_k=.5, glow=(150, 110, 255), glow_a=.3)
     CF.foreground(img, w, 0, seed=15)
     a = np.asarray(img, np.float32)
     yy = np.linspace(0, 1, H)[:, None, None]
@@ -813,7 +826,7 @@ def s14(u, D, cue):
         stitle(img, 's14_b', [('TRAPPED.', KEY, 215)], 520, u, cue(7) - .1)
     sx, sy = shake(u, cue(7), 10, .3)
     if sx or sy: img = anim.camera(img, 1.0, None, None, sx, sy)
-    return img, {'faces': [], 'avoid': [(0, 90, W, 860)]}
+    return img, {'faces': [], 'avoid': [(0, 90, W, 860), (int(hx - 220), int(hy - 200), int(hx + 220), int(hy + 200))]}
 
 
 # ---------------------------------------------------------------- s15: the loop back to 2024
