@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import wind_cave as B
 
 B.HIDE_UI = True
+B.THUMB = True
 ws = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/wind-cave/words.json')))
 line3 = ws[27:38]                                      # line 3 words (lines 1-2 have 14 + 13 words)
 t0 = line3[0]['start'] - .1

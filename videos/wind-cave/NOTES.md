@@ -1,15 +1,16 @@
 # Wind Cave: "This Cave Has Been Breathing Since 1881" (flat2d, claude/area-wind-cave, 2026-11-23)
 
-Video 7. Same look, tone and pipeline as videos 3-6: white stickmen with a black outline, rich flat 2D, serious mystery, no comedy, "sentence" captions, continuous motion. Voice: Kokoro `am_adam` (the Producer's `audio/wind-cave/`, unchanged). Built on the Blood Falls formula: one hero image (the small hole in the rock BREATHING on a golden prairie), a blue-white breath motif against warm gold, a brother reacting in almost every shot, big titles. **Status: 540 preview + thumbnail done. The 1080 final has not been rendered and nothing is published.**
+Video 7. Same look, tone and pipeline as videos 3-6: white stickmen with a black outline, rich flat 2D, serious mystery, no comedy, "sentence" captions, continuous motion. Voice: Kokoro `am_adam` (the Producer's `audio/wind-cave/`, unchanged). Built on the Blood Falls formula: one hero image (the small hole in the rock BREATHING on a golden prairie), a blue-white breath motif against warm gold, a brother reacting in almost every shot, big titles. **Status (2026-11-24): the Director's one fix pass is done and the 1080 final is rendered: `wind_cave_final_1080x1920.mp4` (43.9 MB, 64.96 s with the 0.1 s cover). Nothing is published.**
 
 ## Files
 | file | what |
 |---|---|
-| `tests/preview_full_540.mp4` | 540x960 full-length preview with `audio/wind-cave/mix.wav` (no cover), 1945 frames = 64.83 s |
-| `tests/sheet_2s.jpg` | 2 s contact sheet of the preview |
+| `wind_cave_final_1080x1920.mp4` | **the one posting copy**: 1080x1920 30 fps, the cover in the first 3 frames, `mix.wav` delayed 0.1 s, 2-pass libx264 High 5200k, AAC 192k, +faststart; 1948 frames, 64.96 s, 43.9 MB |
+| `tests/preview_full_540.mp4` | the OLD 540x960 preview from before the fix pass (fountain breath), kept for comparison |
+| `tests/sheet_2s.jpg` | 2 s contact sheet of the 1080 final (low-res) |
 | `tests/stills_r1/`, `tests/stills_r11/` | the first and last rounds review stills (one per shot, 540x960, captions on) + `sheet.png`; `stills_r2`-`r10` keep only their `sheet.png` (size) |
 | `tests/review_brief.md` | what each reviewer got: every still's voice-over line and planned picture |
-| `thumbnail.png` | house-style thumbnail: a caption-free s03 frame (`flat2d/wind_cave_thumb.py`, `HIDE_UI`) at the gust's peak: the hole blowing out hard, Tom's brown hat flying off, Tom recoiling. Headline THIS CAVE / IS BREATHING (key blue) / SINCE 1881 (yellow) |
+| `thumbnail.png` | house-style thumbnail (redone in the fix pass: `wind_cave.THUMB` gives s03 a bigger outcrop and hole, a stronger airy breath and the hat flying top-right): a caption-free s03 frame (`flat2d/wind_cave_thumb.py`, `HIDE_UI`) at the gust's peak: the hole blowing out hard, Tom's brown hat flying off, Tom recoiling. Headline THIS CAVE / IS BREATHING (key blue) / SINCE 1881 (yellow) |
 | `flat2d/wind_cave.py` | the shots `s01`-`s16b`, `SHOT_LIST`, `END`, `STILL_AT`, `HIDE_UI` |
 | `flat2d/prairie.py` | the new kit: painted skies (fair / morning / storm / dusk / sunset / deep), sun, flat two-tone cumulus, `storm_deck`, `thunderhead` (with a rain curtain), `lightning`, `rain`; Black Hills `pine_ridge` (cached, pine-tooth crest, haze); rolling `hill` bands (lit crest, wind-combed streaks); `grass` (bunch-grass clumps that bend with the breeze, travelling gust bands and the hole's breath via `flow_at`), `seed_heads`; `outcrop` (three stacked limestone slabs, joints, lichen, the hole with a lit lip); **the breath**: `breath` OUT (long tapered ribbons on integrated spines with curled tips, arrowheads on the leading end, a cold plume, mouth puffs, flying grass bits / leaf flakes / motes) and `breath_in` IN (a funnel: streams converge from a wide arc, narrow into the hole, big arrowheads pointing in, chevrons marching inward); `hat_layer`/`put_hat`; `paper`; `barometer`; `earth_section`, `maze_net`/`draw_maze` (Prim tree + loops, meandering tunnels, lit rims), `boxwork`, `lamp_light`; `air_blanket` (the atmosphere as wavy bands of molecules + pressing arrows, thickness = pressure); `cabin`, `chips_bag` |
 | `flat2d/wind_cave_thumb.py` | the thumbnail frame |
@@ -107,3 +108,30 @@ The Producer's mix (`audio/wind-cave/mix.wav`, `sfx.json`, `music.json`) is used
 - Acting and feel are the Director's call on `tests/preview_full_540.mp4`; the Producer reviews `tests/sheet_2s.jpg` against the script before any 1080 final.
 - Dramatised (as in SCRIPT.md): which brother lost which hat follows the park's traditional story; the 8 x 10 in hole is drawn to scale beside a letter sheet (slightly enlarged sheet for legibility); the tunnel to a second opening is shown only as an imagined dashed ghost; the cave is never called "discovered".
 - Render cost: frames are drawn at 1080 and downscaled; the 540 preview takes about 25-30 min on 4 cores, and the 1080 final about 45-60 min.
+
+## Fix pass (2026-11-24, the Director's notes, one pass, then the final)
+1. **The breath** (`prairie.breath` OUT and `breath_in` IN, used by every shot) no longer reads as a water fountain. Each stream is now a low-alpha, blurred haze body plus three thin bright streak lines that wobble. The solid fills, ink edges and arrowheads are gone. The fix also adds:
+   - curling eddies where the wisps break up;
+   - a sideways wind `drift` (default 0.5, swaying);
+   - a softer mouth puff and plume;
+   - `shimmer`: heat-shimmer row displacement plus faint wavy lines above the hole;
+   - carried bits: tumbling seed heads, grass slivers, leaf flakes and fewer, smaller motes, scattered wider;
+   - grass flattened harder near the mouth (`flow_at` near term) with a travelling ripple.
+   IN keeps the funnel geometry in the same airy style, with thin open chevrons on alternate streams and a thinner chevron ring.
+2. **s14** `rich_cabin`: a perspective cabin. Seat rows recede to a vanishing point, with headrest covers and other passengers' heads (some with hair). It also has overhead bins with seams and reading lights, window rows on both walls (the sun side is warm, with sun patches on the seats) and the near oval window with a sunset sky and clouds sliding by. The passenger's big aura was removed (it washed the set grey). The chips bag is unchanged.
+3. **s05b**: rock grain texture, lit lips and cast shadows on the joints, and a top-left light to bottom-right shade gradient. Crusty lichen rosettes (orange, sage and pale), golden prairie at the rock's corners and bigger grass tufts. The breath rises at the camera as swelling puffs plus curling wisps spiralling outward, and the hole stays dark.
+4. **s13**: 34 nodes instead of 70 and 8 loops instead of 50, with tunnels about 1.3x wider. A link tunnel now joins the network to the shaft. Brighter air and rims. The pulses are bigger and fade with distance from the shaft. The captions are unchanged.
+5. **s16a**: four pine ridges (a far hazy one and a near dark one added). Rain curtains with streaks veil the far ridges. A lit rim runs along the storm front, with lit arcs under the deck. The outcrop is bigger (0.9) and breathes out harder with drift. The hat is larger, lifted, glowing, with speed streaks.
+6. **Thumbnail**: redone with the new breath and a bigger hole (the same three headline lines).
+
+Checks: low-res stills after each change (`flat2d/stills.py`), then one sonnet sanity reviewer on the stills sheet, full-size stills and the thumbnail. It gave all six fixes PASS with no blockers. Minor notes: some s01/s03 OUT streams still fan out a little from the hole, and in the s06 still the hat is airborne above the rock. Motion QA on the 1945 final frames, with the same cuts and impacts as above: **PASS** (longest frozen span 1 frame, median diff 2.65, no pops).
+
+Final build:
+```
+.venv/bin/python flat2d/render.py audio/wind-cave/words.json OUT.mp4 --film wind_cave --size 1080x1920      # ~31 min on 4 cores
+ffmpeg -i OUT.mp4 -i audio/wind-cave/mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -shortest muxed.mp4
+tools/add_cover.sh muxed.mp4 videos/wind-cave/thumbnail.png master.mp4
+ffmpeg -i master.mp4 -c:v libx264 -profile:v high -preset slow -b:v 5200k -pass 1 -an -f mp4 /dev/null
+ffmpeg -i master.mp4 -c:v libx264 -profile:v high -preset slow -b:v 5200k -pass 2 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart videos/wind-cave/wind_cave_final_1080x1920.mp4
+```
+The audio and shot timing are unchanged (`mix.wav`, 1945 frames).

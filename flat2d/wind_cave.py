@@ -23,6 +23,7 @@ from tunguska import chip_t, flash, thought
 
 SLUG = 'wind-cave'
 HIDE_UI = False                          # thumbnail frames: no chips, titles or labels
+THUMB = False                            # thumbnail: s03 with a bigger outcrop/hole
 KEY = (130, 206, 255)                    # BREATHING / breath key colour for titles
 TOM_COL = (196, 92, 52)                  # TOM label
 JESSE_COL = (70, 120, 190)               # JESSE label
@@ -288,7 +289,7 @@ def s03(u, D, cue):
     horizon = 1330
     prairie_back(img, u, cam * .4, horizon=horizon, sunp=(300, 900), storm_far=.0, kind='fair', kind2='storm', mixk=.42)
     gold = P.GOLD
-    hole = (380 + cam * .8, 1430)
+    hole = (380 + cam * .8, 1430) if not THUMB else (420 + cam * .8, 1400)
     gust = smooth(seg(u, cue(0) - .2, cue(1) + .1)) * (1.0 + .3 * smooth(seg(u, cue(6), cue(9))))
     k = .6 + 1.25 * gust + .1 * math.sin(u * 7)
     ang = -math.pi / 2 + .28
@@ -296,11 +297,14 @@ def s03(u, D, cue):
     P.paste_band(img, P.hill(61, horizon + 40, 30, gold, ink=INK, waves=(.6, 1.7)), cam, .6)
     P.grass(img, u, (-60, horizon, W + 60, horizon + 160), 150, 26, 52, cols=gold, seed=31, src=src, clump=(3, 6),
             ytop=lambda x: P.edge_y(61, horizon + 40, 30, x - cam * .6, waves=(.6, 1.7)) + 4)
-    P.outcrop(img, hole[0], hole[1], 1.45, seed=3, breath_glow=min(1, k), t=u, src=src)
+    P.outcrop(img, hole[0], hole[1], 1.45 if not THUMB else 2.2, seed=3, breath_glow=min(1, k), t=u, src=src)
+    if THUMB:                                                     # the hole as the hero: a cold glow ring around the mouth
+        rm_ = mask(); ImageDraw.Draw(rm_).ellipse([hole[0] - 190, hole[1] - 120, hole[0] + 190, hole[1] + 110], outline=255, width=30)
+        glow(img, rm_, (90, 170, 255), 1.0, blur=22, add=True)
     t_hat = cue(9) - .3
     G = {}
-    P.breath(img, u, hole[0], hole[1], ang=ang, sign=1, k=k, scale=1.3, n=10, spread=1.0, seed=11, Lr=(900, 1300), Ar=(40, 90),
-             width=22, particles=60)
+    P.breath(img, u, hole[0], hole[1], ang=ang, sign=1, k=k * (1.35 if THUMB else 1), scale=1.3 if not THUMB else 1.6, n=10 if not THUMB else 13,
+             spread=1.0, seed=11, Lr=(900, 1300), Ar=(40, 90), width=22, particles=60 if not THUMB else 90)
     kb = out_back(seg(u, cue(1), cue(1) + .35), 1.8)
     pose = mix(dict(POSES['stand'], armL=(30, 20), armR=(-40, -30)), dict(POSES['stand'], armL=(95, 150), armR=(-100, -150)), kb)
     hat_on = u < t_hat
@@ -309,7 +313,7 @@ def s03(u, D, cue):
                      aura=(150, 210, 255), aura_a=.3)
     if not hat_on:
         hx, hy = G['t']['head']; R = G['t']['R']
-        x, y, a, sc = hat_flight(u, t_hat, (hx, hy - R * .85), (300, 420), spin=-540, s0=.85, s1=.75, arc=-160)
+        x, y, a, sc = hat_flight(u, t_hat, (hx, hy - R * .85), (300, 420) if not THUMB else (980, 760), spin=-540, s0=.85, s1=.75 if not THUMB else 1.0, arc=-160)
         P.put_hat(img, P.TOM_HAT, x, y, sc, angle=a)
         G['hat'] = (x, y)
     P.grass(img, u, (-80, 1880, W + 80, 1990), 40, 80, 150, cols=(lerp(gold[1], INK, .1), gold[2], gold[3], lerp(gold[3], INK, .3)),
@@ -537,9 +541,33 @@ def s05b(u, D, cue):
         pts = [(x0, y0)]
         for _ in range(5): pts.append((pts[-1][0] + rng.uniform(60, 160), pts[-1][1] + rng.uniform(-60, 60)))
         d.line([(x + cam, y) for x, y in pts], fill=(110, 98, 96), width=6, joint='curve')
-    for i in range(70):                                            # lichen + pits
-        x, y, r = rng.uniform(0, W) + cam, rng.uniform(250, H), rng.uniform(6, 22)
-        d.ellipse([x - r, y - r * .7, x + r, y + r * .7], fill=(198, 192, 124) if i % 3 else (226, 170, 100))
+    for i in range(9):                                             # lit lips + cast shadows along the joints
+        x0 = rng.uniform(-100, W); y0 = rng.uniform(300, 1900)
+        pts = [(x0 + cam, y0)]
+        for _ in range(5): pts.append((pts[-1][0] + rng.uniform(60, 160), pts[-1][1] + rng.uniform(-60, 60)))
+        d.line([(x + 6, y + 14) for x, y in pts], fill=(96, 84, 86), width=16, joint='curve')
+        d.line(pts, fill=(60, 50, 56), width=7, joint='curve')
+        d.line([(x - 3, y - 7) for x, y in pts], fill=(236, 226, 206), width=4, joint='curve')
+    tex = P.cached(('s05b_tex',), lambda: Image.fromarray((np.random.default_rng(3).normal(0, 1, (H // 6, W // 6)) * 22 + 128).clip(0, 255).astype(np.uint8))
+                   .resize((W, H), Image.BICUBIC).filter(ImageFilter.GaussianBlur(2)))
+    arr = np.asarray(img, np.float32); tx_ = (np.asarray(tex, np.float32)[..., None] - 128) / 128
+    arr[..., :3] *= (1 + .22 * tx_); img.paste(Image.fromarray(arr.clip(0, 255).astype(np.uint8)))
+    d = ImageDraw.Draw(img)
+    for i in range(22):                                            # crusty lichen rosettes (orange, sage, pale)
+        x, y = rng.uniform(0, W) + cam, rng.uniform(250, H)
+        if math.dist((x, y), (380 + cam, 1120)) < 220: continue
+        c0 = [(232, 150, 64), (178, 186, 118), (222, 220, 186)][i % 3]
+        R = rng.uniform(26, 70)
+        for kk in range(9):
+            a_ = rng.uniform(0, 6.3); rr = R * rng.uniform(.2, .8); r2 = R * rng.uniform(.25, .5)
+            cx_, cy_ = x + math.cos(a_) * rr, y + math.sin(a_) * rr * .8
+            d.ellipse([cx_ - r2, cy_ - r2 * .8, cx_ + r2, cy_ + r2 * .8], fill=c0, outline=lerp(c0, (60, 50, 50), .45), width=3)
+        d.ellipse([x - R * .25, y - R * .2, x + R * .25, y + R * .2], fill=lerp(c0, (90, 70, 50), .35))
+    for i in range(50):                                            # pits
+        x, y, r = rng.uniform(0, W) + cam, rng.uniform(250, H), rng.uniform(4, 10)
+        d.ellipse([x - r, y - r * .7, x + r, y + r * .7], fill=(104, 92, 92))
+    sh = Image.fromarray(np.clip((np.add.outer(np.arange(H) * .55, np.arange(W) * .9) - 900) / 1500, 0, 1).astype(np.float32).__mul__(150).astype(np.uint8))
+    fill_mask(img, sh, (50, 40, 60), .7)                           # light from the top-left, shade toward the bottom-right
     radial(img, 260, 400, 1300, (255, 230, 170), .5)
     kit.light_rays(img, 0, 0, (255, 236, 190), n=7, alpha=.2, spread=(30, 70), length=2400, seed=5, phase=2 * math.sin(u * .5))
     hole = (380 + cam, 1120)
@@ -550,18 +578,34 @@ def s05b(u, D, cue):
     d.polygon(hp, fill=(16, 12, 24))
     d.polygon([(hole[0] + (x - hole[0]) * .55, hole[1] + (y - hole[1]) * .55 + 8) for x, y in hp], fill=(4, 2, 10))
     d.line(hp + hp[:1], fill=INK, width=7, joint='curve')
-    # breath coming up at us: rings + motes rising out of the hole
-    lay = layer(); dl = ImageDraw.Draw(lay)
-    for i in range(4):
-        q = (i / 4 + u * .7) % 1.0
-        r = hw * (.5 + 1.6 * q); al = int(230 * math.sin(math.pi * q))
-        dl.ellipse([hole[0] - r, hole[1] - r * .8, hole[0] + r, hole[1] + r * .8], outline=P.BREATH_EDGE + (al,), width=14)
-        dl.ellipse([hole[0] - r, hole[1] - r * .8, hole[0] + r, hole[1] + r * .8], outline=P.BREATH + (al,), width=7)
-    img.alpha_composite(lay)
+    # breath rising at us: soft puffs swelling out of the hole + thin curling wisps spiralling outward
+    hz = mask(); dh = ImageDraw.Draw(hz); st = mask(); ds = ImageDraw.Draw(st)
+    for i in range(5):
+        q = (i / 5 + u * .55) % 1.0
+        r = hw * (.6 + 2.4 * q)
+        dh.ellipse([hole[0] - r, hole[1] - r * .8, hole[0] + r, hole[1] + r * .8], fill=int(120 * math.sin(math.pi * q) ** 1.5))
+    for i in range(11):
+        q = (i / 11 * 1.7 + u * .45) % 1.0; a0 = i * 2.4 + u * .9
+        pts = []
+        for v in np.linspace(0, 1, 18):
+            rr = hw * (.7 + 3.2 * q * (.4 + .6 * v)); aa = a0 + v * 1.3 + q * 1.2
+            pts.append((hole[0] + math.cos(aa) * rr, hole[1] + math.sin(aa) * rr * .82))
+        al = int(230 * math.sin(math.pi * q))
+        ds.line(pts, fill=al, width=int(8 + 9 * (1 - q)), joint='curve')
+    hzb = hz.filter(ImageFilter.GaussianBlur(26))
+    hole_m = mask(); ImageDraw.Draw(hole_m).polygon(hp, fill=255)
+    hzb = ImageChops.subtract(hzb, hole_m.filter(ImageFilter.GaussianBlur(10)).point(lambda v: int(v * .8)))
+    glow(img, hzb, P.BREATH_GLOW, .55, blur=30, add=True); fill_mask(img, hzb, P.BREATH, .5)
+    glow(img, st, (170, 215, 255), .6, blur=8, add=True); fill_mask(img, st.filter(ImageFilter.GaussianBlur(1.6)), (255, 255, 255), .75)
     radial(img, hole[0], hole[1], 260, (200, 232, 255), .45 + .1 * math.sin(u * 4))
     dust(img, 9, 40, (hole[0] - 250, hole[1] - 250, hole[0] + 250, hole[1] + 250), (240, 250, 255), 200, size=(3, 8), t=u * 3)
-    for side, (gx, gy) in enumerate(((0, 300), (W, 1700), (0, 1900), (W, 420), (300, 1950), (800, 1990))):   # grass tufts at the rock's edges
-        P.grass(img, u, (gx - 160, gy - 40, gx + 160, gy + 40), 16, 90, 160, seed=200 + side, clump=(5, 9), ink=INK)
+    em = mask(); de = ImageDraw.Draw(em)                          # the rock's edge: golden prairie at the corners
+    for cx_, cy_, rx_, ry_ in ((-60, 260, 300, 260), (W + 40, 380, 260, 300), (-40, 1880, 380, 260), (W + 60, 1760, 320, 280), (560, 2010, 420, 140)):
+        de.ellipse([cx_ - rx_ + cam, cy_ - ry_, cx_ + rx_ + cam, cy_ + ry_], fill=255)
+    img.paste(Image.new('RGBA', (W, H), (176, 128, 60, 255)), (0, 0), em)
+    d = ImageDraw.Draw(img)
+    for side, (gx, gy) in enumerate(((0, 300), (W, 1700), (0, 1900), (W, 420), (300, 1950), (800, 1990), (120, 200), (980, 300), (60, 1760), (1000, 1880), (560, 1990))):
+        P.grass(img, u, (gx - 200 + cam, gy - 60, gx + 200 + cam, gy + 60), 26, 110, 200, seed=200 + side, clump=(5, 9), ink=INK, wind=.3)
     # the sheet of paper, laid flat beside the hole
     kp = out_back(seg(u, cue(13) - .45, cue(13)), 1.4)
     if kp > 0:
@@ -1055,11 +1099,14 @@ def s13(u, D, cue):
     P.paste_band(img, P.pine_ridge(131, y_surf - 30, 100, (110, 126, 160), tree=(18, 34), dens=1.2), 0, .3)
     P.paste_band(img, P.hill(132, y_surf + 10, 16, P.GOLD, ink=INK, waves=(.5, 1.4)), 0, .5)
     P.earth_section(img, y_surf + 20, H + 40, cols=((96, 92, 110), (76, 74, 96), (60, 60, 84), (46, 48, 72), (34, 38, 60), (24, 28, 48)), seed=33)
-    nt = P.maze_net(14, (20, y_surf + 220, 1060, 1900), n_nodes=70, extra=50)
+    nt0 = P.maze_net(15, (60, y_surf + 330, 1020, 1860), n_nodes=34, extra=8)
+    top = min(range(len(nt0[0])), key=lambda i_: math.dist(nt0[0][i_], (560, y_surf + 300)))
+    link = ([nt0[0][top], ((560 + nt0[0][top][0]) / 2 + 20, (y_surf + 300 + nt0[0][top][1]) / 2), (560, y_surf + 290)], 30, (top, top))
+    nt = (nt0[0], [(poly, w_ * 1.3 + 6, ij) for poly, w_, ij in nt0[1]] + [link])     # fewer, bolder tunnels, joined to the shaft
     breathe = .5 + .5 * math.sin(u * 2.2)
     kh = smooth(seg(u, cue(7), cue(10)))
-    mi = P.draw_maze(img, nt, wall=(16, 18, 34), air=(40, 64, 100), rim=(100, 130, 170), glow_col=(120, 190, 255),
-                     glow_a=.35 + .35 * breathe * (.4 + .6 * kh))
+    mi = P.draw_maze(img, nt, wall=(14, 16, 30), air=(50, 92, 150), rim=(140, 190, 240), glow_col=(120, 190, 255),
+                     glow_a=.5 + .4 * breathe * (.4 + .6 * kh))
     hole = (540, y_surf - 10)
     cave_dark(img, [(540, 760, 700, .9), (540, 1200, 600, .5)], dark=(6, 8, 22), a=.62)     # light hierarchy: bright near the shaft
     radial(img, 540, 620, 420, (150, 210, 255), .45 + .15 * breathe)
@@ -1079,10 +1126,12 @@ def s13(u, D, cue):
     pts, tunnels = nt                                           # air pulses run through every tunnel toward the hole
     for ti, (poly, w_, (i, j)) in enumerate(tunnels):
         if math.dist(pts[i], hole) < math.dist(pts[j], hole): poly = poly[::-1]
+        dd_ = min(math.dist(pts[i], hole), math.dist(pts[j], hole))
+        lit = max(.35, 1 - dd_ / 1500)                             # pulses brighter near the shaft
         for kk in range(2):
             q = (kk / 2 + u * (.5 + .4 * kh) + ti * .137) % 1.0
             x, y = path_point(poly, q); x2, y2 = path_point(poly, min(1, q + .08))
-            chev(img, x, y, math.atan2(y2 - y, x2 - x), 13, (210, 236, 255), math.sin(math.pi * q) * (.35 + .65 * kh))
+            chev(img, x, y, math.atan2(y2 - y, x2 - x), 20, (220, 240, 255), math.sin(math.pi * q) * (.35 + .65 * kh) * lit)
     kc = out_back(seg(u, cue(14) - .2, cue(15)), 1.6)
     if kc > 0 and not HIDE_UI:
         rm = mask(); ImageDraw.Draw(rm).ellipse([hole[0] - 120 * kc, hole[1] - 85 * kc, hole[0] + 120 * kc, hole[1] + 70 * kc], outline=255, width=14)
@@ -1100,25 +1149,117 @@ def s13(u, D, cue):
 
 
 # ---------------------------------------------------------------- s14: a chips bag on a plane
+def rich_cabin(img, u, cam=0.0):
+    """Airliner cabin in perspective: rows of seats receding to a vanishing point, overhead bins, a row of windows with
+    warm sun and other passengers' heads; the near oval window (clouds sliding by) on the right wall."""
+    VX, VY = 470 + cam * .3, 800
+    pr = lambda X, Y, z: (VX + X * z, VY + Y * z)
+    img.paste(vgrad([(0, (200, 180, 160)), (.45, (236, 214, 180)), (1, (120, 100, 120))]))
+    d = ImageDraw.Draw(img)
+    zn, zf = 1.15, .16
+    # ceiling, walls, floor as big quads (near -> far)
+    def quad(X0, Y0, X1, Y1, col, zz=(zn, zf)):
+        a, b = zz
+        d.polygon([pr(X0, Y0, a), pr(X1, Y1, a), pr(X1, Y1, b), pr(X0, Y0, b)], fill=col)
+    quad(-760, -700, 640, -700, (212, 196, 172))                       # ceiling
+    quad(-760, -700, -760, 760, (150, 136, 140))                       # left wall
+    quad(640, -700, 640, 760, (240, 214, 170))                         # right wall (sun side)
+    quad(-760, 760, 640, 760, (78, 70, 98))                            # carpet
+    quad(-110, 760, 110, 760, (96, 64, 84))                            # aisle runner
+    for z in np.linspace(zf, zn, 22):                                  # carpet pattern lines
+        d.line([pr(-110, 760, z), pr(110, 760, z)], fill=(120, 84, 104), width=max(1, int(4 * z)))
+    d.polygon([pr(-140, -700, zn), pr(140, -700, zn), pr(140, -700, zf), pr(-140, -700, zf)], fill=(255, 246, 222))   # light strip
+    # overhead bins (both sides): a front face + a lit lip, seams per row
+    for sgn, Xw, Xb in ((-1, -760, -330), (1, 640, 260)):
+        d.polygon([pr(Xb, -700, zn), pr(Xb, -430, zn), pr(Xb, -430, zf), pr(Xb, -700, zf)], fill=(226, 214, 196))
+        d.polygon([pr(Xw, -430, zn), pr(Xb, -430, zn), pr(Xb, -430, zf), pr(Xw, -430, zf)], fill=(176, 170, 172))
+        d.line([pr(Xb, -430, zn), pr(Xb, -430, zf)], fill=INK, width=5)
+        d.line([pr(Xb, -700, zn), pr(Xb, -700, zf)], fill=(150, 146, 150), width=3)
+        for i in range(12):
+            z = 1 / (1 + i * .55)
+            if z < zf: break
+            d.line([pr(Xb, -700, z), pr(Xb, -430, z)], fill=(150, 146, 150), width=max(1, int(5 * z)))
+            hx_, hy_ = pr(Xb, -500, z / (1 + .27 * z))
+            d.rounded_rectangle([hx_ - 22 * z, hy_ - 6 * z, hx_ + 22 * z, hy_ + 6 * z], 4, fill=(190, 186, 190))
+            lx, ly = pr(Xb - sgn * 80, -430, z)                         # reading lights under the bins
+            d.ellipse([lx - 14 * z, ly - 5 * z, lx + 14 * z, ly + 5 * z], fill=(255, 226, 150))
+    # windows along both walls (the right ones are sunlit) + sun patches on the seats
+    sunm = mask(); ds = ImageDraw.Draw(sunm)
+    for sgn, Xw in ((-1, -760), (1, 640)):
+        for i in range(2, 13):
+            z = 1 / (1 + i * .55)
+            if z < zf: break
+            z2 = 1 / (1 + (i + .45) * .55)
+            p0, p1 = pr(Xw, -300, z), pr(Xw, -60, z2)
+            x0_, x1_ = sorted((p0[0], p1[0])); y0_, y1_ = pr(Xw, -300, (z + z2) / 2)[1], pr(Xw, -60, (z + z2) / 2)[1]
+            col = (255, 226, 160) if sgn > 0 else (176, 206, 240)
+            d.rounded_rectangle([x0_, y0_, x1_, y1_], max(2, int(30 * z)), fill=col, outline=INK, width=max(2, int(5 * z)))
+            if sgn > 0:                                                # a slanting sun beam onto the seats
+                ds.polygon([(x1_, y0_), (x1_, y1_), pr(Xw - 420, 420, z2), pr(Xw - 420, 260, z2)], fill=150)
+    # rows of seats with passengers' heads, far -> near
+    rng = np.random.default_rng(14)
+    hair = [(60, 40, 30), (30, 26, 30), (150, 100, 50), (200, 190, 170), None, None]
+    rows = []
+    for i in range(1, 13):
+        rows.append((i, 1 / (1 + i * .55)))
+    heads = {(i, s): (rng.random() < .55, rng.integers(0, len(hair)), rng.uniform(0, 6)) for i in range(13) for s in range(6)}
+    for i, z in rows[::-1]:
+        if z < zf: continue
+        for s, (Xa, Xb_) in enumerate(((-720, -540), (-520, -340), (-320, -140), (140, 320), (340, 520), (540, 620))):
+            if s == 5: continue
+            hd, hc, ph = heads[(i, s)]
+            if hd:                                                     # a passenger's head above the seat back
+                cx, cy = pr((Xa + Xb_) / 2, -60 + 6 * math.sin(u * 1.3 + ph), z); r = 62 * z
+                d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(246, 244, 238), outline=INK, width=max(2, int(6 * z)))
+                if hair[hc]:
+                    d.chord([cx - r, cy - r, cx + r, cy + r], 180, 360, fill=hair[hc], outline=INK, width=max(2, int(6 * z)))
+            x0_, y0_ = pr(Xa, 40, z); x1_, y1_ = pr(Xb_, 760, z)
+            d.rounded_rectangle([x0_, y0_, x1_, y1_], max(3, int(46 * z)), fill=(38, 64, 136), outline=INK, width=max(2, int(6 * z)))
+            d.rounded_rectangle([x0_ + 14 * z, y0_ + 10 * z, x1_ - 14 * z, y0_ + 120 * z], max(2, int(30 * z)), fill=(240, 240, 244),
+                                outline=INK, width=max(1, int(4 * z)))
+            d.line([(x0_ + 18 * z, y0_ + 150 * z), (x0_ + 18 * z, y1_ - 20 * z)], fill=(80, 106, 160), width=max(1, int(10 * z)))
+            d.rounded_rectangle([x0_ + 30 * z, y0_ + 260 * z, x1_ - 30 * z, y0_ + 300 * z], 3, fill=(36, 52, 92))   # tray latch strip
+        # aisle armrest caps
+        for Xe in (-140, 140):
+            ax, ay = pr(Xe, 300, z); d.rounded_rectangle([ax - 14 * z, ay, ax + 14 * z, ay + 40 * z], 4, fill=(90, 90, 104))
+    fill_mask(img, sunm.filter(ImageFilter.GaussianBlur(10)), (255, 200, 110), .28)
+    radial(img, VX, VY, 260, (255, 230, 180), .35)                     # the far end glows
+    kit.vignette(img, .3, (40, 26, 40), rx=.62, ry=.5)
+    # the near oval window on the right wall
+    wx, wy, ww, wh = 905 + cam * .2, 860, 250, 380
+    m = mask(); ImageDraw.Draw(m).rounded_rectangle([wx - ww / 2, wy - wh / 2, wx + ww / 2, wy + wh / 2], 120, fill=255)
+    out = vgrad([(0, (20, 40, 120)), (.34, (40, 80, 170)), (.44, (100, 150, 225)), (.51, (255, 180, 120)), (.57, (255, 220, 170)), (1, (255, 230, 190))])
+    cl = layer(); P.cumulus(cl, u * 7, [(500, 960, .6, 3, -70), (1000, 1010, .8, 5, -70), (1500, 940, .5, 8, -70), (700, 1040, .7, 9, -70)],
+                            lit=(255, 246, 230), shade=(220, 190, 200))
+    out.alpha_composite(cl)
+    radial(out, 980, 900, 160, (255, 240, 190), .9)
+    img.paste(out, (0, 0), m)
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([wx - ww / 2 - 36, wy - wh / 2 - 36, wx + ww / 2 + 36, wy + wh / 2 + 36], 150, outline=(226, 208, 180), width=36)
+    d.rounded_rectangle([wx - ww / 2 - 52, wy - wh / 2 - 52, wx + ww / 2 + 52, wy + wh / 2 + 52], 166, outline=INK, width=6)
+    d.rounded_rectangle([wx - ww / 2, wy - wh / 2, wx + ww / 2, wy + wh / 2], 120, outline=INK, width=6)
+    d.rounded_rectangle([wx - ww / 2 + 6, wy - wh / 2 + 6, wx + ww / 2 - 6, wy - wh / 2 + 60], 50, fill=(236, 224, 204))
+    glare = mask(); ImageDraw.Draw(glare).polygon([(wx - 90, wy + 160), (wx - 30, wy - 130), (wx + 10, wy - 130), (wx - 50, wy + 160)], fill=255)
+    fill_mask(img, ImageChops.multiply(glare, m), (255, 255, 255), .12)
+    lm = mask(); ImageDraw.Draw(lm).polygon([(wx - ww / 2, wy - wh / 2), (wx + ww / 2, wy + wh / 2), (380, 1600), (60, 1300)], fill=120)
+    glow(img, lm, (255, 200, 130), .2, blur=60, add=True)             # the window's warm light across the cabin
+    return wx, wy
+
+
 def s14(u, D, cue):
     img = Image.new('RGBA', (W, H))
     cam = -8 * smooth(u / D)
-    P.cabin(img, u, cam)
+    rich_cabin(img, u, cam)
     kp = smooth(seg(u, cue(8) - .1, cue(14) + .2))
     G = {}
-    dW = ImageDraw.Draw(img)
-    for x_ in (140, 980):                                      # wall panel seams
-        dW.line([(x_, 380), (x_ - 20, 1500)], fill=(170, 172, 186), width=5)
-    radial(img, 600 + cam * .2, 700, 520, (210, 230, 255), .5)
     d0 = ImageDraw.Draw(img)                                    # his seat (headrest + back) behind him
     d0.rounded_rectangle([60 + cam, 900, 500 + cam, 2000], 90, fill=(52, 72, 116), outline=INK, width=7)
     d0.rounded_rectangle([110 + cam, 940, 450 + cam, 1120], 60, fill=(236, 236, 240), outline=INK, width=5)
-    radial(img, 600, 900, 900, (255, 236, 190), .45 + .03 * math.sin(u * 2))
-    fill_mask(img, Image.new('L', (W, H), 50), (255, 200, 140))
-    fill_mask(img, Image.fromarray(np.tile(np.clip((np.arange(H) - 1100) / 820, 0, 1)[:, None] * 120, (1, W)).astype(np.uint8)), (40, 50, 80))
+    radial(img, 760, 1300, 420, (255, 226, 170), .18 + .03 * math.sin(u * 2))
+    fill_mask(img, Image.fromarray(np.tile(np.clip((np.arange(H) - 1300) / 700, 0, 1)[:, None] * 110, (1, W)).astype(np.uint8)), (40, 50, 80))
     # the passenger behind the tray, upper body
     g = actor(img, 'neutral' if kp < .3 else 'surprised', dict(POSES['stand'], armL=(30, 60), armR=(-40, -70)), 300 + cam, 2150, 1.15, u,
-              look=.5, aura=(255, 230, 190), aura_alpha=.25, rim=(255, 240, 210), rim_dir=(1, -.4), shirt='#6a8a5a', pants='#3a4058')
+              look=.5, rim=(255, 240, 210), rim_dir=(1, -.4), shirt='#6a8a5a', pants='#3a4058')
     G['p'] = g
     d = ImageDraw.Draw(img)
     # seat back + tray table in front of him
@@ -1207,29 +1348,55 @@ def s16a(u, D, cue):
     ImageDraw.Draw(m).polygon([(-50, -50), (xf, -50), (xf - 260, 1100), (-50, 1100)], fill=255)
     front.putalpha(ImageChops.multiply(front.split()[3], m.filter(ImageFilter.GaussianBlur(50))))
     img.alpha_composite(front)
+    # lit cloud edges: a bright rim along the front's leading edge and under the deck
+    rm = mask(); dr_ = ImageDraw.Draw(rm)
+    dr_.line([(xf + 20, -50), (xf - 250, 1100)], fill=200, width=60)
+    for i in range(6):
+        x_ = -40 + i * 220 + 30 * math.sin(u * .8 + i)
+        if x_ < xf - 100: dr_.arc([x_ - 170, 620, x_ + 170, 790], 15, 165, fill=230, width=26)
+    glow(img, ImageChops.multiply(rm, m.filter(ImageFilter.GaussianBlur(50)).point(lambda v: 255 if v > 20 else 0)), (255, 214, 190), .8, blur=18, add=True)
     P.lightning(img, u, cue(3) - .1, 260, 300, 1000, seed=9, dur=.35)
     P.thunderhead(img, u, 820, 1000, .7, seed=6, alpha=.8, rain_a=.0, cols=((84, 76, 116), (118, 106, 150), (176, 160, 196)))
-    rc = ((100, 96, 136), (70, 76, 100), (48, 58, 66))
+    # rain curtains hanging under the storm, drifting with it
+    cm = mask(); dc_ = ImageDraw.Draw(cm)
+    for i in range(5):
+        x_ = -200 + i * 230 + 40 * math.sin(u * .6 + i * 1.7) + 60 * ks
+        if x_ > xf - 150: continue
+        dc_.polygon([(x_, 760), (x_ + 170, 760), (x_ + 60, 1200), (x_ - 120, 1200)], fill=int(150 + 60 * math.sin(i * 2.3)))
+    cm = cm.filter(ImageFilter.GaussianBlur(30))
+    streak = layer(); ds_ = ImageDraw.Draw(streak); rng_ = np.random.default_rng(160)
+    for i in range(160):
+        x_ = rng_.uniform(-200, W); y_ = (rng_.uniform(700, 1200) + u * 900) % 520 + 700
+        ds_.line([(x_, y_), (x_ - 18, y_ + 70)], fill=(200, 200, 236, 120), width=3)
+    streak.putalpha(ImageChops.multiply(streak.split()[3], cm.point(lambda v: min(255, v * 2))))
+    img.alpha_composite(streak)
+    rc = ((112, 106, 146), (84, 86, 116), (58, 66, 84), (40, 48, 58))
+    P.paste_band(img, P.pine_ridge(167, 1010, 150, (128, 120, 160), tree=(14, 26), dens=1.3, haze_col=(160, 150, 180), haze_a=.45), cam, .1)
     P.paste_band(img, P.pine_ridge(161, 1060, 160, rc[0], tree=(18, 34), dens=1.2, haze_col=(150, 140, 170), haze_a=.3), cam, .2)
+    fill_mask(img, cm, (170, 166, 206), .5)                    # the rain curtains veil the far ridges
     P.paste_band(img, P.pine_ridge(162, 1130, 130, rc[1], tree=(26, 50)), cam, .35)
-    haze(img, 980, 1200, (150, 136, 170), .3)
+    P.paste_band(img, P.pine_ridge(168, 1190, 120, rc[2], tree=(34, 64), dens=.8), cam, .5)
+    haze(img, 980, 1220, (150, 136, 170), .25)
     gold = P.GOLD_STORM
     P.paste_band(img, P.hill(163, 1230, 50, gold, ink=INK, waves=(.7, 1.9)), cam, .7)
-    k = .8 + .3 * math.sin(u * 3)
-    src = (hole[0], hole[1], 1.0 * k, 1, -math.pi / 2 - .3)
+    k = 1.0 + .3 * math.sin(u * 3)
+    src = (hole[0], hole[1], 1.2 * k, 1, -math.pi / 2 - .3)
     P.grass(img, u, (-60, 1190, W + 60, 1400), 200, 22, 46, cols=gold, seed=164, src=src, clump=(3, 6), wind=.6,
             ytop=lambda x: P.edge_y(163, 1230, 50, x - cam * .7, waves=(.7, 1.9)) + 4)
-    P.outcrop(img, hole[0], hole[1], .75, seed=3, breath_glow=1.0, t=u, src=src, gold=gold)
-    P.breath(img, u, hole[0], hole[1], ang=-math.pi / 2 - .3, sign=1, k=k, scale=.6, n=8, spread=1.1, seed=41,
-             Lr=(700, 950), Ar=(30, 60), width=22, particles=24)
+    P.outcrop(img, hole[0], hole[1], .9, seed=3, breath_glow=1.0, t=u, src=src, gold=gold)
+    P.breath(img, u, hole[0], hole[1], ang=-math.pi / 2 - .2, sign=1, k=k, scale=.7, n=9, spread=1.1, seed=41,
+             Lr=(700, 950), Ar=(30, 60), width=24, particles=30, drift=.8)
     P.grass(img, u, (-60, 1400, W + 60, 1700), 120, 40, 90, cols=gold, seed=166, src=src, clump=(4, 7), wind=.7)
     # Tom's lost hat tumbling through the grass in the gusts
     v = u / D
-    hx, hy = -200 + 1450 * v, 1690 - 110 * abs(math.sin(u * 4.2))
-    hm = mask(); ImageDraw.Draw(hm).ellipse([hx - 260, hy - 120, hx + 260, hy + 110], fill=255)
-    glow(img, hm, (255, 200, 140), .35, blur=40, add=True)
-    P.put_hat(img, P.TOM_HAT, hx, hy, 1.8, angle=-300 * v * 2)
-    P.grass(img, u, (-60, 1760, W + 60, 1990), 70, 80, 160, cols=gold, seed=165, src=src, clump=(4, 8), wind=.7, ink=INK)
+    hx, hy = -200 + 1450 * v, 1640 - 130 * abs(math.sin(u * 4.2))
+    hm = mask(); ImageDraw.Draw(hm).ellipse([hx - 280, hy - 140, hx + 280, hy + 120], fill=255)
+    glow(img, hm, (255, 210, 150), .5, blur=40, add=True)
+    P.put_hat(img, P.TOM_HAT, hx, hy, 1.7, angle=-300 * v * 2)
+    for j in range(3):                                         # speed streaks behind the tumbling hat
+        yy_ = hy - 40 + j * 40
+        ImageDraw.Draw(img).line([(hx - 200 - j * 30, yy_), (hx - 110, yy_)], fill=(255, 236, 200), width=6)
+    P.grass(img, u, (-60, 1800, W + 60, 2000), 60, 70, 140, cols=gold, seed=165, src=src, clump=(4, 8), wind=.7, ink=INK)
     P.rain(img, u, (0, 0, W, H), n=int(80 + 140 * ks), slant=.35, a=int(80 + 80 * ks))
     img = finish(img, u, 1.02 + .03 * smooth(u / D), 540, 1200, vig=(.32, (20, 16, 40)))
     if not HIDE_UI:
