@@ -1,0 +1,81 @@
+{
+ "title": "Why Do Moths Fly Into Lights?",
+ "note": "Producer shot list (one shot per voice line) for audio/build_mix.py. The Animator may split shots; keep word counts.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "cloudforest",
+   "text": "In 2024, scientists released slow-motion films of moths around a lamp at night, in a Costa Rican cloud forest."
+  },
+  {
+   "id": "s02",
+   "set": "room",
+   "text": "People have watched moths fly into flames and lights for thousands of years, and never agreed why."
+  },
+  {
+   "id": "s03",
+   "set": "night",
+   "text": "The usual answer: they're drawn to the light, or they think it's the Moon."
+  },
+  {
+   "id": "s04",
+   "set": "cloudforest",
+   "text": "But on camera, they didn't fly at the lamp. They flew around it, again and again."
+  },
+  {
+   "id": "s05",
+   "set": "cloudforest",
+   "text": "Clue one. As they circled, they kept their backs turned toward the light."
+  },
+  {
+   "id": "s06",
+   "set": "cloudforest",
+   "text": "Clue two. Over a lamp pointing up, they flipped upside down and fell to the ground."
+  },
+  {
+   "id": "s07",
+   "set": "cloudforest",
+   "text": "Clue three. When a white sheet glowed above them, like the sky, they flew straight through."
+  },
+  {
+   "id": "s08",
+   "set": "cloudforest",
+   "text": "So why would an insect turn its back to a light?"
+  },
+  {
+   "id": "s09",
+   "set": "night",
+   "text": "For millions of years, the brightest part of the night was the sky, never the ground."
+  },
+  {
+   "id": "s10",
+   "set": "night",
+   "text": "So insects keep their backs toward the brightest light. That's how they know which way is up."
+  },
+  {
+   "id": "s11",
+   "set": "night",
+   "text": "Near a lamp, \"up\" points sideways. The insect tilts toward it, turns, and ends up circling the lamp."
+  },
+  {
+   "id": "s12",
+   "set": "night",
+   "text": "Fly over the lamp, and \"up\" points down. So it rolls over, and falls."
+  },
+  {
+   "id": "s13",
+   "set": "room",
+   "text": "It's like a compass next to a magnet: nothing inside is broken. It's just pointing the wrong way."
+  },
+  {
+   "id": "s14",
+   "set": "cloudforest",
+   "text": "Moths aren't attracted to the light. They're trapped by it."
+  },
+  {
+   "id": "s15",
+   "set": "cloudforest",
+   "text": "And in 2024, those films from the cloud forest showed exactly that."
+  }
+ ]
+}

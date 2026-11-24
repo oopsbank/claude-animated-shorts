@@ -1,0 +1,218 @@
+[
+ {
+  "cue": "lamp_hum",
+  "shot": "s01",
+  "at_word": 0,
+  "level": -22,
+  "offset": -0.3,
+  "note": "the UV lamp humming in the night forest"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s01",
+  "at_word": 1,
+  "level": -16,
+  "offset": 0,
+  "note": "2024 · COSTA RICA title"
+ },
+ {
+  "cue": "moth_flutter",
+  "shot": "s01",
+  "at_word": 7,
+  "level": -19,
+  "offset": -0.2,
+  "note": "moths circle the lamp"
+ },
+ {
+  "cue": "bulb_tick",
+  "shot": "s02",
+  "at_word": 8,
+  "level": -19,
+  "offset": 0,
+  "note": "a moth taps a lamp"
+ },
+ {
+  "cue": "question",
+  "shot": "s03",
+  "at_word": 2,
+  "level": -17,
+  "offset": 0,
+  "note": "DRAWN TO THE LIGHT?"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s03",
+  "at_word": 13,
+  "level": -19,
+  "offset": 0,
+  "note": "the Moon"
+ },
+ {
+  "cue": "impact",
+  "shot": "s04",
+  "at_word": 4,
+  "level": -16,
+  "offset": 0,
+  "note": "X: they didn't fly at the lamp"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s04",
+  "at_word": 10,
+  "level": -18,
+  "offset": -0.1,
+  "note": "orbit trail"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s05",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 1"
+ },
+ {
+  "cue": "moth_flutter",
+  "shot": "s05",
+  "at_word": 6,
+  "level": -20,
+  "offset": -0.2,
+  "note": "a moth circling, back to the light"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 2"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s06",
+  "at_word": 8,
+  "level": -17,
+  "offset": -0.1,
+  "note": "the moth flips over"
+ },
+ {
+  "cue": "dust_puff",
+  "shot": "s06",
+  "at_word": 12,
+  "level": -19,
+  "offset": 0,
+  "note": "it drops to the ground"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 3"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s07",
+  "at_word": 6,
+  "level": -19,
+  "offset": 0,
+  "note": "the white sheet glows like a sky"
+ },
+ {
+  "cue": "question",
+  "shot": "s08",
+  "at_word": 1,
+  "level": -17,
+  "offset": 0,
+  "note": "the riddle"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s09",
+  "at_word": 11,
+  "level": -20,
+  "offset": 0,
+  "note": "the night sky"
+ },
+ {
+  "cue": "ding",
+  "shot": "s10",
+  "at_word": 16,
+  "level": -18,
+  "offset": 0,
+  "note": "UP arrow"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s11",
+  "at_word": 8,
+  "level": -18,
+  "offset": -0.1,
+  "note": "the insect tilts toward the lamp"
+ },
+ {
+  "cue": "moth_flutter",
+  "shot": "s11",
+  "at_word": 15,
+  "level": -20,
+  "offset": -0.2,
+  "note": "circling the lamp"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s12",
+  "at_word": 10,
+  "level": -17,
+  "offset": -0.1,
+  "note": "it rolls over"
+ },
+ {
+  "cue": "dust_puff",
+  "shot": "s12",
+  "at_word": 13,
+  "level": -19,
+  "offset": 0,
+  "note": "and falls"
+ },
+ {
+  "cue": "compass_spin",
+  "shot": "s13",
+  "at_word": 3,
+  "level": -17,
+  "offset": -0.1,
+  "note": "a compass needle swings to a magnet"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s14",
+  "at_word": 0,
+  "level": -17,
+  "offset": 0,
+  "note": "NOT ATTRACTED."
+ },
+ {
+  "cue": "impact",
+  "shot": "s14",
+  "at_word": 7,
+  "level": -15,
+  "offset": 0,
+  "note": "TRAPPED."
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s15",
+  "at_word": 2,
+  "level": -17,
+  "offset": 0,
+  "note": "back to 2024"
+ },
+ {
+  "cue": "moth_flutter",
+  "shot": "s15",
+  "at_word": 6,
+  "level": -20,
+  "offset": -0.2,
+  "note": "moths circling the lamp again"
+ }
+]

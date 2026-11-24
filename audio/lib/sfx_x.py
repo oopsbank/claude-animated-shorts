@@ -682,6 +682,97 @@ def amb_lagoon(dur, r):
     out += pan(lp(flock, 2600, 2), 0.25 * (2 * r.random() - 1))
     return out
 
+
+# ---------------------------------------------------------------- moths and light (video 11)
+def moth_flutter(r, dur=1.4):
+    """a big moth fluttering past: soft papery wingbeats (~28/s) swelling and fading, panned across"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    rate = 26 + 4 * smooth_noise(n, r, 0.8)
+    beat = (0.5 + 0.5 * np.sin(phase(rate))) ** 6
+    body = bp(r.standard_normal(n), 250, 2600, 2) * beat
+    thump = lp(r.standard_normal(n), 180, 2) * beat * 0.6
+    env = np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 1.5
+    y = (body + thump) * env
+    y = fades(y, 0.02, 0.15)
+    return np.stack([y * (1 - 0.6 * t / dur), y * (0.4 + 0.6 * t / dur)])
+
+
+def lamp_hum(r, dur=2.4):
+    """an electric lamp switching on: a soft click, then a mains hum with a faint buzzing tube"""
+    t = tt(dur)
+    n = len(t)
+    hum = sum(np.sin(TAU * 50 * k * t) / k ** 1.2 for k in range(1, 9))
+    buzz = bp(r.standard_normal(n), 1800, 6000, 2) * (0.5 + 0.5 * np.sin(TAU * 100 * t)) * 0.08
+    env = np.minimum(1, t / 0.25) * np.minimum(1, (dur - t) / 0.6)
+    click = lp(r.standard_normal(n), 3000, 2) * np.exp(-t / 0.004) * 0.8
+    return fades(click + (0.25 * hum + buzz) * env, 0.0, 0.05)
+
+
+def bulb_tick(r):
+    """a moth bumping a glass lamp: a tiny bright glassy tick and a wing flick"""
+    t = tt(0.35)
+    n = len(t)
+    glass = sum(np.sin(TAU * f * t) * np.exp(-t / dk) * a for f, dk, a in [(3100, 0.03, 1.0), (5200, 0.018, 0.5), (7400, 0.01, 0.3)])
+    flick = bp(r.standard_normal(n), 600, 4000, 2) * np.exp(-t / 0.03) * 0.4
+    return fades(glass * 0.6 + flick, 0.0, 0.05)
+
+
+def compass_spin(r):
+    """a compass needle swinging and settling: a light metallic whirr that slows, then a tiny tick"""
+    t = tt(1.3)
+    n = len(t)
+    rate = 18 * np.exp(-t / 0.35) + 1.5
+    wob = (0.5 + 0.5 * np.sin(phase(rate))) ** 4
+    whirr = bp(r.standard_normal(n), 2500, 7000, 2) * wob * np.exp(-t / 0.5) * 0.4
+    tick_i = int(1.0 * SR)
+    tk = t[:n - tick_i]
+    tick = np.zeros(n)
+    tick[tick_i:] = np.sin(TAU * 4200 * tk) * np.exp(-tk / 0.008) * 0.5
+    return fades(whirr + tick, 0.01, 0.05)
+
+
+def _frogs(dur, r, density=0.5):
+    """sparse tree-frog calls: short two-note 'ko-kee' chirps around 1-2.5 kHz"""
+    n = ns(dur)
+    y = np.zeros(n)
+    t0 = r.uniform(0.2, 1.0)
+    while t0 < dur - 0.4:
+        f0 = r.uniform(1100, 1500)
+        for d, f, a in [(0.0, f0, 0.6), (0.11, f0 * r.uniform(1.5, 1.8), 1.0)]:
+            tt_ = tt(0.08)
+            note = np.sin(phase(f * (1 + 0.15 * tt_ / 0.08))) * np.sin(np.pi * tt_ / 0.08) ** 2
+            i = int((t0 + d) * SR)
+            y[i:i + len(note)] += note[:max(0, n - i)] * a
+        t0 += r.uniform(0.6, 2.2) / density
+    return y
+
+
+def amb_nightforest(dur, r):
+    """a tropical cloud forest at night: still moist air, layered crickets and katydids, sparse tree frogs, rare drips"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    out = G.breeze(dur, r, 0.35, gust=0.12, bright=700)
+    out += np.stack([G.crickets(dur, r, 3) * 0.03, G.crickets(dur, r, 3) * 0.03])
+    kat = bp(r.standard_normal(n), 7000, 10500, 2) * ((np.sin(TAU * 2.2 * t) > 0.3).astype(float)) * 0.012
+    out += pan(lp(kat, 12000, 1), 0.4)
+    out += pan(_frogs(dur, r, 0.45) * 0.025, -0.35)
+    drips = np.zeros(n)
+    k = r.uniform(0.5, 2.5)
+    while k < dur - 0.2:
+        i = int(k * SR); tk = t[:n - i][:int(0.05 * SR)]
+        drips[i:i + len(tk)] += np.sin(phase(900 + 1500 * np.exp(-tk / 0.006))) * np.exp(-tk / 0.012) * 0.05
+        k += r.uniform(1.5, 4.0)
+    out += st(drips)
+    return out
+
+
+def amb_night(dur, r):
+    """an open night under the sky: a faint breeze and a few distant crickets"""
+    out = G.breeze(dur, r, 0.3, gust=0.1, bright=600)
+    out += np.stack([G.crickets(dur, r, 2) * 0.018, G.crickets(dur, r, 2) * 0.018])
+    return out
+
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
     "whoosh_fast": (whoosh_fast, -16, "fast swish / speed lines"),
@@ -741,8 +832,12 @@ GEN = {
     "flamingo_honk": (flamingo_honk, -18, "a flamingo call"),
     "water_step": (water_step, -17, "a thin leg in shallow water"),
     "joint_settle": (joint_settle, -16, "a joint settling to the end of its range"),
+    "moth_flutter": (moth_flutter, -19, "a moth fluttering past"),
+    "lamp_hum": (lamp_hum, -21, "an electric lamp switching on and humming"),
+    "bulb_tick": (bulb_tick, -19, "a moth bumping a glass lamp"),
+    "compass_spin": (compass_spin, -17, "a compass needle swinging and settling"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
-        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie, "savanna": amb_savanna, "farm": amb_outdoor, "lagoon": amb_lagoon}
+        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie, "savanna": amb_savanna, "farm": amb_outdoor, "lagoon": amb_lagoon, "cloudforest": amb_nightforest, "night": amb_night}
