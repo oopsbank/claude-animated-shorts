@@ -221,8 +221,8 @@ def lab_scene(w, cam=0.0, k_flat=1.0, pose=None, chars=True, mon=True, sci_pose=
         LG.monitor(img, 880 + cam * .9, 960, 320, 230, w, k_flat=k_flat, label="MUSCLE ACTIVITY")
     info = specimen(img, w, SPEC_X + cam, SPEC_GY, SPEC_S, pose=pose)
     if chars:
-        G['a'] = sci(img, w, 'A', dict(POSES['stand'], armR=(-60, -100)), 'thinking', 150 + cam * 1.2, 1990, .5, look=.5)
-        G['b'] = sci(img, w, 'B', 'hold', 'neutral', 950 + cam * 1.2, 2010, .5, look=-.55, bphase=.4)
+        G['a'] = sci(img, w, 'A', dict(POSES['stand'], armR=(-60, -100)), 'thinking', 140 + cam * 1.2, 1935, .5, look=.5)
+        G['b'] = sci(img, w, 'B', 'hold', 'neutral', 960 + cam * 1.2, 1950, .5, look=-.55, bphase=.4)
     return img, info, G
 
 
@@ -512,12 +512,12 @@ def s05(u, D, cue):
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1300, vig=(.3, (0, 10, 30)))
     if not HIDE_UI:
         clue(img, 'CLUE 1', u, .05, 230)
-        tag(img, 'YOUR LEG', 230, 820, 40, (220, 210, 255), pop(u, .3, .3))
-        chip(img, 'NOT A KNEE', (120, 110, 170), A[0] + 150, A[1] - 120, u, cue(13) - .1, size=46)
-        if u > cue(13) + .3 and u < cue(16): draw_x(img, A[0] + 150, A[1] - 120, 50, (u - cue(13) - .3) / .15, w=14)
-        chip(img, 'ANKLE', (230, 160, 30), A[0] + 150, A[1] + 10, u, cue(16) - .1, size=60)
-        tag(img, 'KNEE', Hk[0] + 110, Hk[1], 40, (220, 210, 255), pop(u, cue(13) - .1, .3))
-        tag(img, 'ANKLE', Ha[0] + 120, Ha[1] - 70, 40, KEY, pop(u, cue(16), .3))
+        tag(img, 'YOUR LEG', 250, 820, 54, (220, 210, 255), pop(u, .3, .3))
+        chip(img, 'NOT A KNEE', (120, 110, 170), A[0] + 130, A[1] - 130, u, cue(13) - .1, size=56)
+        if u > cue(13) + .3 and u < cue(16): draw_x(img, A[0] + 130, A[1] - 130, 60, (u - cue(13) - .3) / .15, w=14)
+        chip(img, 'ANKLE', (230, 160, 30), A[0] + 130, A[1] + 20, u, cue(16) - .1, size=70)
+        tag(img, 'KNEE', Hk[0] + 120, Hk[1], 54, (220, 210, 255), pop(u, cue(13) - .1, .3))
+        tag(img, 'ANKLE', Ha[0] + 130, Ha[1] - 80, 54, KEY, pop(u, cue(16), .3))
     return img, {'faces': [], 'avoid': [(300, 150, 780, 320)]}
 
 
@@ -675,9 +675,9 @@ def s09(u, D, cue):
         glow(img, m, (255, 140, 90), .45 * ka, blur=24)
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1200, vig=(.18, (120, 90, 60)))
     if not HIDE_UI:
-        chip(img, 'FOOT UNDER THE BODY', (120, 100, 200), 540, 260, u, cue(1) - .1, size=48)
-        chip(img, 'ALL THE WEIGHT', (230, 80, 60), 790, 620, u, cue(8) - .1, size=50)
-        chip(img, 'STRAIGHT DOWN', (40, 40, 48), 790, 760, u, cue(10) - .1, size=50)
+        chip(img, 'FOOT UNDER THE BODY', (120, 100, 200), 540, 250, u, cue(1) - .1, size=58)
+        chip(img, 'ALL THE WEIGHT', (230, 80, 60), 780, 620, u, cue(8) - .1, size=58)
+        chip(img, 'STRAIGHT DOWN', (40, 40, 48), 780, 770, u, cue(10) - .1, size=58)
     return img, {'faces': [], 'avoid': [(200, 180, 880, 340), (560, 540, 1060, 840)]}
 
 
@@ -733,8 +733,8 @@ def s10(u, D, cue):
     sx, sy = shake(u, te, 6, .25)
     img = finish(img, w, 1.0 + .02 * smooth(u / D), 540, 1100, dx=sx, dy=sy, vig=(.26, (10, 20, 50)))
     if not HIDE_UI:
-        chip(img, 'END OF THE BEND', (230, 80, 60), 760, 1390, u, cue(8) - .05, size=50)
-        chip(img, "CAN'T FOLD", (40, 40, 48), 760, 1510, u, cue(15) - .1, size=54)
+        chip(img, 'END OF THE BEND', (230, 80, 60), 760, 1400, u, cue(8) - .05, size=58)
+        chip(img, "CAN'T FOLD", (40, 40, 48), 760, 1540, u, cue(15) - .1, size=64)
     return img, {'faces': [], 'avoid': [(520, 380, 1040, 1560)]}
 
 
@@ -760,8 +760,8 @@ def s11(u, D, cue):
     LG.reeds(img, w, -60, 260, 1950, 26, 140, 320, seed=6, col=(70, 50, 70), tip=(140, 90, 90))
     cx, cy = info['center']; K = info['knee']
     kg = smooth(seg(u, -.1, .5))
-    yb = cy - 170 + 14 * math.sin(w * 2)
-    arrow(img, (cx, 230 + 40 * (1 - kg)), (cx, yb), 90, (70, 120, 220), alpha=int(230 * kg))
+    ax_ = cx - 150; yb = info['back'][1] - 30 + 10 * math.sin(w * 2)
+    arrow(img, (ax_, 230 + 40 * (1 - kg)), (ax_, yb), 90, (70, 120, 220), alpha=int(230 * kg))
     m = mask(); ImageDraw.Draw(m).line([info['knee'], info['ankle'], info['foot']], fill=255, width=34)
     glow(img, m, (140, 190, 255), .35 * kg, blur=20)
     lock_icon(img, K[0] + 40, K[1] - 10, .55, pop(u, cue(1) - .05, .3))
@@ -769,8 +769,9 @@ def s11(u, D, cue):
     meter(img, 900, 1480, 560, v, 'MUSCLES')
     img = finish(img, w, 1.0 + .03 * smooth(u / D), 540, 1200, vig=(.26, (60, 30, 50)))
     if not HIDE_UI:
-        tag(img, 'GRAVITY', cx, 200, 64, (140, 180, 255), pop(u, cue(0) - .05, .3))
-        chip(img, 'HOLDS IT', (70, 120, 220), cx + 10, cy - 120, u, cue(1) - .1, size=50)
+        tag(img, 'GRAVITY', cx - 150, 200, 64, (140, 180, 255), pop(u, cue(0) - .05, .3))
+        chip(img, 'HOLDS IT', (70, 120, 220), cx - 150, 560, u, cue(1) - .1, size=54)
+        tag(img, 'LOCKED', K[0] + 200, K[1] + 10, 46, KEY, pop(u, cue(1), .3))
         chip(img, 'BARELY WORK', (60, 150, 110), 860, 780, u, cue(7) - .1, size=48)
     return img, {'faces': [], 'avoid': [(250, 120, 1080, 820), (780, 820, 1020, 1520)]}
 
@@ -783,7 +784,7 @@ def s12(u, D, cue):
     LG.lab(img, w, 80 + cam)
     LG.bench(img, -200, 330, 1160, cam * .9)
     LG.monitor(img, 215 + cam, 960, 270, 190, w, k_flat=1.0, label='MUSCLES')
-    info = specimen(img, w, 620 + cam, 1560, 1000, face=-1)
+    info = specimen(img, w, 590 + cam, 1560, 930, face=-1)
     g = sci(img, w, 'B', dict(POSES['stand'], armR=(-60, -100)), 'surprised', 140 + cam * 1.2, 2010, .5, look=.5, bphase=.4)
     img = finish(img, w, 1.03 + .03 * smooth(u / D), 540, 1200, vig=(.26, (50, 30, 30)))
     if not HIDE_UI:
@@ -802,7 +803,7 @@ def s12b(u, D, cue):
     kf = smooth(seg(u, tf, tf + .45))
     wob = 3 * math.sin(u * 9) * smooth(seg(u, .1, tf))
     pose = {'fold': 0.0, 'fx': .06, 'fx2': -.10, 'tilt': q(-wob, .5), 'drop': q(.05 * kf, .005), 'sleep': 1.0, 'breath': .5}
-    x, gy, s = 620, 1560, 1000
+    x, gy, s = 640, 1560, 900
     d = ImageDraw.Draw(img)
     d.rounded_rectangle([x - .4 * s, gy - 6, x + .4 * s, gy + 40], 10, fill=(120, 130, 146), outline=INK, width=5)
     d.rectangle([x - .38 * s, gy - 6, x + .38 * s, gy + 6], fill=(206, 214, 226))
@@ -810,27 +811,27 @@ def s12b(u, D, cue):
     fill_mask(img, m, (60, 40, 40), .3, blur=10)
     tmp = layer()
     info = FL.put(tmp, x, gy, s, face=-1, kind='specimen', pose=pose)
-    ang = 17 * kf
+    ang = 27 * kf
     if ang > .2:
-        gh = tmp.copy(); gh.putalpha(gh.split()[3].point(lambda v: int(v * .22)))
+        gh = tmp.copy(); gh.putalpha(gh.split()[3].point(lambda v: int(v * .32)))
         img.alpha_composite(gh)
-        px, py = info['foot'][0] - 40, gy
-        tmp = tmp.rotate(-ang, resample=Image.BICUBIC, center=(px, py))
+        px, py = min(info['far_foot'][0], info['foot'][0]) - 30, gy
+        tmp = tmp.rotate(ang, resample=Image.BICUBIC, center=(px, py))
         # motion arcs from the upright head to the toppled head
         cx_, cy_ = info['center']
         lay = layer(); dl = ImageDraw.Draw(lay)
         for k_, rr in enumerate((math.dist((px, py), (cx_, cy_)), math.dist((px, py), info['back']) + 60)):
-            dl.arc([px - rr, py - rr, px + rr, py + rr], 270 - 26, 270 + ang - 4, fill=INK + (200,), width=14)
-            dl.arc([px - rr, py - rr, px + rr, py + rr], 270 - 26, 270 + ang - 4, fill=(255, 255, 255, 230), width=7)
+            dl.arc([px - rr, py - rr, px + rr, py + rr], 270 - ang + 4, 270 + 20, fill=INK + (200,), width=14)
+            dl.arc([px - rr, py - rr, px + rr, py + rr], 270 - ang + 4, 270 + 20, fill=(255, 255, 255, 230), width=7)
         img.alpha_composite(lay)
     img.alpha_composite(tmp)
     sx, sy = shake(u, tf + .45, 8, .3)
     img = finish(img, w, 1.03, 540, 1200, dx=sx, dy=sy, vig=(.26, (50, 30, 30)))
     if not HIDE_UI:
-        chip(img, 'TWO LEGS', (40, 40, 48), 290, 300, u, cue(8) - .1, size=56)
-        chip(img, 'UNSTEADY', (230, 80, 60), 290, 430, u, tf + .3, size=56)
-        if u > tf + .4: draw_x(img, 290, 590, 60, (u - tf - .4) / .12, w=18)
-    return img, {'faces': [], 'avoid': [(40, 240, 560, 680)]}
+        chip(img, 'TWO LEGS', (40, 40, 48), 760, 300, u, cue(8) - .1, size=56)
+        chip(img, 'UNSTEADY', (230, 80, 60), 760, 430, u, tf + .3, size=56)
+        if u > tf + .4: draw_x(img, 760, 590, 60, (u - tf - .4) / .12, w=18)
+    return img, {'faces': [], 'avoid': [(500, 240, 1040, 680)]}
 
 
 # ---------------------------------------------------------------- s13: locked knees in a queue
@@ -939,6 +940,6 @@ SHOT_LIST = [('s01', 1, 0), ('s01b', 1, 12), ('s02', 2, 0), ('s03', 3, 0), ('s04
 END = 1888 / 30                  # 62.933 s (length.json)
 NO_PUNCH = ()
 BAND_AT = {}
-BAND_FIX = {'s09': 1835, 's10': 1835, 's11': 1835, 's13': 1840}
+BAND_FIX = {'s05': 1835, 's05b': 1835, 's09': 1835, 's10': 1835, 's11': 1835, 's12b': 1835, 's13': 1840}
 STILL_AT = {'s01': .02, 's01b': .9, 's02': .95, 's03': .9, 's04': .9, 's04b': .9, 's05': .95, 's05b': .9, 's06': .92,
             's07': .95, 's08': .9, 's09': .95, 's10': .9, 's11': .92, 's12': .9, 's12b': .75, 's13': .92, 's14': .95, 's15': .5}

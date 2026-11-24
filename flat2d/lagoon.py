@@ -225,7 +225,7 @@ def _lab_static(variant=0):
         for y in range(wy0, wy0 + 140, 14):
             d.rectangle([wx0, y, wx1, y + 9], fill=(244, 232, 210))
         # right wall: shelves with binders, boxes, a bird skeleton poster, a whiteboard
-        px0, py0 = 690, 230
+        px0, py0 = 840, 250
         d.rectangle([px0, py0, px0 + 330, py0 + 420], fill=(250, 244, 230), outline=INK, width=6)
         d.text((px0 + 165, py0 + 36), 'AVIAN LEG', font=font(34, True), fill=(120, 70, 60), anchor='mm')
         # poster: a bird leg skeleton diagram
