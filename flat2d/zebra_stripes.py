@@ -1106,8 +1106,10 @@ def s16(u, D, cue):
 # ---------------------------------------------------------------- s17: the loop back to 2016
 def s17(u, D, cue):
     w = u - D                                               # the s01 world clock meets s01's frame 0 at the end
-    if u > D - 1.5 / 30:
-        return s01_frame(0.0, 0.0)
+    if u > D - 1.5 / 30:                                   # the loop frame: exactly s01's frame 0 (same idle clock too)
+        now = anim.NOW; anim.NOW = 0.0
+        try: return s01_frame(0.0, 0.0)
+        finally: anim.NOW = now
     kz = smooth(seg(u, .3, D - .5))
     z = 1.55 - .55 * kz
     cam = 8 * math.sin(w * .45)
@@ -1120,7 +1122,7 @@ def s17(u, D, cue):
     def extra(img):
         # flies overshoot the coat: they dive at it, fail to brake, bounce off or fly straight past
         for i, tb in enumerate((cue(2), cue(4), cue(7), cue(9))):
-            if not (tb - .7 <= u < tb + 1.0): continue
+            if not (tb - .7 <= u < tb + 1.6): continue
             sd = 1 if i % 2 else -1
             tx, ty = HX + cam * .85 + 40 * sd + 60 * i - 90, HGY - HS * (.72 + .08 * (i % 2))
             def pos(t, tb=tb, tx=tx, ty=ty, sd=sd):
@@ -1131,12 +1133,12 @@ def s17(u, D, cue):
                 return (tx + sd * 520 * k, ty - 430 * k + 360 * k * k)
             if u < tb: fly_at(img, pos, u, 64, trail=.6, dt=.08, r=7, t_min=tb - .7)
             else:
-                pts = [pos(t) for t in np.arange(tb - .5, tb, .08)]
-                SV.dots_trail(img, pts, r=7)
-                A.put_fly(img, *pos(u), 64 * sd, ang=-(u - tb) * 500, wing='blur', ph=u * 7)
+                pts = [pos(t) for t in np.arange(tb - .5 + min(.5, (u - tb) * .8), tb, .08)]
+                if pts: SV.dots_trail(img, pts, r=7)
+                A.put_fly(img, *pos(u), 64 * sd, ang=-(u - tb) * 500, wing='blur', ph=u * 7, alpha=max(0.0, 1 - fa) * (1 - smooth(seg(u, tb + 1.1, tb + 1.6))))
             bonk_star(img, tx, ty, (u - tb) / .4, .6)
     img, hi = field_world(w, cam, chars=chars, fly_a=fa, extra=extra)
-    img = finish(img, w, 1.04 * z if z > 1.0 else 1.0, 540 + (HX - 540) * (1 - kz), 1200 - 120 * (1 - kz), vig=(.24, (30, 40, 30)))
+    img = finish(img, w, z, 540 + (HX - 540) * (1 - kz), 1200 - 120 * (1 - kz), vig=(.24, (30, 40, 30)))
     if not HIDE_UI:
         k = smooth(seg(u, D - .9, D - .2))
         if k > 0: opening_title(img, 0.0, k)
