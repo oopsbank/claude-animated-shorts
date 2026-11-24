@@ -93,3 +93,8 @@ The Producer's mix is used unchanged. The picture lands on its cues: the 1894 ti
 - Acting and feel are the Director's call on `tests/preview_full_540.mp4`; the Producer reviews `tests/sheet_2s.jpg` against the script before any 1080 final.
 - Dramatised / simplified (as in SCRIPT.md): the fall is shown in slow motion (the real fall lasts ~0.3 s; Marey filmed at 12 frames per second); the righting is drawn as the simplified "tuck and turn" (front ~195° vs back ~15°, then swap), not the full Kane & Scher bend-and-twist; Marey on a stool and his loupe are staging; the 1968 gym, the suit design and the photo on the wall are illustrative.
 - Render cost: frames are drawn at 1080 and downscaled; the 540 preview takes ~25-30 min on 4 cores, the 1080 final about 45-60 min.
+
+## Beard fix (Producer, 2026-11-24, after the Director's note "râu vẫn bị lỗi")
+- Cause: `kit.head_of` guessed the head centre from the card's top alpha row, which is a hand when Marey raises his arms, so the beard landed off the face; it was also a box-like polygon with a straight top edge and floating side tufts.
+- Fix: `stickman.draw` now stores the true head centre in `card.info['head']`; `anim.actor` returns the effective `look`/`lean`; `cat_righting.beard` hugs the jaw along the head rim below the mouth (~0.49 R), ends in a rounded point, has a thin moustache above the mouth, tilts with the head, drawn at 3x and downsampled; no side tufts.
+- Re-rendered the 1080 final (same audio/timing), cover and 2-pass encode: `cat_righting_final_1080x1920.mp4` 43.7 MB, 65.39 s; thumbnail rebuilt (no zoom).
