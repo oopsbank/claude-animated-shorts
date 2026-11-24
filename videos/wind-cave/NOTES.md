@@ -135,3 +135,17 @@ ffmpeg -i master.mp4 -c:v libx264 -profile:v high -preset slow -b:v 5200k -pass 
 ffmpeg -i master.mp4 -c:v libx264 -profile:v high -preset slow -b:v 5200k -pass 2 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart videos/wind-cave/wind_cave_final_1080x1920.mp4
 ```
 The audio and shot timing are unchanged (`mix.wav`, 1945 frames).
+
+## Posted 2026-11-24 (Asia/Ho_Chi_Minh), with the Director's OK ("ok"), via Buffer, shareNow
+- File: `https://oopsbank.github.io/some-crazy-things-media/wind_cave_1080x1920.mp4` (= `wind_cave_final_1080x1920.mp4`). The first attempt failed ("Video could not be read from its URL") before Pages had deployed; a retry 2 min later worked.
+- YouTube (post 6b050b02db52b449cf22649d, public, category 27): https://www.youtube.com/watch?v=xDlmnvZ90mg
+- Facebook reel (post 6b050b069a4bd32ca3efbb2e): https://facebook.com/1395801306957363_122108353485549918
+- TikTok (post 6b050af86734c08a26ad0cdd): TIKTOK_LINK
+- FB/TikTok caption (≤ 255 bytes): In 1881, a small hole in a South Dakota hill was blowing wind hard enough to knock a hat off. Later it sucked one in. What makes the ground breathe? 🌬️ #windcave #cave #science #mystery
+
+**Title:** This Cave Has Been Breathing Since 1881 🌬️ #shorts
+
+**Description:**
+In 1881, brothers Jesse and Tom Bingham heard a whistle coming from the ground in the Black Hills of South Dakota. It came from a small hole in the rock, and wind was rushing out of it hard enough, as the story goes, to blow Tom's hat off. Later the wind reversed and sucked a hat inside. There is no second entrance: just one natural opening of about 8 x 10 inches. The clues: the hole follows the weather, and behind it lies Wind Cave, a maze of more than 260 km of known passages that is still not fully explored. The explanation is air pressure. When a storm brings low pressure, the cave's air pushes out; when pressure rises, air flows back in. With that much cave behind it, a small pressure change moves a huge amount of air through one small hole, like a bag of chips puffing up on a plane. The cave isn't breathing. The sky is.
+
+Sources: NPS, Wind Cave exploration history https://www.nps.gov/wica/learn/historyculture/cave-exploration.htm · NPS, Wind Cave geology https://home.nps.gov/wica/learn/nature/wind-cave-geology.htm · NPS, exploration news https://home.nps.gov/wica/learn/news/exploration-pushes-wind-cave-to-5th-longest-in-the-world.htm · Wind Cave National Park (Wikipedia) https://en.wikipedia.org/wiki/Wind_Cave_National_Park
