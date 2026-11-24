@@ -1,17 +1,18 @@
-"""flat2d.cat: a flat 2D cat built for the falling-cat explanation (video 8, cat-righting).
+"""flat2d.cat: a flat 2D tabby cat built for the falling-cat explanation (video 8, cat-righting).
 
-The cat is two halves joined at a bendy spine. Each half is a fur "cylinder" seen from the side with its own ROLL
-about its own axis (0 = feet down, pi = upside down). Roll is drawn honestly: the white belly band, the tabby
-stripes, the legs (attached on the belly side, foreshortened when they point at the camera), the ears (dorsal side
-of the head) and the eyes all move with it, so the silhouette reads upside down and mid-twist.
+The cat is two halves joined at a bendy spine. Each half has its own ROLL about its own axis (0 = feet down,
+pi = upside down) and is drawn from a tiny 3D model projected flat: the body is a chain of spheres (a deep chest,
+a narrow waist, round haunches), the head a skull + cheek ruff + muzzle with two almond eyes, a nose, whiskers and
+two ears on the dorsal side; the head always turns its face a little toward the camera, so the face reads upside
+down and mid-twist. Tabby stripes follow the body rings, the belly/chest/muzzle are cream, the legs taper to paws.
 
 render_cat(x, y, s, rot=0, bend=0, phf=pi, phb=pi, tuckf=.5, tuckb=.5, tail=True, ...) -> (layer, (x0, y0), info)
-- x, y: the waist joint in frame px; s: px per cat unit (the body is ~2.1 units long, the head ~.6 wide);
+- x, y: the waist joint in frame px; s: px per cat unit (the body is ~2 units long, the head ~.65 wide);
 - rot: screen angle of the spine (deg, 0 = head to the right); bend: the V at the waist (deg, + = both ends up);
-- phf / phb: roll of the front / back half (rad); tuckf / tuckb: 0 = legs stretched wide, 1 = tucked in;
-- tail: False = the tailless (Manx) cat; tail_ph: swing phase; glow: None or k (front blue, back orange halves);
-- sepia: True for film-strip frames (no glow, flat sepia palette later). info: 'head', 'front', 'back' (centres),
-  'masks': {'front', 'back'} L masks on the layer, 'spine': [B, J, F].
+- phf / phb: roll of the front / back half (rad); tuckf / tuckb: 0 = legs stretched wide, ~.4 = standing, 1 = tucked;
+- tail: False = the tailless (Manx) cat (a short rounded rump); tail_ph: swing phase; glow: None or k (front blue,
+  back orange halves); seam: ink line between the halves. info: 'head', 'rh', 'front', 'back', 'F', 'B', 'J', 'tf',
+  'tb', 'masks': {'front', 'back'} L masks on the layer, 'origin'.
 Rules: ink outline on every piece, far limbs darker, a form shadow away from the light and a warm rim toward it.
 """
 import math
@@ -19,11 +20,12 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageChops
 
 INK = (22, 18, 24)
-TABBY = (164, 138, 112)
-TABBY_D = (92, 70, 56)
-WHITE = (246, 242, 234)
-PINK = (236, 150, 150)
-EYE = (196, 214, 86)
+TABBY = (172, 136, 100)
+TABBY_D = (78, 56, 42)
+WHITE = (238, 222, 196)          # cream belly / chest / muzzle (not a stark white)
+PINK = (226, 140, 140)
+NOSE = (196, 112, 112)
+EYE = (200, 206, 92)
 FRONT_COL = (90, 170, 255)
 BACK_COL = (255, 150, 60)
 
@@ -37,58 +39,90 @@ def _add(p, *vs):
     return (x, y)
 
 
-def _shade(c, k): return tuple(int(v * k) for v in c)
+def _shade(c, k): return tuple(int(min(255, v * k)) for v in c)
 
 
-def _limb(d, pts, w0, w1, col, ink, iw, cap=True):
-    """Tapered limb along pts (2-4 points), widths w0 -> w1, ink first then fill (round joints)."""
+def _lerp(a, b, k): return tuple(int(a[i] + (b[i] - a[i]) * k) for i in range(3))
+
+
+# 3D helpers (screen x right, y down, z toward the camera)
+def _v3(*cs):
+    x = y = z = 0.0
+    for k, v in cs: x += k * v[0]; y += k * v[1]; z += k * v[2]
+    return (x, y, z)
+
+
+def _norm(v):
+    L = math.sqrt(v[0] ** 2 + v[1] ** 2 + v[2] ** 2) or 1
+    return (v[0] / L, v[1] / L, v[2] / L)
+
+
+def _dot(a, b): return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+
+def _cross(a, b): return (a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0])
+
+
+def _limb(d, pts, w0, w1, col, ink, iw, cap=True, widths=None):
+    """Tapered limb along pts, widths w0 -> w1 (or per-point widths), ink first then fill (round joints)."""
     n = len(pts)
-    for pass_, (c, grow) in enumerate(((ink, iw), (col, 0))):
+    ws = widths or [w0 + (w1 - w0) * i / (n - 1) for i in range(n)]
+    for c, grow in ((ink, iw), (col, 0)):
+        if c is None: continue
         for i in range(n - 1):
             a, b = pts[i], pts[i + 1]
-            wa = w0 + (w1 - w0) * i / (n - 1); wb = w0 + (w1 - w0) * (i + 1) / (n - 1)
             dx, dy = b[0] - a[0], b[1] - a[1]; L = math.hypot(dx, dy) or 1
             nx, ny = -dy / L, dx / L
-            ra, rb = wa / 2 + grow, wb / 2 + grow
+            ra, rb = ws[i] / 2 + grow, ws[i + 1] / 2 + grow
             d.polygon([(a[0] + nx * ra, a[1] + ny * ra), (b[0] + nx * rb, b[1] + ny * rb),
                        (b[0] - nx * rb, b[1] - ny * rb), (a[0] - nx * ra, a[1] - ny * ra)], fill=c)
             for p, r in ((a, ra), (b, rb)):
                 d.ellipse([p[0] - r, p[1] - r, p[0] + r, p[1] + r], fill=c)
 
 
-def _sausage(J, t, n, L, prof, k=14):
-    """Outline of a body half from J along t (length L) with radius profile prof(f) (f 0 at J, 1 at the end)."""
-    left, right = [], []
-    for i in range(k + 1):
-        f = i / k; c = _add(J, (L * f, t)); r = prof(f)
-        left.append(_add(c, (r, n))); right.append(_add(c, (-r, n)))
-    # rounded caps
-    end = _add(J, (L, t)); r1 = prof(1.0); cap1 = []
-    for i in range(1, 8):
-        a = math.pi * i / 8
-        cap1.append(_add(end, (r1 * math.cos(a), n), (r1 * math.sin(a) * .9, t)))
-    r0 = prof(0.0); cap0 = []
-    for i in range(1, 8):
-        a = math.pi * i / 8
-        cap0.append(_add(J, (-r0 * math.cos(a), n), (-r0 * math.sin(a) * .7, t)))
-    return left + cap1 + right[::-1] + cap0, (left, right)
-
-
-def _intervals(phi, half=1.2):
-    """Visible screen-offset intervals (cos theta, along n) of the belly band centred on roll phi (+-half rad)."""
+def _smooth_pts(pts, k=4):
+    """Catmull-Rom resample of a polyline (k points per span)."""
+    if len(pts) < 3: return pts
+    P = [pts[0]] + list(pts) + [pts[-1]]
     out = []
-    lo, hi = phi - half, phi + half
-    for k in (-1, 0, 1):
-        a, b = max(lo + 2 * math.pi * k, 0.0), min(hi + 2 * math.pi * k, math.pi)
-        if b > a: out.append((math.cos(b), math.cos(a)))
+    for i in range(1, len(P) - 2):
+        p0, p1, p2, p3 = P[i - 1], P[i], P[i + 1], P[i + 2]
+        for j in range(k):
+            t = j / k; t2, t3 = t * t, t * t * t
+            out.append(tuple(.5 * (2 * p1[c] + (-p0[c] + p2[c]) * t + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * t2
+                                   + (-p0[c] + 3 * p1[c] - 3 * p2[c] + p3[c]) * t3) for c in range(2)))
+    out.append(pts[-1])
     return out
+
+
+def _interp(keys, x):
+    """Piecewise-linear interpolation of tuples keyed by x (sorted list of (x, tuple))."""
+    if x <= keys[0][0]: return keys[0][1]
+    for (x0, a), (x1, b) in zip(keys, keys[1:]):
+        if x <= x1:
+            k = (x - x0) / (x1 - x0)
+            return tuple(a[i] + (b[i] - a[i]) * k for i in range(len(a)))
+    return keys[-1][1]
+
+
+# body profiles: f (0 at the waist, 1 at the shoulder / rump) -> (dorsal radius, ventral radius) in cat units
+PROF_F = [(0, (.18, .19)), (.35, (.2, .27)), (.68, (.23, .37)), (.88, (.24, .33)), (1.0, (.22, .26))]
+PROF_B = [(0, (.18, .19)), (.4, (.21, .23)), (.72, (.265, .29)), (.9, (.255, .26)), (1.0, (.22, .2))]
+
+# leg poses by tuck: (segment betas..., lengths...) in cat units; beta = angle from the belly direction toward +axis
+LEG_F = [(0.0, (.62, .84, .9, .44, .44, .13)),       # stretched wide, reaching
+         (0.4, (-.12, .08, .5, .42, .42, .13)),       # standing
+         (1.0, (-1.0, 2.3, 2.0, .36, .34, .11))]       # tucked to the chest
+LEG_B = [(0.0, (.55, .75, .85, .42, .4, .26)),
+         (0.4, (-.6, .8, -.05, .42, .4, .25)),
+         (1.0, (-1.25, 2.3, 1.1, .38, .34, .2))]
 
 
 def render_cat(x, y, s, rot=0.0, bend=0.0, phf=math.pi, phb=math.pi, tuckf=.5, tuckb=.5, tail=True, tail_ph=0.0,
                glow=None, ink_w=None, light=(-.6, -.8), head_tilt=0.0, sepia=False, legs_k=1.0, paw_spread=0.0,
                fur=TABBY, fur_d=TABBY_D, belly=WHITE, eyes_closed=False, scale_front=1.0, seam=False):
     S = s
-    iw = ink_w if ink_w is not None else max(2, int(S * .028))
+    iw = ink_w if ink_w is not None else max(2, int(S * .032))
     pad = int(S * 2.3)
     Wd = Hd = 2 * pad
     ox, oy = x - pad, y - pad
@@ -96,241 +130,339 @@ def render_cat(x, y, s, rot=0.0, bend=0.0, phf=math.pi, phb=math.pi, tuckf=.5, t
     af = math.radians(rot - bend / 2); ab = math.radians(rot + bend / 2)
     tf, tb = _v(af), _v(ab)
     nf, nb = (-tf[1], tf[0]), (-tb[1], tb[0])
-    Lf, Lb = .9 * S, .9 * S
+    Lf, Lb = .8 * S, .8 * S
     F = _add(J, (Lf, tf)); B = _add(J, (-Lb, tb))
     lay = Image.new('RGBA', (Wd, Hd), (0, 0, 0, 0))
     d = ImageDraw.Draw(lay)
     mfront = Image.new('L', (Wd, Hd), 0); mback = Image.new('L', (Wd, Hd), 0)
     dmf, dmb = ImageDraw.Draw(mfront), ImageDraw.Draw(mback)
+    fur_far = _shade(fur, .7)
 
-    prof_f = lambda f: S * (.28 + .08 * math.sin(min(1, f * 1.15) * math.pi * .85) - .05 * max(0, f - .8) / .2) * scale_front
-    prof_b = lambda f: S * (.27 + .09 * math.sin(min(1, f * 1.1) * math.pi * .8))
-
-    items = []          # (depth, fn)
-
-    # ---------------- legs
-    def leg(J0, t, n, phi, side, front, tuck, which):
-        th = phi + side * .5                                  # attach angle on the cross-section
-        cth, sth = math.cos(th), math.sin(th)
+    # ---------------- the halves as chains of spheres (screen circles)
+    def chain(front):
+        prof = PROF_F if front else PROF_B
+        t = tf if front else (-tb[0], -tb[1])
+        n = nf if front else nb
+        phi = phf if front else phb
         L = Lf if front else Lb
-        r = (prof_f if front else prof_b)(.72)
-        hip = _add(J0, ((.68 if front else .74) * L, t), (r * .78 * cth, n))
-        # beta: angle from the belly direction toward +t (head); per segment, stretched -> tucked
-        # t points away from the waist for both halves: + beta = toward the head (front) / the tail (back)
-        b1 = (1 - tuck) * .62 + tuck * (-.95); b2 = (1 - tuck) * .84 + tuck * 2.35
-        l1 = S * (.5 * (1 - tuck) + .30 * tuck); l2 = S * (.52 * (1 - tuck) + .30 * tuck)
-        l1 *= legs_k; l2 *= legs_k
-        spread = (1 - tuck) * (.35 + paw_spread)              # stretched legs splay sideways too
-        def proj(beta, l, extra=0.0):
-            # 3D dir: cos(beta) * belly(th + side*spread) + sin(beta) * t
-            thl = th + side * (spread + extra)
-            vn, vz = math.cos(beta) * math.cos(thl), math.cos(beta) * math.sin(thl)
-            vt = math.sin(beta)
-            return (vt * l * t[0] + vn * l * n[0], vt * l * t[1] + vn * l * n[1]), vz
-        v1, z1 = proj(b1, l1); v2, z2 = proj(b2, l2, .1)
-        knee = (hip[0] + v1[0], hip[1] + v1[1]); paw = (knee[0] + v2[0], knee[1] + v2[1])
-        depth = sth + .3 * (z1 + z2) / 2
-        far = depth < 0
-        k = .72 if far else 1.0
-        up = _shade(fur, k); lo = _shade(belly, k * (.96 if far else 1))
-        w0 = S * (.19 if front else .25); w1 = S * .1
-        def fn(dr=d, mk=(dmf if front else dmb)):
-            _limb(dr, [hip, knee, paw], w0, w1, up, INK, iw)
-            sock = (knee[0] + (paw[0] - knee[0]) * .55, knee[1] + (paw[1] - knee[1]) * .55)
-            _limb(dr, [sock, paw], w1 * 1.02, w1, lo, lo, 0)
-            pr = S * .075
-            dx, dy = paw[0] - knee[0], paw[1] - knee[1]; L_ = math.hypot(dx, dy) or 1
-            pc = (paw[0] + dx / L_ * pr * .4, paw[1] + dy / L_ * pr * .4)
-            for c, g in ((INK, iw), (lo, 0)):
-                dr.ellipse([pc[0] - pr - g, pc[1] - pr - g, pc[0] + pr + g, pc[1] + pr + g], fill=c)
-            _limb(mk, [hip, knee, paw], w0 + 2 * iw, w1 + 2 * iw, 255, 255, 0)
-            mk.ellipse([pc[0] - pr - iw, pc[1] - pr - iw, pc[0] + pr + iw, pc[1] + pr + iw], fill=255)
-        items.append((depth * 2.0 + (.01 if front else 0), fn))
+        sc = scale_front if front else 1.0
+        out = []
+        for i in range(25):
+            f = i / 24
+            rd, rv = _interp(prof, f)
+            rd, rv = rd * S * sc, rv * S * sc
+            r = (rd + rv) / 2; o = (rv - rd) / 2
+            c = _add(J, (L * f, t), (o * math.cos(phi), n))
+            out.append((c, r, f))
+        return out, t, n, phi
 
-    items.clear()
-    tbr = (-tb[0], -tb[1]); nbr = (-nb[0], -nb[1])
-    for side in (-1, 1):
-        leg(J, tf, nf, phf, side, True, tuckf, 'f')
-    nfront = len(items)
-    # hind legs: reversed axis; flip roll so that belly stays on the same screen side (n -> -n means phi -> pi - phi)
-    for side in (-1, 1):
-        leg(J, tbr, nbr, math.pi - phb, -side, False, tuckb, 'b')
+    CH = {True: chain(True), False: chain(False)}
 
-    # ---------------- body halves
-    def half(front):
-        t = tf if front else tbr; n = nf if front else nbr
-        prof = prof_f if front else prof_b
-        phi = phf if front else (math.pi - phb)
-        outline, (Lft, Rgt) = _sausage(J, t, n, Lf if front else Lb, prof)
-        ink_out, _ = _sausage(J, t, n, Lf if front else Lb, lambda f: prof(f) + iw)
+    def circles(dr, ch, grow, col):
+        for c, r, _ in ch:
+            rr = r + grow
+            dr.ellipse([c[0] - rr, c[1] - rr, c[0] + rr, c[1] + rr], fill=col)
+
+    def half_fns(front):
+        ch, t, n, phi = CH[front]
+        mk = dmf if front else dmb
         def ink_fn():
-            d.polygon(ink_out, fill=INK)
+            circles(d, ch, iw, INK)
         def fn():
-            if seam: d.polygon(ink_out, fill=INK)
+            if seam: circles(d, ch, iw, INK)
+            m = Image.new('L', (Wd, Hd), 0); circles(ImageDraw.Draw(m), ch, 0, 255)
             sub = Image.new('RGBA', (Wd, Hd), fur + (255,)); ds = ImageDraw.Draw(sub)
-            k = 16; L = Lf if front else Lb
-            # stripes: dorsal centre at phi + pi; visible where sin > 0
+            # cream belly band (ventral side, centred on roll phi), soft edged
+            bm = Image.new('L', (Wd, Hd), 0); db = ImageDraw.Draw(bm)
+            half = 1.0 if front else .85
+            for i in range(len(ch)):
+                c, r, f = ch[i]
+                hw = half + (.35 * max(0, f - .55) / .45 if front else 0)     # the chest bib widens toward the neck
+                a0, a1 = max(phi - hw, 0.0), min(phi + hw, math.pi)
+                segs = []
+                for kk in (-1, 0, 1):
+                    lo, hi = phi - hw + 2 * math.pi * kk, phi + hw + 2 * math.pi * kk
+                    lo, hi = max(lo, 0.0), min(hi, math.pi)
+                    if hi > lo: segs.append((lo, hi))
+                for lo, hi in segs:
+                    p1 = _add(c, (r * math.cos(lo), n)); p2 = _add(c, (r * math.cos(hi), n))
+                    rr = S * .045
+                    db.line([p1, p2], fill=255, width=int(S * .09))
+            bm = bm.filter(ImageFilter.GaussianBlur(S * .03))
+            sub.paste(Image.new('RGBA', (Wd, Hd), belly + (255,)), (0, 0), bm)
+            # tabby stripes: rings over the dorsal side, tapered at the flanks, a dark spine line
             dors = phi + math.pi
-            for j in range(6 if front else 6):
-                f = .14 + j * .145
-                if f > 1.0: break
-                c = _add(J, (L * f, t)); r = prof(min(1, f))
-                a0, a1 = dors - 1.05, dors + 1.05
-                pts = []
-                for q in range(13):
-                    a = a0 + (a1 - a0) * q / 12
-                    if math.sin(a) <= 0.02: continue
+            nst = 7
+            for j in range(nst):
+                f0 = .1 + j * (.82 / (nst - 1))
+                idx = min(24, int(f0 * 24)); c, r, _ = ch[idx]
+                c = _add(c, (S * .02 * math.sin(j * 1.7), t))
+                lo, hi = dors - 1.25, dors + 1.25
+                left, right = [], []
+                for q in range(17):
+                    a = lo + (hi - lo) * q / 16
+                    if math.sin(a) <= -.05: continue
                     off = math.cos(a) * r
-                    wav = S * .035 * math.sin(a * 3 + j)
-                    pts.append(_add(c, (off, n), (wav, t)))
-                if len(pts) > 1:
-                    ds.line(pts, fill=fur_d, width=max(2, int(S * .075)), joint='curve')
-            # white belly band
-            for lo, hi in _intervals(phi, 1.45):
-                poly = []
-                for i in range(k + 1):
-                    f = i / k; c = _add(J, (L * f, t)); r = prof(f) * 1.08
-                    poly.append(_add(c, (hi * r, n)))
-                for i in range(k, -1, -1):
-                    f = i / k; c = _add(J, (L * f, t)); r = prof(f) * 1.08
-                    poly.append(_add(c, (lo * r, n)))
-                ds.polygon(poly, fill=belly)
-            m = Image.new('L', (Wd, Hd), 0); ImageDraw.Draw(m).polygon(outline, fill=255)
+                    w = S * .036 * max(0.0, 1 - min(1.0, abs((a - dors) / 1.25)) ** 3) ** .6 + S * .003
+                    bow = S * .07 * (1 - ((a - dors) / 1.25) ** 2) * (1 if front else -1)
+                    p = _add(c, (off, n), (-bow, t))
+                    left.append(_add(p, (w, t))); right.append(_add(p, (-w, t)))
+                if len(left) > 1:
+                    ds.polygon(left + right[::-1], fill=fur_d)
+            if math.sin(dors) > -.2:                          # spine line
+                k = max(0, min(1, (math.sin(dors) + .2) / .5))
+                pts = [_add(c, (r * .97 * math.cos(dors), n)) for c, r, f in ch[2:23]]
+                ds.line(pts, fill=_lerp(fur, fur_d, .8 * k), width=max(2, int(S * .06 * k + 1)), joint='curve')
             sub.putalpha(m)
             lay.alpha_composite(sub)
-            (dmf if front else dmb).polygon(ink_out, fill=255)
+            mk.bitmap((0, 0), m, fill=255)
+            circles(mk, ch, iw, 255)
         return ink_fn, fn
 
-    # ---------------- tail
+    # ---------------- legs
+    items = []
+
+    def leg(front, side):
+        ch, t, n, phi = CH[front]
+        keys = LEG_F if front else LEG_B
+        tuck = tuckf if front else tuckb
+        pose = _interp(keys, tuck)
+        nseg = 3
+        betas, lens = pose[:3], pose[3:]
+        th = phi + side * .42                                  # attach angle on the cross-section
+        cth, sth = math.cos(th), math.sin(th)
+        fi = .78 if front else .74
+        c, r, _ = ch[int(fi * 24)]
+        hip = _add(c, (r * .62 * cth, n))
+        spread = (1 - min(1, tuck / .4)) * (.35 + paw_spread) + .05
+        pts = [hip]; zsum = 0
+        for k_ in range(nseg):
+            thl = th + side * (spread * (k_ + 1) / nseg)
+            vn = math.cos(betas[k_]) * math.cos(thl); vz = math.cos(betas[k_]) * math.sin(thl)
+            vt = math.sin(betas[k_])
+            l = lens[k_] * S * legs_k
+            p = pts[-1]
+            pts.append((p[0] + vt * l * t[0] + vn * l * n[0], p[1] + vt * l * t[1] + vn * l * n[1]))
+            zsum += vz
+        depth = sth + .25 * zsum / nseg
+        far = depth < 0
+        col = fur_far if far else fur
+        dk = _shade(fur_d, .8 if far else 1)
+        lo = _shade(belly, .78 if far else 1)
+        if front: widths = [S * .22, S * .13, S * .105, S * .1]
+        else: widths = [S * .32, S * .17, S * .11, S * .1]
+        def fn():
+            mk = dmf if front else dmb
+            _limb(d, pts, 0, 0, col, INK, iw, widths=widths)
+            # stripes across the lower leg
+            for a_, b_, fr in ((pts[1], pts[2], .35), (pts[1], pts[2], .7)):
+                p = (a_[0] + (b_[0] - a_[0]) * fr, a_[1] + (b_[1] - a_[1]) * fr)
+                dx, dy = b_[0] - a_[0], b_[1] - a_[1]; L_ = math.hypot(dx, dy) or 1
+                nx, ny = -dy / L_, dx / L_; w = widths[1] * .42
+                d.line([(p[0] - nx * w, p[1] - ny * w), (p[0] + nx * w, p[1] + ny * w)], fill=dk, width=max(2, int(S * .035)))
+            # paw: an oval along the last segment, cream, with two toe lines
+            a_, b_ = pts[-2], pts[-1]
+            dx, dy = b_[0] - a_[0], b_[1] - a_[1]; L_ = math.hypot(dx, dy) or 1
+            ux, uy = dx / L_, dy / L_
+            pc = (b_[0] + ux * S * .03, b_[1] + uy * S * .03)
+            pl, pw = S * .085, S * .065
+            def oval(g):
+                return [(pc[0] + ux * (pl + g) * math.cos(q * math.pi / 10) - uy * (pw + g) * math.sin(q * math.pi / 10),
+                         pc[1] + uy * (pl + g) * math.cos(q * math.pi / 10) + ux * (pw + g) * math.sin(q * math.pi / 10)) for q in range(20)]
+            d.polygon(oval(iw), fill=INK); d.polygon(oval(0), fill=lo)
+            for sgn in (-1, 1):
+                q0 = (pc[0] + ux * pl * .2 - uy * sgn * pw * .35, pc[1] + uy * pl * .2 + ux * sgn * pw * .35)
+                q1 = (pc[0] + ux * pl * .95 - uy * sgn * pw * .3, pc[1] + uy * pl * .95 + ux * sgn * pw * .3)
+                d.line([q0, q1], fill=_shade(lo, .7), width=max(1, int(S * .015)))
+            _limb(mk, pts, 0, 0, 255, None, 0, widths=[w_ + 2 * iw for w_ in widths])
+            mk.polygon(oval(iw), fill=255)
+        items.append((depth * 2.0 + (.01 if front else 0), fn))
+
+    for side in (-1, 1):
+        leg(True, side)
+        leg(False, side)
+
+    # ---------------- tail (or the Manx stub)
     def tail_fn():
-        phi = math.pi - phb
-        base = _add(B, (S * .05, tbr), (0, nbr))
-        pts = []; zs = []
-        p3 = [0.0, 0.0, 0.0]                                    # (t, n, z) in the reversed back frame
-        ang = 0.0
-        for i in range(14):
-            f = i / 13
-            # direction: along the axis, curling toward the dorsal side, swinging sideways
-            curl = .2 + 1.5 * f
-            dors_n, dors_z = -math.cos(phi), -math.sin(phi)
-            sw = .5 * math.sin(tail_ph + f * 2.2)
-            lat_n, lat_z = -math.sin(phi), math.cos(phi)      # lateral (left side) direction
-            dt = math.cos(curl) * .9
+        ch, t, n, phi = CH[False]
+        c_end, r_end, _ = ch[22]
+        base = _add(c_end, (-r_end * .55 * math.cos(phi), n))   # high on the rump (dorsal side)
+        pts = [base]; zs = []
+        p3 = [0.0, 0.0, 0.0]
+        dors_n, dors_z = -math.cos(phi), -math.sin(phi)
+        lat_n, lat_z = -math.sin(phi), math.cos(phi)
+        for i in range(16):
+            f = i / 15
+            curl = .15 + 1.6 * f ** 1.3
+            sw = .55 * math.sin(tail_ph + f * 2.4)
+            dt = math.cos(curl)
             dn = math.sin(curl) * dors_n + sw * lat_n
             dz = math.sin(curl) * dors_z + sw * lat_z
-            Lseg = S * .085
+            Lseg = S * .075
             p3 = [p3[0] + dt * Lseg, p3[1] + dn * Lseg, p3[2] + dz * Lseg]
-            pts.append(_add(base, (p3[0], tbr), (p3[1], nbr))); zs.append(p3[2])
+            pts.append(_add(base, (p3[0], t), (p3[1], n))); zs.append(p3[2])
         z = sum(zs) / len(zs) / S
+        sp = _smooth_pts(pts, 3)
+        ws = [S * (.15 - .07 * (i / (len(sp) - 1))) for i in range(len(sp))]
         def fn():
-            _limb(d, [base] + pts[::2] + [pts[-1]], S * .17, S * .1, fur, INK, iw)
-            # rings
-            for j in range(3, len(pts) - 1, 3):
-                a, b = pts[j - 1], pts[j + 1]
-                dx, dy = b[0] - a[0], b[1] - a[1]; L = math.hypot(dx, dy) or 1
-                nx, ny = -dy / L, dx / L; r = S * .065
-                c = pts[j]
-                d.line([(c[0] - nx * r, c[1] - ny * r), (c[0] + nx * r, c[1] + ny * r)], fill=fur_d, width=max(2, int(S * .06)))
-            e = pts[-1]; r = S * .055
-            d.ellipse([e[0] - r, e[1] - r, e[0] + r, e[1] + r], fill=fur_d)
-            _limb(dmb, [base] + pts[::2] + [pts[-1]], S * .17 + 2 * iw, S * .1 + 2 * iw, 255, 255, 0)
+            _limb(d, sp, 0, 0, fur, INK, iw, widths=ws)
+            for j in range(5, len(sp) - 3, 6):
+                a_, b_ = sp[j - 1], sp[j + 1]
+                dx, dy = b_[0] - a_[0], b_[1] - a_[1]; L_ = math.hypot(dx, dy) or 1
+                nx, ny = -dy / L_, dx / L_; w = ws[j] * .46
+                c = sp[j]
+                d.line([(c[0] - nx * w, c[1] - ny * w), (c[0] + nx * w, c[1] + ny * w)], fill=fur_d, width=max(2, int(S * .05)))
+            _limb(d, sp[-5:], 0, 0, fur_d, None, 0, widths=ws[-5:])          # dark tip
+            _limb(dmb, sp, 0, 0, 255, None, 0, widths=[w + 2 * iw for w in ws])
         return z, fn
 
-    # ---------------- head
+    # ---------------- head (a tiny 3D model, face turned toward the camera)
     phh = phf + head_tilt
-    Hc = _add(F, (S * .2, tf), (-S * .03 * math.cos(phh), nf))
-    rh = S * .32
-    def ear(side):
-        th = phh + math.pi + side * .62
-        c, sn = math.cos(th), math.sin(th)
-        base = _add(Hc, (rh * .78 * c, nf), (-S * .02 + (S * .09 if sn < 0 else -S * .02), tf))
-        ln = S * .32 * max(.35, abs(c))
-        tip = _add(base, (ln * (1 if c >= 0 else -1), nf), (S * .04, tf))
-        wb = S * .13
-        b1 = _add(base, (wb, tf)); b2 = _add(base, (-wb, tf))
+    rh = S * .3 * scale_front
+    T3 = (tf[0], tf[1], 0.0); N3 = (nf[0], nf[1], 0.0); Z3 = (0.0, 0.0, 1.0)
+    D3 = _v3((math.cos(phh), N3), (math.sin(phh), Z3))              # chin / belly direction
+    S3 = _v3((-math.sin(phh), N3), (math.cos(phh), Z3))
+    Fh = _norm(_v3((.62, T3), (.78 * math.cos(phh), S3), (.45 * math.sin(phh) ** 2, D3)))
+    U0 = (-D3[0], -D3[1], -D3[2])
+    Uh = _norm(_v3((1, U0), (-_dot(U0, Fh), Fh)))
+    Rh = _cross(Fh, Uh)
+    Hc = _add(F, (S * .2, tf), (-S * .1 * math.cos(phh), nf))
+
+    def P(*cs):
+        v = _v3(*cs)
+        return (Hc[0] + rh * v[0], Hc[1] + rh * v[1]), v[2]
+
+    def disc(c3, r):
+        p, z = P(*c3)
+        return p, r * rh, z
+
+    def head_parts():
+        skull = disc(((1, (0, 0, 0)),), 1.0)
+        cheeks = [disc(((.22, Fh), (.38, (-Uh[0], -Uh[1], -Uh[2])), (sg * .46, Rh)), .64) for sg in (-1, 1)]
+        muzzle = disc(((.7, Fh), (.36, (-Uh[0], -Uh[1], -Uh[2]))), .42)
+        return [skull] + cheeks + [muzzle]
+
+    def ear(sg):
+        cdir = _norm(_v3((.82, Uh), (sg * .55, Rh), (-.08, Fh)))
+        tang = _norm(_v3((.55, Uh), (-sg * .82, Rh)))
+        tipd = _norm(_v3((.9, Uh), (sg * .42, Rh), (.06, Fh)))
+        b1, _ = P((.92, cdir), (.42, tang)); b2, _ = P((.92, cdir), (-.42, tang))
+        tip, _ = P((.95, cdir), (.95, tipd))
+        front_vis = _dot(Fh, Z3)
+        cdz = _dot(cdir, Z3)
         def fn():
-            for col, g in ((INK, iw * 1.3), (fur if sn > -.2 else _shade(fur, .75), 0)):
-                cx = (b1[0] + b2[0] + tip[0]) / 3; cy = (b1[1] + b2[1] + tip[1]) / 3
-                tri = [(p[0] + (p[0] - cx) * g / (S * .12), p[1] + (p[1] - cy) * g / (S * .12)) for p in (b1, tip, b2)]
-                d.polygon(tri, fill=col)
-            if sn > -.1:
-                ib1 = _add(base, (wb * .55, tf), (S * .02 * (1 if c >= 0 else -1), nf))
-                ib2 = _add(base, (-wb * .5, tf), (S * .02 * (1 if c >= 0 else -1), nf))
-                itip = _add(tip, (-ln * .28 * (1 if c >= 0 else -1), nf))
-                d.polygon([ib1, itip, ib2], fill=PINK)
-            dmf.polygon([b1, tip, b2], fill=255)
-        return sn, fn
+            cx = (b1[0] + b2[0] + tip[0]) / 3; cy = (b1[1] + b2[1] + tip[1]) / 3
+            def grow(p, g):
+                dx, dy = p[0] - cx, p[1] - cy; L_ = math.hypot(dx, dy) or 1
+                return (p[0] + dx / L_ * g, p[1] + dy / L_ * g)
+            d.polygon([grow(p, iw * 1.4) for p in (b1, tip, b2)], fill=INK)
+            d.polygon([b1, tip, b2], fill=fur if cdz > -.3 else fur_far)
+            if front_vis > -.1:
+                ib1, _ = P((.92, cdir), (.24, tang), (.08, Fh)); ib2, _ = P((.92, cdir), (-.24, tang), (.08, Fh))
+                it, _ = P((.95, cdir), (.6, tipd), (.06, Fh))
+                d.polygon([ib1, it, ib2], fill=PINK)
+                # ear tufts
+                d.line([it, ((ib1[0] + ib2[0]) / 2, (ib1[1] + ib2[1]) / 2)], fill=_lerp(PINK, belly, .6), width=max(1, int(S * .012)))
+            dmf.polygon([grow(p, iw * 1.4) for p in (b1, tip, b2)], fill=255)
+        return fn
 
     def head_fn():
-        # skull + cheeks (white chin band on the belly side), muzzle, eyes, nose, whiskers
-        for col, g in ((INK, iw), (fur, 0)):
-            r = rh + g
-            d.ellipse([Hc[0] - r, Hc[1] - r, Hc[0] + r, Hc[1] + r], fill=col)
-        sub = Image.new('RGBA', (Wd, Hd), (0, 0, 0, 0)); ds = ImageDraw.Draw(sub)
-        for lo, hi in _intervals(phh, 1.05):
-            poly = [_add(Hc, (hi * rh * 1.05, nf), (-rh * 1.2, tf)), _add(Hc, (hi * rh * 1.05, nf), (rh * 1.2, tf)),
-                    _add(Hc, (lo * rh * 1.05, nf), (rh * 1.2, tf)), _add(Hc, (lo * rh * 1.05, nf), (-rh * 1.2, tf))]
-            ds.polygon(poly, fill=belly + (255,))
-        # forehead stripes ('M') on the dorsal side
-        dors = phh + math.pi
-        if math.sin(dors) > -.3:
-            for j in (-1, 0, 1):
-                c = _add(Hc, (rh * .55 * math.cos(dors), nf), (j * rh * .28, tf))
-                e = _add(c, (rh * .32 * (1 if math.cos(dors) >= 0 else -1), nf))
-                ds.line([c, e], fill=fur_d + (255,), width=max(2, int(S * .05)))
-        m = Image.new('L', (Wd, Hd), 0); ImageDraw.Draw(m).ellipse([Hc[0] - rh, Hc[1] - rh, Hc[0] + rh, Hc[1] + rh], fill=255)
-        sub.putalpha(ImageChops.multiply(sub.split()[3], m))
+        parts = head_parts()
+        for (c, r, z) in parts:
+            rr = r + iw
+            d.ellipse([c[0] - rr, c[1] - rr, c[0] + rr, c[1] + rr], fill=INK)
+        hm = Image.new('L', (Wd, Hd), 0); dhm = ImageDraw.Draw(hm)
+        for (c, r, z) in parts:
+            dhm.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], fill=255)
+        sub = Image.new('RGBA', (Wd, Hd), fur + (255,)); ds = ImageDraw.Draw(sub)
+        Dn = (-Uh[0], -Uh[1], -Uh[2])
+        # cream muzzle pads + chin, cream throat
+        for sg in (-1, 1):
+            c, r, z = disc(((.86, Fh), (.4, Dn), (sg * .2, Rh)), .27)
+            ds.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], fill=belly)
+        c, r, z = disc(((.62, Fh), (.66, Dn)), .26); ds.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], fill=belly)
+        c, r, z = disc(((.1, Fh), (.85, Dn)), .45); ds.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], fill=_lerp(belly, fur, .15))
+        # eye patches (lighter rings around the eyes)
+        for sg in (-1, 1):
+            c, r, z = disc(((.78, Fh), (.16, Uh), (sg * .44, Rh)), .26)
+            if z > -.1: ds.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], fill=_lerp(fur, belly, .45))
+        # forehead 'M' and cheek stripes
+        sw = max(2, int(S * .028))
+        for k in (-1, 0, 1):
+            a, za = P((.66, Fh), (.62, Uh), (k * .2, Rh))
+            b, zb = P((.2, Fh), (.98, Uh), (k * .26, Rh))
+            if za > -.2: ds.line([a, b], fill=fur_d, width=sw + (1 if k == 0 else 0))
+        for sg in (-1, 1):
+            for j in range(2):
+                a, za = P((.35, Fh), (-.05 - j * .2, Uh), (sg * .8, Rh))
+                b, zb = P((-.15, Fh), (-.1 - j * .24, Uh), (sg * .98, Rh))
+                if za > -.1: ds.line([a, b], fill=fur_d, width=sw)
+        sub.putalpha(hm)
         lay.alpha_composite(sub)
-        # muzzle: forward along tf, a little to the chin side
-        Mz = _add(Hc, (rh * .66, tf), (rh * .24 * math.cos(phh), nf))
-        mr = rh * .33
-        for col, g in ((INK, iw), (belly, 0)):
-            d.ellipse([Mz[0] - mr * 1.1 - g, Mz[1] - mr * .85 - g, Mz[0] + mr * 1.1 + g, Mz[1] + mr * .85 + g], fill=col)
-        # nose
-        Nz = _add(Mz, (mr * .78, tf), (-mr * .25 * math.cos(phh), nf))
-        nr = rh * .1
-        d.polygon([_add(Nz, (-nr, tf), (-nr, nf)), _add(Nz, (nr * .6, tf)), _add(Nz, (-nr, tf), (nr, nf))], fill=PINK, outline=INK)
-        # whiskers
-        for j in (-1, 0, 1):
-            a = _add(Mz, (mr * .3, tf), (j * mr * .25, nf))
-            e = _add(a, (rh * 1.0, tf), (j * rh * .35 + rh * .1 * math.cos(phh), nf))
-            d.line([a, e], fill=(250, 248, 240), width=max(1, int(S * .012)))
-        # eyes (near and far): on the sides, a little toward the dorsal side
-        for side in (1, -1):
-            th = phh + side * (math.pi / 2 + .5)
-            sn = math.sin(th)
-            if sn < .12: continue
-            E = _add(Hc, (rh * .3, tf), (rh * .82 * math.cos(th), nf))
-            ew, eh = rh * .26 * (.5 + .5 * sn), rh * .2
+        # eyes: almond, on the face, a little above the muzzle
+        for sg in (-1, 1):
+            En = _norm(_v3((.8, Fh), (.17, Uh), (sg * .5, Rh)))
+            if _dot(En, Z3) < .08: continue
+            e1 = _norm(_v3((sg, Rh), (-_dot(_v3((sg, Rh)), En), En)))
+            e1 = _norm(_v3((1, e1), (.22, Uh)))                      # outer corner tilts up
+            e2 = _norm(_cross(En, e1))
+            if _dot(e2, Uh) < 0: e2 = (-e2[0], -e2[1], -e2[2])
+            a_, b_ = .25, .175
+            pts = []
+            for q in range(24):
+                th = 2 * math.pi * q / 24
+                ya = math.sin(th) * (abs(math.sin(th)) ** .25)
+                pts.append(P((1.0, En), (a_ * math.cos(th), e1), (b_ * ya, e2))[0])
             if eyes_closed:
-                d.line([_add(E, (-ew, tf)), _add(E, (ew, tf))], fill=INK, width=max(2, int(S * .03)))
+                lo_ = [P((1.0, En), (a_ * math.cos(th), e1), (-b_ * .2 * math.sin(th), e2))[0] for th in np.linspace(0, math.pi, 9)]
+                d.line(lo_, fill=INK, width=max(2, int(S * .03)), joint='curve')
                 continue
-            poly = []
-            for q in range(16):
-                a = 2 * math.pi * q / 16
-                poly.append(_add(E, (ew * math.cos(a), tf), (eh * math.sin(a) * (abs(math.sin(a)) ** .35), nf)))
-            d.polygon(poly, fill=EYE, outline=INK, width=max(2, int(S * .022)))
-            d.line([_add(E, (0, tf), (-eh * .85, nf)), _add(E, (0, tf), (eh * .85, nf))], fill=INK, width=max(2, int(S * .04)))
-            hl = _add(E, (-ew * .35, tf), (-eh * .35, nf)); r = S * .016
-            d.ellipse([hl[0] - r, hl[1] - r, hl[0] + r, hl[1] + r], fill=(255, 255, 255))
-        dmf.ellipse([Hc[0] - rh - iw, Hc[1] - rh - iw, Hc[0] + rh + iw, Hc[1] + rh + iw], fill=255)
-        dmf.ellipse([Mz[0] - mr * 1.1 - iw, Mz[1] - mr * .85 - iw, Mz[0] + mr * 1.1 + iw, Mz[1] + mr * .85 + iw], fill=255)
+            d.polygon(pts, fill=INK)
+            inner = [P((1.0, En), (a_ * .82 * math.cos(th), e1), (b_ * .78 * math.sin(th) * (abs(math.sin(th)) ** .25), e2))[0]
+                     for th in np.linspace(0, 2 * math.pi, 24, endpoint=False)]
+            d.polygon(inner, fill=EYE)
+            pup = [P((1.0, En), (.085 * math.cos(th), e1), (.15 * math.sin(th), e2))[0] for th in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
+            d.polygon(pup, fill=INK)
+            hl, _ = P((1.0, En), (-.07 * sg, e1), (.06, e2)); r = max(1.5, S * .022)
+            d.ellipse([hl[0] - r, hl[1] - r, hl[0] + r, hl[1] + r], fill=(255, 255, 250))
+            # upper lid
+            lid = [P((1.0, En), (a_ * math.cos(th), e1), (b_ * math.sin(th) * (abs(math.sin(th)) ** .25), e2))[0] for th in np.linspace(0, math.pi, 10)]
+            d.line(lid, fill=INK, width=max(2, int(S * .03)), joint='curve')
+        # nose + mouth
+        Nn = _norm(_v3((1.05, Fh), (.12, Dn)))
+        if _dot(Nn, Z3) > -.3:
+            nc = (1.06, Nn)
+            tri = [P(nc, (-.11, Rh), (.06, Uh))[0], P(nc, (.11, Rh), (.06, Uh))[0], P(nc, (.08, Dn))[0]]
+            d.polygon(tri, fill=NOSE, outline=INK, width=max(1, int(S * .014)))
+            m0 = P(nc, (.08, Dn))[0]; m1 = P(nc, (.24, Dn), (-.05, Fh))[0]
+            d.line([m0, m1], fill=INK, width=max(1, int(S * .016)))
+            for sg in (-1, 1):
+                m2 = P(nc, (.3, Dn), (sg * .13, Rh), (-.1, Fh))[0]
+                d.line([m1, m2], fill=INK, width=max(1, int(S * .016)))
+        # whiskers
+        for sg in (-1, 1):
+            for j in range(3):
+                a, za = P((.92, Fh), (.38 + j * .05, Dn), (sg * .28, Rh))
+                b, zb = P((1.1, Fh), (.2 + j * .22, Dn), (sg * 1.35, Rh))
+                if za > -.2:
+                    d.line([a, b], fill=(244, 238, 226), width=max(1, int(S * .01)))
+        for (c, r, z) in parts:
+            rr = r + iw
+            dmf.ellipse([c[0] - rr, c[1] - rr, c[0] + rr, c[1] + rr], fill=255)
 
     # ---------------- draw order
-    legs_items = items
     order = []
-    for dep, fn in legs_items:
+    for dep, fn in items:
         order.append((dep if dep >= 0 else dep - 3, fn))
-    ib, fb = half(False); ifr, ff = half(True)
+    ib, fb = half_fns(False); ifr, ff = half_fns(True)
     if not seam:
         order.append((-.65, ib)); order.append((-.64, ifr))
     order.append((-.6, fb))
     order.append((-.5, ff))
     if tail:
         zt, tfn = tail_fn(); order.append(((-2.5 if zt < 0 else .4), tfn))
-    for side in (-1, 1):
-        sn, efn = ear(side)
-        order.append(((-.55 if sn < -.2 else -.2) + .001 * side, efn))
+    for sg in (-1, 1):
+        order.append((-.45 + .001 * sg, ear(sg)))
     order.append((-.3, head_fn))
     for dep, fn in sorted(order, key=lambda p: p[0]):
         fn()
@@ -340,13 +472,15 @@ def render_cat(x, y, s, rot=0.0, bend=0.0, phf=math.pi, phb=math.pi, tuckf=.5, t
     if a.max() > 0:
         lx, ly = light; sh = int(S * .09)
         A = Image.fromarray((a * 255).astype(np.uint8))
+        A = A.filter(ImageFilter.MinFilter(2 * max(1, iw) + 1))       # shade/rim inside the ink line
+        a_in = np.asarray(A, np.float32) / 255
         away = np.asarray(ImageChops.offset(A, int(-lx * sh), int(-ly * sh)).filter(ImageFilter.GaussianBlur(S * .05)), np.float32) / 255
-        toward = np.asarray(ImageChops.offset(A, int(lx * sh * .6), int(ly * sh * .6)).filter(ImageFilter.GaussianBlur(S * .03)), np.float32) / 255
+        toward = np.asarray(ImageChops.offset(A, int(lx * sh * .45), int(ly * sh * .45)).filter(ImageFilter.GaussianBlur(S * .02)), np.float32) / 255
         arr = np.asarray(lay, np.float32).copy()
-        shade = np.clip(a - away, 0, 1) * .38
-        rim = np.clip(a - toward, 0, 1) * .55
+        shade = np.clip(a_in - away, 0, 1) * .34
+        rim = np.clip(a_in - toward, 0, 1) * .55
         arr[..., :3] *= (1 - shade)[..., None]
-        rimc = np.array((255, 236, 200), np.float32)
+        rimc = np.array((255, 238, 206), np.float32)
         arr[..., :3] = arr[..., :3] * (1 - rim[..., None]) + rimc * rim[..., None]
         lay = Image.fromarray(arr.clip(0, 255).astype(np.uint8), 'RGBA')
 
@@ -361,7 +495,6 @@ def render_cat(x, y, s, rot=0.0, bend=0.0, phf=math.pi, phb=math.pi, tuckf=.5, t
             mm = m.filter(ImageFilter.GaussianBlur(S * .16)).point(lambda v: int(min(255, v * 1.6 * kk)))
             out.paste(Image.new('RGBA', (Wd, Hd), col + (255,)), (0, 0), mm)
         out.alpha_composite(lay)
-        # tint each half (screen-ish) so the halves read blue / orange
         arr = np.asarray(out, np.float32).copy()
         for m, col, kk in ((mback, BACK_COL, kb), (mfront, FRONT_COL, kf)):
             if kk <= 0: continue

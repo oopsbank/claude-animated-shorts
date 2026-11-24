@@ -70,9 +70,10 @@ def beard(img, g, look=0.0, col=(128, 112, 104)):
         d.line([(x, hy + R * .85), (x + (k - 1.5) * R * .06, hy + R * 1.2)], fill=lerp(col, INK, .4), width=max(2, int(R * .05)))
     for s_ in (-1, 1):                                         # moustache
         d.pieslice([fx + s_ * R * .26 - R * .3, hy + R * .3, fx + s_ * R * .26 + R * .3, hy + R * .62], 180, 360, fill=lerp(col, INK, .15), outline=INK, width=3)
-    for s_ in (-1, 1):                                         # side hair
-        cx_ = hx + s_ * R * .92
-        d.ellipse([cx_ - R * .2, hy - R * .56, cx_ + R * .2, hy - R * .01], fill=col, outline=INK, width=3)
+    for s_ in (-1, 1):                                         # side hair at the rim, never over an eye
+        if abs(look) > .25 and s_ * look > 0: continue
+        cx_ = hx + s_ * R * 1.0
+        d.ellipse([cx_ - R * .15, hy - R * .42, cx_ + R * .15, hy + R * .02], fill=col, outline=INK, width=3)
 
 
 def marey(img, t, pose, expr, cx, gy, s, look=0.0, lean=0.0, hop=0.0, label_on=True, rim=(255, 214, 160), rim_dir=(-1, -.4),
@@ -216,9 +217,11 @@ def chrono_camera(img, x, y, u, s=1.0, spin=1.0, flash_k=0.0):
     d.rounded_rectangle([x - 230 * s, y - 34 * s, x - 125 * s, y + 46 * s], 10 * s, fill=(206, 164, 76), outline=INK, width=int(6 * s))
     d.rectangle([x - 206 * s, y - 34 * s, x - 196 * s, y + 46 * s], fill=(160, 120, 50))
     d.ellipse([x - 252 * s, y - 40 * s, x - 212 * s, y + 52 * s], fill=(40, 46, 60), outline=INK, width=int(6 * s))
+    d.ellipse([x - 244 * s, y - 26 * s, x - 226 * s, y - 4 * s], fill=(120, 140, 170))            # glass reflection
     if flash_k > 0:
         m = mask(); ImageDraw.Draw(m).ellipse([x - 262 * s, y - 50 * s, x - 202 * s, y + 62 * s], fill=255)
         glow(img, m, (255, 240, 200), .9 * flash_k, blur=26, add=True)
+    lens_glint(img, x - 235 * s, y - 14 * s, .45 + .25 * math.sin(u * 2.3) + 1.2 * flash_k, s)
     # the disc shutter on top
     cx, cy, r = x + 20 * s, y - 150 * s, 95 * s
     d.line([(cx, cy), (cx, y - 100 * s)], fill=INK, width=int(14 * s))
@@ -228,6 +231,32 @@ def chrono_camera(img, x, y, u, s=1.0, spin=1.0, flash_k=0.0):
         p1 = (cx + math.cos(a) * r * .55, cy + math.sin(a) * r * .55); p2 = (cx + math.cos(a) * r * .86, cy + math.sin(a) * r * .86)
         d.line([p1, p2], fill=(230, 210, 160), width=int(9 * s))
     d.ellipse([cx - 16 * s, cy - 16 * s, cx + 16 * s, cy + 16 * s], fill=(206, 164, 76), outline=INK, width=int(4 * s))
+
+
+def lens_glint(img, x, y, k, s=1.0):
+    """A small star glint on glass (additive): a soft core + a long horizontal and a short vertical streak."""
+    if k <= 0: return
+    lay = layer(); d = ImageDraw.Draw(lay)
+    L = 120 * s * min(1.6, k)
+    for (dx, dy), w_ in (((L, 0), 5), ((0, L * .45), 4), ((L * .3, L * .3), 3), ((L * .3, -L * .3), 3)):
+        d.line([(x - dx, y - dy), (x + dx, y + dy)], fill=(255, 244, 214, int(min(255, 200 * k))), width=max(2, int(w_ * s)))
+    lay = lay.filter(ImageFilter.GaussianBlur(2))
+    img.alpha_composite(lay)
+    radial(img, x, y, 70 * s, (255, 236, 190), min(.9, .5 * k), 1.8)
+
+
+def low_angle(img, a=110, sy=.9, fill=(14, 10, 14)):
+    """Fake a low camera: verticals converge upward (keystone) and the floor sinks toward the bottom."""
+    def coeffs(src, dst):
+        A = []; Bv = []
+        for (x, y), (X, Y) in zip(dst, src):
+            A.append([x, y, 1, 0, 0, 0, -X * x, -X * y]); A.append([0, 0, 0, x, y, 1, -Y * x, -Y * y]); Bv += [X, Y]
+        return np.linalg.solve(np.array(A, float), np.array(Bv, float)).tolist()
+    src = [(-a, 0), (W + a, 0), (W, H * sy), (0, H * sy)]
+    dst = [(0, 0), (W, 0), (W, H), (0, H)]
+    base = Image.new('RGBA', img.size, fill + (255,))
+    base.alpha_composite(img.transform(img.size, Image.PERSPECTIVE, coeffs(src, dst), Image.BICUBIC))
+    return base
 
 
 def stool(img, cx, gy, w=230, h=150):
@@ -249,7 +278,8 @@ def mattress(img, cx, y, w=520, h=86):
         d.line([(x, y - h / 2 + 10), (x, y + h / 2 - 10)], fill=(150, 120, 70), width=3)
 
 
-def lab(img, u, cam=0.0, light=1.0, velvet_glow=(560, 860), camera=True, cam_flash=0.0, spin=1.0, mat=True, rays=1.0, cam_xy=(900, 1170)):
+def lab(img, u, cam=0.0, light=1.0, velvet_glow=(560, 860), camera=True, cam_flash=0.0, spin=1.0, mat=True, rays=1.0, cam_xy=(900, 1170),
+        warm=0.0):
     """The 1894 lab: wall + window (far, slow), velvet backdrop (mid), floor + mattress, the camera (near, fast)."""
     wall = _cached('wall', _wall_layer)
     img.alpha_composite(wall, (int(-100 + cam * .3), 0))
@@ -261,6 +291,13 @@ def lab(img, u, cam=0.0, light=1.0, velvet_glow=(560, 860), camera=True, cam_fla
     if rays > 0:
         kit.light_rays(img, 250 + cam * .3, 420, (255, 222, 170), n=7, alpha=.16 * rays * light, spread=(10, 70), length=1900, seed=3,
                        phase=1.5 * math.sin(u * .4), blur=26)
+    if warm > 0:                                     # late-afternoon sun through the window vs the black velvet
+        radial(img, 230 + cam * .3, 560, 520, (255, 190, 110), .42 * warm, 1.3)
+        kit.light_rays(img, 200 + cam * .3, 380, (255, 200, 130), n=5, alpha=.22 * warm, spread=(30, 60), length=1700, seed=9,
+                       phase=1.2 * math.sin(u * .3), blur=34)
+        radial(img, 420 + cam * .8, 1620, 420, (255, 180, 100), .3 * warm, 1.4)
+        lay = layer(); ImageDraw.Draw(lay).rectangle([560 + cam * .55, 200, 1080, 1480], fill=(4, 6, 14, int(90 * warm)))
+        img.alpha_composite(lay.filter(ImageFilter.GaussianBlur(60)))
     if velvet_glow:
         radial(img, velvet_glow[0] + cam * .55, velvet_glow[1], 520, (255, 214, 160), .22 * light, 1.6)
     radial(img, 600 + cam * .8, 1640, 560, (255, 200, 140), .2, 1.5)
@@ -393,7 +430,7 @@ def s01_frame(u, w, D=4.5, cue=None, loop=False):
     img = Image.new('RGBA', (W, H))
     t_film = cue(10) - .15
     fk = smooth(seg(u, t_film, t_film + .25)) * (1 - smooth(seg(u, t_film + .3, t_film + .9)))
-    lab(img, w, cam, cam_flash=fk, spin=1.0 + 2.5 * smooth(seg(u, t_film - .2, t_film + .2)), cam_xy=(950, 1330))
+    lab(img, w, cam, cam_flash=fk, spin=1.0 + 2.5 * smooth(seg(u, t_film - .2, t_film + .2)), cam_xy=(950, 1330), warm=.8)
     G = {}
     # Marey (left): hands up and open, just let go
     kr = smooth(seg(u, 0, .8))
@@ -447,35 +484,38 @@ def s01(u, D, cue):
 def s02(u, D, cue):
     cam = -10 * smooth(u / D)
     img = Image.new('RGBA', (W, H))
-    lab(img, u + 4.5, cam, spin=3.0)
+    lab(img, u + 4.5, cam, spin=3.0, mat=False, cam_xy=(930, 1230))
+    img = low_angle(img)                             # LOW ANGLE: under the falling cat, the floor sinks, verticals converge
+    radial(img, 560, 380, 700, (255, 220, 170), .18, 1.4)
+    mattress(img, 560 + cam * .8, 1690, w=700, h=120)
     t0, t1 = cue(1), cue(15) - .05                   # starts turning on 'down,' ... lands on 'feet.'
     def path(t):
         p = smooth(seg(t, t0, t1 - .25))
         x = 560 + cam * .6 + 10 * math.sin(t)
-        y = 860 + (1430 - 860) * (seg(t, 0, t1) ** 1.6)
+        y = 700 + (1500 - 700) * (seg(t, 0, t1) ** 1.6)
         kw = dict(C.righting(p)); kw['tail_ph'] = t * 2
         return x, y, kw
     G = {}
     kreact = out_back(seg(u, cue(9), cue(9) + .4), 1.5)
     pose = mix(dict(POSES['stand'], armL=(150, 165), armR=(120, 150)), dict(POSES['stand'], armL=(40, 120), armR=(-50, -130)), kreact)
-    G['m'] = marey(img, u, pose, 'surprised', 220 + cam * .9, 1720, .72, look=.55, lean=6 * kreact, label_on=True)
-    ghost_trail(img, path, n=5, every=.34, u=u, s=150, alpha=.4, start=.2)
+    G['m'] = marey(img, u, pose, 'surprised', 190 + cam * .9, 1990, .92, look=.55, lean=6 * kreact, label_on=True)
+    ghost_trail(img, path, n=5, every=.34, u=u, s=190, alpha=.4, start=.2)
     if u < t1:
         x, y, kw = path(u)
-        radial(img, x, y, 280, (255, 230, 190), .22, 1.5)
-        C.put_cat(img, x, y, 150, **kw)
+        radial(img, x, y, 320, (255, 230, 190), .22, 1.5)
+        C.put_cat(img, x, y, 190, **kw)
     else:                                            # landed: a squash and settle on the mattress
         v = u - t1
         sq = damp(v, .08, 7, 16)
         kw = dict(phf=0, phb=0, tuckf=.3, tuckb=.3, bend=-6 * (1 - smooth(v / .5)), tail_ph=u * 2)
         x = 560 + cam * .6 + 10 * math.sin(t1)
-        C.put_cat(img, x, 1440 + 30 * sq, 150, legs_k=1 - .15 * max(0, sq) / .08, **kw)
+        C.put_cat(img, x, 1500 + 36 * sq, 190, legs_k=1 - .15 * max(0, sq) / .08, **kw)
         if v < .5:
             dd = ImageDraw.Draw(img)
             for s_ in (-1, 1):
                 for j in range(3):
                     r = 60 + 160 * v
-                    dd.line([(x + s_ * (150 + r * .6), 1560 - j * 20), (x + s_ * (200 + r), 1540 - j * 34)], fill=(255, 236, 200), width=6)
+                    dd.line([(x + s_ * (190 + r * .6), 1650 - j * 20), (x + s_ * (240 + r), 1630 - j * 34)], fill=(255, 236, 200), width=7)
     img = finish(img, u, 1.02 + .03 * smooth(u / D), 560, 1200, vig=(.4, (12, 8, 14)))
     if not HIDE_UI:
         chip(img, 'NOTHING TO PUSH ON', (70, 70, 96), 540, 300, u, cue(3) - .1, size=58)
@@ -486,11 +526,13 @@ def s02(u, D, cue):
 def s03(u, D, cue):
     cam = 8 * smooth(u / D)
     img = Image.new('RGBA', (W, H))
-    lab(img, u + 9, cam, camera=False)
+    lab(img, u + 9, cam, camera=False, warm=1.0, velvet_glow=None)
     G = {}
-    G['m'] = marey(img, u, mix(dict(POSES['think']), dict(POSES['stand'], armL=(120, 150), armR=(-120, -150)), out_back(seg(u, cue(4) - .2, cue(4) + .2), 1.6)), 'surprised', 300 + cam, 1760, .82, look=.6, lean=-6 + 2 * math.sin(u * 2), label_on=False)
-    C.put_cat(img, 700 + cam * .8, 1440, 160, phf=0, phb=0, tuckf=.3, tuckb=.3, bend=-4, tail_ph=u * 1.5, head_tilt=.15 * math.sin(u * 1.2))
-    img = finish(img, u, 1.18 + .04 * smooth(u / D), 560, 1300, vig=(.45, (12, 8, 14)))
+    C.put_cat(img, 800 + cam * .8, 1460, 170, phf=0, phb=0, tuckf=.4, tuckb=.4, bend=-4, tail_ph=u * 1.5, head_tilt=.15 * math.sin(u * 1.2))
+    radial(img, 360 + cam, 1080, 420, (255, 200, 140), .3, 1.5)          # warm key on his face (CLOSE-UP)
+    G['m'] = marey(img, u, mix(dict(POSES['think']), dict(POSES['stand'], armL=(120, 150), armR=(-120, -150)), out_back(seg(u, cue(4) - .2, cue(4) + .2), 1.6)), 'surprised', 360 + cam, 2380, 1.42, look=.5, lean=-5 + 2 * math.sin(u * 2), label_on=False)
+    zf = 1.04 + .04 * smooth(u / D)
+    img = finish(img, u, zf, 480, 1150, vig=(.45, (12, 8, 14)))
     t_b, t_p = cue(4) - .08, cue(8) - .08
     if not HIDE_UI:
         stitle(img, 's03', [('BREAKING A LAW', 'white', 104), ('OF PHYSICS?', (255, 120, 90), 150)], 230, u, t_b, stagger=t_p - t_b)
@@ -503,7 +545,8 @@ def s03(u, D, cue):
     sx, sy = shake(u, t_p, 12, .35)
     if sx or sy: img = anim.camera(img, 1.0, None, None, sx, sy)
     flash(img, u, t_p, .2, .35)
-    return img, {'faces': [face_box({'head': (G['m']['head'][0] * 1.18 - 100, G['m']['head'][1] * 1.18 - 230), 'R': G['m']['R'] * 1.2}, 1.3)],
+    hx, hy = G['m']['head']
+    return img, {'faces': [face_box({'head': (480 + (hx - 480) * zf, 1150 + (hy - 1150) * zf), 'R': G['m']['R'] * zf}, 1.3)],
                  'avoid': [(0, 160, W, 700)]}
 
 
@@ -554,7 +597,7 @@ def s04(u, D, cue):
 def s05(u, D, cue):
     cam = 10 * smooth(u / D)
     img = Image.new('RGBA', (W, H))
-    lab(img, u + 16, cam * .5, velvet_glow=(600, 900), camera=True)
+    lab(img, u + 16, cam * .5, velvet_glow=(600, 900), camera=True, warm=1.3)
     G = {}
     t_p = cue(5) - .05
     kp = smooth(seg(u, t_p, t_p + .5))
@@ -711,11 +754,32 @@ def _room_layer(warm=1.0):
     return img
 
 
-def room(img, u, cam=0.0):
+def _sun_patch():
+    lay = layer(); ImageDraw.Draw(lay).polygon([(560, 1480), (930, 1480), (1060, 1800), (520, 1800)], fill=(255, 214, 150, 80))
+    return lay.filter(ImageFilter.GaussianBlur(28))
+
+
+def _fg_plant():
+    """A dark, out-of-focus houseplant in the near foreground (bottom-left corner): depth."""
+    lay = layer(); d = ImageDraw.Draw(lay)
+    d.rounded_rectangle([-40, 1760, 200, 1990], 30, fill=(70, 40, 30), outline=INK, width=6)
+    for k, (a, L) in enumerate(((-100, 330), (-70, 380), (-45, 300), (-125, 260), (-20, 240), (-85, 420))):
+        r = math.radians(a); bx, by = 80 + k * 12, 1770
+        tip = (bx + math.cos(r) * L, by + math.sin(r) * L)
+        mid = (bx + math.cos(r) * L * .55, by + math.sin(r) * L * .55); nx, ny = -math.sin(r) * 46, math.cos(r) * 46
+        d.polygon([(bx, by), (mid[0] + nx, mid[1] + ny), tip, (mid[0] - nx, mid[1] - ny)], fill=(34, 62 + k * 6, 44), outline=(14, 26, 18), width=4)
+    return lay.filter(ImageFilter.GaussianBlur(7))
+
+
+def room(img, u, cam=0.0, fg=True):
     img.alpha_composite(_cached('room', _room_layer), (int(-100 + cam * .5), 0))
-    kit.light_rays(img, 900 + cam * .5, 420, (255, 236, 200), n=6, alpha=.12, spread=(120, 200), length=1800, seed=6, phase=math.sin(u * .4), blur=24)
+    img.alpha_composite(_cached('sun_patch', _sun_patch), (int(cam * .8), 0))
+    kit.light_rays(img, 900 + cam * .5, 420, (255, 236, 200), n=6, alpha=.16, spread=(120, 200), length=1800, seed=6, phase=math.sin(u * .4), blur=24)
     radial(img, 700 + cam * .5, 1500, 800, (255, 226, 180), .22, 1.5)
+    haze(img, 1380, 1700, (255, 230, 190), .12)
+    radial(img, 60 + cam * .4, 900, 500, (20, 30, 40), .25, 1.2, add=False)          # the shaded corner away from the window
     dust(img, 9, 24, (500, 300, 1080, 1400), (255, 246, 220), 110, size=(2, 5), t=u)
+    if fg: img.alpha_composite(_cached('fg_plant', _fg_plant), (int(cam * 1.6), 0))
 
 
 def owner(img, t, pose, expr, cx, gy, s, look=0.0, lean=0.0, label_txt='OWNER', label_on=True, lbl_dy=0):
@@ -751,10 +815,10 @@ def s07(u, D, cue):
     img = finish(img, u, 1.03, 560, 1200, vig=(.32, (20, 24, 34)))
     if not HIDE_UI:
         clue(img, 'CLUE 1', u)
-        chip(img, 'NO TAIL', (196, 80, 60), 540, 430, u, cue(5) - .1, size=56)
-        if u > cue(6) - .1:                            # pointer to the rump
+        if u > cue(5) - .1:                            # NO TAIL tag + a short pointer to the rump
             x, y, kw = path(min(u, t1 - .01)) if u < t1 else (600 + cam * .6, 1590, {})
-            straight_arrow(img, (540 + 0, 480), (x - 140, y - 30), (196, 80, 60), w=14, head=40, alpha=int(255 * smooth(seg(u, cue(6) - .1, cue(6) + .1))))
+            straight_arrow(img, (x - 330, y - 260), (x - 150, y - 50), (196, 80, 60), w=14, head=40, alpha=int(255 * smooth(seg(u, cue(5) - .1, cue(5) + .15))))
+            put_chip(img, 'NO TAIL', (196, 80, 60), x - 330, y - 300, pop(u, cue(5) - .1, .3, 2.0), size=56)
     return img, {'faces': [face_box(G['o'], 1.3)], 'avoid': [(0, 160, W, 480)]}
 
 
@@ -808,15 +872,59 @@ def s08(u, D, cue):
 
 
 # ---------------------------------------------------------------- s09: CLUE 3: 1968, a gymnast in a spacesuit copies it
-def gym_bg(img, u, cam=0.0):
-    img.alpha_composite(vgrad([(0, (40, 96, 104)), (.7, (62, 124, 128)), (1, (44, 92, 98))]))
+def _gym_wall():
+    """1968 gym back wall (1280 wide): panels, a row of high windows, wall bars, a clock, a NASA-style test banner."""
+    Wl = W + 200
+    img = vgrad([(0, (30, 72, 80)), (.6, (58, 120, 124)), (1, (44, 92, 98))], Wl, 1310)
     d = ImageDraw.Draw(img)
-    for x in range(-200, W + 200, 160):                      # wall panels
-        xx = x + cam * .4
-        d.rectangle([xx, 200, xx + 140, 1300], fill=(52, 112, 118), outline=(30, 70, 76), width=4)
+    for x in range(0, Wl, 160):
+        d.rectangle([x, 330, x + 140, 1300], fill=(52, 112, 118), outline=(30, 70, 76), width=4)
+    for x in range(40, Wl, 300):                                # high windows with daylight
+        d.rectangle([x, 60, x + 220, 250], fill=(196, 226, 236), outline=INK, width=6)
+        d.line([(x + 110, 60), (x + 110, 250)], fill=INK, width=5); d.line([(x, 155), (x + 220, 155)], fill=INK, width=5)
+    d.rectangle([0, 270, Wl, 300], fill=(40, 60, 66), outline=INK, width=4)
+    for x0 in (900, 1010):                                       # wall bars (right)
+        d.rectangle([x0, 380, x0 + 22, 1300], fill=(176, 128, 74), outline=INK, width=4)
+    for y in range(420, 1300, 64):
+        d.line([(900, y), (1032, y)], fill=INK, width=12); d.line([(900, y), (1032, y)], fill=(206, 160, 100), width=6)
+    cx, cy = 640, 420                                            # clock
+    d.ellipse([cx - 56, cy - 56, cx + 56, cy + 56], fill=(240, 236, 224), outline=INK, width=7)
+    d.line([(cx, cy), (cx, cy - 38)], fill=INK, width=6); d.line([(cx, cy), (cx + 28, cy + 10)], fill=INK, width=6)
+    return img
+
+
+def _film_camera_1968():
+    """A 1968 16 mm film camera on a tripod (echo of Marey's camera), near foreground left, soft focus."""
+    lay = layer(); d = ImageDraw.Draw(lay)
+    x, y = 120, 1450
+    for lx in (-110, 0, 110):
+        d.line([(x, y + 60), (x + lx, y + 470)], fill=INK, width=22); d.line([(x, y + 60), (x + lx, y + 470)], fill=(90, 94, 104), width=12)
+    d.rounded_rectangle([x - 90, y - 70, x + 120, y + 70], 14, fill=(60, 62, 72), outline=INK, width=7)
+    for c_ in ((x - 40, y - 120), (x + 60, y - 120)):
+        d.ellipse([c_[0] - 62, c_[1] - 62, c_[0] + 62, c_[1] + 62], fill=(48, 50, 58), outline=INK, width=6)
+        d.ellipse([c_[0] - 14, c_[1] - 14, c_[0] + 14, c_[1] + 14], fill=(150, 150, 160))
+    d.rounded_rectangle([x + 110, y - 34, x + 200, y + 30], 8, fill=(30, 30, 36), outline=INK, width=6)
+    d.ellipse([x + 186, y - 30, x + 214, y + 26], fill=(80, 110, 150), outline=INK, width=4)
+    return lay.filter(ImageFilter.GaussianBlur(3))
+
+
+def gym_bg(img, u, cam=0.0):
+    img.alpha_composite(vgrad([(0, (30, 72, 80)), (1, (44, 92, 98))]))
+    img.alpha_composite(_cached('gym_wall', _gym_wall), (int(-100 + cam * .4), 0))
+    kit.light_rays(img, 300 + cam * .4, 160, (230, 246, 255), n=6, alpha=.14, spread=(30, 90), length=1600, seed=4, phase=math.sin(u * .5), blur=30)
+    d = ImageDraw.Draw(img)
     d.rectangle([0, 1300, W, H], fill=(196, 118, 60))
     for k in range(-10, 12):
         d.line([(540 + k * 40 + cam * .8, 1300), (540 + k * 200 + cam, H)], fill=(170, 98, 48), width=4)
+    d.rounded_rectangle([700 + cam * .9, 1560, 1180 + cam * .9, 1640], 16, fill=(60, 90, 160), outline=INK, width=6)   # floor mat
+    radial(img, 540 + cam * .8, 1420, 520, (255, 236, 200), .22, 1.5)                                                     # floor shine
+    haze(img, 1200, 1420, (210, 236, 240), .2)
+    # a framed photo of the falling cat on the wall (what they copy)
+    fr = film_frame_img(('s09pic',), 260, 200, dict(C.righting(.35), rot=0), cy=.5, s=66)
+    px, py = 120 + cam * .4, 430
+    d.rectangle([px - 18, py - 18, px + 278, py + 218], fill=(230, 220, 200), outline=INK, width=6)
+    img.alpha_composite(fr, (int(px), int(py)))
+    return (px + 130, py + 100)
     # ceiling lights
     for x in (200, 540, 880):
         d.rectangle([x - 90 + cam * .3, 120, x + 90 + cam * .3, 150], fill=(250, 250, 230), outline=INK, width=4)
@@ -901,6 +1009,7 @@ def s09(u, D, cue):
     spin = u * 2.6
     tuck = .5 + .5 * math.sin(u * 2.6 * 2)
     hh = spacesuit_gymnast(img, u, tcx, gy, 1.0, spin, tuck)
+    img.alpha_composite(_cached('cam1968', _film_camera_1968), (int(-60 + cam * 1.5), 60))      # near foreground
     G['g'] = {'head': hh[:2], 'R': hh[2] / 1.25}
     # motion arcs
     if hgt > .2:
@@ -1256,30 +1365,169 @@ def person_top(img, cx, cy, ang, arm_out, leg_out, s=1.0):
     d.ellipse([n[0] - 14 * s, n[1] - 14 * s, n[0] + 14 * s, n[1] + 14 * s], fill=(246, 246, 242), outline=INK, width=5)
 
 
-def s16(u, D, cue):
-    img = Image.new('RGBA', (W, H))
-    topview_room(img, u)
-    cx, cy = 540, 1010
-    # turns: 3 cycles; in each, arms out + legs in, swing (chair turns +), then swap (turns more)
-    t0, t1 = cue(5) - .2, cue(13) + .2
-    k = seg(u, t0, t1)
-    cyc = k * 3
-    ph = cyc % 1.0
+def chair_person(img, cx, seat_y, ang, arm_out, leg_out, s=1.0, swing=0.0, faces=None):
+    """SIDE / THREE-QUARTER view of a white stickman on an office swivel chair, turned by ang about the column
+    (0 = facing screen right, +pi/2 = facing the camera). A tiny 3D model, projected with the camera a little above.
+    arm_out / leg_out 0..1: arms wide vs hugged in, legs stretched forward vs tucked under the seat (feet off the floor)."""
+    EL = .32
+    def proj(p):                                   # p = (X right, Y up, Z toward camera) -> screen, depth
+        return (cx + p[0] * s, seat_y - (p[1] * .95 - p[2] * EL) * s), p[2]
+    fa = (math.cos(ang), 0.0, math.sin(ang)); la = (-math.sin(ang), 0.0, math.cos(ang))     # forward, left (toward camera at ang 0)
+    def L(f=0.0, l=0.0, y=0.0):
+        return (fa[0] * f + la[0] * l, y, fa[2] * f + la[2] * l)
+    d = ImageDraw.Draw(img)
+    WH = (246, 246, 242)
+    # ---- chair base (5-star + casters) and the gas column
+    by = -300
+    for k in range(5):
+        a = ang + k * 2 * math.pi / 5 + .4
+        e, ze = proj((math.cos(a) * 170, by, math.sin(a) * 170))
+        o, _ = proj((0, by + 10, 0))
+        col = (58, 58, 66) if ze < 0 else (78, 78, 88)
+        d.line([o, e], fill=INK, width=int(30 * s)); d.line([o, e], fill=col, width=int(17 * s))
+        d.ellipse([e[0] - 20 * s, e[1] - 6 * s, e[0] + 20 * s, e[1] + 30 * s], fill=(28, 28, 32), outline=INK, width=4)
+    top, _ = proj((0, -40, 0)); bot, _ = proj((0, by + 10, 0))
+    d.line([top, bot], fill=INK, width=int(40 * s)); d.line([top, bot], fill=(150, 154, 166), width=int(24 * s))
+    # ---- body joints
+    H = L(-15, 0, 30)
+    SH = L(-25, 0, 300)
+    HD = L(-10, 0, 425)
+    pts = {}
+    for sd in (-1, 1):
+        hip = L(-10, sd * 42, 40)
+        knee = mix_pt(L(150, sd * 55, 100), L(190, sd * 60, 30), leg_out)
+        foot = mix_pt(L(70, sd * 50, -120), L(360, sd * 70, 60), leg_out)
+        sh = L(-25, sd * 72, 290)
+        elbow = mix_pt(L(40, sd * 110, 190), L(-20, sd * 210, 300), arm_out)
+        hand = mix_pt(L(85, sd * 40, 250), L(-15, sd * 330, 320 + 25 * math.sin(swing)), arm_out)
+        pts[sd] = (hip, knee, foot, sh, elbow, hand)
+    items = []
+    def limb(chain, col, w, z_bias=0.0):
+        P2 = [proj(p) for p in chain]; z = sum(q[1] for q in P2) / len(P2) + z_bias
+        def fn():
+            xy = [q[0] for q in P2]
+            d.line(xy, fill=INK, width=int((w + 14) * s), joint='curve')
+            for q in xy: d.ellipse([q[0] - (w + 14) / 2 * s, q[1] - (w + 14) / 2 * s, q[0] + (w + 14) / 2 * s, q[1] + (w + 14) / 2 * s], fill=INK)
+            d.line(xy, fill=col, width=int(w * s), joint='curve')
+            for q in xy: d.ellipse([q[0] - w / 2 * s, q[1] - w / 2 * s, q[0] + w / 2 * s, q[1] + w / 2 * s], fill=col)
+        items.append((z, fn))
+    pants = kit.rgb(OWNER_KW['pants']); shirt = kit.rgb(OWNER_KW['shirt'])
+    for sd in (-1, 1):
+        hip, knee, foot, sh, elbow, hand = pts[sd]
+        limb([hip, knee, foot], pants, 40)
+        fp, zf = proj(foot)
+        def shoe(fp=fp, foot=foot):
+            tip, _ = proj((foot[0] + fa[0] * 40, foot[1], foot[2] + fa[2] * 40))
+            d.line([fp, tip], fill=INK, width=int(46 * s)); d.line([fp, tip], fill=(60, 44, 40), width=int(32 * s))
+        items.append((zf + .5, shoe))
+        limb([sh, elbow, hand], WH, 26, .3)
+        hp, zh = proj(hand)
+        items.append((zh + .4, lambda hp=hp: d.ellipse([hp[0] - 20 * s, hp[1] - 20 * s, hp[0] + 20 * s, hp[1] + 20 * s], fill=WH, outline=INK, width=5)))
+    # seat cushion (a puck) and the backrest behind the hips
+    def seat():
+        c, _ = proj((0, 0, 0)); rx, ry = 165 * s, 165 * EL * s
+        d.rounded_rectangle([c[0] - rx, c[1] - ry * .2, c[0] + rx, c[1] + 38 * s], 20, fill=(40, 42, 52), outline=INK, width=6)
+        d.ellipse([c[0] - rx, c[1] - ry, c[0] + rx, c[1] + ry], fill=(66, 70, 86), outline=INK, width=6)
+    items.append((-60, seat))
+    bk = [L(-120, -120, 70), L(-120, 120, 70), L(-140, 125, 380), L(-140, -125, 380)]
+    bz = sum(p[2] for p in bk) / 4
+    def back():
+        q = [proj(p)[0] for p in bk]
+        d.polygon(q, fill=(58, 62, 78), outline=INK, width=8)
+        a0, _ = proj(L(-110, 0, 0)); a1, _ = proj(L(-120, 0, 80))
+        d.line([a0, a1], fill=INK, width=int(26 * s)); d.line([a0, a1], fill=(120, 124, 136), width=int(12 * s))
+    items.append((bz * 1.0 - (5 if bz < 0 else -200), back))
+    # torso (shirt) + head
+    def torso():
+        a, _ = proj(H); b, _ = proj(SH)
+        d.line([a, b], fill=INK, width=int(132 * s)); d.line([a, b], fill=shirt, width=int(116 * s))
+        for q, r in ((a, 58), (b, 58)):
+            d.ellipse([q[0] - r * s, q[1] - r * s, q[0] + r * s, q[1] + r * s], fill=shirt)
+    items.append((0, torso))
+    def head():
+        c, _ = proj(HD); R = 78 * s
+        n0, _ = proj(L(-25, 0, 330)); d.line([n0, c], fill=INK, width=int(40 * s)); d.line([n0, c], fill=WH, width=int(26 * s))
+        d.ellipse([c[0] - R - 5, c[1] - R - 5, c[0] + R + 5, c[1] + R + 5], fill=INK)
+        d.ellipse([c[0] - R, c[1] - R, c[0] + R, c[1] + R], fill=WH)
+        # hair tuft on the back/top
+        hb, _ = proj(L(-40, 0, 470)); d.ellipse([hb[0] - 52 * s, hb[1] - 30 * s, hb[0] + 52 * s, hb[1] + 26 * s], fill=(90, 58, 42))
+        # face: eyes + smile on the forward side, only when it faces the camera at all
+        for sd in (-1, 1):
+            e3 = L(-10 + 62, sd * 30, 438); e, ze = proj(e3)
+            if fa[2] * 62 + la[2] * sd * 30 > -10:
+                d.ellipse([e[0] - 9 * s, e[1] - 12 * s, e[0] + 9 * s, e[1] + 12 * s], fill=INK)
+        if fa[2] > -.2:
+            m0, _ = proj(L(60, -22, 395)); m1, _ = proj(L(66, 0, 388)); m2, _ = proj(L(60, 22, 395))
+            d.line([m0, m1, m2], fill=INK, width=int(7 * s), joint='curve')
+        if faces is not None: faces.append((c[0] - R, c[1] - R, c[0] + R, c[1] + R))
+    items.append((40 if fa[2] > -.2 else -2, head))
+    for z, fn in sorted(items, key=lambda q: q[0]):
+        fn()
+    return {sd: (proj(pts[sd][5])[0], proj(pts[sd][2])[0]) for sd in (-1, 1)}
+
+
+def mix_pt(a, b, k):
+    return tuple(a[i] + (b[i] - a[i]) * k for i in range(3))
+
+
+def chair_state(u, t0, t1):
+    """3 cycles: arms out + legs in, then swap; the chair turns a step on each half-cycle (one way only)."""
+    k = seg(u, t0, t1); cyc = k * 3
     arm_out = .5 + .5 * math.cos(2 * math.pi * cyc)
     leg_out = 1 - arm_out
-    base = -math.pi / 2
-    ang = base + math.radians(140) * (cyc - math.sin(2 * math.pi * cyc) / (2 * math.pi) * .6) / 1.0 + .03 * math.sin(u * 2)
-    person_top(img, cx, cy, ang, arm_out, leg_out)
-    # the chair's turn so far
+    ang = .55 + math.radians(120) * (cyc - math.sin(4 * math.pi * cyc) / (4 * math.pi) * .8) + .03 * math.sin(u * 2)
+    return ang, arm_out, leg_out
+
+
+def s16(u, D, cue):
+    img = Image.new('RGBA', (W, H))
+    cam = -14 * smooth(u / D)
+    room(img, u + 3, cam)
+    img.alpha_composite(Image.new('RGBA', img.size, (20, 14, 10, 70)))
+    radial(img, 540 + cam * .5, 1150, 640, (255, 226, 180), .3, 1.4)           # a soft pool of light on the chair
+    cx, seat_y = 540 + cam * .8, 1250
+    d = ImageDraw.Draw(img)
+    d.ellipse([cx - 260, 1560, cx + 260, 1640], fill=(40, 28, 22, 255))       # floor shadow
+    img = Image.alpha_composite(img, Image.new('RGBA', img.size, (0, 0, 0, 0)))
+    t0, t1 = cue(5) - .2, cue(13) + .2
+    # motion arcs: where the hands and feet were a moment ago (fading white trails)
+    trail = layer(); dt = ImageDraw.Draw(trail)
+    hist = []
+    for j in range(7):
+        a_, ao, lo = chair_state(u - j * .05, t0, t1)
+        tmp = Image.new('RGBA', (8, 8)); hist.append(chair_person_pts(cx, seat_y, a_, ao, lo))
+    for key in ((-1, 0), (1, 0), (-1, 1), (1, 1)):
+        pl = [h[key[0]][key[1]] for h in hist]
+        for j in range(len(pl) - 1):
+            dt.line([pl[j], pl[j + 1]], fill=(255, 244, 214, int(150 * (1 - j / 7))), width=int(12 * (1 - j / 8)))
+    img.alpha_composite(trail.filter(ImageFilter.GaussianBlur(2)))
+    ang, arm_out, leg_out = chair_state(u, t0, t1)
+    faces = []
+    # the turn arrow around the column (behind half first, then the person, then the front half)
+    k = seg(u, t0, t1)
     if k > 0 and not HIDE_UI:
-        arc_arrow(img, cx, cy, 330, 330, base - .1, ang - .05, GOLD, w=16, head=44)
-    G = {'faces': []}
-    img = finish(img, u, 1.0 + .04 * smooth(u / D), 540, 1000, vig=(.35, (20, 14, 10)))
+        arc_arrow(img, cx, seat_y + 120, 330, 96, math.pi + .3, 2 * math.pi - .3, GOLD, w=14, head=1, alpha=150)
+    chair_person(img, cx, seat_y, ang, arm_out, leg_out, 1.0, swing=u * 3, faces=faces)
+    if k > 0 and not HIDE_UI:
+        arc_arrow(img, cx, seat_y + 120, 330, 96, -.2, math.pi - .5, GOLD, w=18, head=48)
+    img = finish(img, u, 1.0 + .04 * smooth(u / D), 540, 1100, vig=(.38, (20, 14, 10)))
     if not HIDE_UI:
         stitle(img, 's16', [('A SPINNING CHAIR', 'white', 96)], 170, u, cue(3) - .1)
-        chip(img, 'TOP VIEW', (70, 70, 96), 540, 330, u, cue(3) + .1, size=48)
-        chip(img, 'ARMS & LEGS, IN TURNS', (196, 120, 30), 540, 1560, u, cue(7) - .1, size=46)
-    return img, {'faces': [(cx - 80, cy - 80, cx + 80, cy + 80)], 'avoid': [(0, 120, W, 380), (0, 1500, W, 1620), (cx - 380, cy - 380, cx + 380, cy + 380)]}
+        chip(img, 'ARMS & LEGS, IN TURNS', (196, 120, 30), 540, 1700, u, cue(7) - .1, size=50)
+    return img, {'faces': faces, 'avoid': [(0, 120, W, 340), (0, 1640, W, 1760), (cx - 420, 700, cx + 420, 1600)]}
+
+
+def chair_person_pts(cx, seat_y, ang, arm_out, leg_out):
+    """Hands and feet in screen px (for the motion trails), same model as chair_person."""
+    fa = (math.cos(ang), 0.0, math.sin(ang)); la = (-math.sin(ang), 0.0, math.cos(ang))
+    def L(f=0.0, l=0.0, y=0.0): return (fa[0] * f + la[0] * l, y, fa[2] * f + la[2] * l)
+    def proj(p): return (cx + p[0], seat_y - (p[1] * .95 - p[2] * .32))
+    out = {}
+    for sd in (-1, 1):
+        hand = mix_pt(L(85, sd * 40, 250), L(-15, sd * 330, 320), arm_out)
+        foot = mix_pt(L(70, sd * 50, -120), L(360, sd * 70, 60), leg_out)
+        out[sd] = (proj(hand), proj(foot))
+    return out
 
 
 # ---------------------------------------------------------------- s17: DIDN'T BREAK PHYSICS. / IT USED IT.
