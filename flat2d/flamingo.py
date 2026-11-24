@@ -24,8 +24,8 @@ from animals import _cr, _limb_poly, _dilate, _erode, _paste, contact
 
 INK = (24, 16, 26)
 PAL = {
-    'adult': dict(body=(250, 168, 172), body_hi=(255, 214, 210), body_lo=(226, 104, 124), wing=(236, 78, 102),
-                  wing_hi=(255, 140, 146), wing_lo=(190, 46, 78), neck=(252, 172, 176), neck_lo=(232, 118, 136),
+    'adult': dict(body=(250, 168, 172), body_hi=(255, 214, 210), body_lo=(226, 104, 124), wing=(242, 102, 112),
+                  wing_hi=(255, 164, 158), wing_lo=(204, 60, 86), neck=(252, 172, 176), neck_lo=(232, 118, 136),
                   head=(248, 150, 160), face=(250, 226, 220), beak=(246, 220, 214), beak_lo=(214, 168, 170),
                   leg=(238, 120, 146), leg_lo=(196, 76, 108), leg_hi=(255, 178, 192), black=(26, 22, 30),
                   eye=(252, 214, 60), rim=(255, 236, 226)),
@@ -69,18 +69,19 @@ def ik(K, F, back=True):
 
 
 # ---------------------------------------------------------------- geometry
-BODY = [(0.140, -0.800), (0.195, -0.750), (0.205, -0.690), (0.170, -0.625), (0.090, -0.585), (-0.020, -0.580),
-        (-0.120, -0.605), (-0.200, -0.645), (-0.255, -0.680), (-0.225, -0.715), (-0.130, -0.775), (0.000, -0.815),
-        (0.085, -0.818)]
-WING = [(0.090, -0.790), (0.120, -0.745), (0.090, -0.690), (0.010, -0.660), (-0.100, -0.655), (-0.200, -0.672),
-        (-0.240, -0.690), (-0.200, -0.728), (-0.110, -0.778), (-0.010, -0.808), (0.050, -0.810)]
-PRIM = [(0.010, -0.672), (-0.090, -0.652), (-0.200, -0.650), (-0.320, -0.668), (-0.330, -0.690), (-0.250, -0.712),
-        (-0.150, -0.705), (-0.060, -0.690)]
-# neck centrelines (base in the chest -> head centre) for the upright and sleeping poses
+BODY = [(0.150, -0.802), (0.198, -0.768), (0.218, -0.715), (0.205, -0.660), (0.155, -0.612), (0.075, -0.582),
+        (-0.030, -0.578), (-0.135, -0.598), (-0.220, -0.638), (-0.292, -0.682), (-0.348, -0.708), (-0.300, -0.726),
+        (-0.200, -0.768), (-0.080, -0.808), (0.040, -0.824)]
+WING = [(0.105, -0.792), (0.130, -0.752), (0.105, -0.708), (0.030, -0.680), (-0.080, -0.672), (-0.180, -0.684),
+        (-0.250, -0.706), (-0.215, -0.742), (-0.120, -0.784), (-0.020, -0.808), (0.055, -0.810)]
+PRIM = [(0.000, -0.684), (-0.100, -0.660), (-0.210, -0.671), (-0.335, -0.703), (-0.322, -0.716), (-0.240, -0.712),
+        (-0.120, -0.700), (-0.030, -0.700)]
+# neck centrelines (base in the chest -> head centre) for the upright and sleeping poses. Asleep the neck lies flat
+# in an S along the back (no gap under it) and the head rests on the back, the bill tucked into the back feathers.
 NECK_UP = [(0.140, -0.735), (0.190, -0.810), (0.225, -0.905), (0.200, -1.000), (0.130, -1.075), (0.105, -1.160),
            (0.140, -1.240), (0.195, -1.280)]
-NECK_SLEEP = [(0.140, -0.735), (0.185, -0.785), (0.185, -0.830), (0.140, -0.850), (0.070, -0.850), (0.000, -0.840),
-              (-0.060, -0.830), (-0.105, -0.825)]
+NECK_SLEEP = [(0.140, -0.735), (0.168, -0.766), (0.160, -0.800), (0.118, -0.820), (0.060, -0.832), (0.005, -0.836),
+              (-0.040, -0.842), (-0.072, -0.846)]
 NECK_W = [0.085, 0.066, 0.052, 0.046, 0.044, 0.042, 0.044, 0.050]
 
 
@@ -121,7 +122,7 @@ def geometry(pose, kind='adult'):
     hc = cl[-1]
     d_up = math.atan2(cl[-1][1] - cl[-2][1], cl[-1][0] - cl[-2][0])
     a_up = 0.35 + float(p.get('nod', 0.0))                         # rad, + = beak down
-    a_sl = math.pi - 0.25
+    a_sl = math.pi - 0.42
     ha = lerp(a_up, a_sl, sl) if sl < .5 else lerp(a_up + 2 * math.pi * 0, a_sl, sl)
     ha += tilt
     G['head_c'], G['head_a'] = hc, ha
@@ -156,11 +157,14 @@ def geometry(pose, kind='adult'):
     def angs(K, A, F):
         return math.atan2(A[1] - K[1], A[0] - K[0]), math.atan2(F[1] - A[1], F[0] - A[0])
     a1d, a2d = angs(Kf, Af_down, Ff_down)
-    a1t, a2t = math.atan2(0.80, -0.60) + tilt, math.atan2(-0.70, 0.71) + tilt          # tucked: '<' pointing back
+    At, Ft = B((-0.080, -0.528)), B((0.080, -0.592))
+    a1t, a2t = angs(Kf, At, Ft)
+    L1t, L2t = math.hypot(At[0] - Kf[0], At[1] - Kf[1]), math.hypot(Ft[0] - At[0], Ft[1] - At[1])
     k = fold * fold * (3 - 2 * fold)
-    a1 = lerp(a1d, a1t, k); a2 = lerp(a2d, a2t if a2t > a2d - math.pi else a2t + 2 * math.pi, k)
-    Af = (Kf[0] + math.cos(a1) * LT, Kf[1] + math.sin(a1) * LT)
-    Ff = (Af[0] + math.cos(a2) * LM, Af[1] + math.sin(a2) * LM)
+    if a2t > a2d: a2t -= 2 * math.pi
+    a1 = lerp(a1d, a1t, k); a2 = lerp(a2d, a2t, k)
+    Af = (Kf[0] + math.cos(a1) * lerp(LT, L1t, k), Kf[1] + math.sin(a1) * lerp(LT, L1t, k))
+    Ff = (Af[0] + math.cos(a2) * lerp(LM, L2t, k), Af[1] + math.sin(a2) * lerp(LM, L2t, k))
     G['legs'] = {'near': (Kn, An, Fn), 'far': (Kf, Af, Ff)}
     G['far_fold'] = k
     G['piv'] = B(piv)
@@ -184,8 +188,8 @@ def _foot_poly(F, A, tucked=0.0):
     tucked: the toes curl and point down/back (foot folded up under the body)."""
     dirx = 1.0
     if tucked > 0:
-        a = math.atan2(F[1] - A[1], F[0] - A[0]) + math.pi * .55 * tucked
-        L = 0.085 * (1 - .35 * tucked)
+        a = math.atan2(F[1] - A[1], F[0] - A[0]) - math.pi * .25 * tucked
+        L = 0.085 * (1 - .45 * tucked)
         tipc = (F[0] + math.cos(a) * L, F[1] + math.sin(a) * L)
         n = (-math.sin(a), math.cos(a))
         web = [(F[0] - n[0] * .012, F[1] - n[1] * .012), (tipc[0] - n[0] * .022, tipc[1] - n[1] * .022),
@@ -273,11 +277,11 @@ def bird(s, pose=None, kind='adult', light=(-.5, -1.0), cache=True, ink_w=None):
     fc = lerpc(C['leg'], C['leg_lo'], .45)
     paint(mfar, fc, lerpc(C['leg'], C['leg_hi'], .4), C['leg_lo'], .4, .5, .02)
     d = ImageDraw.Draw(lay)
-    d.ellipse([*pt((Af[0] - .02, Af[1] - .017)), *pt((Af[0] + .02, Af[1] + .017))], fill=lerpc(fc, C['leg_lo'], .5))
+    d.ellipse([*pt((Af[0] - .014, Af[1] - .012)), *pt((Af[0] + .014, Af[1] + .012))], fill=lerpc(fc, C['leg_lo'], .5))
 
     # ---- near group masks
     mb = M([G['body']]); mn = M([G['neck']]); mh = M([G['head']]); mbk = M([G['beak']])
-    mw = M([G['wing']]); mp = M([G['prim']] + [_limb_poly(_cr(f, 4, False), np.linspace(.028, .010, len(_cr(f, 4, False)))) for f in G['feathers']])
+    mw = M([G['wing']]); mp = M([G['prim']])
     Kn, An, Fn = G['legs']['near']
     ml = M([_leg_poly(Kn, An, Fn)])
     webn, toesn = _foot_poly(Fn, An)
@@ -298,21 +302,29 @@ def bird(s, pose=None, kind='adult', light=(-.5, -1.0), cache=True, ink_w=None):
     for tl in toesn:
         d.line([pt(tl[0]), pt(tl[1])], fill=lerpc(C['leg'], C['leg_lo'], .7), width=max(1, int(S * .004)))
 
-    # body: graded pale back -> deeper belly, scallops
+    # body: an oval with a full chest, graded pale back -> coral belly, soft layered contour feathers, form shadow
     bb = mb.getbbox() or (0, 0, Wd, Hd)
-    paint(mb, ('g', (0, bb[1]), (0, bb[3]), C['body_hi'], C['body_lo'], C['body'], .55), C['rim'], C['body_lo'], .5, .55, .05)
+    paint(mb, ('g', (0, bb[1]), (0, bb[3]), C['body_hi'], C['body_lo'], C['body'], .5), C['rim'], C['body_lo'], .5, .6, .06)
     tex = Image.new('RGBA', (Wd, Hd), (0, 0, 0, 0)); dt = ImageDraw.Draw(tex)
     rng = np.random.default_rng(7)
-    r = .022 * S
-    for row in range(12):
-        yy = bb[1] + (row + .5) * (bb[3] - bb[1]) / 14
-        off = (row % 2) * r
-        for xx in np.arange(bb[0] - r + off, bb[2] + r, r * 2.0):
-            j = rng.uniform(-.25, .25) * r
-            col = lerpc(C['body'], C['body_lo'], .35) if row > 5 else lerpc(C['body'], C['body_hi'], .6)
-            dt.arc([xx - r + j, yy - r * .7, xx + r + j, yy + r * .7], 20, 160, fill=col + (70,), width=max(1, int(S * .003)))
+    fw = .05 * S
+    for row in range(7):
+        yy = bb[1] + (row + 1.2) * (bb[3] - bb[1]) / 8.2
+        off = (row % 2) * fw * .55
+        for xx in np.arange(bb[0] + off, bb[2], fw * 1.1):
+            j = rng.uniform(-.2, .2) * fw; L = fw * rng.uniform(.9, 1.25)
+            # one contour feather: its tip edge (pointing back, -x) as a soft crescent, a pale fringe above it
+            box = [xx - L + j, yy - fw * .42, xx + L * .2 + j, yy + fw * .42]
+            dt.arc(box, 115, 245, fill=lerpc(C['body_lo'], (150, 40, 70), .1) + (12 + row * 3,), width=max(1, int(S * .004)))
+            dt.arc([box[0] + S * .004, box[1], box[2] + S * .004, box[3]], 125, 235, fill=C['body_hi'] + (22,), width=max(1, int(S * .003)))
+    tex = tex.filter(ImageFilter.GaussianBlur(S * .003))
     tex.putalpha(ImageChops.multiply(tex.split()[3], mb))
     lay.alpha_composite(tex)
+    # the wing casts a soft shadow on the flank under it
+    mw0 = M([G['wing']])
+    shw = ImageChops.offset(mw0, int(S * .004), int(S * .022)).filter(ImageFilter.GaussianBlur(S * .014))
+    shw = ImageChops.multiply(ImageChops.subtract(shw, mw0), mb)
+    lay.paste(Image.new('RGBA', (Wd, Hd), C['body_lo'] + (255,)), (0, 0), shw.point(lambda v: int(v * .75)))
 
     # neck + head
     nb = mn.getbbox() or bb
@@ -328,6 +340,9 @@ def bird(s, pose=None, kind='adult', light=(-.5, -1.0), cache=True, ink_w=None):
     if sleep > .25:
         over = ImageChops.multiply(_dilate(ImageChops.lighter(mn, mh), int(iw * .7)), mb)
         over = ImageChops.subtract(over, ImageChops.lighter(mn, mh))
+        nb0 = pt(G['neck_c'][0]); yy_, xx_ = np.mgrid[0:Hd, 0:Wd]
+        fade = np.clip((np.hypot(xx_ - nb0[0], yy_ - nb0[1]) - .06 * S) / (.05 * S), 0, 1)
+        over = Image.fromarray((np.asarray(over, np.float32) * fade).astype(np.uint8))
         lay.paste(Image.new('RGBA', (Wd, Hd), INK + (255,)), (0, 0), over)
         paint(mn, nspec, C['rim'], C['neck_lo'], .55, .55, .025)
         paint(mh, C['head'], C['rim'], C['neck_lo'], .5, .5, .02)
@@ -353,40 +368,62 @@ def bird(s, pose=None, kind='adult', light=(-.5, -1.0), cache=True, ink_w=None):
         flip = G['head_flip']
         d.arc([ex - er * 1.3, ey - er * 1.0, ex + er * 1.3, ey + er * 1.0], 200 if flip else 20, 340 if flip else 160, fill=INK, width=max(2, int(S * .0055)))
 
-    # wing coverts: deep coral, layered scallops; black primaries along the lower rear edge
+    # wing: deeper coral coverts in overlapping rows (each feather a soft lobe with a pale fringe and a shadow under its
+    # tip), long tertial plumes over the rear, and the black flight feathers as a neat band along the lower rear edge
     wb = mw.getbbox() or bb
-    # primaries first (under the coverts)
-    pink_edge = ImageChops.subtract(_dilate(mp, int(iw * .6)), mp)
-    lay.paste(Image.new('RGBA', (Wd, Hd), INK + (255,)), (0, 0), ImageChops.multiply(pink_edge, mb))
-    paint(mp, C['black'], (90, 84, 100), (0, 0, 0), .5, .3, .01)
+    pb = mp.getbbox() or wb
+    paint(mp, ('g', (pb[0], 0), (pb[2], 0), (14, 12, 18), (52, 46, 58)), (96, 90, 104), (0, 0, 0), .45, .3, .01)
     d = ImageDraw.Draw(lay)
-    for f in G['feathers']:
-        sm = _cr(f, 4, False)
-        d.line(P(sm), fill=(70, 66, 80), width=max(1, int(S * .003)))
-    wing_ink = ImageChops.subtract(_dilate(mw, int(iw * .55)), mw)
-    lay.paste(Image.new('RGBA', (Wd, Hd), lerpc(C['wing_lo'], INK, .55) + (255,)), (0, 0), ImageChops.multiply(wing_ink, mb))
-    paint(mw, ('g', (wb[2], wb[1]), (wb[0], wb[3]), C['wing_hi'], C['wing_lo'], C['wing'], .5), C['wing_hi'], C['wing_lo'], .5, .5, .03)
+    wing_ink = ImageChops.subtract(_dilate(mw, int(iw * .5)), mw)
+    lay.paste(Image.new('RGBA', (Wd, Hd), lerpc(C['wing_lo'], INK, .5) + (255,)), (0, 0), ImageChops.multiply(wing_ink, mb))
+    paint(mw, ('g', (wb[2], wb[1]), (wb[0], wb[3]), C['wing_hi'], C['wing_lo'], C['wing'], .55), C['wing_hi'], C['wing_lo'], .45, .45, .03)
+    warr = np.asarray(mw) > 0
+    cols = np.where(warr.any(0))[0]
     tex = Image.new('RGBA', (Wd, Hd), (0, 0, 0, 0)); dt = ImageDraw.Draw(tex)
-    rr = .034 * S
-    for row in range(5):
-        f = row / 4
-        yy = lerp(wb[1] + rr * 1.2, wb[3] - rr * .6, f)
-        off = (row % 2) * rr * .9
-        for xx in np.arange(wb[0] + off - rr, wb[2] + rr, rr * 1.8):
-            # a covert feather: rounded tip pointing back (-x), darker under-edge, pale fringe
-            box = [xx - rr * 1.3, yy - rr * .75, xx + rr * .5, yy + rr * .75]
-            dt.chord(box, 100, 260, fill=lerpc(C['wing'], C['wing_lo'], .3 + .3 * f) + (60,))
-            dt.arc(box, 120, 240, fill=lerpc(C['wing_hi'], (255, 255, 255), .2) + (95,), width=max(1, int(S * .003)))
-    # long scapular plumes drooping back over the black flight feathers
-    for i in range(6):
-        f = i / 5
-        a0 = (lerp(wb[0] + (wb[2] - wb[0]) * .55, wb[0] + (wb[2] - wb[0]) * .2, f), lerp(wb[1] + (wb[3] - wb[1]) * .45, wb[1] + (wb[3] - wb[1]) * .6, f))
-        a1 = (a0[0] - (wb[2] - wb[0]) * (.35 + .1 * f), a0[1] + (wb[3] - wb[1]) * (.25 + .05 * f))
-        mid = ((a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2 - (wb[3] - wb[1]) * .08)
-        dt.line([a0, mid, a1], fill=lerpc(C['wing_lo'], (0, 0, 0), .15) + (110,), width=max(1, int(S * .0045)), joint='curve')
-        dt.line([(a0[0], a0[1] - S * .004), (mid[0], mid[1] - S * .004)], fill=lerpc(C['wing_hi'], (255, 255, 255), .3) + (90,), width=max(1, int(S * .003)))
+    rng = np.random.default_rng(11)
+    def col_span(x):
+        x = int(min(max(x, cols[0]), cols[-1])); ys = np.where(warr[:, x])[0]
+        return (ys[0], ys[-1]) if len(ys) else (wb[1], wb[3])
+    W_ = wb[2] - wb[0]
+    rows = [(.12, .026, .55), (.27, .032, .72), (.44, .040, .86), (.62, .050, .98), (.80, .060, 1.0)]   # (depth, feather size, reach)
+    for depth, fs, reach in rows[::-1]:
+        L = fs * S * 1.5; Hh = fs * S * .42
+        xs = np.arange(wb[2] - L * .3 - (depth * 7 % 1) * L * .5, wb[2] - W_ * reach, -L * .62)
+        for xx in xs[::-1]:
+            top, bot = col_span(xx)
+            yy = top + (bot - top) * depth + rng.uniform(-.06, .06) * Hh
+            k = (wb[2] - xx) / max(1, W_)
+            c = lerpc(lerpc(C['wing_hi'], C['wing'], .35 + .4 * depth), C['wing_lo'], .25 * k)
+            box = [xx - L, yy - Hh, xx + L * .25, yy + Hh]
+            dt.ellipse([box[0] + L * .06, box[1] + Hh * .35, box[2] + L * .06, box[3] + Hh * .35], fill=lerpc(C['wing_lo'], (90, 10, 40), .3) + (45,))
+            dt.ellipse(box, fill=c + (235,))
+            dt.arc([box[0] + L * .08, box[1] + Hh * .15, box[2], box[3] - Hh * .1], 110, 250, fill=lerpc(C['wing_hi'], (255, 255, 255), .4) + (120,), width=max(1, int(S * .0026)))
+            dt.line([(xx - L * .75, yy + Hh * .05), (xx + L * .2, yy - Hh * .1)], fill=lerpc(c, C['wing_lo'], .45) + (90,), width=max(1, int(S * .002)))
+    # tertials: long soft plumes drooping back over the black band
+    for i in range(5):
+        f = i / 4
+        x0 = wb[0] + W_ * (.55 - .25 * f); top, bot = col_span(x0); y0 = top + (bot - top) * (.45 + .1 * f)
+        x1 = wb[0] - W_ * (.02 + .06 * f); y1 = y0 + (bot - top) * (.32 + .08 * f)
+        pts = [(x0, y0), ((x0 + x1) / 2, (y0 + y1) / 2 - (bot - top) * .06), (x1, y1)]
+        sm = _cr(pts, 6, False)
+        poly = _limb_poly(sm, np.linspace(.022 * S, .006 * S, len(sm)))
+        dt.polygon(poly, fill=lerpc(C['wing'], C['wing_lo'], .2 + .15 * f) + (225,))
+        dt.line(sm[:len(sm) * 3 // 4], fill=lerpc(C['wing_hi'], (255, 255, 255), .3) + (130,), width=max(1, int(S * .0025)))
     tex.putalpha(ImageChops.multiply(tex.split()[3], mw))
     lay.alpha_composite(tex)
+    # asleep: the bill is pushed into the back feathers (a clump of scapulars lies over its front half)
+    if False:
+        Hf = G['Hf']; cc = pt(Hf(0.098, 0.034)); a0 = G['head_a']
+        clump = Image.new('RGBA', (Wd, Hd), (0, 0, 0, 0)); dc = ImageDraw.Draw(clump)
+        rx, ry = .075 * S, .036 * S
+        for j, (dx_, dy_, sc) in enumerate([(.02, .012, 1.0), (-.03, -.004, .8), (.05, -.012, .7)]):
+            cx_, cy_ = cc[0] + dx_ * S, cc[1] + dy_ * S
+            dc.ellipse([cx_ - rx * sc, cy_ - ry * sc, cx_ + rx * sc, cy_ + ry * sc], fill=lerpc(C['wing'], C['wing_hi'], .25 + .15 * j) + (255,))
+            dc.arc([cx_ - rx * sc, cy_ - ry * sc, cx_ + rx * sc, cy_ + ry * sc], 150, 300, fill=lerpc(C['wing_hi'], (255, 255, 255), .45) + (220,), width=max(1, int(S * .003)))
+            dc.arc([cx_ - rx * sc, cy_ - ry * sc, cx_ + rx * sc, cy_ + ry * sc], 330, 470, fill=lerpc(C['wing_lo'], INK, .4) + (200,), width=max(1, int(S * .003)))
+        clump = clump.filter(ImageFilter.GaussianBlur(S * .0015))
+        clump.putalpha(ImageChops.multiply(clump.split()[3], ImageChops.lighter(mb, mbk)))
+        lay.alpha_composite(clump)
     # ruffle: a few loose covert tips over the lower wing edge (wind / settling)
     # rim light inside the ink on the top edges, form shadow under the belly
     near_in = _erode(near, int(iw * .5))
