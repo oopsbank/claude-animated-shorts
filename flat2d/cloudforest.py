@@ -205,9 +205,6 @@ def _layer_near(seed, base_col, moss, moss_l, fern, side_trunks=True):
         for x, wd in ((200 + 10, 230), (200 + W - 10, 260)):
             L, R = trunk(d, x, -80, H + 60, wd * .85, wd * 1.15, base_col, seed + 50, ink=INK, iw=3)
             moss_clumps(d, L, R, moss, moss_l, seed + 51 + int(x), n=16, scale=1.6, hang=True, hang_col=lerp(moss, (30, 40, 30), .2))
-            for j in range(3):
-                bromeliad(d, x + rng.uniform(-40, 40) + (90 if x < 0 else -90), rng.uniform(300, 1200), rng.uniform(70, 110),
-                          lerp(moss, (90, 60, 60), .3), moss_l, seed + 60 + j)
     # lianas from the top
     for k in range(5):
         x0 = rng.uniform(0, W + 400); x1 = x0 + rng.uniform(-300, 300)

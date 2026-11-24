@@ -659,3 +659,25 @@ def back_arrow(img, base, up, length, col=(255, 210, 63), w=None, label='BACK', 
         lay.putalpha(lay.split()[3].point(lambda v: int(v * alpha)))
     img.alpha_composite(lay)
     return (x1, y1)
+
+
+def up_screen(view='top', elev=0.0, yaw=0.0, roll=0.0, pitch=0.0, heading=0.0):
+    """The moth's dorsal normal as a 2D screen vector (after the screen-plane heading rotation)."""
+    v = view_matrix(view, elev, yaw, roll, pitch) @ np.array((0, 0, 1.0))
+    return _rot2((float(v[0]), float(v[1])), math.radians(heading))
+
+
+def bank_sign(target, **kw):
+    """+1 or -1: the roll sign that tilts the back toward the 2D screen direction `target`."""
+    r = abs(kw.pop('roll', 45)) or 45
+    a = up_screen(roll=r, **kw); b = up_screen(roll=-r, **kw)
+    return 1 if a[0] * target[0] + a[1] * target[1] >= b[0] * target[0] + b[1] * target[1] else -1
+
+
+def ir_layer(lay, gain=1.7):
+    """Recolour an RGBA layer to the infrared camera look, brighter (insects glow on IR footage)."""
+    a = np.asarray(lay, np.float32)
+    L = np.clip((a[..., 0] * .35 + a[..., 1] * .45 + a[..., 2] * .45) / 255 * gain + .12, 0, 1) ** .8
+    c0 = np.array((20, 30, 24), np.float32); c1 = np.array((236, 250, 236), np.float32)
+    rgbv = c0 + (c1 - c0) * L[..., None]
+    return Image.fromarray(np.dstack([rgbv, a[..., 3]]).clip(0, 255).astype(np.uint8), 'RGBA')
