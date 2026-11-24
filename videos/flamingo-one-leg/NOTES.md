@@ -5,7 +5,7 @@ people in a queue), rich flat 2D, serious and curious, no comedy, "sentence" cap
 the Producer's `audio/flamingo-one-leg/` (Kokoro `am_adam` 1.16), untouched: 1888 frames = 62.933 s. Built on the Blood
 Falls formula: ONE hero image (the 2017 study flamingo standing on one leg in a lab clamp, its muscle monitor FLAT),
 flamingo pink against teal water / the warm lab, the reveal flipped in the biggest title (FOR US: HARD. / FOR A
-FLAMINGO: EASY.), and a loop back to the 2017 lab. **Status: 540 preview + thumbnail done. No 1080 render. Nothing
+FLAMINGO: EASY.), and a loop back to the 2017 lab. **Status: fix pass + 1080 final done (see the last section). Nothing
 is published.**
 
 ## Files
@@ -91,3 +91,32 @@ clock `anim.NOW` reset to 0). Frame 0 checked by eye: the full hook (2017 / ATLA
 flat monitor, both scientists), no caption (the first word starts at 0.06 s).
 
 **Preview**: `tests/preview_full_540.mp4` (62.93 s, `mix.wav`, 13 MB) + `tests/sheet_2s.jpg`.
+
+## Fix pass + final (claude/fix-flamingo-one-leg, 2026-11-24)
+Producer's review of the 2 s sheet, stills_r3 and the thumbnail; one fix pass, no reviewer subagents (checked by eye on
+540 stills: `tests/stills_fix/`). Timing, shot ids and `audio/flamingo-one-leg` untouched.
+- **Folded leg (every one-leg pose + thumbnail)** `flat2d/flamingo.py`: the tucked leg is now a compact Z under the belly:
+  the knee in the belly feathers, the ankle bent fully just under the belly, the tarsus folded back up forward against the
+  belly and the foot tucked into the feathers (hidden behind the body). The fold animates by joint angles and segment
+  length (foreshortened), so s03/s06 lifts stay smooth. No diagonal stick, no ball end (smaller ankle knob).
+- **Sleeping pose**: the neck lies flat in an S along the back with no gap under it; the head rests on the back with the
+  bill angled down into the back feathers (the wing coverts overlap its front half); closed-eye line kept. The inner
+  crease where the neck lies over the chest fades out at the neck base (no angular notch).
+- **Body and feathers**: a new body outline (oval, fuller chest, short pointed tail), graded pale pink back to coral belly
+  with faint soft contour feathers (no fish scales), a cast shadow under the wing; the wing is softer coral with
+  overlapping covert rows (each feather a slim lobe with a pale fringe and a shadow under its tip, bigger toward the
+  rear), long tertial plumes, and the black flight feathers as one neat dark band along the lower rear edge. Rim light /
+  form shadow as before.
+- **Captions** (`BAND_FIX`): s03 520 (above the body, off the standing leg), s07 1885, s08 1845 (below the foot), s14 1000
+  (under EASY., off the stickman's arm), s15 1850 (below the FORCE PLATE label).
+- **s03**: the standing leg in the water is painted a clear cool blue with a soft blue glow (reads COLD, not lost).
+- **s07**: a Zoo Atlanta flamingo yard: a wire fence behind the bird, a shallow pool with a stone rim across the
+  foreground (ripples, lily pads), big leafy plants both sides; the keeper (cap, green shirt) fully in frame on the rim.
+- Thumbnail rebuilt with the fixed bird (same HOW IS IT / NOT FALLING? text).
+
+Checks: 540 preview `tests/preview_full_540.mp4` (62.93 s, mix) + new `tests/sheet_2s.jpg`; loop: frame 1887 = frame 0
+(mean abs diff 0.0 at 540 and at 1080); 1080 frame 0 checked by eye.
+
+**Final:** `flamingo_one_leg_final_1080x1920.mp4`: `render.py --size 1080x1920` (1888 frames), mux `mix.wav`,
+`tools/add_cover.sh` (thumbnail as the first 0.1 s), 2-pass libx264 high 5200k `-preset slow`, AAC 192k, +faststart →
+**43.0 MB (41.0 MiB), 63.04 s, 1891 frames**, 1080x1920. Not published.
