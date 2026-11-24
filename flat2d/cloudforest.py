@@ -643,9 +643,9 @@ def street_lamp(img, w, cam=0.0, head=(600, 560)):
     for k, (x0, x1, top, c) in enumerate(((-40, 380, 520, (70, 40, 40)), (360, 720, 700, (56, 46, 54)), (700, 1120, 460, (64, 44, 36)))):
         x0 += cam * .4; x1 += cam * .4
         d.rectangle([x0, top, x1, 1500], fill=c, outline=INK, width=5)
-        for yy in range(top + 60, 1400, 150):
-            for xx in range(int(x0) + 50, int(x1) - 60, 120):
-                lit = ((xx * 7 + yy * 3 + k) % 5) < 2
+        for r_, yy in enumerate(range(top + 60, 1400, 150)):
+            for c_, xx in enumerate(range(int(x0) + 50, int(x1) - 60, 120)):
+                lit = ((c_ * 7 + r_ * 3 + k) % 5) < 2                  # by window index, so a camera pan can't flip them
                 d.rectangle([xx, yy, xx + 60, yy + 90], fill=(250, 200, 110) if lit else (30, 30, 44), outline=INK, width=3)
     d.rectangle([0, 1500, W, H], fill=(40, 38, 44))
     d.rectangle([0, 1500, W, 1530], fill=(70, 66, 72))

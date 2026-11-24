@@ -117,7 +117,16 @@ The weakest areas reviewers name, as open notes:
 - the s02 and s02b moths are small at phone size.
 
 ## Motion QA (`flat2d/motion_qa.py`)
-MOTION_QA_PLACEHOLDER
+On the 1915 preview frames:
+
+`motion_qa.py FRAMES 3.36 7.08 9.34 12.18 15.46 19.39 22.96 27.4 31.74 33.95 38.01 42.2 45.37 47.35 50.92 55.83 58.66`
+
+The result is **PASS**: median diff 2.12, the longest frozen span is 1 frame, and there are no pops. The cuts are the shot starts and nothing is listed as an impact.
+
+- The first full render FAILED with 8 pops at 10.2-11.8 s (s02b). The street's lit-window pattern in `cloudforest.street_lamp` was keyed to the window's pixel x, so the slow camera pan flipped windows on and off every few frames. The pattern is now keyed to the window's row and column index. s02b (frames 280-366) was re-rendered with `--t0 9.3333 --t1 12.2333` and spliced in; the seams at the s02/s02b and s02b/s03 cuts are clean.
+- Single near-static frames alternate in s13 (51-56 s, the compass and desk). Every other frame moves, so the frozen-span check is satisfied.
+- **Loop:** s15's last frame (f 1914) is `s01_frame(0, 0)`. Its mean abs difference from frame 0 is **0.10/255** (the same picture). Frame 0 shows the forest, the lamp, the small moths, the hero moth, both scientists, the cameras and 2024 / COSTA RICA.
+- Preview: `tests/preview_full_540.mp4` is 1915 frames, 63.83 s, h264 + AAC 192k, 17 MB.
 
 ## Sound
 The Producer's mix (`audio/moth-light/mix.wav`, `sfx.json`, `music.json`) is used unchanged. Shot ids s01-s15 keep their cue anchors (the splits are inside lines).
@@ -128,4 +137,4 @@ The Producer's mix (`audio/moth-light/mix.wav`, `sfx.json`, `music.json`) is use
   - "released slow-motion films in 2024" (the paper was published in 2024; the footage was filmed earlier);
   - the IR camera HUD timestamps are illustrative;
   - the white-sheet clue is staged in the same forest.
-- Render cost: frames are drawn at 1080 and downscaled. The 540 preview took RENDER_TIME on 4 cores.
+- Render cost: frames are drawn at 1080 and downscaled. The 540 preview took about 48 min (plus the band cache) on 4 cores.
