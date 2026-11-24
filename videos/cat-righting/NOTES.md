@@ -67,7 +67,10 @@ Fixes per round:
 - s07/s09/s16/s18 are lighter in detail than the lab.
 
 ## Motion QA (`flat2d/motion_qa.py`)
-See the run below (filled in after the preview render).
+On the 1958 rendered preview frames: `motion_qa.py FRAMES 4.48 8.88 10.69 12.99 16.13 20.45 23.11 26.20 32.08 34.30 38.37 41.60 45.31 49.48 53.49 57.23 59.64 --impacts 3.5 8.5 9.6 10.22 14.46 15.2 18.33 19.94 22.76 25.19 25.44 35.37 35.69 36.57 37.6 45.74 47.9 53.0 54.2 57.62 58.16 58.94 61.19 64.97` → **PASS** (longest frozen span 11 frames = 0.37 s, in the quiet explanation holds where only the grain boils and the glow breathes; no pops).
+- The impacts are designed beats on the word: the lens flash on "filmed", the landing on "feet", the arms-up and crack on "break"/"physics", the title slams (PUSHED OFF / HIS HANDS?, THE MIDDLE, TWO HALVES, SWAP!, A SPINNING CHAIR, PHYSICS., IT USED IT.), the X on "mid-air", the Manx landing, the bend glow, the solid-object X, the halves split, the icons-to-dials swap in s14, the FLIPPED! landing, the s18 landing and the loop dissolve.
+- The first run flagged three real pops, fixed and re-rendered: the s08 loupe jumped onto the waist (now glides), and the s12-s14 lower panel appeared in one frame (now fades in over 0.3 s).
+- Loop: s18's last 7 frames are `s01_frame(0, 0, loop=True)` (it pins `anim.NOW = 0` so Marey's idle motion matches); frame 1957 equals frame 0 exactly (mean abs diff 0.0).
 
 ## Sound
 The Producer's mix is used unchanged. The picture lands on its cues: the 1894 title pop, the camera ticking on "filmed" (disc spin-up + lens flash), the flip whoosh, the soft landing on "feet", the impact on "physics", the X on "mid-air", CLUE pops, the Manx landing on "too", the bend glow on "bent", the trampoline bounce, the halves' glow on "halves", the front turn on "turns", the back catching up on "catches", the ding on "flipped" (the landing), the chair spin, IT USED IT on "used", the modern cat landing on "lands", the film strip on "Paris" (loop).

@@ -387,6 +387,7 @@ CAT0 = dict(phf=math.pi, phb=math.pi, tuckf=.5, tuckb=.5, bend=12)
 def s01_frame(u, w, D=4.5, cue=None, loop=False):
     """The cat upside down in mid-air in Marey's lab, slow motion; Marey's hands just opened above it; on 'filmed'
     the camera ticks and a sepia film strip of the drop unrolls along the bottom. w = the world clock."""
+    if loop: anim.NOW = 0.0                         # the loop frame: Marey's idle motion at the film's start clock
     cue = cue or (lambda i: [.06, .3, .84, 1.02, 1.68, 1.92, 2.34, 2.88, 3.06, 3.35, 3.65, 4.13][min(i, 11)] - 0.0)
     cam = 6 * math.sin(w * .5)
     img = Image.new('RGBA', (W, H))
