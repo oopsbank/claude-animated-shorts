@@ -14,7 +14,7 @@ nothing is published.**
 |---|---|
 | `tests/preview_full_540.mp4` | 540x960 30 fps preview with `mix.wav` (1951 frames) |
 | `tests/sheet_2s.jpg` | 2 s contact sheet of the preview |
-| `tests/stills_r1/`, `tests/stills_r2/`, `tests/stills_r3/` | review stills per round (one per shot, 540x960, captions on) + `sheet.png`. r3 is the last reviewed round, re-rendered after the small post-review fixes below |
+| `tests/stills_r1/`, `tests/stills_r2/`, `tests/stills_r3/` | review stills per round (one per shot, 540x960, captions on) + `sheet.png`. r3 is the last reviewed round, re-rendered with the final code after the small post-review fixes below |
 | `tests/review_brief.md` | what each reviewer got: every still's voice-over line and planned picture |
 | `thumbnail.png` | `tools/thumbnail.py` on a caption-free frame (`flat2d/zebra_stripes_thumb.py`): the striped-coat horse big, head bare and in frame, flies circling with dotted trails, one fly bonking off the coat; IT'S NOT (white) / CAMOUFLAGE (yellow) |
 | `flat2d/animals.py` | **the animal kit (new)**. One side-view quadruped renderer for `zebra`, `horse` (bay), `coat` (bay horse in a fitted zebra-striped rug: torso, neck and hood covered, head and lower legs bare, black binding at the hem), `lion` (stalking crouch, shaggy mane) and `cow` (Japanese Black; `painted=True` gives white brushed stripes). Shapes are built in unit space (1 unit = withers height) and painted through a LABEL image (torso, neck, head, near and far legs, ears, mane, tail, hooves), so each part gets its own colour and pattern. Zebra stripes follow the body: vertical on the barrel, sweeping round the haunch to horizontal, rings on the legs, across the neck into an upright striped mane, fine stripes across the face, a black muzzle, ears with black tips. The render adds one ink outline round the silhouette, inner lines where a near leg crosses the body, a far-leg group drawn darker, a form shadow under the barrel and a rim light inside the ink. Poses cover neck, head, ear flick, tail swing, breath, walk legs and blink; layers are cached by pose. `fly_layer`/`put_fly` draw the HORSE FLY side on: a huge green compound eye with violet zigzag bands and facets, a humped striped thorax with bristles, a banded abdomen, a blade mouth and veined wings (`blur` beating / `fold` / `up`); legs go from tucked (fast flight) to stretched (landing) |
@@ -79,7 +79,8 @@ Fixes per round:
 - s01's caption sits on the horse's belly (the band picker's least-busy choice).
 
 ## Motion QA
-MOTION_QA_PLACEHOLDER
+`motion_qa.py` on the 1951 preview frames, with the 21 cut times and `--impacts 45.71` (the s12 BONK: shake + star, designed) → **PASS**: no pops, longest frozen span 1 frame (0.03 s), median frame diff 2.15.
+Fixed on the way: an s08 ring radius went negative for a few frames (render crash); s17's zoom jumped 1.04 → 1.0 near its end (a full-frame pop at 64.5 s); s17's bonked flies vanished at the end of their window (now fade out).
 
 ## Loop
-LOOP_PLACEHOLDER
+Frame 1950 (the last) = frame 0: mean abs difference **0.0** (s17's last frame calls `s01_frame(0, 0)` with the idle clock `anim.NOW` reset to 0, so the stickmen's secondary motion matches too). Note: in the parallel render the two frames differed by 0.13 (cached cards/layers built from neighbouring pose values in each worker), so frames 0 and 1950 were re-rendered in one process; for the 1080 final do the same (or render those two frames last in one process).
