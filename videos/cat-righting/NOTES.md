@@ -1,0 +1,78 @@
+# Cat righting: "Why Do Cats Always Land on Their Feet?" (flat2d, claude/area-cat-righting, 2026-11-24)
+
+Video 8. Same look, tone and pipeline as videos 3-7: white stickmen with a black outline, rich flat 2D, serious mystery, no comedy, "sentence" captions, continuous motion. Voice and mix: the Producer's `audio/cat-righting/` (Kokoro `am_adam`), unchanged: 1958 frames = 65.267 s. Built on the Blood Falls formula: one hero image (the cat UPSIDE DOWN in mid-air in Marey's 1894 Paris lab, against black velvet), the sepia 1894 film strip (sprocket holes) as the motif (s01, s06, s08, s09 photo, s18 loop), Marey reacting in most shots, big titles. **Status: 540 preview + thumbnail + NOTES done. The 1080 final is NOT rendered and nothing is published.**
+
+## Files
+| file | what |
+|---|---|
+| `tests/preview_full_540.mp4` | 540x960 30 fps preview with `mix.wav` (1958 frames) |
+| `tests/sheet_2s.jpg` | 2 s contact sheet of the preview |
+| `tests/stills_r1/`, `tests/stills_r2/`, `tests/stills_r3/` | review stills per round (one per shot, 540x960, captions on) + `sheet.png`; r3 is the last reviewed round |
+| `tests/review_brief.md` | what each reviewer got: every still's voice-over line and planned picture |
+| `thumbnail.png` | `tools/thumbnail.py` on a caption-free s01 frame (`flat2d/cat_righting_thumb.py`, `HIDE_UI`): the cat upside down mid-air, Marey on the stool, the camera; THIS CAT (white) / BROKE PHYSICS? (blue) / IN 1894 (yellow) |
+| `flat2d/cat.py` | **the new cat kit**: `render_cat` / `put_cat`, a flat tabby-and-white cat built as two halves joined at a bendy waist. Each half has its own ROLL about its own axis (white belly band, tabby stripes, legs on the belly side, foreshortened toward the camera, ears on the dorsal side, eyes), so it reads upside down and mid-twist; `tuckf`/`tuckb` (legs tucked vs stretched wide), `bend` (the V), `tail=False` (Manx), `glow` (blue front / orange back halves with masks), `seam`, a form shadow + rim light. `righting(p)` = the tuck-and-turn program (front turns ~195° while the back turns ~15° the other way, swap, the back catches up, both feet-down) |
+| `flat2d/cat_righting.py` | the shots `s01`-`s18`, `SHOT_LIST`, `END`, `STILL_AT`, `HIDE_UI`; sets: the 1894 lab (cached wall + window with Paris roofs and the Eiffel Tower, velvet backdrop, floor, mattress, stool, the chronophotographic camera with a spinning disc shutter), sepia film frames + strips, the explanation stage (tinted per shot, grid, lower-third diagram panel, turn dials, tuck icons), a present-day living room, a 1968 gym with a trampoline and a spacesuit gymnast, a top-view room with a swivel chair; Marey (beard, jacket) |
+| `flat2d/cat_righting_thumb.py` | the thumbnail frame |
+
+## Build
+```
+.venv/bin/python flat2d/render.py audio/cat-righting/words.json OUT.mp4 --film cat_righting --size 540x960     # 1958 frames, ~25 min on 4 cores
+.venv/bin/python flat2d/stills.py audio/cat-righting/words.json OUTDIR --film cat_righting                     # review stills
+.venv/bin/python flat2d/motion_qa.py OUT.mp4.frames <cuts> --impacts <beats>                                   # see Motion QA
+ffmpeg -i OUT.mp4 -i audio/cat-righting/mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -shortest videos/cat-righting/tests/preview_full_540.mp4
+.venv/bin/python flat2d/cat_righting_thumb.py frame.png
+.venv/bin/python tools/thumbnail.py frame.png videos/cat-righting/thumbnail.png --zoom 1.25 --focus 0.55,0.5 --line "THIS CAT|white|130" --line "BROKE PHYSICS?|blue|130" --line "IN 1894|yellow|120"
+```
+Final (after the Producer's pass): `render.py ... --size 1080x1920`, mux `mix.wav`, `tools/add_cover.sh <video> videos/cat-righting/thumbnail.png <master>`. Shot ids are the Producer's s01-s18 (one per line, no splits), so `sfx.json` anchors need no rebuild.
+
+## Shot list (timed to the real voice; a shot starts 0.1 s before its first word)
+| shot | time s | picture |
+|---|---|---|
+| s01 | 0.00-4.48 | **frame 0 = the hook**: the cat upside down in mid-air in slow motion, lit against the black velvet; Marey on a stool, hands just opened above it; 1894 + PARIS; the camera's disc spins up and its lens flashes on "filmed"; a sepia film strip slides out along the bottom |
+| s02 | 4.48-8.88 | slow-motion fall with chronophotograph ghosts: the cat tucks, the front turns, swap, the back catches up, it lands on the mattress on "feet" (squash, dust lines); Marey reacts; NOTHING TO PUSH ON |
+| s03 | 8.88-10.69 | the landed cat, Marey throws his arms up on "break"; BREAKING A LAW / OF PHYSICS? with a crack, shake and flash on "physics" |
+| s04 | 10.69-12.99 | cool-lit lab: a wooden block with an arrow falls straight, its ghosts all point the same way; a spin arrow is crossed out on "spin"; NO PUSH, / NO SPIN; Marey thinking |
+| s05 | 12.99-16.13 | the wrong answer, imagined: Marey on the stool holds the cat up; on "pushed" push arrows from his hands kick it into a spin (a pale ghost of where it was); PUSHED OFF / HIS HANDS? |
+| s06 | 16.13-20.45 | Marey's sepia strip scrolls up: green checks on the first four upside-down frames (NO SPIN AT FIRST), a gold box on THE TURN STARTS HERE, a red X slams on PUSHED OFF? on "mid-air" |
+| s07 | 20.45-23.11 | CLUE 1, the living room: a tailless (Manx) cat twists down and lands on the rug on "too"; NO TAIL + a pointer to its rump; the owner surprised |
+| s08 | 23.11-26.20 | CLUE 2: one big sepia frame under Marey's brass loupe (it magnifies what it covers); the waist glows with a V mark on "bent"; BENT IN / THE MIDDLE |
+| s09 | 26.20-32.08 | CLUE 3, a 1968 gym: a gymnast in a white spacesuit bounces on a trampoline and twists in the air, arms in and out; a scientist watches; 1968, NASA-FUNDED, GYMNAST; the falling-cat photo on the wall lights up on "copy it" (COPY THE CAT) |
+| s10 | 32.08-34.30 | the riddle: the cat upside down floating in the dark, a big glowing ?; Marey thinking; NOTHING TO PUSH ON |
+| s11 | 34.30-38.37 | ONE SOLID OBJECT? box crossed out; on "two halves" the cat splits into a BACK (orange) and FRONT (blue) half; on "bendy spine" the vertebrae glow and it bends into a V; Marey watches |
+| s12 | 38.37-41.60 | front legs tuck (FRONT LEGS IN), back legs stretch (BACK LEGS OUT); lower panel: STRETCHED: WIDE vs TUCKED: SMALL (end-on icons with dashed spin circles) |
+| s13 | 41.60-45.31 | the front half turns ~195° with a big blue arrow (TUCKED: TURNS A LOT); the back turns ~15° the other way with a small orange one (STRETCHED: BARELY MOVES); FRONT / BACK turn dials count |
+| s14 | 45.31-49.48 | SWAP!: back legs in, front legs out (faint ghost of the old pose); the back half catches up with a big orange arrow; dials |
+| s15 | 49.48-53.49 | + and − twists slide together into = 0 (TWISTS CANCEL, NO LAW BROKEN); the glowing feet-down cat drops onto the mattress on "flipped" (FLIPPED!); Marey smiles |
+| s16 | 53.49-57.23 | top view: a person on a swivel chair swings arms out / legs in, then the other way, in turns; the chair turns (gold arc); A SPINNING CHAIR, ARMS & LEGS, IN TURNS |
+| s17 | 57.23-59.64 | sunset window light, the cat big and calm on the mattress, Marey nodding; DIDN'T BREAK / PHYSICS. then IT USED IT. slams (shake + flash) on "used" |
+| s18 | 59.64-65.27 | today: a cat leaps off the top bookshelf, twists, lands on the rug on "lands"; the owner watches; on "that cat did" the sepia strip slides in, the camera dives into the first frame, which dissolves into **s01's frame 0 exactly** (last 7 frames, the loop) |
+
+## Review (stills only; one fresh sonnet reviewer per round, each still with its voice-over line and planned picture (`tests/review_brief.md`), the in-order sheet and the Wind Cave sheet as the reference)
+| Round | richness / readability / composition | overall | script contradiction | 3+ run | result |
+|---|---|---|---|---|---|
+| 1 | 7 / 7 / 6.5 | 6.8 | s15 (no flip shown), s02 (still before the landing), s14 borderline | s11-s15, s01-s05 | FAIL |
+| 2 | 7 / 7 / 7 | 7.0 | s03 (Marey calm), s06 (tag unreadable), s15, s12 borderline | s01-s05, s10-s15 | FAIL |
+| 3 | 7 / 7.5 / 7 | 7.2 | none (near-misses: s04 block arrows sideways, s15 still after the twist, s07 cat small) | s01-s05, s11-s15 | FAIL (< 8) |
+
+Fixes per round:
+- R1: s11-s15 rebuilt: a per-shot tint (navy, teal, violet, plum, warm lab), a bigger cat, a lower-third diagram panel with end-on tuck icons (TUCKED: SMALL / STRETCHED: WIDE) and turn dials, the halves split visibly with glowing vertebrae, a ghost of the pre-swap pose in s14; s15 ends on the landing on the mattress (FLIPPED!); s08 without Marey's body (title clear of the frame); a warm floor light pool in the lab; s02/s15 stills moved.
+- R2: s03 Marey throws his arms up on "break"; s04 cool light; bigger tags (PUSHED OFF?, NO SPIN AT FIRST, GYMNAST, labels); a bigger explanation cat and big/small rotation arrows (TURNS A LOT vs BARELY MOVES); s17 re-staged (sunset light, a big calm cat, Marey on the right) so it no longer copies s03.
+- After R3 (not re-reviewed, under the 3-round cap): Marey's beard moved down onto the chin (it sat on the eyes when he leans/looks); the s07 Manx cat 30% bigger.
+
+**The gate (overall >= 8) was not reached in the 3 allowed rounds: 6.8 → 7.0 → 7.2.** Open notes from R3, for the Producer/Director:
+- s01-s05 all sit in the same lab (by design: one hero set), reviewers want more camera/colour variety there;
+- s11-s15 share the stage and the panel (deliberate continuity of the explanation; each shot has its own tint);
+- s04's block arrow points sideways (it marks orientation; reviewers read it as motion);
+- the cat's fur is flat colour + stripes (no fur texture);
+- s07/s09/s16/s18 are lighter in detail than the lab.
+
+## Motion QA (`flat2d/motion_qa.py`)
+See the run below (filled in after the preview render).
+
+## Sound
+The Producer's mix is used unchanged. The picture lands on its cues: the 1894 title pop, the camera ticking on "filmed" (disc spin-up + lens flash), the flip whoosh, the soft landing on "feet", the impact on "physics", the X on "mid-air", CLUE pops, the Manx landing on "too", the bend glow on "bent", the trampoline bounce, the halves' glow on "halves", the front turn on "turns", the back catching up on "catches", the ding on "flipped" (the landing), the chair spin, IT USED IT on "used", the modern cat landing on "lands", the film strip on "Paris" (loop).
+
+## Open notes
+- Acting and feel are the Director's call on `tests/preview_full_540.mp4`; the Producer reviews `tests/sheet_2s.jpg` against the script before any 1080 final.
+- Dramatised / simplified (as in SCRIPT.md): the fall is shown in slow motion (the real fall lasts ~0.3 s; Marey filmed at 12 frames per second); the righting is drawn as the simplified "tuck and turn" (front ~195° vs back ~15°, then swap), not the full Kane & Scher bend-and-twist; Marey on a stool and his loupe are staging; the 1968 gym, the suit design and the photo on the wall are illustrative.
+- Render cost: frames are drawn at 1080 and downscaled; the 540 preview takes ~25-30 min on 4 cores, the 1080 final about 45-60 min.
