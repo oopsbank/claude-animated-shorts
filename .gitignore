@@ -14,3 +14,4 @@ videos/*/*_captions_cover_1080x1920.mp4
 audio/*/stem_*.wav
 models/
 deliverables/
+audio/*/voice_24k.wav
