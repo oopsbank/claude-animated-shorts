@@ -68,3 +68,4 @@ The Director's cinematic style (2026-11-25): the house flat2d look shot like a f
   stickmen at 3D points), `skyworld.py` (altitude sky, cloud sea in parallax rows, cirrus, wisps).
 - `anim.actor(..., quant=2.0)`: round small figures' joint angles so cards are reused across frames (a 6x speedup
   on crowds); `kit.contact_shadow` and `kit.place` now work on canvases of any size.
+- `smoke.py WORDS --film NAME [--from SHOT]`: draws every shot at its start, middle and last frame in parallel and reports exceptions; run it before any full render.

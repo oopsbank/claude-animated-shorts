@@ -150,4 +150,4 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Engines "buried in the wing root" read as pods unless the root bay has a blunt, flat leading edge for the intake decals to sit on.
 - Reviewers call diagram stages "flat slides" next to 3D sets: give mechanism shots a defocused foreground (a window rim, a riveted frame member), a light sweep and varied framing, and alternate grades (deep navy / warm dusk / steel / warm red) across a mechanism run.
 - Crowds of small stickmen are slow (a new card every frame from the idle motion): quantise their poses (`anim.actor(quant=2)`), freeze idle sway on distant extras, and draw each on a small canvas, not a full-frame layer (s03 went from 25 s to 4 s a frame).
-
+- Smoke-test every shot at its start, middle and last frame (`flat2d/smoke.py`, ~1 min in parallel) before a full render: review stills sample one moment per shot, and a negative base `** 2.2` (complex) at the START of s05b crashed the 540 render 21 s in. Clamp bases before fractional powers.

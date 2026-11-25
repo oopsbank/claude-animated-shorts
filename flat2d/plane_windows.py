@@ -1035,7 +1035,7 @@ def s05b(u, D, cue):
     if gy < H - 2:
         d.rectangle([0, gy, W, H], fill=(96, 128, 86)); d.line([(0, gy), (W, gy)], fill=INK, width=5)
         for x in range(0, W, 90): d.line([(x, gy + 30), (x + 40, gy + 30)], fill=(150, 170, 120), width=6)
-    dens = lambda y: max(.03, min(.9, ((y + tilt * .9 - 150) / 1700) ** 2.2))
+    dens = lambda y: max(.03, min(.9, max(0.0, (y + tilt * .9 - 150) / 1700) ** 2.2))
     air_dots(img, T, (0, 0, W, gy), lambda y: dens(y) * .55, (196, 228, 255), r=5, alpha=165, jitter=4)
     if not HIDE_UI:
         tag(img, 'THIN AIR', 760, 230, 46, (200, 226, 255))
