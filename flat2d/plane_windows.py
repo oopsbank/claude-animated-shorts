@@ -43,6 +43,25 @@ if '1080x1920' in sys.argv: P3.SS = 2
 def q(v, step): return round(v / step) * step
 
 
+_WORDS = None
+
+
+def line_cue(line, w0=0):
+    """cue(i) for a shot that starts LEAD s before word w0 of voice-over line `line` (from words.json), so one shot
+    can draw another shot's frame (match-cut dissolves) with the right word timings."""
+    global _WORDS
+    if _WORDS is None:
+        import json, re
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        ws = json.load(open(os.path.join(root, 'audio', SLUG, 'words.json')))
+        txt = open(os.path.join(root, 'scripts', SLUG, 'SCRIPT.md')).read().split('## Voice-over')[1].split('\n## ')[0]
+        k = 0; _WORDS = {}
+        for li, m in enumerate(re.finditer(r'^\d+\. (.+)$', txt, re.M), 1):
+            n = len(m.group(1).split()); _WORDS[li] = [w['start'] for w in ws[k:k + n]]; k += n
+    st = _WORDS[line]; t0 = st[w0] - .1
+    return lambda i: st[min(i, len(st) - 1)] - t0
+
+
 # ---------------------------------------------------------------- UI wrappers (HIDE_UI for the thumbnail frame)
 def clue(img, txt, u, t0=.05, y=250):
     if not HIDE_UI: TG.clue(img, txt, u, t0, y)
@@ -221,10 +240,10 @@ def opening_title(img, u, k=1.0, t_pop=None):
 
 
 def tank_frame(T, cam, chars=None, flex=0.0, swell=0.0, surge=0.0, fg=None, bloom_k=.24, focus_fg=None, porthole_glow=0.0,
-               extra_mid=None, extra_after=None):
+               extra_mid=None, extra_after=None, extra_under=None):
     DRAWN.clear()
     img, info = Hg.scene(cam, T, chars=chars, flex=flex, swell=swell, surge=surge, fg=fg, porthole_glow=porthole_glow,
-                         extra_mid=extra_mid, extra_after=extra_after)
+                         extra_mid=extra_mid, extra_after=extra_after, extra_under=extra_under)
     return fin(img, T, 'hangar', bloom_k=bloom_k)
 
 
@@ -350,7 +369,8 @@ def s07(u, D, cue):
     flex = (pv - .08) * 1.1
     sx, sy = shake(u, sp, 16, .5)
     img = tank_frame(T, cam, tank_chars(T, react=react, hide=(0,)), flex=flex, surge=surge, porthole_glow=.6,
-                     extra_mid=lambda im, c: (split_line(im, c, smooth(seg(u, sp - .05, sp + .25))), erupt(im, c, smooth(seg(u, sp, sp + .5)), u)))
+                     extra_mid=lambda im, c: erupt(im, c, smooth(seg(u, sp, sp + .5)), u),
+                     extra_under=lambda ul, c: split_line(ul, c, smooth(seg(u, sp - .05, sp + .25))))
     if sx or sy: img = cine.cam2d(img, 1.03, dx=sx, dy=sy)
     faces = [face_box(g, 1.3) for g in DRAWN if g['R'] > 6]
     if not HIDE_UI:
@@ -401,7 +421,9 @@ def s15(u, D, cue):
         chip(img, 'A TANK OF WATER', TEAL, 540, 420, u, cue(6) - .05, size=52, until=t54 - .15)
     # the match cut in: the cabin window (s14's last frame) dissolves into the porthole for the first 0.3 s
     if u < .3:
-        prev, _ = s14_frame(S14_END, None)
+        now = anim.NOW; anim.NOW = 61.11 + u                 # s14's own clock (the window sky keeps drifting)
+        prev, _ = s14(S14_END + u, S14_END, line_cue(14))
+        anim.NOW = now
         img = cine.xfade(prev, img, smooth(u / .3))
     return img, {'faces': faces, 'avoid': [(0, 100, W, 520)]}
 
@@ -500,7 +522,7 @@ def s02_frame(u, D, cue):
     s = 1.25 - .05 * k                                  # window scale (u = 0: the bezel matches the porthole)
     par = (10 * (1 - k), -6 * (1 - k))
     img = Image.new('RGBA', (W, H))
-    wall_panel(img, T, seams=(140 - 260 * k, 940 + 260 * k))
+    wall_panel(img, T, col=(206, 194, 174), seams=(140 - 260 * k, 940 + 260 * k))
     cx, cy = 540 - 20 * k, 960 - 50 * k
     # the overhead bin above, with a warm light strip under it
     d = ImageDraw.Draw(img); by = 150 - 120 * (1 - k)
@@ -524,7 +546,7 @@ def s02_frame(u, D, cue):
         kc = smooth(seg(u, cue(7) - .1, cue(8) + .1))
         p = corner_fit(img, box, r, kc, which='tr')
         if kc > .6 and p:
-            tag(img, 'NO SHARP CORNERS', 540, box[1] - 140, 56, 'white', pop(u, cue(7), .3))
+            tag(img, 'NO SHARP CORNERS', 540, box[1] - 150, 66, 'white', pop(u, cue(7), .3))
         qmark(img, box[2] + 110, box[1] - 10, .95, u, cue(8) + .02)
     return img, box
 
@@ -532,7 +554,9 @@ def s02_frame(u, D, cue):
 def s02(u, D, cue):
     img, box = s02_frame(u, D, cue)
     if u < .2:                                          # match cut: the 1954 porthole dissolves into the cabin window
+        now = anim.NOW
         prev, _ = s01_frame(7.22)
+        anim.NOW = now
         img = cine.xfade(prev, img, smooth(u / .2))
     return img, {'faces': [], 'avoid': [(box[0] - 120, box[1] - 200, box[2] + 220, box[3] + 40)]}
 
@@ -634,8 +658,8 @@ def s14_frame(u, cue):
     img = Image.new('RGBA', (W, H))
     wall_panel(img, T, seams=(70, 1010), light=(.5, .6))
     z = 1 + .05 * smooth(u / 3.2)
-    cx, cy = 540, 1330
-    box = A.window_art(img, cx, cy, 1.15 * z, lambda l, b: sky_into(l, b, T), T, shade=.08, par=(6 * math.sin(u * .6), -4))
+    cx, cy = 540, 1380
+    box = A.window_art(img, cx, cy, 1.1 * z, lambda l, b: sky_into(l, b, T), T, shade=.08, par=(6 * math.sin(u * .6), -4))
     kit.radial(img, cx + 60, cy - 120, 420, (255, 244, 220), .22)
     img = fin(img, T, 'cabin', bloom_k=.32)
     return img, box
@@ -646,7 +670,7 @@ def s14(u, D, cue):
     if not HIDE_UI:
         stitle(img, 's14a', [('NOT ABOUT', 'white', 124), ('LOOKS.', 'white', 140)], 130, u, cue(0) - .02, stagger=.12)
         if u > cue(8) - .05:
-            stitle(img, 's14b', [('ABOUT NOT', KEY, 150), ('TEARING', KEY, 190), ('OPEN.', KEY, 190)], 430, u, cue(8) - .05, stagger=.09)
+            stitle(img, 's14b', [('ABOUT NOT', KEY, 140), ('TEARING', KEY, 176), ('OPEN.', KEY, 176)], 420, u, cue(8) - .05, stagger=.09)
     sx, sy = shake(u, cue(8), 14, .4)
     if sx or sy: img = cine.cam2d(img, 1.02, dx=sx, dy=sy)
     return img, {'faces': [], 'avoid': [(0, 100, W, 1000), (box[0] - 60, box[1] - 40, box[2] + 60, box[3] + 30)]}
@@ -665,7 +689,7 @@ def comet_parts(att=(7.0, 0.0, 0.0)):
     return _CM[k]
 
 
-SKY_LIGHT = P3.Light(d=(.25, -.45, .86), amb=.52, bands=(.2, .55, .82), soft=.45, shadow=(80, 104, 150), shadow_k=.3)
+SKY_LIGHT = P3.Light(d=(.25, .45, .86), amb=.56, bands=(.2, .55, .82), soft=.45, shadow=(80, 104, 150), shadow_k=.3)
 
 
 def altitude_bg(T, pan=0.0, tilt=0.0, horizon=1460, sun=(860, 330), dark=0.0):
@@ -680,7 +704,7 @@ def altitude_bg(T, pan=0.0, tilt=0.0, horizon=1460, sun=(860, 330), dark=0.0):
 
 
 S04_PATH = P3.Path([(0.0, (-52.0, 40.0, 3.0), (-8.0, 0.0, 2.0), 36.0), (.9, (-24.0, 40.0, 8.0), (12.5, 0.0, .5), 40.0),
-                    (1.9, (-15.0, 36.0, 7.0), (12.5, 0.0, .5), 38.0), (3.24, (11.0, 17.0, 3.2), (11.0, 0.0, .2), 24.0)],
+                    (1.9, (-21.0, 41.0, 8.0), (12.5, 0.0, .5), 39.0), (3.24, (11.0, 17.0, 3.2), (11.0, 0.0, .2), 24.0)],
                    ease_ends=False)
 
 
@@ -819,7 +843,7 @@ def s04b(u, D, cue):
     if not HIDE_UI and u >= t_cut:
         kx = cue(15) - .1                                  # 'broke apart' -> the wrong answer is crossed out
         chip(img, 'JUST STYLE?', (214, 90, 150), 300, 1640, u, kx - .15, size=64, angle=6)
-        if u > cue(16) - .2: xmark(img, 300, 1640, 120, (u - (cue(16) - .2)) * 5)
+        if u > cue(16) - .2: xmark(img, 300, 1640, 95, (u - (cue(16) - .2)) * 5, w=20)
     return img, {'faces': [], 'avoid': [(0, 1520, 640, 1760)]}
 
 
@@ -967,7 +991,7 @@ def s05(u, D, cue):
     # top-down camera: a slow rotate + push over the map
     z = 1.0 + .12 * smooth(u / D); roll = -7 + 5 * smooth(u / D)
     mm = cine.cam2d(m, z, rx, ry, roll=roll)
-    img.alpha_composite(mm.crop((int(rx - W / 2), int(ry - 1000), int(rx - W / 2) + W, int(ry - 1000) + H)))
+    img.alpha_composite(mm.crop((int(rx - W / 2 - 90), int(ry - 1000), int(rx - W / 2 - 90) + W, int(ry - 1000) + H)))
     # desk-lamp light pool and a blurred magnifier rim in the foreground (DOF)
     kit.radial(img, 620, 900, 900, (255, 226, 170), .22)
     def pencil(l):
@@ -979,7 +1003,7 @@ def s05(u, D, cue):
     img = fin(img, T, 'archive', bloom_k=.1, vig=(.4, (14, 10, 8)))
     if not HIDE_UI:
         clue(img, 'CLUE 1', u, cue(0) - .05, y=230)
-        x, y = 540, 1000 - 20
+        x, y = 630, 1000 - 20
         if u > cue(8) - .1:
             tag(img, 'ROME', x + 120, y + 6, 52, 'white', pop(u, cue(8) - .1, .3))
         chip(img, 'BOTH WHILE CLIMBING', RED, 540, 420, u, cue(5) - .05, size=50)
@@ -1015,7 +1039,7 @@ def s05b(u, D, cue):
     air_dots(img, T, (0, 0, W, gy), lambda y: dens(y) * .55, (196, 228, 255), r=5, alpha=165, jitter=4)
     if not HIDE_UI:
         tag(img, 'THIN AIR', 760, 230, 46, (200, 226, 255))
-        if gy - 120 < H: tag(img, 'THICK AIR', 760, min(H - 80, gy - 120), 46, (255, 255, 255))
+        tag(img, 'THICK AIR', 760, min(H - 300, gy - 120), 46, (255, 255, 255))
     # altitude scale
     for k_, lbl in enumerate(('0 FT', '10,000', '20,000', '30,000')):
         y = gy - 160 - k_ * 470
@@ -1029,6 +1053,11 @@ def s05b(u, D, cue):
     pl = pl.crop(pl.getbbox()); sc = 700 / pl.width
     pl = pl.resize((int(pl.width * sc), int(pl.height * sc)), Image.LANCZOS)
     img.alpha_composite(pl, (int(px - pl.width / 2), int(py - pl.height / 2)))
+    def cloud_fg(l):
+        dd = ImageDraw.Draw(l)
+        for x, y, r in ((-60, 1880, 260), (200, 1960, 230), (900, 1900, 240), (1140, 1820, 220)):
+            dd.ellipse([x - r, y - r * .7, x + r, y + r * .7], fill=(236, 244, 255, 235))
+    cine.fg_frame(img, cloud_fg, blur=12)
     img = fin(img, T, 'altitude', bloom_k=.15)
     if not HIDE_UI:
         chip(img, 'AIR OUTSIDE: THINNER', (40, 92, 150), 540, 380, u, cue(11) - .1, size=54)
@@ -1072,7 +1101,7 @@ def s06(u, D, cue):
     d.polygon([(0, 1060), (W, 1000), (W, H), (0, H)], fill=(96, 62, 40)); d.line([(0, 1060), (W, 1000)], fill=INK, width=6)
     # the investigator behind the desk (medium)
     z = 1 + .06 * smooth(u / D)
-    g = actor(img, 'thinking' if u < cue(6) else 'neutral', 'hold' if u < cue(2) else 'point', 540, 1520, .62, T, look=.3 if u < cue(6) else -.2,
+    g = actor(img, 'thinking' if u < cue(6) else 'neutral', 'hold' if u < cue(2) else 'point', 560, 1660, .86, T, look=.3 if u < cue(6) else -.2,
               coat='#5a5248', pants='#3a3434', rim=(255, 220, 170), rim_dir=(1, -.4))
     d.polygon([(0, 1180), (W, 1120), (W, H), (0, H)], fill=(110, 72, 46)); d.line([(0, 1180), (W, 1120)], fill=INK, width=6)
     # the lamp pool + two logbooks
@@ -1182,7 +1211,7 @@ def corner_boost(x, y):
     """Extra stress colour near the square window's corners (the singular points the lines crowd into)."""
     sx, sy, w, h, rr = HOLE_S
     d = min(math.hypot(x - (sx + a * w / 2), y - (sy + b * h / 2)) for a in (-1, 1) for b in (-1, 1))
-    return 3.6 * math.exp(-d / 42.0)
+    return 4.6 * math.exp(-d / 55.0)
 
 
 def panel_static(kind='both'):
@@ -1241,9 +1270,20 @@ def flow_frame(t, camx, camy, zoom, show='both', pulse=0.0, dash_speed=160.0, cr
     dd = ImageDraw.Draw(base)
     dd.ellipse([cx - r, cy - r, cx + r, cy + r], outline=INK, width=8)
     dd.rounded_rectangle([sx - w / 2, sy - h / 2, sx + w / 2, sy + h / 2], rr, outline=INK, width=8)
-    # the hot point at the top-right corner of the square window
+    # the hot point at the top-right corner of the square window (all four corners glow, that one most)
     hx, hy = sx + w / 2, sy - h / 2
     if glow_k > 0:
+        for ax, ay in ((-1, -1), (-1, 1), (1, 1)):
+            kit.radial(base, sx + ax * w / 2, sy + ay * h / 2, 90 + 30 * pulse, (255, 80, 40), (.45 + .25 * pulse) * glow_k, add=True)
+        pl = layer(base.width, base.height); dp = ImageDraw.Draw(pl)
+        for k_ in range(9):                                   # stretch lines funnelling into the corner point
+            a0 = math.radians(-160 + 140 * k_ / 8); r0 = 230
+            p0 = (hx + math.cos(a0) * r0 * 1.2, hy + math.sin(a0) * r0)
+            mid = (hx + math.cos(a0) * r0 * .45, hy + math.sin(a0) * r0 * .35)
+            pts = [(p0[0] * (1 - t_) ** 2 + 2 * mid[0] * t_ * (1 - t_) + hx * t_ * t_, p0[1] * (1 - t_) ** 2 + 2 * mid[1] * t_ * (1 - t_) + hy * t_ * t_)
+                   for t_ in np.linspace(0, 1, 16)]
+            dp.line(pts, fill=(255, 150, 70, int(230 * glow_k)), width=5)
+        base.alpha_composite(kit.soft_layer(pl, 1.2))
         kit.radial(base, hx, hy, 150 + 60 * pulse, (255, 70, 40), (.65 + .3 * pulse) * glow_k, add=True)
         kit.radial(base, hx, hy, 46, (255, 240, 200), (.8 + .2 * pulse) * glow_k, power=.8, add=True)
     if crack > 0: draw_crack(base, hx, hy, crack, rip)
@@ -1298,7 +1338,7 @@ def panel_fg(img, T, side=1):
     """Foreground framing for the panel shots: a riveted frame member crossing the frame edge, defocused, and a slow
     light sweep across the metal."""
     def draw(l):
-        d = ImageDraw.Draw(l); x0 = 1000 if side > 0 else -220
+        d = ImageDraw.Draw(l); x0 = 930 if side > 0 else -150
         d.rectangle([x0, -40, x0 + 300, H + 40], fill=(120, 128, 142, 255), outline=INK, width=10)
         for y in range(30, H, 90): d.ellipse([x0 + 120, y, x0 + 170, y + 50], fill=(170, 176, 188, 255))
     cine.fg_frame(img, draw, blur=16)
@@ -1359,7 +1399,8 @@ def s12(u, D, cue):
     T = anim.NOW
     sx, sy, w, h, rr = HOLE_S; hx, hy = sx + w / 2, sy - h / 2
     z = 1.75 + .35 * smooth(seg(u, 0, 2.2)) - .45 * smooth(seg(u, cue(11) - .2, cue(12) + .3))
-    camx = hx + 120 + 60 * smooth(seg(u, 0, 2.2)); camy = hy - 60 - 60 * smooth(seg(u, 0, 2.2))
+    camx = hx + 40 + 40 * smooth(seg(u, 0, 2.2)); camy = hy - 250 - 40 * smooth(seg(u, 0, 2.2))
+    camx = min(camx, PANEL_W - W / (2 * z) - 6); camy = max(camy, H / (2 * z) + 6)
     n = sum(T >= s for s in SQUEEZES)
     ph = min([T - s for s in SQUEEZES if T >= s] or [9])
     pulse = math.exp(-ph * 6) if ph < 2 else 0.0
@@ -1507,12 +1548,21 @@ def s09(u, D, cue):
             for s_ in (-1, 1):
                 arrow(img, (540 + s_ * 120, 1560), (540 + s_ * 120, 1300), (255, 150, 70), 16, 40, alpha=smooth(seg(u, cue(5) - .2, cue(5) + .2)))
     if u >= t_x + .35: img = cine.cam2d(img, 1.0 + .16 * smooth(seg(u, t_x + .35, D)), 540, 1060)
+    rim_fg(img, -1, smooth(seg(u, t_x, t_x + .5)))
     img = fin(img, T, 'navy', bloom_k=.25)
     if not HIDE_UI:
         chip(img, 'UP HIGH: THIN AIR', (40, 92, 150), 540, 300, u, cue(0) - .05, size=52, until=cue(5) - .2)
         if u > cue(5) - .1: chip(img, 'CABIN: PUMPED FULL OF AIR', (200, 110, 40), 540, 300, u, cue(5) - .1, size=48)
         if u > cue(12) - .15: chip(img, 'SO YOU CAN BREATHE', (60, 130, 80), 540, 1560, u, cue(12) - .15, size=48)
     return img, {'faces': [], 'avoid': [(0, 200, W, 400), (0, 1480, W, 1640)]}
+
+
+def rim_fg(img, side=1, k=1.0):
+    """Foreground depth for the cross-section shots: the soft rim of an airliner window we look past (DOF)."""
+    def draw(l):
+        d = ImageDraw.Draw(l); x = 1180 if side > 0 else -100
+        d.rounded_rectangle([x - 260, 1300, x + 260, 2200], 200, outline=(226, 220, 208, 255), width=120)
+    cine.fg_frame(img, draw, blur=18, alpha=k)
 
 
 def s09b(u, D, cue):
@@ -1525,7 +1575,7 @@ def s09b(u, D, cue):
     img = fin(img, T, 'navy', bloom_k=.25)
     if not HIDE_UI:
         stitle(img, 's09sw', [('SWELLS', (255, 170, 90), 130)], 160, u, cue(15) - .05)
-        if u > cue(17) - .1: tag(img, 'LIKE A BALLOON', 760, 700, 46, 'white', pop(u, cue(17) - .1, .3))
+        if u > cue(17) - .1: tag(img, 'LIKE A BALLOON', 470, 420, 50, 'white', pop(u, cue(17) - .1, .3))
         tag(img, '(EXAGGERATED)', 540, 1560, 34, (220, 230, 255), pop(u, cue(16), .3) * .9)
     return img, {'faces': [], 'avoid': [(0, 120, W, 330), (0, 1500, W, 1620)]}
 
@@ -1550,11 +1600,12 @@ def s10(u, D, cue):
     img = outside(T, alt)
     section(img, T, sw=sw, air=1.0, inward=sh * (1 - smooth(seg(u, cue(5) - .2, cue(5)))), ghost=sh * (1 - smooth(seg(u, cue(5) - .3, cue(5)))),
             ghost_r=1.075)
+    rim_fg(img, 1)
     img = fin(img, T, 'desk', bloom_k=.25)
     if not HIDE_UI:
         if u < cue(5) - .1:
             chip(img, 'LANDING', (60, 130, 80), 540, 300, u, cue(0) - .05, size=52)
-            if u > cue(3) - .1: tag(img, 'SHRINKS BACK', 540, 1560, 56, 'white', pop(u, cue(3) - .1, .3))
+            if u > cue(3) - .1: tag(img, 'SHRINKS BACK', 540, 440, 60, 'white', pop(u, cue(3) - .1, .3))
         else:
             # flight arc + counter
             d = ImageDraw.Draw(img)
@@ -1599,7 +1650,7 @@ def s07b(u, D, cue):
     img = cine.cam2d(art, z, hx - 60, hy + 40, dx=W / 2 - (hx - 60), dy=H / 2 - (hy + 40), roll=-4 + 4 * smooth(u / D)).crop((0, 0, W, H))
     # under water: teal veil, caustics, light rays, drifting particles, a slight wobble
     img.alpha_composite(Image.new('RGBA', img.size, (20, 110, 118, 92)))
-    cine.caustics(img, T, box=(0, 0, W, H), col=(200, 255, 236), alpha=.3, scale=1 / 90, res=3)
+    cine.caustics(img, T, box=(0, 0, W, H), col=(200, 255, 236), alpha=.42, scale=1 / 80, res=3)
     cine.shafts(img, [[(200, -50), (420, -50), (900, 1900), (520, 1900)], [(700, -50), (820, -50), (1200, 1500), (1000, 1600)]],
                 col=(210, 255, 240), alpha=.2, blur=40)
     cine.motes(img, T, (0, 0, W, H), n=70, col=(220, 255, 240), alpha=150, size=(2, 6), drift=(4, -18))
@@ -1610,7 +1661,7 @@ def s07b(u, D, cue):
         if u > cue(14) - .15:
             chip(img, 'THE SHARP CORNER', RED, 540, 380, u, cue(14) - .15, size=54)
             arrow(img, (sx_ - 300, sy_ - 330), (sx_ - 50, sy_ - 50), (255, 255, 255), 16, 40, alpha=smooth(seg(u, cue(14), cue(15))))
-        if u > cue(18) - .15: tag(img, 'OF A HATCH WINDOW', 540, 1640, 52, 'white', pop(u, cue(18) - .15, .3))
+        if u > cue(18) - .15: tag(img, 'OF A HATCH WINDOW', 540, 1330, 54, 'white', pop(u, cue(18) - .15, .3))
     return img, {'faces': [], 'avoid': [(0, 260, W, 480), (0, 1560, W, 1720)]}
 
 
@@ -1648,6 +1699,12 @@ def s08(u, D, cue):
     img.paste(warped, (0, 0), m)
     d.line(dst + [dst[0]], fill=INK, width=6)
     kit.radial(img, 620, 1420, 520, (255, 226, 170), .25)
+    cine.shafts(img, [[(420, 300), (640, 300), (1040, 1700), (60, 1700)]], col=(255, 226, 170), alpha=.16, blur=50)
+    def lamp(l):
+        dd = ImageDraw.Draw(l); dd.line([(530, -20), (530, 160)], fill=(30, 30, 30, 255), width=10)
+        dd.polygon([(400, 330), (660, 330), (590, 160), (470, 160)], fill=(40, 90, 70, 255))
+        dd.ellipse([440, 300, 620, 360], fill=(255, 240, 200, 255))
+    cine.fg_frame(img, lamp, blur=9)
     img = fin(img, T, 'desk', bloom_k=.22)
     faces = [face_box(g, 1.25)]
     if not HIDE_UI:
@@ -1748,7 +1805,7 @@ END = 1956 / 30                  # 65.20 s (length.json)
 NO_PUNCH = ('s01b', 's02', 's04', 's04a', 's04b', 's05b', 's07b', 's09b', 's10', 's11b', 's12', 's15')
 BAND_AT = {}
 BAND_FIX = {'s01': 1500, 's01b': 1290, 's15': 1500, 's14': 1790, 's11': 1720, 's11b': 1780, 's12': 1820, 's09': 1800,
-            's09b': 1800, 's10': 1730, 's04': 1520, 's04a': 1520, 's06': 1880, 's08': 1860, 's04b': 1850, 's05': 1720, 's13': 1760, 's07': 1330, 's07b': 1530, }
-STILL_AT = {'s01': .0, 's01b': .8, 's02': .95, 's03': .7, 's04': .88, 's04a': .75, 's04b': .75, 's05': .92, 's05b': .85, 's06': .9,
+            's09b': 1800, 's10': 1730, 's04': 1520, 's04a': 1520, 's06': 1880, 's08': 1860, 's04b': 1880, 's03': 1790, 's05': 1720, 's13': 1760, 's07': 1330, 's07b': 1530, }
+STILL_AT = {'s01': .0, 's01b': .8, 's02': .95, 's03': .79, 's04': .75, 's04a': .75, 's04b': .75, 's05': .92, 's05b': .85, 's06': .9,
             's07': .9, 's07b': .9, 's08': .9, 's09': .85, 's09b': .9, 's10': .38, 's11': .92, 's11b': .9, 's12': .93,
             's13': .93, 's14': .95, 's15': .55}

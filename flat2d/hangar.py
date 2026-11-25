@@ -517,7 +517,7 @@ def port_views(img, ul, cam, t, glow=0.0):
 
 # ---------------------------------------------------------------- the whole scene
 def scene(cam, t, focus=None, aperture=0.0, chars=None, flex=0.0, swell=0.0, surge=0.0, fg=None, shafts_k=1.0,
-          bg_blur=2.0, motes_k=1.0, porthole_glow=0.0, extra_mid=None, extra_after=None, roof=True):
+          bg_blur=2.0, motes_k=1.0, porthole_glow=0.0, extra_mid=None, extra_after=None, roof=True, extra_under=None):
     """Draw the hangar + tank + Comet for camera `cam` at time t. chars(img, cam, layer_name) draws characters
     ('deck-1' on the near gantry, 'deck1' on the far gantry, 'floor' on the floor). fg(img) draws the blurred
     foreground. Returns (img RGBA, info)."""
@@ -541,6 +541,7 @@ def scene(cam, t, focus=None, aperture=0.0, chars=None, flex=0.0, swell=0.0, sur
     # ---- under water: tank inner faces + the submerged Comet (fogged), composited through the water
     ul = kit.layer(*cam.size)
     P3.render(ul, cam, [S['tank_inner']] + S['comet_under'], light=LIGHT, fog=fog_water, ink_w=2, sil_w=4)
+    if extra_under: extra_under(ul, cam)
     # ---- far gantry (behind the tank from any angle), then the far engineers, then the tank (occludes them when low)
     deckN, colsN, railN = S['gantry-1']; deckF, colsF, railF = S['gantry1']
     far = kit.layer(*cam.size)

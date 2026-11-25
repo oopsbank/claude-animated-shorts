@@ -38,7 +38,7 @@ def _puff_row(w, h, seed, base, amp, rmin, rmax, lit=(255, 255, 255), shade=(196
     while x < w + rmax:
         r = rng.uniform(rmin, rmax); y = base - amp * rng.uniform(.2, 1.0)
         bumps.append((x, y, r)); x += r * rng.uniform(.9, 1.4)
-    d.rectangle([0, base, w, h], fill=deep + (255,))
+    d.rectangle([0, base, w, h], fill=shade + (255,))
     for x, y, r in bumps: d.ellipse([x - r, y - r, x + r, y + r * 1.4], fill=deep + (255,))
     for x, y, r in bumps: d.ellipse([x - r * .96, y - r * .96, x + r * .9, y + r * .9], fill=shade + (255,))
     for x, y, r in bumps: d.ellipse([x - r * .86, y - r * .94, x + r * .62, y + r * .5], fill=lit + (255,))
