@@ -1,0 +1,81 @@
+{
+ "title": "Why Are Airplane Windows Round?",
+ "note": "Producer shot list (one shot per voice line) for audio/build_mix.py. The Animator may split shots; keep word counts.",
+ "shots": [
+  {
+   "id": "s01",
+   "set": "hangar",
+   "text": "In 1954, British engineers sank an entire airliner in a giant tank of water. Then they pumped it up, again and again."
+  },
+  {
+   "id": "s02",
+   "set": "aircabin",
+   "text": "Ever noticed that plane windows never have sharp corners?"
+  },
+  {
+   "id": "s03",
+   "set": "aircabin",
+   "text": "Most people think it's just style."
+  },
+  {
+   "id": "s04",
+   "set": "altitude",
+   "text": "But the first jet airliner, the Comet, had squarish windows. And in 1954, two Comets broke apart in the sky."
+  },
+  {
+   "id": "s05",
+   "set": "altitude",
+   "text": "Clue one. Both broke up climbing away from Rome, as the air outside thinned."
+  },
+  {
+   "id": "s06",
+   "set": "altitude",
+   "text": "Clue two. Neither plane was old. Each had made only about a thousand flights."
+  },
+  {
+   "id": "s07",
+   "set": "hangar",
+   "text": "Clue three. In the tank, the test plane finally split open, starting at the sharp corner of a hatch window."
+  },
+  {
+   "id": "s08",
+   "set": "hangar",
+   "text": "So why would a corner tear first?"
+  },
+  {
+   "id": "s09",
+   "set": "aircabin",
+   "text": "Up high, the cabin is pumped full of air so you can breathe. The body swells slightly, like a balloon."
+  },
+  {
+   "id": "s10",
+   "set": "aircabin",
+   "text": "Every landing, it shrinks back. One flight, one squeeze."
+  },
+  {
+   "id": "s11",
+   "set": "room",
+   "text": "Around a round window, the stretch flows smoothly past. At a sharp corner, it piles into one tiny point."
+  },
+  {
+   "id": "s12",
+   "set": "room",
+   "text": "Squeeze after squeeze, a tiny crack grows there, until the metal gives way. That's metal fatigue."
+  },
+  {
+   "id": "s13",
+   "set": "room",
+   "text": "It's like bending a paperclip: once is fine. Do it a hundred times, and it snaps."
+  },
+  {
+   "id": "s14",
+   "set": "aircabin",
+   "text": "Round windows aren't about looks. They're about not tearing open."
+  },
+  {
+   "id": "s15",
+   "set": "hangar",
+   "text": "And it was learned in a tank of water, in 1954."
+  }
+ ]
+}

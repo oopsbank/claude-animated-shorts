@@ -1,0 +1,202 @@
+[
+ {
+  "cue": "card_pop",
+  "shot": "s01",
+  "at_word": 1,
+  "level": -16,
+  "offset": 0,
+  "note": "1954 · ENGLAND title"
+ },
+ {
+  "cue": "pump_hiss",
+  "shot": "s01",
+  "at_word": 16,
+  "level": -19,
+  "offset": -0.1,
+  "note": "the fuselage in the tank is pumped up"
+ },
+ {
+  "cue": "metal_groan",
+  "shot": "s01",
+  "at_word": 19,
+  "level": -18,
+  "offset": 0,
+  "note": "the hull flexes, again and again"
+ },
+ {
+  "cue": "question",
+  "shot": "s02",
+  "at_word": 8,
+  "level": -18,
+  "offset": 0,
+  "note": "no sharp corners?"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s03",
+  "at_word": 5,
+  "level": -18,
+  "offset": 0,
+  "note": "JUST STYLE?"
+ },
+ {
+  "cue": "jet_pass",
+  "shot": "s04",
+  "at_word": 4,
+  "level": -19,
+  "offset": -0.5,
+  "note": "the Comet, the first jet airliner"
+ },
+ {
+  "cue": "impact",
+  "shot": "s04",
+  "at_word": 15,
+  "level": -19,
+  "offset": 0,
+  "note": "two Comets lost (respectful, low)"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s05",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 1"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s06",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 2"
+ },
+ {
+  "cue": "ding",
+  "shot": "s06",
+  "at_word": 12,
+  "level": -19,
+  "offset": 0,
+  "note": "about 1,000 flights"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s07",
+  "at_word": 0,
+  "level": -16,
+  "offset": 0,
+  "note": "CLUE 3"
+ },
+ {
+  "cue": "crack_ping",
+  "shot": "s07",
+  "at_word": 9,
+  "level": -16,
+  "offset": 0,
+  "note": "the test fuselage splits at a window corner"
+ },
+ {
+  "cue": "question",
+  "shot": "s08",
+  "at_word": 1,
+  "level": -17,
+  "offset": 0,
+  "note": "the riddle"
+ },
+ {
+  "cue": "pump_hiss",
+  "shot": "s09",
+  "at_word": 5,
+  "level": -20,
+  "offset": -0.1,
+  "note": "cabin pumped full of air"
+ },
+ {
+  "cue": "metal_groan",
+  "shot": "s09",
+  "at_word": 15,
+  "level": -19,
+  "offset": 0,
+  "note": "the body swells"
+ },
+ {
+  "cue": "whoosh",
+  "shot": "s10",
+  "at_word": 3,
+  "level": -19,
+  "offset": -0.1,
+  "note": "it shrinks back"
+ },
+ {
+  "cue": "sparkle",
+  "shot": "s11",
+  "at_word": 7,
+  "level": -20,
+  "offset": 0,
+  "note": "stress flows smoothly round the round window"
+ },
+ {
+  "cue": "pop",
+  "shot": "s11",
+  "at_word": 17,
+  "level": -18,
+  "offset": 0,
+  "note": "stress piles into one point at the corner"
+ },
+ {
+  "cue": "crack_ping",
+  "shot": "s12",
+  "at_word": 5,
+  "level": -17,
+  "offset": 0,
+  "note": "a tiny crack grows"
+ },
+ {
+  "cue": "metal_groan",
+  "shot": "s12",
+  "at_word": 10,
+  "level": -18,
+  "offset": 0,
+  "note": "the metal gives way"
+ },
+ {
+  "cue": "paperclip_snap",
+  "shot": "s13",
+  "at_word": 15,
+  "level": -16,
+  "offset": 0,
+  "note": "the paperclip snaps"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s14",
+  "at_word": 0,
+  "level": -17,
+  "offset": 0,
+  "note": "NOT ABOUT LOOKS."
+ },
+ {
+  "cue": "impact",
+  "shot": "s14",
+  "at_word": 8,
+  "level": -16,
+  "offset": 0,
+  "note": "ABOUT NOT TEARING OPEN."
+ },
+ {
+  "cue": "pump_hiss",
+  "shot": "s15",
+  "at_word": 6,
+  "level": -20,
+  "offset": -0.1,
+  "note": "back to the tank"
+ },
+ {
+  "cue": "card_pop",
+  "shot": "s15",
+  "at_word": 10,
+  "level": -17,
+  "offset": 0,
+  "note": "1954"
+ }
+]

@@ -773,6 +773,85 @@ def amb_night(dur, r):
     out += np.stack([G.crickets(dur, r, 2) * 0.018, G.crickets(dur, r, 2) * 0.018])
     return out
 
+
+# ---------------------------------------------------------------- plane windows (video 12)
+FUSELAGE = [(70, 6, 1.0), (140, 8, 0.8), (260, 10, 0.6), (470, 12, 0.4), (820, 14, 0.25)]
+
+
+def pump_hiss(r, dur=1.8):
+    """air pumped into a sealed fuselage: a hiss that swells and settles, with a low pump thump"""
+    t = tt(dur)
+    n = len(t)
+    env = np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 1.2
+    hiss = bp(colored(n, r, 0.3), 1500, 7000, 2) * env * 0.35
+    pump = np.sin(phase(42 + 6 * t / dur)) * (0.5 + 0.5 * np.sin(TAU * 2.0 * t)) ** 4 * env * 0.5
+    return fades(hiss + lp(pump, 200, 2), 0.05, 0.2)
+
+
+def metal_groan(r, dur=1.6):
+    """a big aluminium fuselage flexing under pressure: a slow low groan"""
+    return G.creak(dur, r, rate0=28, rate1=45, modes=FUSELAGE, rough=0.2, noise=0.02)
+
+
+def crack_ping(r):
+    """a fatigue crack giving way: a sharp metallic tick, a short tearing rip and a ringing panel"""
+    t = tt(0.9)
+    n = len(t)
+    tick = sum(np.sin(TAU * f * t) * np.exp(-t / dk) * a for f, dk, a in [(2400, 0.02, 1.0), (3900, 0.012, 0.6), (5600, 0.008, 0.3)])
+    rip = bp(r.standard_normal(n), 900, 6000, 2) * np.exp(-np.maximum(0, t - 0.03) / 0.08) * (t > 0.03) * 0.5
+    ring = sum(np.sin(TAU * f * t) * np.exp(-t / 0.35) * a for f, a in [(310, 0.4), (620, 0.25), (1150, 0.15)])
+    return fades(tick * 0.6 + rip + ring * 0.5, 0.0, 0.1)
+
+
+def paperclip_snap(r):
+    """a small steel wire snapping after being bent: a tiny bright snap"""
+    t = tt(0.3)
+    n = len(t)
+    y = sum(np.sin(TAU * f * t) * np.exp(-t / dk) * a for f, dk, a in [(3600, 0.015, 1.0), (6100, 0.01, 0.5), (8300, 0.006, 0.3)])
+    y += hp(r.standard_normal(n), 3000) * np.exp(-t / 0.004) * 0.7
+    return fades(y * 0.7, 0.0, 0.04)
+
+
+def jet_pass(r, dur=2.6):
+    """a 1950s jet airliner passing overhead: a roar swelling and fading with a falling whine"""
+    t = tt(dur)
+    n = len(t)
+    env = np.exp(-((t - dur * 0.45) / (dur * 0.25)) ** 2)
+    roar = lp(colored(n, r, 1.0), 900, 2) * env
+    whine = np.sin(phase(2600 - 900 * t / dur)) * env * 0.06
+    y = roar + whine
+    return np.stack([y * (1 - 0.7 * t / dur), y * (0.3 + 0.7 * t / dur)])
+
+
+def amb_aircabin(dur, r):
+    """inside a 1950s airliner cabin in flight: a steady low engine drone and air-vent hiss"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    drone = lp(colored(n, r, 1.4), 260, 2) * (0.85 + 0.15 * np.sin(TAU * 0.7 * t))
+    vent = bp(colored(n, r, 0.2), 2000, 6000, 1) * 0.05
+    return st(drone + vent)
+
+
+def amb_hangar(dur, r):
+    """a huge test hangar with a water tank: a deep room tone, slow lapping water and distant clanks"""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    tone = lp(colored(n, r, 1.5), 150, 2) * 0.6
+    lap = bp(colored(n, r, 0.8), 200, 1000, 2) * (0.5 + 0.5 * np.sin(TAU * 0.15 * t) ** 2) * 0.12
+    out = st(tone + lap)
+    k = r.uniform(1.0, 3.0)
+    while k < dur - 0.6:
+        c = G.clink(r, f0=r.uniform(500, 900), dur=0.5) * 0.05
+        i = int(k * SR); out[:, i:i + len(c)] += np.stack([c, c])[:, :n - i] * np.array([[0.7], [0.4]])
+        k += r.uniform(3.0, 6.0)
+    return out
+
+
+def amb_altitude(dur, r):
+    """high altitude outside an airliner: a thin, steady rushing wind"""
+    out = G.breeze(dur, r, 0.9, gust=0.08, bright=1800)
+    return out
+
 GEN = {
     "whoosh": (whoosh, -17, "transition whoosh"),
     "whoosh_fast": (whoosh_fast, -16, "fast swish / speed lines"),
@@ -836,8 +915,13 @@ GEN = {
     "lamp_hum": (lamp_hum, -21, "an electric lamp switching on and humming"),
     "bulb_tick": (bulb_tick, -19, "a moth bumping a glass lamp"),
     "compass_spin": (compass_spin, -17, "a compass needle swinging and settling"),
+    "pump_hiss": (pump_hiss, -19, "air pumped into a sealed fuselage"),
+    "metal_groan": (metal_groan, -18, "a fuselage flexing under pressure"),
+    "crack_ping": (crack_ping, -16, "a fatigue crack giving way"),
+    "paperclip_snap": (paperclip_snap, -17, "a paperclip snapping"),
+    "jet_pass": (jet_pass, -19, "a jet airliner passing overhead"),
 }
 # fx names with no sound of their own (the music or the picture carries them)
 SILENT = {"zzz", "music_note", "anger_vein", "light_shaft", "lens_flash", "steer_arrow", "path_line", "air_hockey_overlay"}
 BEDS = {"polar": amb_polar, "under": amb_under, "lab": amb_room, "road": amb_road, "track": amb_road, "playa": amb_desert, "inserts": amb_alien, "village": amb_outdoor, "park": amb_outdoor, "harbour": amb_outdoor, "interior": amb_room,
-        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie, "savanna": amb_savanna, "farm": amb_outdoor, "lagoon": amb_lagoon, "cloudforest": amb_nightforest, "night": amb_night}
+        "room": amb_room, "taiga": amb_taiga, "ocean": amb_ocean, "jungle": amb_jungle, "river": amb_river, "earth": amb_under, "prairie": amb_prairie, "storm": amb_storm, "cave": amb_cave, "cabin": amb_cabin, "sky": amb_prairie, "savanna": amb_savanna, "farm": amb_outdoor, "lagoon": amb_lagoon, "cloudforest": amb_nightforest, "night": amb_night, "aircabin": amb_aircabin, "hangar": amb_hangar, "altitude": amb_altitude}
