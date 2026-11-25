@@ -248,3 +248,8 @@ The Producer's mix (`audio/plane-windows/mix.wav`, `sfx.json`, `music.json`) is 
 
 ## Final (the Producer, 2026-11-25, rendered locally; no fix session)
 The Producer's preview pass found no defects worth a fix session. `plane_windows_final_1080x1920.mp4` (**the posting copy**): `render.py audio/plane-windows/words.json OUT.mp4 --film plane_windows --size 1080x1920` (30 min on 4 cores), mux `audio/plane-windows/mix.wav`, `tools/add_cover.sh <muxed> videos/plane-windows/thumbnail.png <master>`, 2-pass libx264 high 5200k `-preset slow`, AAC 192k, +faststart. 1080x1920, 1959 frames (3 cover + 1956), **65.32 s**, **43.9 MB** (43,909,931 bytes). Loop: last frame = frame 0 (diff 0.0); frame 0 checked by eye. Posting title (the Director's OK): "In 1954, They Sank a Whole Airliner in a Tank ✈️". Not published.
+
+## Posted 2026-11-25 (Buffer, media file `plane_windows_1080x1920.mp4`)
+- TikTok 6b06ea74cdd06687d1a38c13 https://tiktok.com/@somecrazythingzz/video/7712109405784870164
+- Facebook 6b06ea7fd1898df0f7fb5695 https://facebook.com/1395801306957363_122109438021549918
+- YouTube: shareNow refused (LimitReachedError, 2 YouTube posts that day); scheduled in Buffer as 6b06ea92d1898df0f7fb6404 for 2026-11-26 04:30 UTC (11:30 Vietnam).
