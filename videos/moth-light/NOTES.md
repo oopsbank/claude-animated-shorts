@@ -143,3 +143,7 @@ The Producer's mix (`audio/moth-light/mix.wav`, `sfx.json`, `music.json`) is use
 The Producer's preview pass (sheet_2s.jpg, stills_r4, thumbnail) found no defects that needed a fix session: the small moths now read as moths, every shot matches its line, the loop holds. Open notes kept as they are: s10-s12 share one blue-violet diagram look; s05/s08/s10 are sparse next to the Wind Cave bar.
 - `moth_light_final_1080x1920.mp4` (**the posting copy**): `render.py audio/moth-light/words.json OUT.mp4 --film moth_light --size 1080x1920` (51 min on 4 cores), mux `audio/moth-light/mix.wav` (`-c:v copy -c:a aac -b:a 192k -shortest`), `tools/add_cover.sh <muxed> videos/moth-light/thumbnail.png <master>`, then 2-pass `libx264 -profile:v high -preset slow -b:v 5200k -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart`.
 - 1080x1920, 30 fps, 1918 frames (3 cover frames + 1915), **63.96 s**, **42.7 MB** (42,667,613 bytes). Frame 0 of the 1080 render matches the 540 preview's frame 0 by eye; loop: last frame vs frame 0 mean abs diff 0.1/255. Not published.
+
+## Scheduled 2026-11-25 (Buffer, media file `moth_light_1080x1920.mp4`)
+- TikTok 6b067b439cddd8483ab3ac6b and Facebook 6b067b43d8874a038cf8c1a4: scheduled for 2026-11-25 09:00 UTC (16:00 Vietnam), the Director's time.
+- YouTube 6b067b4a9cddd8483ab3af80: scheduled for 2026-11-26 09:00 UTC (16:00 Vietnam). Buffer refused 2026-11-25 (LimitReachedError: YouTube max 2 posts a day, videos 9 and 10 went out that day).
