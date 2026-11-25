@@ -223,7 +223,7 @@ def hand_anchors(pose='stand', fixed=False, prop=None, prop_hand='R'):
 def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixed=False,
          shirt=None, coat=None, uniform=None, apron=None, pants=None, outfit=None,
          prop=None, prop_hand='R', mouth=None, goggles=None, hair=None, hat_col=None, glasses=None,
-         cardigan=None, pyjamas=None):
+         cardigan=None, pyjamas=None, plain=False):
     # pose: a name from POSES, or a dict of joint angles (for animation); dict keys '_name' / '_side' set the style.
     # fixed=True keeps the hip at x=300 (no auto-centring) so animated frames don't jitter sideways.
     # Outfits: shirt / coat / uniform / apron / pants take a colour ('#rrggbb') or True for the default colour;
@@ -429,7 +429,11 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
         rect(300 - torso_half(458), 452, 300 + torso_half(458), 464, tA)
         if not side:
             d.rounded_rectangle([X(300 - 22) * S, Y(540) * S, X(300 + 22) * S, Y(584) * S], radius=5 * S, outline=tone(cA, 0.5), width=int(2.6 * S))
-    if cU:                                   # buttons + belt with buckle
+    if cU and plain:                         # plain=True: a hooded zip jacket (zip line + front pocket), no buttons/belt
+        d.line([(X(300 + sx) * S, Y(246) * S), (X(300 + sx) * S, Y(500) * S)], fill=tone(cU, .55), width=int(3.5 * S))
+        if not side:
+            d.rounded_rectangle([X(300 - 38) * S, Y(410) * S, X(300 + 38) * S, Y(470) * S], radius=10 * S, outline=tone(cU, .5), width=int(3 * S))
+    elif cU:                                 # buttons + belt with buckle
         for y in (300, 342, 384, 426): dot(300 + sx, y, 6, GOLD, tone(GOLD, 0.45))
         rect(300 - torso_half(480), 470, 300 + torso_half(480), 490, BELT)
         d.rounded_rectangle([X(300 - 11 + sx) * S, Y(467) * S, X(300 + 11 + sx) * S, Y(493) * S], radius=3 * S, fill=GOLD, outline=tone(GOLD, 0.5), width=int(2 * S))
