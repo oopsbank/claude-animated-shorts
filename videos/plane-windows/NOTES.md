@@ -245,3 +245,6 @@ The Producer's mix (`audio/plane-windows/mix.wav`, `sfx.json`, `music.json`) is 
   - the tank counter shows 1830 (the tank's own cycles);
   - the newspaper pages are generic, period-styled props: no real masthead, the dates are the day after each loss;
   - the map markers stand for the two loss areas, not precise positions.
+
+## Final (the Producer, 2026-11-25, rendered locally; no fix session)
+The Producer's preview pass found no defects worth a fix session. `plane_windows_final_1080x1920.mp4` (**the posting copy**): `render.py audio/plane-windows/words.json OUT.mp4 --film plane_windows --size 1080x1920` (30 min on 4 cores), mux `audio/plane-windows/mix.wav`, `tools/add_cover.sh <muxed> videos/plane-windows/thumbnail.png <master>`, 2-pass libx264 high 5200k `-preset slow`, AAC 192k, +faststart. 1080x1920, 1959 frames (3 cover + 1956), **65.32 s**, **43.9 MB** (43,909,931 bytes). Loop: last frame = frame 0 (diff 0.0); frame 0 checked by eye. Posting title (the Director's OK): "In 1954, They Sank a Whole Airliner in a Tank ✈️". Not published.
