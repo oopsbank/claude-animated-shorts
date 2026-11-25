@@ -45,8 +45,9 @@ OUTFITS = {                                  # presets for shots.json "outfit"
 HATS = ('helmet', 'sailor', 'cap', 'tophat', 'captain', 'cowboy', 'chef', 'hardhat', 'crown')
 PROPS = ('bag', 'rock', 'phone', 'lantern', 'sword', 'paper', 'cup')
 MOUTHS = ('closed', 'small', 'open', 'wide', 'O', 'smile_talk')
-HAIRS = ('wild', 'tuft')
+HAIRS = ('wild', 'tuft', 'swept')
 GOGGLE_FRAME = '#e8892a'; HAIR_COL = '#8e94a4'
+FACE_STYLE = 'house'                     # 'house' (videos 1-12) or 'ref' (the Director's reference look, 2026-11-25)
 HAT_CLEAR = 50                                 # every hat stays above hy - HAT_CLEAR over the face (brows reach hy-49)
 SHOE = (58, 48, 46); GOLD = (238, 192, 64); BELT = (52, 40, 36)
 
@@ -191,7 +192,7 @@ def hand_anchors(pose='stand', fixed=False, prop=None, prop_hand='R'):
 
 def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixed=False,
          shirt=None, coat=None, uniform=None, apron=None, pants=None, outfit=None,
-         prop=None, prop_hand='R', mouth=None, goggles=None, hair=None, hat_col=None):
+         prop=None, prop_hand='R', mouth=None, goggles=None, hair=None, hat_col=None, glasses=None):
     # pose: a name from POSES, or a dict of joint angles (for animation); dict keys '_name' / '_side' set the style.
     # fixed=True keeps the hip at x=300 (no auto-centring) so animated frames don't jitter sideways.
     # Outfits: shirt / coat / uniform / apron / pants take a colour ('#rrggbb') or True for the default colour;
@@ -399,6 +400,7 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
         # drawn before the head so a coloured sleeve root hides under it (no knot at the shoulder)
         stamp(LA[10:], T + 2 * OUT, INK); fill(LA, T, ARM_B)
     hx, hy = head
+    front_hair = None
     if hair:                                  # hair tufts sit behind the head outline (only the tips show)
         hn, hc = (hair if isinstance(hair, (tuple, list)) else ('wild' if hair is True else hair, HAIR_COL))
         if hn not in HAIRS: raise ValueError(f'unknown hair {hn!r}; use one of {HAIRS}')
@@ -413,6 +415,8 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
                 tufts.append([(hx + e * (R - 18), hy - 70), (hx + e * (R + 34), hy - 64), (hx + e * (R + 22), hy - 44),
                               (hx + e * (R + 42), hy - 28), (hx + e * (R + 20), hy - 14), (hx + e * (R + 30), hy + 4),
                               (hx + e * (R - 14), hy - 6)])
+        elif hn == 'swept':                   # drawn over the head after it (a cap of hair with a side part)
+            tufts = []; front_hair = hc
         else:                                  # 'tuft': one swept quiff on top
             tufts = [[(hx - 60, hy - 70), (hx - 40, hy - R - 34), (hx - 4, hy - R - 18), (hx + 30, hy - R - 46),
                       (hx + 40, hy - R - 10), (hx + 70, hy - 60)]]
@@ -425,6 +429,16 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
     cap = Image.new('L', im.size, 0); ImageDraw.Draw(cap).ellipse([(hx - R * 1.25) * S, (hy - R * 1.9) * S, (hx + R * 1.25) * S, (hy + R * 0.15) * S], fill=150)
     cap = ImageChops.multiply(cap.filter(ImageFilter.GaussianBlur(26 * S)), m)
     lay = Image.new('RGBA', im.size, hi + (255,)); lay.putalpha(cap); im.alpha_composite(lay); d = ImageDraw.Draw(im)
+    if front_hair is not None:               # 'swept': a hair cap over the crown, fringe swept to one side, a part line
+        pts = []
+        for i in range(25):
+            a = math.radians(196 + i * 148 / 24); pts.append((hx + math.cos(a) * (R + OUT * .5), hy + math.sin(a) * (R + OUT * .5)))
+        fr = [(hx + R * .97, hy - R * .22), (hx + R * .55, hy - R * .5), (hx + R * .12, hy - R * .44), (hx - R * .2, hy - R * .58),
+              (hx - R * .6, hy - R * .5), (hx - R * .96, hy - R * .25)]
+        poly = [(x * S, y * S) for x, y in pts + fr]
+        d.polygon(poly, fill=front_hair); d.line(poly + poly[:1], fill=INK, width=int(2 * OUT * S), joint='curve')
+        d.line([((hx - R * .2) * S, (hy - R * .58) * S), ((hx - R * .05) * S, (hy - R * .95) * S)], fill=INK, width=int(1.4 * OUT * S))
+        d.arc([(hx - R * .9) * S, (hy - R * 1.0) * S, (hx + R * .2) * S, (hy - R * .2) * S], 200, 300, fill=mixc(front_hair, (255, 255, 255), .35) + (255,), width=int(2.2 * OUT * S))
 
     # ---------------- face ----------------
     K = (16, 14, 22, 255); WH = (255, 255, 255, 255); TONGUE = (225, 95, 105, 255)
@@ -454,45 +468,125 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
     def M(fn):                               # the expression's own mouth, unless a lip-sync mouth overrides it
         if mouth is None: fn()
 
+
+    def ref_face():
+        """The 'ref' face style (2026-11-25, the Director's reference look): small white eyes with a black rim and a
+        dark pupil set close together, heavy half-lids for calm/smug looks, short thick rounded brows, a small mouth,
+        no nose. Sizes scale with the head radius R (bigger heads in the chibi proportions)."""
+        k = R / 98.0
+        g = 30 * k; ery = 18 * k; erx = 17 * k; pr = 8 * k
+        cy = hy + 8 * k; mY = hy + 52 * k; cx0 = hx + look * 30 * k
+        L, Rr = cx0 - g, cx0 + g
+        lw_ = max(3, int(3.6 * k))
+        def eye(cx, lid=0.0, size=1.0, pup=(0.0, 0.0), pupil=True):
+            rx, ry = erx * size, ery * size
+            box_ = [(cx - rx) * S, (cy - ry) * S, (cx + rx) * S, (cy + ry) * S]
+            d.ellipse(box_, fill=WH, outline=K, width=lw_ * S)
+            if pupil:
+                px, py = cx + (look * 5 + pup[0]) * k, cy + (2 + pup[1]) * k
+                d.ellipse([(px - pr * size ** .5) * S, (py - pr * size ** .5) * S, (px + pr * size ** .5) * S, (py + pr * size ** .5) * S], fill=K)
+            if lid > 0:                      # upper lid: head-coloured cover + a thick lid line
+                yl = cy - ry + 2 * ry * lid
+                d.rectangle([(cx - rx - 3) * S, (cy - ry - 4) * S, (cx + rx + 3) * S, yl * S], fill=C)
+                d.line([(cx - rx - 2 * k) * S, yl * S, (cx + rx + 2 * k) * S, yl * S], fill=K, width=int(5 * k) * S)
+        def brow(cx, tilt, dy=-31, w=10.5, ln=16):
+            y0 = cy + dy * k
+            d.line([(cx - ln * k) * S, (y0 - tilt * k) * S, (cx + ln * k) * S, (y0 + tilt * k) * S], fill=K, width=int(w * k) * S)
+            for (ex, ey_) in ((cx - ln * k, y0 - tilt * k), (cx + ln * k, y0 + tilt * k)):
+                rr = w * k / 2; d.ellipse([(ex - rr) * S, (ey_ - rr) * S, (ex + rr) * S, (ey_ + rr) * S], fill=K)
+        def pill(w, h, dy=0, col=K):
+            d.rounded_rectangle([(cx0 - w * k) * S, (mY + dy - h * k) * S, (cx0 + w * k) * S, (mY + dy + h * k) * S], radius=int(h * k) * S, fill=col)
+        def grin(w=23, h=14):
+            box_ = [(cx0 - w * k) * S, (mY - h * k) * S, (cx0 + w * k) * S, (mY + h * k) * S]
+            d.chord(box_, 0, 180, fill=WH, outline=K, width=lw_ * S)
+            d.line([(cx0 - (w - 3) * k) * S, (mY + 1 * k) * S, (cx0 + (w - 3) * k) * S, (mY + 1 * k) * S], fill=K, width=max(2, int(2.5 * k)) * S)
+        def smirk():
+            d.arc([(cx0 - 12 * k) * S, (mY - 12 * k) * S, (cx0 + 14 * k) * S, (mY + 6 * k) * S], 25, 140, fill=K, width=int(5 * k) * S)
+        if expr in ('neutral', 'blink'):
+            if expr == 'blink': eye(L, 1.0); eye(Rr, 1.0)
+            else: eye(L, .38); eye(Rr, .38)
+            brow(L, 0, -25, 7.5); brow(Rr, 0, -25, 7.5)
+            M(lambda: pill(13, 5))
+        elif expr == 'smug':
+            eye(L, .5); eye(Rr, .5); brow(L, 3, -21, 8); brow(Rr, -4, -26, 8)
+            M(lambda: pill(18, 6))
+        elif expr in ('happy', 'blink_happy'):
+            eye(L, .18 if expr == 'happy' else 1.0); eye(Rr, .18 if expr == 'happy' else 1.0)
+            brow(L, -2, -27, 7); brow(Rr, 2, -27, 7)
+            M(grin)
+        elif expr == 'angry':
+            eye(L, .42); eye(Rr, .42); brow(L, 6, -20, 9); brow(Rr, -6, -20, 9)
+            M(lambda: teeth(cx0 - 24 * k, cx0 + 25 * k, mY, 18 * k, 0.1))
+        elif expr == 'surprised':
+            eye(L, 0, 1.18); eye(Rr, 0, 1.18); brow(L, -3, -34, 7); brow(Rr, 3, -34, 7)
+            M(lambda: d.ellipse([(cx0 - 7 * k) * S, (mY - 7 * k) * S, (cx0 + 7 * k) * S, (mY + 10 * k) * S], fill=K))
+        elif expr == 'scared':
+            eye(L, 0, 1.22, pupil=True); eye(Rr, 0, 1.22); brow(L, -6, -35, 7); brow(Rr, 6, -35, 7)
+            M(lambda: teeth(cx0 - 20 * k, cx0 + 20 * k, mY + 3 * k, 15 * k, -0.05))
+        elif expr == 'worried':
+            eye(L, .12); eye(Rr, .12); brow(L, -6, -28, 7.5); brow(Rr, 6, -28, 7.5)
+            M(lambda: d.arc([(cx0 - 12 * k) * S, (mY - 1 * k) * S, (cx0 + 12 * k) * S, (mY + 14 * k) * S], 200, 340, fill=K, width=int(5 * k) * S))
+            late.append(lambda: d.ellipse([(hx + R - 38 * k) * S, (hy - 62 * k) * S, (hx + R - 22 * k) * S, (hy - 38 * k) * S], fill=(160, 215, 255, 255)))
+        elif expr == 'sad':
+            eye(L, .3, pup=(0, 3)); eye(Rr, .3, pup=(0, 3)); brow(L, -5, -24, 7); brow(Rr, 5, -24, 7)
+            M(lambda: d.arc([(cx0 - 11 * k) * S, (mY + 1 * k) * S, (cx0 + 11 * k) * S, (mY + 15 * k) * S], 200, 340, fill=K, width=int(5 * k) * S))
+        elif expr == 'thinking':
+            eye(L, .3, pup=(4, -4)); eye(Rr, .3, pup=(4, -4)); brow(L, 0, -27, 7.5); brow(Rr, -5, -32, 7.5)
+            M(lambda: d.line([(cx0 - 3 * k) * S, (mY + 2 * k) * S, (cx0 + 12 * k) * S, (mY - 2 * k) * S], fill=K, width=int(5 * k) * S))
+        elif expr == 'determined':
+            eye(L, .45); eye(Rr, .45); brow(L, 5, -21, 9); brow(Rr, -5, -21, 9)
+            M(lambda: pill(11, 3.5))
+        else:
+            eye(L, .38); eye(Rr, .38); M(lambda: pill(9, 4))
+        if glasses:
+            gc = K if glasses is True else hexrgb(glasses) + (255,)
+            for cx in (L, Rr):
+                rr = ery * 1.25
+                d.ellipse([(cx - rr) * S, (cy - rr) * S, (cx + rr) * S, (cy + rr) * S], outline=gc, width=max(3, int(3.2 * k)) * S)
+            d.line([(L + ery * 1.25) * S, cy * S, (Rr - ery * 1.25) * S, cy * S], fill=gc, width=max(3, int(3.2 * k)) * S)
+
     eL, eR = fx - gap, fx + gap
-    if expr == 'neutral':
-        eye(eL, 'dot'); eye(eR, 'dot')
-        M(lambda: d.line([(fx - 16) * S, my * S, (fx + 16) * S, my * S], fill=K, width=5 * S))
-    elif expr == 'happy':
-        eye(eL, 'happy'); eye(eR, 'happy'); M(happy_mouth)
-    elif expr == 'angry':
-        eye(eL, 'dot', 22); eye(eR, 'dot', 22); brow(eL, 8, -26, 8); brow(eR, -8, -26, 8)
-        M(lambda: teeth(fx - 34, fx + 36, my, 26, 0.1))
-    elif expr == 'surprised':
-        eye(eL, 'wide'); eye(eR, 'wide'); brow(eL, -3, -38, 5); brow(eR, 3, -38, 5)
-        M(lambda: d.ellipse([(fx - 12) * S, (my - 10) * S, (fx + 12) * S, (my + 22) * S], fill=K))
-    elif expr == 'worried':
-        eye(eL, 'dot'); eye(eR, 'dot'); brow(eL, -7, -28); brow(eR, 7, -28)
-        M(lambda: d.arc([(fx - 20) * S, (my - 2) * S, (fx + 20) * S, (my + 24) * S], 200, 340, fill=K, width=5 * S))
-        late.append(lambda: d.ellipse([(hx + R - 38) * S, (hy - 62) * S, (hx + R - 22) * S, (hy - 38) * S], fill=(160, 215, 255, 255),
-                                      outline=(16, 14, 22, 255) if hat else None, width=int(2 * S) if hat else 0))
-    elif expr == 'smug':
-        eye(eL, 'flat'); eye(eR, 'flat'); brow(eL, 0, -22, 5); brow(eR, -6, -28, 5)
-        M(lambda: d.arc([(fx - 14) * S, (my - 18) * S, (fx + 26) * S, (my + 6) * S], 20, 120, fill=K, width=5 * S))
-    elif expr == 'scared':
-        eye(eL, 'wide'); eye(eR, 'wide'); brow(eL, -8, -40, 5); brow(eR, 8, -40, 5)
-        M(lambda: teeth(fx - 30, fx + 30, my + 4, 22, -0.05))
-    elif expr == 'sad':
-        eye(eL, 'dot', 20); eye(eR, 'dot', 20); brow(eL, -6, -24, 5); brow(eR, 6, -24, 5)
-        M(lambda: d.arc([(fx - 18) * S, (my + 2) * S, (fx + 18) * S, (my + 26) * S], 200, 340, fill=K, width=5 * S))
-        d.ellipse([(eL - 5) * S, (ey + 18) * S, (eL + 5) * S, (ey + 34) * S], fill=(140, 200, 255, 255))
-    elif expr == 'thinking':               # eyes glance up-right, one brow raised, small skewed mouth
-        for cx in (eL, eR): d.ellipse([(cx + 2) * S, (ey - 20) * S, (cx + 20) * S, (ey + 4) * S], fill=K)
-        brow(eL, 0, -32, 6); brow(eR, -6, -40, 6)
-        M(lambda: d.line([(fx - 4) * S, (my + 4) * S, (fx + 20) * S, (my - 2) * S], fill=K, width=5 * S))
-    elif expr in ('blink', 'blink_happy'):  # eyes closed for one or two frames
-        eye(eL, 'flat'); eye(eR, 'flat')
-        if expr == 'blink':
+    if FACE_STYLE == 'ref':
+        ref_face()
+    else:
+        if expr == 'neutral':
+            eye(eL, 'dot'); eye(eR, 'dot')
             M(lambda: d.line([(fx - 16) * S, my * S, (fx + 16) * S, my * S], fill=K, width=5 * S))
-        else: M(happy_mouth)
-    elif expr == 'determined':
-        eye(eL, 'squint'); eye(eR, 'squint'); brow(eL, 6, -20, 8); brow(eR, -6, -20, 8)
-        M(lambda: d.line([(fx - 18) * S, (my + 2) * S, (fx + 18) * S, (my - 2) * S], fill=K, width=6 * S))
+        elif expr == 'happy':
+            eye(eL, 'happy'); eye(eR, 'happy'); M(happy_mouth)
+        elif expr == 'angry':
+            eye(eL, 'dot', 22); eye(eR, 'dot', 22); brow(eL, 8, -26, 8); brow(eR, -8, -26, 8)
+            M(lambda: teeth(fx - 34, fx + 36, my, 26, 0.1))
+        elif expr == 'surprised':
+            eye(eL, 'wide'); eye(eR, 'wide'); brow(eL, -3, -38, 5); brow(eR, 3, -38, 5)
+            M(lambda: d.ellipse([(fx - 12) * S, (my - 10) * S, (fx + 12) * S, (my + 22) * S], fill=K))
+        elif expr == 'worried':
+            eye(eL, 'dot'); eye(eR, 'dot'); brow(eL, -7, -28); brow(eR, 7, -28)
+            M(lambda: d.arc([(fx - 20) * S, (my - 2) * S, (fx + 20) * S, (my + 24) * S], 200, 340, fill=K, width=5 * S))
+            late.append(lambda: d.ellipse([(hx + R - 38) * S, (hy - 62) * S, (hx + R - 22) * S, (hy - 38) * S], fill=(160, 215, 255, 255),
+                                          outline=(16, 14, 22, 255) if hat else None, width=int(2 * S) if hat else 0))
+        elif expr == 'smug':
+            eye(eL, 'flat'); eye(eR, 'flat'); brow(eL, 0, -22, 5); brow(eR, -6, -28, 5)
+            M(lambda: d.arc([(fx - 14) * S, (my - 18) * S, (fx + 26) * S, (my + 6) * S], 20, 120, fill=K, width=5 * S))
+        elif expr == 'scared':
+            eye(eL, 'wide'); eye(eR, 'wide'); brow(eL, -8, -40, 5); brow(eR, 8, -40, 5)
+            M(lambda: teeth(fx - 30, fx + 30, my + 4, 22, -0.05))
+        elif expr == 'sad':
+            eye(eL, 'dot', 20); eye(eR, 'dot', 20); brow(eL, -6, -24, 5); brow(eR, 6, -24, 5)
+            M(lambda: d.arc([(fx - 18) * S, (my + 2) * S, (fx + 18) * S, (my + 26) * S], 200, 340, fill=K, width=5 * S))
+            d.ellipse([(eL - 5) * S, (ey + 18) * S, (eL + 5) * S, (ey + 34) * S], fill=(140, 200, 255, 255))
+        elif expr == 'thinking':               # eyes glance up-right, one brow raised, small skewed mouth
+            for cx in (eL, eR): d.ellipse([(cx + 2) * S, (ey - 20) * S, (cx + 20) * S, (ey + 4) * S], fill=K)
+            brow(eL, 0, -32, 6); brow(eR, -6, -40, 6)
+            M(lambda: d.line([(fx - 4) * S, (my + 4) * S, (fx + 20) * S, (my - 2) * S], fill=K, width=5 * S))
+        elif expr in ('blink', 'blink_happy'):  # eyes closed for one or two frames
+            eye(eL, 'flat'); eye(eR, 'flat')
+            if expr == 'blink':
+                M(lambda: d.line([(fx - 16) * S, my * S, (fx + 16) * S, my * S], fill=K, width=5 * S))
+            else: M(happy_mouth)
+        elif expr == 'determined':
+            eye(eL, 'squint'); eye(eR, 'squint'); brow(eL, 6, -20, 8); brow(eR, -6, -20, 8)
+            M(lambda: d.line([(fx - 18) * S, (my + 2) * S, (fx + 18) * S, (my - 2) * S], fill=K, width=6 * S))
 
     # ---------------- lip-sync mouths (same anchor and similar size, so they swap cleanly) ----------------
     if mouth == 'closed':

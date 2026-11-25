@@ -13,7 +13,8 @@ import hangar  # for stand()
 import stickman
 CHIBI = os.environ.get('CHIBI', '1') == '1'
 if CHIBI:   # bigger heads, shorter limbs (closer to the reference's proportions)
-    stickman.R = 132; stickman.SEG_LEG = 170; stickman.SEG_ARM = 112
+    stickman.R = 132; stickman.SEG_LEG = 170; stickman.SEG_ARM = 112; stickman.OUT = 4.4
+stickman.FACE_STYLE = os.environ.get('FACE', 'ref')
 
 W, H = 1080, 1920
 OUT = sys.argv[1] if len(sys.argv) > 1 else '.'
