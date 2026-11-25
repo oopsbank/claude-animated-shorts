@@ -314,10 +314,10 @@ def vignette(img, strength=0.35, color=(16, 14, 40), rx=0.75, ry=0.62, power=2.2
 
 def contact_shadow(img, cx, gy, w, color=(70, 90, 140), alpha=0.55, h=None):
     """Soft ellipse under feet/props. Moves with its owner; squashes with a hop."""
-    m = mask(); h = h or w * 0.16
+    m = mask(img.width, img.height); h = h or w * 0.16
     ImageDraw.Draw(m).ellipse([cx - w / 2, gy - h / 2, cx + w / 2, gy + h / 2], fill=255)
     fill_mask(img, m, color, alpha, blur=max(4, w * .05))
-    m2 = mask(); ImageDraw.Draw(m2).ellipse([cx - w * .3, gy - h * .25, cx + w * .3, gy + h * .25], fill=255)
+    m2 = mask(img.width, img.height); ImageDraw.Draw(m2).ellipse([cx - w * .3, gy - h * .25, cx + w * .3, gy + h * .25], fill=255)
     fill_mask(img, m2, lerp(rgb(color), (0, 0, 0), .3), alpha * .7, blur=max(3, w * .025))
 
 
@@ -354,8 +354,8 @@ def place(img, card, cx, gy, scale, aura=None, aura_alpha=0.55, rim=None, rim_di
         bb = a.getbbox(); sw = shadow_w or (bb[2] - bb[0]) * 1.1
         contact_shadow(img, cx, gy, sw, shadow, shadow_alpha)
     if aura:
-        m = mask(); m.paste(a, (px, py)); glow(img, m, aura, aura_alpha, blur=int(30 * s + 6))
-        m2 = mask(); m2.paste(a, (px, py)); glow(img, m2, aura, aura_alpha * .6, blur=int(80 * s + 10))
+        m = mask(img.width, img.height); m.paste(a, (px, py)); glow(img, m, aura, aura_alpha, blur=int(30 * s + 6))
+        m2 = mask(img.width, img.height); m2.paste(a, (px, py)); glow(img, m2, aura, aura_alpha * .6, blur=int(80 * s + 10))
     if rim:
         an = np.asarray(a, np.float32) / 255
         L = np.array(rim_dir, np.float32); L = L / np.linalg.norm(L)

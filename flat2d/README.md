@@ -50,3 +50,22 @@ Rules kept: blur masks only, never straight RGBA (LESSONS); glow sits behind cha
 - render.py tags words.json with the SCRIPT.md line of each word when tts.py left none.
 - `stills.py WORDS OUTDIR`: one captioned still per shot (at `STILL_AT` or 0.7 of the shot) plus a sheet, as input for the review gate.
 - `motion_qa.py`: the cut window is −1..+6 frames (the cut punch-in settle), `--impacts` lists designed beats, and it prints a PASS/FAIL line.
+
+## Cinematic 2D toolkit (video 12, plane-windows; reuse it)
+The Director's cinematic style (2026-11-25): the house flat2d look shot like a film. Details and examples in
+`videos/plane-windows/NOTES.md` › Cinematic tools.
+- `persp.py`: a 3D look-at camera (`Cam`, lens `shift`), camera moves through keyframes (`Path`: Catmull-Rom, eased
+  ends, handheld drift) and a toon mesh renderer (`render`): `Part`s painter-sorted, back faces culled, flat banded
+  shading with a cool shadow tint and specular, per-face `fog` (haze, under water), near-plane clipping (fly inside a
+  set), silhouette ink, decals/beams/dots; builders `box`, `lathe`, `loft`, `prism`, `quad`. Supersampling via
+  `persp.SS` (1 for 540 previews, 2 for 1080).
+- `cine.py`: depth of field (`defocus`, `coc`, `fg_frame` foreground framing, `bokeh`, `multiplane` 2.5D camera),
+  `cam2d` (zoom/pan/roll), per-scene grades (`grade`: hangar, cabin, altitude, navy, archive, water, desk, steel;
+  `mix_grade`), `bloom`, soft `vignette`, light (`shafts`, `shafts3d` from 3D openings, `motes` in the light,
+  `caustics`, `wobble`, `flare`), transitions (`xfade`, `through`, `iris`, `whip`) and `finish`.
+- Kits/worlds: `airliner.py` (the Comet 1 and a modern twinjet in 3D, the modern cabin set, window close-up art),
+  `hangar.py` (the 1954 test hangar + water tank in 3D, water with reflections/caustics/portholes, `stand()` places
+  stickmen at 3D points), `skyworld.py` (altitude sky, cloud sea in parallax rows, cirrus, wisps).
+- `anim.actor(..., quant=2.0)`: round small figures' joint angles so cards are reused across frames (a 6x speedup
+  on crowds); `kit.contact_shadow` and `kit.place` now work on canvases of any size.
+- `smoke.py WORDS --film NAME [--from SHOT]`: draws every shot at its start, middle and last frame in parallel and reports exceptions; run it before any full render.
