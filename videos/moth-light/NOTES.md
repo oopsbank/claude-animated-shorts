@@ -147,3 +147,5 @@ The Producer's preview pass (sheet_2s.jpg, stills_r4, thumbnail) found no defect
 ## Scheduled 2026-11-25 (Buffer, media file `moth_light_1080x1920.mp4`)
 - TikTok 6b067b439cddd8483ab3ac6b and Facebook 6b067b43d8874a038cf8c1a4: scheduled for 2026-11-25 09:00 UTC (16:00 Vietnam), the Director's time.
 - YouTube 6b067b4a9cddd8483ab3af80: scheduled for 2026-11-26 09:00 UTC (16:00 Vietnam). Buffer refused 2026-11-25 (LimitReachedError: YouTube max 2 posts a day, videos 9 and 10 went out that day).
+- Went out 2026-11-25 09:00 UTC: TikTok https://tiktok.com/@somecrazythingzz/video/7712031358272507157 · Facebook https://www.facebook.com/reel/4501458003449128/
+- YouTube schedule 6b067b4a9cddd8483ab3af80 deleted on the Director's request ("bỏ hẹn"); YouTube not posted yet.
