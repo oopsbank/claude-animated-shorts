@@ -25,6 +25,7 @@ The project state for a new Producer session. Then read `PIPELINE.md`, `QA.md`, 
 - **One copy only (the Director, 2026-11-23, video 6):** YouTube can use the same <45 MB posting copy as TikTok/Facebook; no separate high-quality YouTube copy is needed (this replaces the CRF ~16 hand-upload note above).
 - **Cadence advice given:** max 1 video/day, ~24 h apart, ~6:30 VN (US evening peak); 2-3/week is sustainable.
 
+- **YouTube retention (Studio screenshot from the Director, 2026-11-25; avg view duration / avg % viewed):** Blood Falls 0:55 / 83.4%, Tunguska 0:53 / 80.8%, Bloop 0:56 / 85.7%, Boiling River 0:55 / 84.1%, Wind Cave 0:50 / 77.3% versus the "why" format: Cats 0:42 / 64.6%, Zebras 0:36 / 55.9%, Flamingo 0:41 / 64.7% (posted that day, little data). **The mystery format ("an impossible thing + a year" title) holds viewers ~15-25 points better than "Why do X…?" titles.** Frame future topics (even "why" topics) as a mystery: an impossible statement + a year in the title and thumbnail, not a question the viewer may already know.
 - **Fix without asking (the Director, 2026-11-24: "mốt cứ thấy lỗi là sửa đừng có hỏi nữa"):** when the Producer's preview pass finds problems, open ONE fix + 1080 session straight away and tell the Director after. Topic choice and publishing still need the Director's explicit OK.
 
 ## The Blood Falls formula (video 3 went viral; the Director, 2026-11-23: "learn its presentation again" — apply to every new video)
