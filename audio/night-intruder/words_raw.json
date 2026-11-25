@@ -1,0 +1,41 @@
+{
+ "voice": "am_onyx",
+ "speed": 0.9,
+ "words": [
+  {
+   "word": "You",
+   "start": 0.01,
+   "end": 0.21
+  },
+  {
+   "word": "done",
+   "start": 0.24,
+   "end": 0.62
+  },
+  {
+   "word": "yet?",
+   "start": 0.65,
+   "end": 0.849
+  },
+  {
+   "word": "What's",
+   "start": 1.2,
+   "end": 1.47
+  },
+  {
+   "word": "all",
+   "start": 1.48,
+   "end": 1.69
+  },
+  {
+   "word": "the",
+   "start": 1.71,
+   "end": 1.81
+  },
+  {
+   "word": "noise?",
+   "start": 1.82,
+   "end": 2.44
+  }
+ ]
+}
