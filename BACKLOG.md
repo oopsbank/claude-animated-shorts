@@ -123,6 +123,13 @@ P1 = needed before the next video, P2 = quality, P3 = nice to have. Video 1 (bik
 
 - [x] P1 Video 2 sprites the engine composites: DONE through engine/props.py (string props on playa/inserts; plate-baked and held props skipped).
 
+## flat2d cinematic toolkit (`flat2d/persp.py`, `flat2d/cine.py`; video 12 plane-windows)
+- [ ] P2 Mechanism/diagram shots read "flatter" than the 3D sets to reviewers (plane-windows s09-s12): try a 3D diagram stage in `persp` (a fuselage cutaway with real depth, a panel seen at an angle) with DOF, instead of 2D diagrams over a gradient.
+- [ ] P2 `persp.render` is a painter's renderer (no z-buffer): parts that interpenetrate must be split with `airliner.clip_part` (water line, tank walls). A small z-buffered path would let complex sets mesh freely.
+- [ ] P2 Stickmen in 3D sets are front-facing billboards; over-the-shoulder shots fake the back of the head with a plain defocused disc. A back-view card would make OTS shots and walking-away shots read better.
+- [ ] P3 Speed: a hangar frame is ~6 s at 1080 (the 540 preview took ~50 min on 4 cores). Cache the background layer while the camera holds, and reuse card caches across shots.
+- [x] P2 Light shafts and a lens flash (fx list above): available for flat2d as `cine.shafts`, `cine.shafts3d`, `cine.flare` (video 12).
+
 ## audio (`audio/`)
 - [ ] P2 Re-run `build_mix.py` whenever `shots.json` changes (fx entries drive the SFX). New fx names need an entry in `lib/sfx_x.py` GEN or SILENT.
 - [ ] P2 The limiter peaks at 3.7 dB of gain reduction on voice consonants. Try a fast voice peak stage before the mix. LRA is 1.2 vs the reference 2.4: ease the voice compression if it sounds squashed.
