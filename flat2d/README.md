@@ -69,3 +69,10 @@ The Director's cinematic style (2026-11-25): the house flat2d look shot like a f
 - `anim.actor(..., quant=2.0)`: round small figures' joint angles so cards are reused across frames (a 6x speedup
   on crowds); `kit.contact_shadow` and `kit.place` now work on canvases of any size.
 - `smoke.py WORDS --film NAME [--from SHOT]`: draws every shot at its start, middle and last frame in parallel and reports exceptions; run it before any full render.
+- `toonlight.py` (style test 3): `night_map` (a blue gradient-map night grade), `add_light(mask, col, k, mix)`, the practicals
+  `glow_at`, `pool`, `wall_pool`, `floor_patch` (moonlight window panes on the floor + shaft), `under_door`, `cone`
+  (a flashlight beam with its hot spot), `moon_tint` for character layers, and `measure(img)` (mean L, p5, p95, saturation,
+  edge density at 360x640, the numbers LESSONS compares with the reference). `style_test_rooms3.py` holds the
+  two-storey stair-hall set (`house()`, `stairs_frame()` with depth-split foreground blur), the night bedroom, the bed
+  and doorway occluder passes, the phone and lock macros, and the camera-move clip. Stickman additions (opt-in):
+  `stickman.BODY_STYLE = 'round'`, `torso_half(y)`, and garments `cardigan=` and `pyjamas=`.

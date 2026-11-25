@@ -32,7 +32,8 @@ POSES = {
 SIDE_POSES = {'walk', 'run'}
 
 # ---------------- wardrobe ----------------
-OUTFIT_DEFAULTS = dict(shirt='#f3f1ea', coat='#8b5a3c', uniform='#2e3f6e', apron='#f7f4ec', pants='#3a4058')
+OUTFIT_DEFAULTS = dict(shirt='#f3f1ea', coat='#8b5a3c', uniform='#2e3f6e', apron='#f7f4ec', pants='#3a4058',
+                       cardigan='#c25a3e', pyjamas='#7fa4dc')
 OUTFITS = {                                  # presets for shots.json "outfit"
     'sailor':    dict(shirt='#f4f4f0', pants='#26346a'),
     'captain':   dict(uniform='#24305e'),
@@ -48,6 +49,7 @@ MOUTHS = ('closed', 'small', 'open', 'wide', 'O', 'smile_talk')
 HAIRS = ('wild', 'tuft', 'swept')
 GOGGLE_FRAME = '#e8892a'; HAIR_COL = '#8e94a4'
 FACE_STYLE = 'house'                     # 'house' (videos 1-12) or 'ref' (the Director's reference look, 2026-11-25)
+BODY_STYLE = 'tube'                      # 'tube' (house) or 'round' (style test 3: a rounded egg torso, shoulders/hips apart)
 HAT_CLEAR = 50                                 # every hat stays above hy - HAT_CLEAR over the face (brows reach hy-49)
 SHOE = (58, 48, 46); GOLD = (238, 192, 64); BELT = (52, 40, 36)
 
@@ -80,9 +82,23 @@ def _pose(pose):
     side = name in SIDE_POSES or (not isinstance(pose, str) and pose.get('_side', False))
     return name, P, side
 
+# the 'round' body: half-widths of the egg torso down its height (card px), and where limbs attach
+ROUND_TORSO = [(24, 228), (38, 240), (47, 262), (52, 300), (55, 380), (55, 450), (51, 500), (43, 528), (29, 546), (0, 553)]
+def torso_half(y):
+    """half-width of the torso at card height y (the tube's TB/2 for the house body)."""
+    if BODY_STYLE != 'round': return TB / 2
+    for (w0, y0), (w1, y1) in zip(ROUND_TORSO, ROUND_TORSO[1:]):
+        if y0 <= y <= y1: return w0 + (w1 - w0) * (y - y0) / (y1 - y0)
+    return 0.0
+
 def _rig(P, name):
-    hip = (300, 520); shoulder = (300, 262)
-    legs = [_limb(hip, P['legL'], SEG_LEG), _limb(hip, P['legR'], SEG_LEG)]
+    rnd = BODY_STYLE == 'round'
+    hips = (288, 312) if rnd else (300, 300)
+    legs = [_limb((hips[0], 520), P['legL'], SEG_LEG), _limb((hips[1], 520), P['legR'], SEG_LEG)]
+    if rnd and name != 'think':             # arms hang from the sides of the round body
+        shx = P.get('_sh', (276, 324))
+        return [_limb((shx[0], 268), P['armL'], SEG_ARM), _limb((shx[1], 268), P['armR'], SEG_ARM)], legs
+    shoulder = (300, 262)
     if name == 'think':                    # each arm from its OWN shoulder (left arm from the left, right from the right)
         shx = P.get('_sh', (278, 322))      # shoulder x (animatable: 300,300 -> 278,322 while moving into the pose)
         arms = [_limb((shx[0], 262), P['armL'], SEG_ARM), _limb((shx[1], 262), P['armR'], SEG_ARM)]
@@ -162,6 +178,20 @@ def _props_of(prop, prop_hand):
     if isinstance(prop, dict): return {k: v for k, v in prop.items() if v}
     return {prop_hand: prop}
 
+def _clip_y(pg, y0, y1):
+    """the part of polygon pg between heights y0 and y1 (two half-plane clips, Sutherland-Hodgman)."""
+    def half(pts, lim, keep):
+        out = []
+        for a, b in zip(pts, pts[1:] + pts[:1]):
+            ka, kb = keep(a[1]), keep(b[1])
+            if ka: out.append(a)
+            if ka != kb:
+                t = (lim - a[1]) / (b[1] - a[1])
+                out.append((a[0] + (b[0] - a[0]) * t, lim))
+        return out
+    pts = half(list(pg), y0, lambda y: y >= y0)
+    return half(pts, y1, lambda y: y <= y1) if pts else []
+
 def _layout(P, name, props, fixed):
     """Skeleton in canvas coords (after grounding + centring), plus the props' world primitives."""
     arms, legs = _rig(P, name)
@@ -192,7 +222,8 @@ def hand_anchors(pose='stand', fixed=False, prop=None, prop_hand='R'):
 
 def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixed=False,
          shirt=None, coat=None, uniform=None, apron=None, pants=None, outfit=None,
-         prop=None, prop_hand='R', mouth=None, goggles=None, hair=None, hat_col=None, glasses=None):
+         prop=None, prop_hand='R', mouth=None, goggles=None, hair=None, hat_col=None, glasses=None,
+         cardigan=None, pyjamas=None):
     # pose: a name from POSES, or a dict of joint angles (for animation); dict keys '_name' / '_side' set the style.
     # fixed=True keeps the hip at x=300 (no auto-centring) so animated frames don't jitter sideways.
     # Outfits: shirt / coat / uniform / apron / pants take a colour ('#rrggbb') or True for the default colour;
@@ -201,6 +232,7 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
     # mouth: a name from MOUTHS; replaces the expression's mouth (lip sync) and keeps its eyes and brows.
     # goggles: lab goggles pushed up on the forehead (True or a frame colour); never over the eyes.
     # hat_col: the cowboy hat's colour ('#rrggbb' or an rgb tuple; default tan).
+    # cardigan: an open knit cardigan (colour) over the shirt (or a white tee); pyjamas: a striped pyjama suit (colour).
     # hair: a name from HAIRS ('wild' = scientist tufts at the sides and top), True for 'wild', or (name, colour).
     name, P, side = _pose(pose)
     if side and look == 0.0: look = 0.7      # side-on body: face turns toward the direction of travel
@@ -210,6 +242,9 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
         uniform = uniform if uniform is not None else pre.get('uniform'); apron = apron if apron is not None else pre.get('apron')
         pants = pants if pants is not None else pre.get('pants')
     cS, cC, cU, cA, cP = _col(shirt, 'shirt'), _col(coat, 'coat'), _col(uniform, 'uniform'), _col(apron, 'apron'), _col(pants, 'pants')
+    cK, cJ = _col(cardigan, 'cardigan'), _col(pyjamas, 'pyjamas')
+    if cJ: cP = cJ                                   # pyjama trousers
+    if cK and not cS: cS = (244, 242, 236)           # a cardigan is worn over a (white) shirt
     props = _props_of(prop, prop_hand)
 
     C = hexrgb(color); hi = mixc(C, (255, 255, 255), 0.22)
@@ -228,14 +263,15 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
 
     # --- colour bands along a limb: [(f0, f1, colour)] over the path's index fraction, cut straight at inner ends
     tC = C
-    sleeve = cC or cU or cS
-    sleeve_to = 0.80 if (cC or cU) else 0.36
+    sleeve = cC or cU or cK or cJ or cS
+    sleeve_to = 0.80 if (cC or cU or cK or cJ) else 0.36
     trousers = cU or cP
     ARM_B = [(0.0, sleeve_to, sleeve)] if sleeve else []
-    LEG_B = [(0.0, 0.88, trousers), (0.88, 1.0, SHOE)] if trousers else []
-    torso_col = cC or cU or cS
+    LEG_B = ([(0.0, 0.88, trousers)] + ([] if cJ else [(0.88, 1.0, SHOE)])) if trousers else []
+    torso_col = cC or cU or cK or cJ or cS
     TORSO_B = []
-    if torso_col:
+    if cK or cJ: TORSO_B = [(0.0, 0.91, cK or cJ)] + ([(0.91, 1.0, cP)] if cP else [])
+    elif torso_col:
         if cS and not (cC or cU):            # a shirt ends at a straight hem above the hip
             TORSO_B = [(0.0, 0.91, cS)] + ([(0.91, 1.0, cP)] if cP else [])
         else: TORSO_B = [(0.0, 1.0, torso_col)]
@@ -339,12 +375,33 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
     # --- back arm + legs + torso (+ garment skirts) as ONE merged silhouette (no inner seams), like the reference
     # Facing the viewer: both arms belong to the one merged silhouette (symmetric, nothing turned).
     # Side-on poses (walk/run) layer a back arm behind and a front arm over the torso.
-    outl = [(RL, T), (LL, T), (torso, TB)] + ([(RA, T)] if side else [(LA, T), (RA, T)])
+    rnd = BODY_STYLE == 'round'
+    sh_ = look * 6 if (rnd and side) else 0.0
+    if rnd:                                   # the round body: an egg polygon joins the merged outline
+        torso_pg = ([(X(300 - hw + sh_), Y(y)) for hw, y in ROUND_TORSO] +
+                    [(X(300 + hw + sh_), Y(y)) for hw, y in ROUND_TORSO[::-1]])
+    outl = [(RL, T), (LL, T)] + ([] if rnd else [(torso, TB)]) + ([(RA, T)] if side else [(LA, T), (RA, T)])
     for pts, w in outl: stamp(pts, w + 2 * OUT, INK)
+    if rnd: polyline_ink(torso_pg)
     for pg, _ in skirts: polyline_ink(pg)
     if side: fill(RA, T, ARM_B)
     fill(RL, T, LEG_B); fill(LL, T, LEG_B)
-    fill(torso, TB, TORSO_B)
+    if rnd:
+        polyfill(torso_pg, tC)
+        for f0, f1, col in TORSO_B:           # bands -> horizontal slices of the egg (straight hem)
+            if col is None: continue
+            sl = _clip_y(torso_pg, Y(232 + f0 * 288), Y(232 + f1 * 288) if f1 < 1 else Y(600))
+            if len(sl) > 2: polyfill(sl, col)
+        if cJ:                                # pyjama stripes, clipped to the jacket
+            lay = Image.new('L', im.size, 0); ImageDraw.Draw(lay).polygon(
+                [(x * S, y * S) for x, y in _clip_y(torso_pg, Y(220), Y(232 + .91 * 288))], fill=255)
+            st = Image.new('L', im.size, 0); sd = ImageDraw.Draw(st)
+            for k in range(-5, 6):
+                xx = X(300 + k * 17 + sh_)
+                sd.rectangle([(xx - 3.5) * S, Y(220) * S, (xx + 3.5) * S, Y(560) * S], fill=255)
+            im.paste(Image.new('RGBA', im.size, mixc(cJ, (255, 255, 255), .55) + (255,)), (0, 0), ImageChops.multiply(lay, st))
+    else:
+        fill(torso, TB, TORSO_B)
     for pg, col in skirts: polyfill(pg, col)
 
     if not side:                             # both arms last, so hands read over a coat or apron
@@ -369,18 +426,34 @@ def draw(expr='neutral', pose='stand', color='#4a86e0', hat=None, look=0.0, fixe
                 d.line([X(300 + e * 18) * S, Y(304) * S, X(300 + e * 9) * S, Y(230) * S], fill=INK, width=int(10 * S))
                 d.line([X(300 + e * 18) * S, Y(304) * S, X(300 + e * 9) * S, Y(230) * S], fill=cA, width=int(4.5 * S))
         d.rounded_rectangle([X(b0) * S, Y(298) * S, X(b1) * S, Y(458) * S], radius=6 * S, fill=cA, outline=INK, width=int(2.6 * S))
-        rect(300 - TB / 2, 452, 300 + TB / 2, 464, tA)
+        rect(300 - torso_half(458), 452, 300 + torso_half(458), 464, tA)
         if not side:
             d.rounded_rectangle([X(300 - 22) * S, Y(540) * S, X(300 + 22) * S, Y(584) * S], radius=5 * S, outline=tone(cA, 0.5), width=int(2.6 * S))
     if cU:                                   # buttons + belt with buckle
         for y in (300, 342, 384, 426): dot(300 + sx, y, 6, GOLD, tone(GOLD, 0.45))
-        rect(300 - TB / 2, 470, 300 + TB / 2, 490, BELT)
+        rect(300 - torso_half(480), 470, 300 + torso_half(480), 490, BELT)
         d.rounded_rectangle([X(300 - 11 + sx) * S, Y(467) * S, X(300 + 11 + sx) * S, Y(493) * S], radius=3 * S, fill=GOLD, outline=tone(GOLD, 0.5), width=int(2 * S))
         d.rectangle([X(300 - 4 + sx) * S, Y(474) * S, X(300 + 4 + sx) * S, Y(486) * S], fill=BELT)
     if cC:                                   # buttons + back vent of the coat skirt
         for y in (318, 380, 442): dot(300 + sx, y, 6, tone(cC, 0.45))
         d.line([X(300 + sx * 1.5) * S, Y(616) * S, X(300 + sx * 1.5) * S, Y(674) * S], fill=tone(cC), width=int(3 * S))
-    if cS and not (cC or cU) and not cA:     # a placket line keeps a plain shirt from reading as a bare body band
+    if cK:                                   # open cardigan: shirt strip down the front, knit edges, buttons, pockets
+        hem = 232 + .91 * 288
+        d.polygon([(X(300 - 12 + sx) * S, Y(236) * S), (X(300 + 12 + sx) * S, Y(236) * S), (X(300 + 7 + sx) * S, Y(hem) * S),
+                   (X(300 - 7 + sx) * S, Y(hem) * S)], fill=cS)
+        for e in (-1, 1):
+            d.line([(X(300 + e * 12 + sx) * S, Y(236) * S), (X(300 + e * 7 + sx) * S, Y(hem) * S)], fill=tone(cK, .4), width=int(4 * S))
+            if rnd and not side:
+                d.rounded_rectangle([X(300 + e * 31 - 11) * S, Y(408) * S, X(300 + e * 31 + 11) * S, Y(432) * S], radius=4 * S,
+                                    outline=tone(cK, .35), width=int(3 * S))
+        for y in (300, 350, 400, 450): dot(300 - 14 + sx, y, 4.5, tone(cK, .5))
+        rect(300 - torso_half(hem - 6), hem - 9, 300 + torso_half(hem - 6), hem, tone(cK, .18))
+    if cJ:                                   # pyjama collar notch, piping placket, buttons
+        d.line([(X(300 + sx) * S, Y(250) * S), (X(300 + sx) * S, Y(232 + .91 * 288) * S)], fill=tone(cJ, .35), width=int(3.5 * S))
+        for y in (296, 346, 396, 446): dot(300 + 7 + sx, y, 4.5, (250, 250, 250), tone(cJ, .4))
+        d.polygon([(X(300 - 22 + sx) * S, Y(232) * S), (X(300 + 22 + sx) * S, Y(232) * S), (X(300 + sx) * S, Y(280) * S)],
+                  fill=mixc(cJ, (255, 255, 255), .7), outline=tone(cJ, .4))
+    if cS and not (cC or cU or cK) and not cA:     # a placket line keeps a plain shirt from reading as a bare body band
         for y in (318, 372, 426): dot(300 + sx, y, 4.5, tone(cS, 0.28))
 
     if cC and not side:                      # collar V (light shirt showing) over the arm roots, under the head
