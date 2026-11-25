@@ -26,3 +26,6 @@ Kịch bản gốc anh viết (giữ nguyên). Bản tiếng Anh và bảng cả
 Mẹo giữ chân của anh:
 - 0:22-0:38 (đèn pin tắt): giảm âm lượng gần như bằng 0 trong 2-3 giây trước khi bung cảnh đánh nhau.
 - 1:05-1:20: tiếng bước chân tên thứ hai càng chậm và vang rõ thì cú cắt đen càng gây ức chế, kích thích bình luận đoán kết.
+
+## Bảng phân cảnh chi tiết (anh gửi sau, 25/11)
+Đã chuyển đủ ý sang `SCRIPT.md` › Shot list (15 cảnh theo đúng mốc giờ, cỡ cảnh, góc máy, hình, tiếng). Thay đổi so với bản đầu: tên trộm 1 đeo khẩu trang đen, TÔI đi chân trần, câu thoại ở 0:55-1:02 lúc tên trộm 2 đứng ở cửa, giữ màn đen 4 giây cuối. Phần "lưu ý quay bằng điện thoại" chuyển thành: vùng tối thật sâu nhưng vẫn đọc được dáng người; mỗi tiếng va chạm là một hiệu ứng riêng, sắc.
