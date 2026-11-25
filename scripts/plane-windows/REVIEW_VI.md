@@ -2,7 +2,7 @@
 
 Anh chọn chủ đề 1, làm luôn không duyệt kịch bản, Animator chạy effort max. Video đầu tiên theo kiểu 2D điện ảnh mới (làm mờ tiền cảnh, góc máy đa dạng, camera đi liền mạch, chỉnh màu theo cảnh). Công thức Băng máu: nhân chứng + năm (bể nước 1954), một hình chủ đạo (thân máy bay Comet chìm trong bể nước, cánh thò ra ngoài), đáp án sai bị bác (chỉ là kiểu dáng), 3 manh mối, câu hỏi, cơ chế (bơm áp suất, lực dồn vào góc nhọn, mỏi kim loại), so sánh (bẻ kẹp giấy), lật ý, vòng lặp về 1954. Giọng Kokoro `am_adam` 1.16, 213 chữ, ~65 giây. Tông nghiêm túc, tôn trọng nạn nhân (không cảnh nổ).
 
-**Tiêu đề:** Why Are Airplane Windows Round? ✈️ · **Thumbnail:** WHY ROUND? / NOT FOR LOOKS
+**Tiêu đề (đổi 25/11 theo số liệu giữ chân, anh đã OK):** In 1954, They Sank a Whole Airliner in a Tank ✈️ · **Thumbnail:** máy bay chìm trong bể nước + WHY SINK / A PLANE?
 
 | # | English | Tiếng Việt |
 |---|---|---|

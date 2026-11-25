@@ -71,4 +71,4 @@ The Director wants the look of top 2D story channels (reference: a stickman "bur
 - s13 analogy: a hand bending a paperclip back and forth, a bend counter, the clip snaps.
 - s14 the flip, biggest title over a modern round window looking out on clouds: NOT ABOUT LOOKS. / ABOUT NOT TEARING OPEN. (yellow), each on its word.
 - s15 back to the 1954 tank; the last frame equals s01 frame 0 (loop).
-- Thumbnail: the round-cornered window vs a cracked square window, or the fuselage in the tank; text WHY ROUND? (white) / NOT FOR LOOKS (yellow), or better if you find it.
+- Thumbnail (**changed 2026-11-25 after the retention data, the Director's OK**): the hero image itself, the Comet fuselage sunk in the giant water tank with its wings sticking out through the walls, readable at a glance without text; text WHY SINK (white) / A PLANE? (yellow). Frame 0 stays the same tank shot. Posting title: "In 1954, They Sank a Whole Airliner in a Tank ✈️" (not a why-question).
