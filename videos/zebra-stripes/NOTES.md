@@ -140,3 +140,4 @@ re-render frames 0 + 1950 in one process (single-process loop fix) → re-encode
 - TikTok 6b057c65e2bac802e9a1c1f0 https://tiktok.com/@somecrazythingzz/video/7711706838231813397
 - Facebook 6b057c78e2bac802e9a1d965 https://facebook.com/1395801306957363_122108703447549918
 - YouTube: shareNow 6b057c76bc0aa082945408d8 failed (daily limit); scheduled in Buffer as 6b057c8ee2bac802e9a1e84f for 2026-11-25 04:30 UTC (11:30 Vietnam).
+- YouTube went out as scheduled: 6b057c8ee2bac802e9a1e84f https://www.youtube.com/shorts/Teootg2bb74 (2026-11-25 04:30 UTC)

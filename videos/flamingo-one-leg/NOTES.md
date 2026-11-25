@@ -124,4 +124,4 @@ Checks: 540 preview `tests/preview_full_540.mp4` (62.93 s, mix) + new `tests/she
 ## Posted 2026-11-25 (Buffer, media file `flamingo_one_leg_1080x1920.mp4`)
 - TikTok 6b0652d522dfb7833a764c5b https://tiktok.com/@somecrazythingzz/video/7711942530920615174
 - Facebook 6b0652e5b6204bca46c03eec https://facebook.com/1395801306957363_122109182865549918
-- YouTube: scheduled in Buffer as 6b0652efb6204bca46c0420e for 2026-11-26 04:30 UTC (11:30 Vietnam), 24 h after video 9's YouTube post.
+- YouTube 6b067551d8874a038cf632ec https://www.youtube.com/watch?v=K2U-a4XZfa8 (posted right away on the Director's request, 2026-11-25 ~05:40 UTC; Buffer accepted it 1 h after video 9's YouTube post; the scheduled copy 6b0652efb6204bca46c0420e was deleted)
