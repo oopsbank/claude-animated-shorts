@@ -516,7 +516,7 @@ def port_views(img, ul, cam, t, glow=0.0):
 
 # ---------------------------------------------------------------- the whole scene
 def scene(cam, t, focus=None, aperture=0.0, chars=None, flex=0.0, swell=0.0, surge=0.0, fg=None, shafts_k=1.0,
-          bg_blur=2.0, motes_k=1.0, porthole_glow=0.0, extra_mid=None, extra_after=None):
+          bg_blur=2.0, motes_k=1.0, porthole_glow=0.0, extra_mid=None, extra_after=None, roof=True):
     """Draw the hangar + tank + Comet for camera `cam` at time t. chars(img, cam, layer_name) draws characters
     ('deck-1' on the near gantry, 'deck1' on the far gantry, 'floor' on the floor). fg(img) draws the blurred
     foreground. Returns (img RGBA, info)."""
@@ -524,7 +524,8 @@ def scene(cam, t, focus=None, aperture=0.0, chars=None, flex=0.0, swell=0.0, sur
     img = Image.new('RGBA', cam.size, (150, 166, 160, 255))
     # ---- background: shell (walls, roof, trusses, lamps), slightly defocused
     bg = Image.new('RGBA', cam.size, (120, 136, 130, 255))
-    P3.render(bg, cam, S['shell'], light=LIGHT, fog=fog_hangar, ink_w=2)
+    shell = S['shell'] if roof else [p for p in S['shell'] if p.name not in ('roof', 'trusses', 'lamps')]
+    P3.render(bg, cam, shell, light=LIGHT, fog=fog_hangar, ink_w=2)
     floor_pools(bg, cam, shafts_k)
     P3.render(bg, cam, [S['props']], light=LIGHT, fog=fog_hangar, ink_w=2)
     if bg_blur: bg = cine.defocus(bg, bg_blur)

@@ -319,7 +319,7 @@ def place(parts, R=None, t=(0, 0, 0), s=1.0):
 
 def attitude(pitch=0.0, yaw=0.0, roll=0.0):
     """Rotation for a model: roll about x, pitch (nose up +, deg) about y, then yaw about z (deg)."""
-    return rot_z(math.radians(yaw)) @ rot_y(-math.radians(pitch)) @ rot_x(math.radians(roll))
+    return rot_z(math.radians(yaw)) @ rot_y(math.radians(pitch)) @ rot_x(math.radians(roll))   # nose (x = 0) up for pitch > 0
 
 
 def clip_part(p, n, d):
