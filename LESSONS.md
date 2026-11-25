@@ -153,3 +153,11 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - Smoke-test every shot at its start, middle and last frame (`flat2d/smoke.py`, ~1 min in parallel) before a full render: review stills sample one moment per shot, and a negative base `** 2.2` (complex) at the START of s05b crashed the 540 render 21 s in. Clamp bases before fractional powers.
 - A camera shake that adds a fixed cover zoom only while it shakes pops on its last frame (the zoom snaps back to 1.0): scale the cover zoom with the shake amplitude so it lands on 1.0 (`plane_windows.shake_cam`).
 - Repeating beats (flight cycles, pulses) must not overlap: a new cycle that restarts its phase before the last one ends makes every value it drives jump (the s10 sky flipped between dusk and altitude). Clip each cycle's length to the gap before the next one.
+
+## Style test: stickmen in perspective toon rooms (Producer, 2026-11-25; `flat2d/style_test_rooms.py`)
+The Director's style target is a stickman story short with real perspective rooms and a moving camera. Four quick iterations with `persp` + `cine`, on CPU, compared side by side with the reference:
+- **Wall winding:** a room is seen from inside, so every wall polygon and wall decal must face into the room (`persp` culls back faces). Wrong winding showed black walls and no decals. Give wall decals an explicit `normal=`.
+- **Bigger heads sell the look:** the reference's stickmen are about 3 heads tall. `stickman.R = 132; SEG_LEG = 170; SEG_ARM = 112` (set before any card is drawn) got close and read much better than the house 5-head figure in a 3D room. Turn blinks off (`blink_ok=False`) for stills.
+- **Framing:** keep hanging lamps and the ceiling out of the top of the frame (the camera near the ceiling puts a lamp in your face); eye-level or low cameras, characters at 1/3, a blurred foreground object (`cine.fg_frame`, `cine.defocus` on the set behind a close-up) for depth.
+- **Ink:** `render(..., ink_w=5, sil_w=8)` at 1080 matches the reference's bold outlines.
+- **Still missing vs the reference:** much denser set dressing (pictures, shelves, small props, wallpaper and rug patterns), a brighter high-key grade (`desk`/`cabin` + grain read a little muddy), coloured night scenes (saturated blue with glows), hair/glasses/clothing details on the characters.
