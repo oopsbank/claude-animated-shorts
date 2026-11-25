@@ -8,7 +8,7 @@ It follows the Blood Falls formula:
 
 The voice is Kokoro `am_adam` 1.16. The voice and mix are the Producer's `audio/plane-windows/` and are unchanged: 1956 frames = 65.20 s, about 65.3 s with the 0.1 s cover.
 
-**Status:** the build, three review rounds (the brief's maximum), the 540 preview, the thumbnail and these notes are done. **No 1080 final, nothing published.**
+**Status:** the build, three review rounds (the brief's maximum; the ≥ 8 gate was not reached: 7.6 / 7.75 / 7.4), the 540 preview (motion QA PASS, exact loop), the thumbnail and these notes are done. **No 1080 final, nothing published.**
 
 ## Files
 | file | what |
@@ -200,7 +200,26 @@ Open notes (the reviewers' remaining points, for the Producer and Director):
 - The JUST STYLE? chip in s03 is small when it pops.
 
 ## Motion QA (`flat2d/motion_qa.py`)
-(filled in after the preview render)
+On the 1956 preview frames:
+
+`motion_qa.py FRAMES 5.31 7.22 10.03 11.74 13.79 14.98 18.58 21.36 22.88 27.34 30.57 32.98 34.67 37.49 39.76 42.78 45.68 48.43 53.70 57.89 61.11 --impacts 11.40 30.05`
+
+The result is **PASS**: median diff 2.63, the longest frozen span is 2 frames (0.07 s), and there are no pops. The cuts are the shot starts. The impacts are two designed beats: the push through the cabin window into the sky (11.40) and the flash on "split" (30.05).
+
+- The first QA run found pops, now fixed:
+  - **s14 at 60.87 (and the same pattern in s07, s12 and s13):** a fixed 1.02 cover zoom was used during a camera shake and snapped back to 1.0 on the shake's last frame. `shake_cam` now scales the zoom with the shake amplitude, down to 1.0.
+  - **s10 at 41.5 and 42.3:** the quick flight cycles overlapped, so the sky jumped between dusk and altitude. The cycles no longer overlap and the ground holds still.
+  - **s15 at 61.33:** the match-cut dissolve ran past the cut window. It now lasts 0.2 s.
+- Those frame ranges were re-rendered and spliced in by frame index (frames are a pure function of film time): 895-917, 1238-1283, 1555-1584, 1720-1736, 1810-1846.
+- The full render had crashed at 21.2 s: s05b's air density took a negative base to a fractional power. That is fixed, every shot passed `flat2d/smoke.py` (start, middle and last frame), and the render resumed from frame 635.
+- **Frame 0** (checked): the hero tank shot with 1954 / ENGLAND, the engineers and the defocused rail.
+- **Loop:** s15's last frame (f 1955) is `s01_frame(0)`. Its mean abs difference from frame 0 is **0.0/255**.
+- **Preview:** `tests/preview_full_540.mp4` is 1956 frames, 65.20 s, h264 + AAC 192k, 19.8 MB.
+- **Render cost:** frames are drawn at 1080 and downscaled. A hangar frame is ~6 s and a 2D diagram frame ~2-3 s, so the full 540 render takes ~50 min on 4 cores (the 1080 final will be similar, plus supersampling on the 3D sets).
+- **Speedups added:**
+  - `persp.render` clips its canvas to each part's bounding box;
+  - small stickmen reuse cached cards (`anim.actor(quant=2)`), and extras in the cabin don't sway, which took s03 from 25 s to 4 s a frame;
+  - the stress-line glow is cached.
 
 ## Thumbnail
 `flat2d/plane_windows_thumb.py` follows the Producer's change (approved by the Director): the thumbnail is the hero image itself, readable at a glance without text.

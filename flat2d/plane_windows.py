@@ -120,6 +120,13 @@ def fin(img, t, look, vig=(.32, (8, 10, 18)), bloom_k=.22, grain=.03, look_b=Non
     return cine.finish(img, t, look, vig=vig, grain=grain, bloom_k=bloom_k, look_b=look_b, kb=kb)
 
 
+def shake_cam(img, sx, sy):
+    """Apply a camera shake offset with just enough zoom to hide the edges; the zoom follows the shake down to 1.0, so
+    nothing snaps when the shake ends (a fixed 1.02 zoom during the shake popped on its last frame)."""
+    if not (sx or sy): return img
+    return cine.cam2d(img, 1 + 2.3 * max(abs(sx), abs(sy)) / 1080, dx=sx, dy=sy)
+
+
 def flash(img, u, t0, dur=.3, a=.8, col=(255, 250, 240)):
     TG.flash(img, u, t0, dur, a, col)
 
@@ -371,7 +378,7 @@ def s07(u, D, cue):
     img = tank_frame(T, cam, tank_chars(T, react=react, hide=(0,)), flex=flex, surge=surge, porthole_glow=.6,
                      extra_mid=lambda im, c: erupt(im, c, smooth(seg(u, sp, sp + .5)), u),
                      extra_under=lambda ul, c: split_line(ul, c, smooth(seg(u, sp - .05, sp + .25))))
-    if sx or sy: img = cine.cam2d(img, 1.03, dx=sx, dy=sy)
+    img = shake_cam(img, sx, sy)
     faces = [face_box(g, 1.3) for g in DRAWN if g['R'] > 6]
     if not HIDE_UI:
         clue(img, 'CLUE 3', u, cue(0) - .05, y=230)
@@ -420,11 +427,11 @@ def s15(u, D, cue):
             put_chip(img, 'ENGLAND', (36, 104, 86), 540, 420, pop(u, t54 + .12, .3, 2.0), size=58)
         chip(img, 'A TANK OF WATER', TEAL, 540, 420, u, cue(6) - .05, size=52, until=t54 - .15)
     # the match cut in: the cabin window (s14's last frame) dissolves into the porthole for the first 0.3 s
-    if u < .3:
+    if u < .2:
         now = anim.NOW; anim.NOW = 61.11 + u                 # s14's own clock (the window sky keeps drifting)
         prev, _ = s14(S14_END + u, S14_END, line_cue(14))
         anim.NOW = now
-        img = cine.xfade(prev, img, smooth(u / .3))
+        img = cine.xfade(prev, img, smooth(u / .2))
     return img, {'faces': faces, 'avoid': [(0, 100, W, 520)]}
 
 
@@ -672,7 +679,7 @@ def s14(u, D, cue):
         if u > cue(8) - .05:
             stitle(img, 's14b', [('ABOUT NOT', KEY, 140), ('TEARING', KEY, 176), ('OPEN.', KEY, 176)], 420, u, cue(8) - .05, stagger=.09)
     sx, sy = shake(u, cue(8), 14, .4)
-    if sx or sy: img = cine.cam2d(img, 1.02, dx=sx, dy=sy)
+    img = shake_cam(img, sx, sy)
     return img, {'faces': [], 'avoid': [(0, 100, W, 1000), (box[0] - 60, box[1] - 40, box[2] + 60, box[3] + 30)]}
 
 
@@ -1409,7 +1416,7 @@ def s12(u, D, cue):
     rip = smooth(seg(u, cue(11) - .05, cue(12) + .2))
     img = flow_frame(T, camx, camy, z, pulse=pulse, crack=crack, rip=rip, lines_k=1 - .6 * rip, glow_k=1.0)
     sxk, syk = shake(u, cue(11), 18, .45)
-    if sxk or syk: img = cine.cam2d(img, 1.03, dx=sxk, dy=syk)
+    img = shake_cam(img, sxk, syk)
     flash(img, u, cue(11), .25, .5, (255, 230, 210))
     panel_fg(img, T, -1)
     kit.radial(img, W / 2, H / 2, 1300, (255, 110, 60), .16, add=True)
@@ -1590,13 +1597,14 @@ def s10(u, D, cue):
     sh = smooth(seg(u, cue(3) - .1, cue(4) + .1))
     sw = 1.075 - .075 * sh
     # then quick flight cycles: up (swell) and down (shrink)
-    ncyc = 0; cyc_ph = 0.0
-    for f in FLIGHTS:
+    ncyc = 0; cyc_ph = 0.0; cyc_d = .48
+    for i, f in enumerate(FLIGHTS):
         if T >= f:
             ncyc += 1; cyc_ph = T - f
+            cyc_d = min(.48, (FLIGHTS[i + 1] - f) if i + 1 < len(FLIGHTS) else .48)
     if ncyc:
-        a = math.sin(math.pi * min(1.0, cyc_ph / .48)) if cyc_ph < .48 else 0.0
-        sw = 1 + .06 * a; alt = .0 + .9 * a * (u > cue(5) - .1)
+        a = math.sin(math.pi * min(1.0, cyc_ph / cyc_d)) if cyc_ph < cyc_d else 0.0
+        sw = 1 + .06 * a                                  # the ring pulses per flight; the ground stays (no jumps)
     img = outside(T, alt)
     section(img, T, sw=sw, air=1.0, inward=sh * (1 - smooth(seg(u, cue(5) - .2, cue(5)))), ghost=sh * (1 - smooth(seg(u, cue(5) - .3, cue(5)))),
             ghost_r=1.075)
@@ -1611,7 +1619,7 @@ def s10(u, D, cue):
             d = ImageDraw.Draw(img)
             pts = [(140 + 800 * i / 40, 520 - 260 * math.sin(math.pi * i / 40)) for i in range(41)]
             for i in range(0, 40, 2): d.line([pts[i], pts[i + 1]], fill=(255, 255, 255), width=7)
-            f = min(1.0, cyc_ph / .48) if ncyc else 0
+            f = min(1.0, cyc_ph / cyc_d) if ncyc else 0
             x, y = path_point(pts, f)
             plane_icon(d, x, y, math.atan2(-260 * math.pi / 40 * math.cos(math.pi * f) / 20, 1), 1.3, (255, 210, 63))
             chip(img, '1 FLIGHT = 1 SQUEEZE', RED, 430, 210, u, cue(5) - .1, size=50)
@@ -1792,7 +1800,7 @@ def s13(u, D, cue):
         if u > cue(11) - .1 and u < cue(15) - .05: chip(img, 'x100', RED, 540, 520, u, cue(11) - .1, size=70)
         if u > cue(15) - .05: stitle(img, 's13snap', [('SNAP!', KEY, 160)], 560, u, cue(15) - .05)
     sx, sy = shake(u, cue(15), 12, .35)
-    if sx or sy: img = cine.cam2d(img, 1.02, dx=sx, dy=sy)
+    img = shake_cam(img, sx, sy)
     return img, {'faces': [], 'avoid': [(0, 220, W, 620)]}
 
 
