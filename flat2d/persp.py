@@ -359,7 +359,18 @@ def render(layer, cam, parts, light=None, fog=None, ink=INK, ink_w=3.0, sil_w=5.
         if order is not None and p.name in order: key = order.index(p.name) - 1e6
         items.append((key, p))
     items.sort(key=lambda x: x[0])
-    # screen bbox of everything (clamped)
+    # screen bbox of everything (clamped): project each part's box corners; anything behind the camera -> full frame
+    if clip is None:
+        xs, ys, full = [], [], False
+        for _, p in items:
+            lo, hi = p.bounds()
+            cs = np.array([[a, b, c] for a in (lo[0], hi[0]) for b in (lo[1], hi[1]) for c in (lo[2], hi[2])])
+            C = cam.to_cam(cs)
+            if (C[:, 2] < cam.near).any(): full = True; break
+            S = cam.proj_cam(C); xs += [S[:, 0].min(), S[:, 0].max()]; ys += [S[:, 1].min(), S[:, 1].max()]
+        if not full and xs:
+            pad = 24 + sil_w * 2
+            clip = (min(xs) - pad, min(ys) - pad, max(xs) + pad, max(ys) + pad)
     X0, Y0, X1, Y1 = (clip if clip else (0, 0, Wl, Hl))
     X0, Y0, X1, Y1 = int(max(0, X0)), int(max(0, Y0)), int(min(Wl, X1)), int(min(Hl, Y1))
     if X1 <= X0 or Y1 <= Y0: return None

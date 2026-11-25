@@ -289,6 +289,19 @@ P7_PATH = P3.Path([(0.0, (3.0, -17.5, 13.5), (13.5, 0.0, 3.4), 50.0), (1.6, (5.0
                    (3.24, (7.0, -14.5, 10.5), (14.0, 0.0, 3.8), 44.0)], ease_ends=False)
 
 
+def split_line(img, cam, k):
+    """A dark jagged split on the side of the sunk fuselage, running from the hatch window corner (seen through water)."""
+    if k <= .01: return
+    pts = []
+    for i, (x, z) in enumerate([(14.5, 3.5), (14.9, 3.75), (15.2, 3.62), (15.6, 3.95), (16.0, 3.85), (16.5, 4.15), (17.1, 4.05)]):
+        if i / 6 > k: break
+        ph = math.asin(max(-.99, min(.99, (z - Hg.ZC) / A.CR)))
+        pts.append(cam.p((x, -math.cos(ph) * A.CR - .02, z)))
+    if len(pts) > 1:
+        d = ImageDraw.Draw(img)
+        d.line(pts, fill=(255, 120, 70), width=12, joint='curve'); d.line(pts, fill=(20, 16, 22), width=6, joint='curve')
+
+
 def erupt(img, cam, k, t):
     """The split: a burst of white water boils up from the hatch on the near side of the sunk fuselage."""
     if k <= .01: return
@@ -337,7 +350,7 @@ def s07(u, D, cue):
     flex = (pv - .08) * 1.1
     sx, sy = shake(u, sp, 16, .5)
     img = tank_frame(T, cam, tank_chars(T, react=react, hide=(0,)), flex=flex, surge=surge, porthole_glow=.6,
-                     extra_mid=lambda im, c: erupt(im, c, smooth(seg(u, sp, sp + .5)) * (1.0 if u < sp + 1.2 else 1.0), u))
+                     extra_mid=lambda im, c: (split_line(im, c, smooth(seg(u, sp - .05, sp + .25))), erupt(im, c, smooth(seg(u, sp, sp + .5)), u)))
     if sx or sy: img = cine.cam2d(img, 1.03, dx=sx, dy=sy)
     faces = [face_box(g, 1.3) for g in DRAWN if g['R'] > 6]
     if not HIDE_UI:
@@ -467,7 +480,8 @@ def corner_fit(img, box, r, k, col=(120, 230, 255), which='tr'):
     n = 32
     for i in range(int(n * min(1, k * 1.4))):
         if i % 2: continue
-        d.arc([cx - r, cy - r, cx + r, cy + r], 360 * i / n, 360 * (i + 1) / n, fill=col + (110,), width=5)
+        d.arc([cx - r - 2, cy - r - 2, cx + r + 2, cy + r + 2], 360 * i / n, 360 * (i + 1) / n, fill=INK + (200,), width=11)
+        d.arc([cx - r, cy - r, cx + r, cy + r], 360 * i / n, 360 * (i + 1) / n, fill=col + (235,), width=6)
     a0 = {'tr': 270, 'tl': 180, 'br': 0, 'bl': 90}[which]
     e = a0 + 90 * smooth(k)
     d.arc([cx - r - 2, cy - r - 2, cx + r + 2, cy + r + 2], a0, e, fill=INK, width=24)
@@ -546,22 +560,27 @@ def cabin_parts():
     return _CAB
 
 
-def seated(img, cam, P, t, expr='neutral', pose='stand', shirt=(70, 120, 170), look=0.0, bphase=0.0, h=1.56, **kw):
+def seated(img, cam, P, t, expr='neutral', pose='stand', shirt=(70, 120, 170), look=0.0, bphase=0.0, h=1.56, idle=1.0, quant=2.0, **kw):
     """A passenger sitting: the stickman is drawn standing with its hip on the seat, then cut below the hip line."""
     C = cam.to_cam([P])[0]
     if C[2] < .3: return None
     ppm = cam.fpx / C[2]; s = h * ppm / 930.0
     hx, hy = cam.proj_cam(C[None])[0]
-    lay = layer()
-    g = anim.actor(lay, expr, pose, hx, hy + 520 * s, s, t, look=look, bphase=bphase, shirt=kit.rgb(shirt) if not isinstance(shirt, str) else shirt,
-                   pants='#3a4058', rim=(255, 236, 210), rim_dir=(-1, -.3), rim_w=8, **kw)
-    m = Image.new('L', img.size, 0); ImageDraw.Draw(m).rectangle([0, 0, W, hy + 40 * s], fill=255)
-    lay.putalpha(ImageChops.multiply(lay.split()[3], m))
-    img.alpha_composite(lay)
+    bw, bh = int(700 * s) + 80, int(1100 * s) + 80                   # a small canvas round the figure (speed)
+    ox, oy = int(hx - bw / 2), int(hy + 520 * s - 1000 * s - 40)
+    if ox > W or oy > H or ox + bw < 0 or oy + bh < 0: return None
+    lay = layer(bw, bh)
+    g = anim.actor(lay, expr, pose, hx - ox, hy + 520 * s - oy, s, t, look=look, bphase=bphase, idle=idle, quant=quant,
+                   shirt=kit.rgb(shirt) if not isinstance(shirt, str) else shirt, pants='#3a4058', rim=(255, 236, 210),
+                   rim_dir=(-1, -.3), rim_w=8, **kw)
+    cut = int(hy + 40 * s - oy)
+    if cut < bh: lay.paste((0, 0, 0, 0), (0, max(0, cut), bw, bh))
+    img.alpha_composite(lay, (ox, oy))
+    g['head'] = (g['head'][0] + ox, g['head'][1] + oy)
     return g
 
 
-S03_PATH = P3.Path([(0.0, (2.9, .4, 1.8), (-4.0, -1.0, .95), 52.0), (1.71, (2.5, .28, 1.76), (-4.0, -1.1, .95), 48.0)], ease_ends=False)
+S03_PATH = P3.Path([(0.0, (2.9, .4, 1.72), (-4.0, -1.0, .55), 52.0), (1.71, (2.5, .28, 1.68), (-4.0, -1.1, .55), 48.0)], ease_ends=False)
 
 
 def s03_frame(u, D, cue, T=None):
@@ -578,11 +597,12 @@ def s03_frame(u, D, cue, T=None):
         for y, who in occ:
             P = (x - .12, y, .52)
             if who == 'hero':
-                sh = smooth(seg(u, cue(4) - .15, cue(5) + .1))
-                pose = anim.mix(POSES['stand'], POSES['shrug'], sh)
+                sh = smooth(seg(u, cue(2) - .1, cue(4)))
+                pose = anim.mix(POSES['stand'], anim.add(POSES['shrug'], armL=(15, -10), armR=(-15, 10)), sh)
                 hero = seated(img, cam, P, T, 'thinking' if sh < .5 else 'neutral', pose, shirt=(214, 120, 60), look=.35, bphase=.3)
             else:
-                seated(img, cam, P, T, 'neutral', 'stand', shirt=who, look=.2 * math.sin(x * 3 + y), bphase=abs(x * 1.7 + y))
+                seated(img, cam, P, T, 'neutral', 'stand', shirt=who, look=round(.2 * math.sin(x * 3 + y), 1), bphase=abs(x * 1.7 + y),
+                       idle=0.0)
     # warm light falling from the windows across the seats
     cine.shafts(img, [[(0, 520), (300, 470), (760, 1240), (380, 1380)]], col=(255, 236, 200), alpha=.18, blur=40)
     img = fin(img, T, 'cabin', bloom_k=.25)
@@ -798,9 +818,9 @@ def s04b(u, D, cue):
         img = sky
     if not HIDE_UI and u >= t_cut:
         kx = cue(15) - .1                                  # 'broke apart' -> the wrong answer is crossed out
-        chip(img, 'JUST STYLE?', (214, 90, 150), 300, 1130, u, kx - .15, size=64, angle=6)
-        if u > cue(16) - .2: xmark(img, 300, 1130, 120, (u - (cue(16) - .2)) * 5)
-    return img, {'faces': [], 'avoid': [(0, 1020, 640, 1250)]}
+        chip(img, 'JUST STYLE?', (214, 90, 150), 300, 1640, u, kx - .15, size=64, angle=6)
+        if u > cue(16) - .2: xmark(img, 300, 1640, 120, (u - (cue(16) - .2)) * 5)
+    return img, {'faces': [], 'avoid': [(0, 1520, 640, 1760)]}
 
 
 def newspaper_frame(v, T, cue, t_cut):
@@ -1003,10 +1023,10 @@ def s05b(u, D, cue):
         d.text((100, y), lbl, font=font(30, True), fill=(230, 240, 255), anchor='lm', stroke_width=3, stroke_fill=INK)
     # the Comet climbing (side view, small): position along the climb
     f = .25 + .6 * smooth(u / D)
-    px, py = 200 + 640 * f, gy - 360 - 1500 * f ** 1.2 + tilt * .0
-    cam = P3.Cam((14.0, 92.0, 26.0), (14.0, 0.0, 0.0), 30.0)
+    px, py = 260 + 520 * f, gy - 420 - 1400 * f ** 1.2
+    cam = P3.Cam((14.0, 92.0, 14.0), (14.0, 0.0, 0.0), 30.0)
     pl = layer(); P3.render(pl, cam, comet_parts((14.0, 0.0, 0.0)), light=SKY_LIGHT, ink_w=2, sil_w=4)
-    pl = pl.crop(pl.getbbox()); sc = 520 / pl.width
+    pl = pl.crop(pl.getbbox()); sc = 700 / pl.width
     pl = pl.resize((int(pl.width * sc), int(pl.height * sc)), Image.LANCZOS)
     img.alpha_composite(pl, (int(px - pl.width / 2), int(py - pl.height / 2)))
     img = fin(img, T, 'altitude', bloom_k=.15)
@@ -1061,7 +1081,7 @@ def s06(u, D, cue):
     logbook(img, 790, 1500, .7, 'PLANE 2 · LOG', 0, 0, ang=-5)
     kc = smooth(seg(u, cue(9) - .2, cue(12) + .1))
     n1 = int(1290 * kc); n2 = int(900 * kc)
-    counter(img, 300, 1760, n1, 4, 80, 'FLIGHTS'); counter(img, 790, 1780, n2, 4, 80, 'FLIGHTS')
+    counter(img, 300, 1730, n1, 4, 80, 'FLIGHTS'); counter(img, 790, 1745, n2, 4, 80, 'FLIGHTS')
     # foreground lamp shade, defocused (DOF frame)
     def lamp(l):
         dd = ImageDraw.Draw(l); dd.polygon([(-60, 0), (420, 0), (300, 260), (-60, 300)], fill=(36, 96, 70, 255))
@@ -1151,8 +1171,8 @@ def flow_lines(spacing=46, dy=6):
 
 def heat(v):
     """Stress colour: calm cyan -> white -> orange -> red as the stretch piles up (v = speed / far-field)."""
-    stops = [(0.0, (90, 200, 255)), (1.2, (120, 224, 255)), (2.0, (220, 246, 255)), (2.8, (255, 196, 80)), (3.6, (255, 90, 40)),
-             (5.0, (255, 40, 30))]
+    stops = [(0.0, (90, 200, 255)), (1.4, (120, 224, 255)), (2.6, (220, 246, 255)), (3.6, (255, 196, 80)), (4.4, (255, 90, 40)),
+             (5.5, (255, 40, 30))]
     for (a, ca), (b, cb) in zip(stops, stops[1:]):
         if v <= b: return kit.lerp(ca, cb, max(0, (v - a) / (b - a)))
     return stops[-1][1]
@@ -1162,7 +1182,7 @@ def corner_boost(x, y):
     """Extra stress colour near the square window's corners (the singular points the lines crowd into)."""
     sx, sy, w, h, rr = HOLE_S
     d = min(math.hypot(x - (sx + a * w / 2), y - (sy + b * h / 2)) for a in (-1, 1) for b in (-1, 1))
-    return 3.2 * math.exp(-d / 60.0)
+    return 3.6 * math.exp(-d / 42.0)
 
 
 def panel_static(kind='both'):
@@ -1198,22 +1218,21 @@ def flow_frame(t, camx, camy, zoom, show='both', pulse=0.0, dash_speed=160.0, cr
     """Render the panel with the flowing stretch lines for a 2D camera (camx, camy panel px at the frame centre)."""
     base = panel_static().copy()
     lines = flow_lines()
-    lay = Image.new('RGBA', base.size, (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+    base.alpha_composite(_flow_glow(round(pulse * 10) / 10, round(lines_k * 10) / 10))
     core = Image.new('RGBA', base.size, (0, 0, 0, 0)); dc = ImageDraw.Draw(core)
     x_lo, x_hi = camx - 760 / zoom, camx + 760 / zoom
     for pts, sp in lines:
         if not pts or pts[0][0] < x_lo - 200 or pts[0][0] > x_hi + 200: continue
-        prev = None; s_acc = 0.0
+        s_acc = 0.0
         for (a, b, v) in zip(pts, pts[1:], sp):
-            vv = v * (1 + .25 * pulse) + corner_boost(*a) * (1 + .6 * pulse) * (a[0] > 1150)
-            col = heat(vv)
-            d.line([a, b], fill=col + (int(140 * lines_k),), width=10)
             s_acc += math.dist(a, b)
+            if lines_k <= .2: continue
             ph = (s_acc - t * dash_speed * max(.6, min(2.2, v))) % 90
-            if ph < 36 and lines_k > .2: dc.line([a, b], fill=(255, 255, 255, int(235 * lines_k)), width=6)
-            else: dc.line([a, b], fill=col + (int(255 * lines_k),), width=4)
-    glow_l = kit.soft_layer(lay, 7)
-    base.alpha_composite(glow_l); base.alpha_composite(core)
+            if ph < 36: dc.line([a, b], fill=(255, 255, 255, int(235 * lines_k)), width=6)
+            else:
+                vv = v * (1 + .25 * pulse) + corner_boost(*a) * (1 + .6 * pulse) * (a[0] > 1150)
+                dc.line([a, b], fill=heat(vv) + (int(255 * lines_k),), width=4)
+    base.alpha_composite(core)
     # windows show the sky through them (over the lines)
     cx, cy, r = HOLE_R
     window_sky_small(base, (cx - r, cy - r, cx + r, cy + r), True, t)
@@ -1225,13 +1244,28 @@ def flow_frame(t, camx, camy, zoom, show='both', pulse=0.0, dash_speed=160.0, cr
     # the hot point at the top-right corner of the square window
     hx, hy = sx + w / 2, sy - h / 2
     if glow_k > 0:
-        kit.radial(base, hx, hy, 120 + 60 * pulse, (255, 70, 40), (.55 + .35 * pulse) * glow_k, add=True)
-        kit.radial(base, hx, hy, 34, (255, 240, 200), (.7 + .3 * pulse) * glow_k, power=.8, add=True)
+        kit.radial(base, hx, hy, 150 + 60 * pulse, (255, 70, 40), (.65 + .3 * pulse) * glow_k, add=True)
+        kit.radial(base, hx, hy, 46, (255, 240, 200), (.8 + .2 * pulse) * glow_k, power=.8, add=True)
     if crack > 0: draw_crack(base, hx, hy, crack, rip)
     img = Image.new('RGBA', (W, H), NAVY + (255,))
     v = cine.cam2d(base, zoom, camx, camy, dx=W / 2 - camx, dy=H / 2 - camy)
     img.alpha_composite(v.crop((0, 0, W, H)) if v.size != (W, H) else v)
     return img
+
+
+def _flow_glow(pulse, lines_k):
+    """The soft glow under the stretch lines (cached per quantised pulse and strength: the costly blur)."""
+    k = ('glow', pulse, lines_k)
+    if k in _FLOW: return _FLOW[k]
+    if sum(1 for key in _FLOW if isinstance(key, tuple) and key[0] == 'glow') > 12:
+        for key in [key for key in _FLOW if isinstance(key, tuple) and key[0] == 'glow']: del _FLOW[key]
+    lay = Image.new('RGBA', (PANEL_W, PANEL_H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+    for pts, sp in flow_lines():
+        for (a, b, v) in zip(pts, pts[1:], sp):
+            vv = v * (1 + .25 * pulse) + corner_boost(*a) * (1 + .6 * pulse) * (a[0] > 1150)
+            d.line([a, b], fill=heat(vv) + (int(140 * lines_k),), width=10)
+    _FLOW[k] = kit.soft_layer(lay, 7)
+    return _FLOW[k]
 
 
 CRACK = None
@@ -1289,11 +1323,11 @@ def s11(u, D, cue):
     if not HIDE_UI:
         if T < 45.6:
             tag(img, 'ROUND WINDOW', 540, 300, 60, 'white', pop(u, cue(2) - .05, .3))
-            arrow(img, (540, 200), (540, 110), CYAN, 14, 36); arrow(img, (540, 1720), (540, 1810), CYAN, 14, 36)
-            chip(img, 'STRETCH', (40, 120, 170), 540, 1640, u, cue(5) - .05, size=48)
+            arrow(img, (540, 200), (540, 110), CYAN, 14, 36); arrow(img, (540, 1830), (540, 1905), CYAN, 14, 32)
+            chip(img, 'STRETCH', (40, 120, 170), 820, 150, u, cue(5) - .05, size=46)
             if u > cue(7) - .1:
-                chip(img, 'FLOWS SMOOTHLY PAST', (40, 150, 110), 540, 400, u, cue(7) - .1, size=50)
-                check(img, 540 + 300, 400 - 2, 40, smooth(seg(u, cue(7), cue(8))))
+                chip(img, 'FLOWS SMOOTHLY PAST', (40, 150, 110), 500, 400, u, cue(7) - .1, size=50)
+                check(img, 920, 398, 40, smooth(seg(u, cue(7), cue(8))))
     return img, {'faces': [], 'avoid': [(0, 100, W, 460)]}
 
 
@@ -1325,12 +1359,12 @@ def s12(u, D, cue):
     T = anim.NOW
     sx, sy, w, h, rr = HOLE_S; hx, hy = sx + w / 2, sy - h / 2
     z = 1.75 + .35 * smooth(seg(u, 0, 2.2)) - .45 * smooth(seg(u, cue(11) - .2, cue(12) + .3))
-    camx = hx - 60 + 120 * smooth(seg(u, 0, 2.2)); camy = hy + 120 - 140 * smooth(seg(u, 0, 2.2))
+    camx = hx + 120 + 60 * smooth(seg(u, 0, 2.2)); camy = hy - 60 - 60 * smooth(seg(u, 0, 2.2))
     n = sum(T >= s for s in SQUEEZES)
     ph = min([T - s for s in SQUEEZES if T >= s] or [9])
     pulse = math.exp(-ph * 6) if ph < 2 else 0.0
-    crack = .04 + .5 * smooth(seg(u, cue(4) - .2, cue(8))) + .46 * smooth(seg(u, cue(10), cue(12)))
-    crack = min(1.0, crack + .02 * n)
+    crack = .03 + .3 * smooth(seg(u, cue(4) - .2, cue(8))) + .27 * smooth(seg(u, cue(10), cue(12)))
+    crack = min(.62, crack + .012 * n)
     rip = smooth(seg(u, cue(11) - .05, cue(12) + .2))
     img = flow_frame(T, camx, camy, z, pulse=pulse, crack=crack, rip=rip, lines_k=1 - .6 * rip, glow_k=1.0)
     sxk, syk = shake(u, cue(11), 18, .45)
@@ -1340,19 +1374,19 @@ def s12(u, D, cue):
     kit.radial(img, W / 2, H / 2, 1300, (255, 110, 60), .16, add=True)
     img = fin(img, T, 'desk', bloom_k=.35, vig=(.42, (20, 6, 6)))
     if not HIDE_UI:
-        counter(img, 540, 250, int(1000 * n / len(SQUEEZES) * 3) if n else 0, 4, 84, 'SQUEEZES', blur=0)
+        counter(img, 800, 1600, int(1000 * n / len(SQUEEZES) * 3) if n else 0, 4, 80, 'SQUEEZES', blur=0)
         if u > cue(5) - .1 and u < cue(11):
-            chip(img, 'A TINY CRACK', RED, 540, 470, u, cue(5) - .1, size=52)
+            chip(img, 'A TINY CRACK', RED, 540, 300, u, cue(5) - .1, size=56)
         if u > cue(13) - .05:
-            stitle(img, 's12mf', [('METAL', 'white', 150), ('FATIGUE', KEY, 170)], 420, u, cue(13) - .05, stagger=.2)
-    return img, {'faces': [], 'avoid': [(0, 150, W, 860)]}
+            stitle(img, 's12mf', [('METAL', 'white', 150), ('FATIGUE', KEY, 170)], 200, u, cue(13) - .05, stagger=.2)
+    return img, {'faces': [], 'avoid': [(0, 150, W, 620), (560, 1500, W, 1700)]}
 
 
 # ---------------------------------------------------------------- the cross-section (s09, s09b, s10)
 SEC = (540, 1010, 420)
 
 
-def section(img, t, sw=1.0, cx=SEC[0], cy=SEC[1], R=SEC[2], air=1.0, arrows=0.0, ghost=0.0, inward=0.0, people=True):
+def section(img, t, sw=1.0, cx=SEC[0], cy=SEC[1], R=SEC[2], air=1.0, arrows=0.0, ghost=0.0, inward=0.0, people=True, ghost_r=1.0):
     """A modern fuselage cross-section seen from the nose: skin ring (radius R*sw), cabin, floor, bins, seats with
     passengers, windows in the ring, warm air dots inside (density air), outward/inward arrows, a dashed ghost ring."""
     Rs = R * sw
@@ -1399,14 +1433,14 @@ def section(img, t, sw=1.0, cx=SEC[0], cy=SEC[1], R=SEC[2], air=1.0, arrows=0.0,
     d.ellipse([cx - Rs + 26, cy - Rs + 26, cx + Rs - 26, cy + Rs - 26], outline=INK, width=5)
     for s_ in (-1, 1):
         a = math.radians(-14); wx = cx + s_ * (Rs - 13) * math.cos(a); wy = cy + (Rs - 13) * math.sin(a)
-        d.rounded_rectangle([wx - 15, wy - 32, wx + 15, wy + 32], 12, fill=(150, 200, 240), outline=INK, width=4)
+        d.rounded_rectangle([wx - 20, wy - 42, wx + 20, wy + 42], 16, fill=(150, 200, 240), outline=INK, width=4)
     for k in range(24):
         a = 2 * math.pi * k / 24; x, y = cx + math.cos(a) * (Rs - 13), cy + math.sin(a) * (Rs - 13)
         d.ellipse([x - 4, y - 4, x + 4, y + 4], fill=(150, 156, 170))
     if ghost > 0:
-        n = 60
+        n = 60; Rg = R * ghost_r
         for i in range(0, n, 2):
-            d.arc([cx - R, cy - R, cx + R, cy + R], 360 * i / n, 360 * (i + 1) / n, fill=(255, 255, 255, int(255 * ghost)), width=5)
+            d.arc([cx - Rg, cy - Rg, cx + Rg, cy + Rg], 360 * i / n, 360 * (i + 1) / n, fill=(255, 255, 255, int(255 * ghost)), width=6)
     if arrows > 0 or inward > 0:
         for k in range(12):
             a = 2 * math.pi * (k + .5) / 12
@@ -1472,6 +1506,7 @@ def s09(u, D, cue):
         if cue(5) - .2 < u < cue(9) + .3 and not HIDE_UI:
             for s_ in (-1, 1):
                 arrow(img, (540 + s_ * 120, 1560), (540 + s_ * 120, 1300), (255, 150, 70), 16, 40, alpha=smooth(seg(u, cue(5) - .2, cue(5) + .2)))
+    if u >= t_x + .35: img = cine.cam2d(img, 1.0 + .16 * smooth(seg(u, t_x + .35, D)), 540, 1060)
     img = fin(img, T, 'navy', bloom_k=.25)
     if not HIDE_UI:
         chip(img, 'UP HIGH: THIN AIR', (40, 92, 150), 540, 300, u, cue(0) - .05, size=52, until=cue(5) - .2)
@@ -1486,6 +1521,7 @@ def s09b(u, D, cue):
     sw = 1 + .075 * smooth(seg(u, cue(15) - .15, cue(16) + .1))
     section(img, T, sw=sw, air=1.0, arrows=smooth(seg(u, cue(14) - .1, cue(15) + .2)), ghost=smooth(seg(u, cue(15), cue(16))))
     balloon(img, 900, 420, smooth(seg(u, cue(17) - .1, cue(19) + .1)), T)
+    img = cine.cam2d(img, 1.07, 540, 1000, roll=-3 * smooth(u / D))
     img = fin(img, T, 'navy', bloom_k=.25)
     if not HIDE_UI:
         stitle(img, 's09sw', [('SWELLS', (255, 170, 90), 130)], 160, u, cue(15) - .05)
@@ -1512,7 +1548,8 @@ def s10(u, D, cue):
         a = math.sin(math.pi * min(1.0, cyc_ph / .48)) if cyc_ph < .48 else 0.0
         sw = 1 + .06 * a; alt = .0 + .9 * a * (u > cue(5) - .1)
     img = outside(T, alt)
-    section(img, T, sw=sw, air=1.0, inward=sh * (1 - smooth(seg(u, cue(5) - .2, cue(5)))), ghost=1 - smooth(seg(u, cue(5) - .3, cue(5))))
+    section(img, T, sw=sw, air=1.0, inward=sh * (1 - smooth(seg(u, cue(5) - .2, cue(5)))), ghost=sh * (1 - smooth(seg(u, cue(5) - .3, cue(5)))),
+            ghost_r=1.075)
     img = fin(img, T, 'desk', bloom_k=.25)
     if not HIDE_UI:
         if u < cue(5) - .1:
@@ -1527,7 +1564,7 @@ def s10(u, D, cue):
             x, y = path_point(pts, f)
             plane_icon(d, x, y, math.atan2(-260 * math.pi / 40 * math.cos(math.pi * f) / 20, 1), 1.3, (255, 210, 63))
             chip(img, '1 FLIGHT = 1 SQUEEZE', RED, 430, 210, u, cue(5) - .1, size=50)
-            counter(img, 860, 330, ncyc, 3, 74, 'SQUEEZES')
+            counter(img, 860, 380, ncyc, 3, 74, 'SQUEEZES')
     return img, {'faces': [], 'avoid': [(0, 150, W, 600), (0, 1480, W, 1720)]}
 
 
@@ -1603,7 +1640,7 @@ def s08(u, D, cue):
     d.polygon([(-200, 1180), (1280, 1180), (1500, H), (-420, H)], fill=(120, 84, 54)); d.line([(-200, 1180), (1280, 1180)], fill=INK, width=6)
     art, box = hatch_skin(1500, 1500, crack=1.0)
     art = art.crop((150, 200, 1350, 1300))
-    dst = [(160, 1250), (930, 1240), (1090, 1800), (-20, 1830)]
+    dst = [(170, 1190), (920, 1180), (1070, 1700), (0, 1730)]
     coeffs = _persp_coeffs([(0, 0), (art.width, 0), (art.width, art.height), (0, art.height)], dst)
     warped = art.transform((W, H), Image.PERSPECTIVE, coeffs, Image.BICUBIC)
     m = Image.new('L', (W, H), 0); ImageDraw.Draw(m).polygon(dst, fill=255)
@@ -1710,8 +1747,8 @@ SHOT_LIST = [('s01', 1, 0), ('s01b', 1, 14), ('s02', 2, 0), ('s03', 3, 0), ('s04
 END = 1956 / 30                  # 65.20 s (length.json)
 NO_PUNCH = ('s01b', 's02', 's04', 's04a', 's04b', 's05b', 's07b', 's09b', 's10', 's11b', 's12', 's15')
 BAND_AT = {}
-BAND_FIX = {'s01': 1500, 's01b': 1290, 's15': 1500, 's14': 1790, 's11': 1780, 's11b': 1780, 's12': 1790, 's09': 1800,
-            's09b': 1800, 's10': 1730, 's04': 1520, 's04a': 1520, 's05': 1720, 's13': 1760, 's07': 1330, 's07b': 1530, 's04b': 1790}
-STILL_AT = {'s01': .0, 's01b': .8, 's02': .95, 's03': .78, 's04': .88, 's04a': .75, 's04b': .75, 's05': .92, 's05b': .85, 's06': .9,
-            's07': .9, 's07b': .9, 's08': .9, 's09': .85, 's09b': .9, 's10': .85, 's11': .92, 's11b': .9, 's12': .93,
+BAND_FIX = {'s01': 1500, 's01b': 1290, 's15': 1500, 's14': 1790, 's11': 1720, 's11b': 1780, 's12': 1820, 's09': 1800,
+            's09b': 1800, 's10': 1730, 's04': 1520, 's04a': 1520, 's06': 1880, 's08': 1860, 's04b': 1850, 's05': 1720, 's13': 1760, 's07': 1330, 's07b': 1530, }
+STILL_AT = {'s01': .0, 's01b': .8, 's02': .95, 's03': .7, 's04': .88, 's04a': .75, 's04b': .75, 's05': .92, 's05b': .85, 's06': .9,
+            's07': .9, 's07b': .9, 's08': .9, 's09': .85, 's09b': .9, 's10': .38, 's11': .92, 's11b': .9, 's12': .93,
             's13': .93, 's14': .95, 's15': .55}

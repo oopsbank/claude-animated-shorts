@@ -123,8 +123,8 @@ def comet(windows=True, hatch_x=None, crack=0.0, cabin_glow=0.0, livery=True, n=
         for side in (1, -1):
             for x in WX:
                 hatch = hatch_x is not None and abs(x - hatch_x) < .3
-                for (w, h, r, col, ink) in (((.6, .54, .09, FRAME, False), (.5, .44, .055, GLASS, True)) if not hatch else
-                                            ((.82, 1.02, .07, WHITE, 2), (.6, .54, .09, FRAME, False), (.5, .44, .055, GLASS, True))):
+                for (w, h, r, col, ink) in (((.66, .58, .09, FRAME, False), (.56, .48, .06, GLASS, True)) if not hatch else
+                                            ((.86, 1.06, .07, WHITE, 2), (.66, .58, .09, FRAME, False), (.56, .48, .06, GLASS, True))):
                     rr = P3.round_rect2d(w, h, r, 4)
                     pts = _surface_poly([(x + a, .27 + b) for a, b in rr], side, .016)
                     if side < 0: pts = pts[::-1]
@@ -164,21 +164,22 @@ def comet(windows=True, hatch_x=None, crack=0.0, cabin_glow=0.0, livery=True, n=
         secs = [(yR, 8.55, 9.25, 1.32), (2.3, 8.62, 9.05, 1.30), (yB, 9.75, 7.35, .86), (8.0, 11.55, 5.2, .52),
                 (13.0, 13.8, 3.5, .34), (yT, 15.85, 2.25, .2)]
         foil = [(0, 0), (.05, .40), (.22, .55), (.55, .42), (1.0, .03), (.6, -.22), (.25, -.36), (.05, -.27)]
+        blunt = [(0, .06), (.02, .44), (.22, .55), (.55, .42), (1.0, .03), (.6, -.22), (.25, -.36), (.02, -.34)]   # engine bay: a deep flat face for the intakes
         S = []
         for y, le, c, th in secs:
-            S.append([(le + c * fx, side * y, zw(y) + th * fz) for fx, fz in foil])
+            S.append([(le + c * fx, side * y, zw(y) + th * fz) for fx, fz in (blunt if y < 3.95 else foil)])
         if side < 0: S = [s[::-1] for s in S]
         w = Part('wingR' if side > 0 else 'wingL', spec=(26, .18), sil_w=5)
         P3.loft(S, METAL, part=w)
         # intakes: two dark ovals per side in the thick root leading edge; exhausts at the trailing edge
         for yi in (1.78, 3.02):
             le = 8.55 + (9.75 - 8.55) * max(0, (yi - 2.3) / (3.9 - 2.3)) if yi > 2.3 else 8.58
-            cz = zw(yi) + .12
+            cz = zw(yi) + .1
             for rad, col in ((.5, (104, 110, 124)), (.4, INTAKE)):
                 pts = []
                 for k in range(16):
                     a = 2 * math.pi * k / 16
-                    pts.append((le - .02, side * (yi + rad * 1.05 * math.cos(a)), cz + rad * .62 * math.sin(a)))
+                    pts.append((le - .015, side * (yi + rad * 1.15 * math.cos(a)), cz + rad * .52 * math.sin(a)))
                 if side > 0: pts = pts[::-1]
                 w.decal(pts, col, ink=1.5 if col == INTAKE else False, normal=(-1, 0, 0))
             te = 8.55 + 9.25 if yi < 2.3 else 9.75 + 7.35 + (8.62 + 9.05 - 17.1) * 0

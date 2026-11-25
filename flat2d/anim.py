@@ -167,12 +167,17 @@ def secondary(pose, t, phase=0.0, amt=1.0):
 
 
 def actor(img, expr, pose, cx, gy, s, t=0.0, look=0.0, lean=0.0, hop=0.0, blink_ok=True, bphase=0.0,
-          aura=None, aura_alpha=.5, rim=None, rim_dir=(1, -.4), rim_w=9, idle=1.0, **kw):
+          aura=None, aura_alpha=.5, rim=None, rim_dir=(1, -.4), rim_w=9, idle=1.0, quant=None, **kw):
     """Draw a stickman with a moving hold (breathing + blinks + `secondary` action), lean (deg, + = toward
-    screen right) and hop (px). Returns kit.place geometry + 'hands' {'L'/'R': (x, y, ang)} in frame px."""
+    screen right) and hop (px). Returns kit.place geometry + 'hands' {'L'/'R': (x, y, ang)} in frame px.
+    quant (deg): round the joint angles (and the look) so small figures reuse cached cards across frames (speed)."""
     if isinstance(pose, str): pose = dict(POSES[pose])
     pose, dl, dn, dh = secondary(pose, t, bphase, idle)
     look = max(-1.0, min(1.0, look + dl)); lean += dn; hop += dh
+    if quant:
+        pose = {k: (tuple(round(x / quant) * quant if i < 2 else x for i, x in enumerate(v)) if k in JOINTS else v)
+                for k, v in pose.items()}
+        look = round(look / .05) * .05
     e = expr
     if blink_ok and blink(t, phase=bphase) and expr not in ('blink',):
         e = 'blink'

@@ -356,7 +356,8 @@ def stand(img, cam, P, t, expr='neutral', pose='stand', h=1.78, look=0.0, bphase
     ppm = cam.fpx / C[2]
     s = h * ppm / 930.0
     if s < .02: return None
-    return anim.actor(img, expr, pose, x, y, s, t, look=look, lean=lean, rim=rim, rim_dir=rim_dir, rim_w=10, bphase=bphase, **kw)
+    return anim.actor(img, expr, pose, x, y, s, t, look=look, lean=lean, rim=rim, rim_dir=rim_dir, rim_w=10, bphase=bphase,
+                      quant=2.0 if s < .45 else None, **kw)
 
 
 ENG_A = dict(coat='#ecebe4', pants='#3a3f4e')                       # engineer in a white coat
