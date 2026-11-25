@@ -1,6 +1,6 @@
 """Style test (2026-11-25): the Director's target look, stickmen in real-perspective toon rooms (persp + cine, CPU).
-the video 12 toolkit (persp + cine) on CPU. Not a repo file; output goes to OUTDIR.
-usage: python style_test.py OUTDIR"""
+Kit pieces (room shell, sofa, lamps, shelf, door, plant, windows) for the next Animator to reuse or replace.
+usage: .venv/bin/python flat2d/style_test_rooms.py OUTDIR    (CHIBI=0 for the house proportions)"""
 import os, sys, math
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'flat2d')); sys.path.insert(0, os.path.join(ROOT, 'stickman', 'scripts'))
