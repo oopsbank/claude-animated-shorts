@@ -120,3 +120,8 @@ Checks: 540 preview `tests/preview_full_540.mp4` (62.93 s, mix) + new `tests/she
 **Final:** `flamingo_one_leg_final_1080x1920.mp4`: `render.py --size 1080x1920` (1888 frames), mux `mix.wav`,
 `tools/add_cover.sh` (thumbnail as the first 0.1 s), 2-pass libx264 high 5200k `-preset slow`, AAC 192k, +faststart →
 **43.0 MB (41.0 MiB), 63.04 s, 1891 frames**, 1080x1920. Not published.
+
+## Posted 2026-11-25 (Buffer, media file `flamingo_one_leg_1080x1920.mp4`)
+- TikTok 6b0652d522dfb7833a764c5b https://tiktok.com/@somecrazythingzz/video/7711942530920615174
+- Facebook 6b0652e5b6204bca46c03eec https://facebook.com/1395801306957363_122109182865549918
+- YouTube: scheduled in Buffer as 6b0652efb6204bca46c0420e for 2026-11-26 04:30 UTC (11:30 Vietnam), 24 h after video 9's YouTube post.
