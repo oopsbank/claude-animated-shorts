@@ -181,3 +181,31 @@ The Director's style target is a stickman story short with real perspective room
 - **Macros:** a defocused set render (r about 18-24 px at 1080) plus bokeh behind a sharp prop (the phone with a glowing UI screen held by a white stickman arm; the brass knob with light through the keyhole and under the door). Their edge density is low (0.03-0.04) by design.
 - **Camera move:** `Path` keys from the bedroom door on the landing to the top step, tilting down onto the kid climbing a step with a torch. 3.5 s, 84 frames at 540x960 / 24 fps, about 2 s per frame on CPU.
 - **Still behind the target:** the bed and furniture are blocky boxes (no rounded mattress or soft folds); the torch beam is faint; the stickman hand on the phone reads more like a finger than a hand; the night rooms have little contrast between objects (one ramp for everything); the bedroom character is small (about 1/6 of the frame).
+
+## Natural motion (video 13 fix pass 2, 2026-11-26; helpers in `flat2d/body2d.py`)
+Reference clips could not be studied: YouTube media hosts are blocked by the session proxy (and yt-dlp hits the bot
+check), so the numbers below are from the published stair/gait biomechanics we know, checked by eye on our stills.
+Never put third-party frames in the repo (public).
+- **Draw poses from joints, not rotated cards.** `body2d.figure(lay, J, k, style)` draws the round-body stickman from
+  screen joints (head, neck, pelvis, shoulders/elbows/hands, hips/knees/ankles/toes) with the card head pasted on
+  top (`head_sprite` in night_intruder.py). Pose builders: `build` (absolute segment angles), `reach` / `plant`
+  (2D IK onto a target, so hands stay on a collar and feet stay on a spot), `ik3` (3D IK: knees toward a pole).
+  Lying / kneeling / propped poses made this way read in 1 s; a standing card rotated 90 deg reads as a tangle.
+- **Stair descent (step-over-step):** normal ~0.55-0.65 s per step; a night creep 1.0-1.5 s (ours: 1.2 s = the
+  footstep sounds). Per step: the lead foot lifts ~5 cm, moves forward over the nosing first, then reaches DOWN
+  toe-first (ankle plantar-flexed ~20 deg, toe ~6 cm below the heel); contact on the sound; the heel settles over
+  ~0.15 s. The support knee flexes (to ~80-90 deg) to lower the body from ~0.45 s before contact; the pelvis dips
+  ~3 cm past its new height at +0.12 s and recovers by +0.4 s; then a held double-support pause (creep). Trunk 5-10
+  deg forward, head pitched down 20-30 deg toward the next treads; the hand on the wall slides ~0.3 s behind the
+  body; a raised arm lags the drop ~0.1 s (follow-through). `body2d.stair_descent(T, contacts, tread)` gives feet +
+  pelvis in 3D; project with the shot camera, so feet are planted on the treads by construction.
+- **Startle / shield (shot 15):** the head pulls back and down first (~0.1 s), the hands lead the arms up in ~0.2 s
+  with a small overshoot (`eback`), the elbows follow ~0.05 s later, then a fine tremble.
+- **Dodge reflex (shot 9):** starts with the swing (reaction ~0.2 s after the wind-up starts), fast ease-out with a
+  small overshoot, slow recovery - not a symmetric smoothstep.
+- **Peek (shot 5):** small moves with held pauses (inch out ~0.7 s, freeze ~0.7 s, inch again), not one slow slide.
+- **Shove + fall:** 3 beats - contact (0.1 s: the victim's trunk whips forward, arms fling back), topple (~0.2 s,
+  ease-IN like gravity, pivoting on the feet, arms swing forward to catch), impact (camera jolt + dust puff + a 1-2
+  frame bounce), the attacker lands after with an overshoot-and-settle.
+- **Getting up from the floor:** prone -> push up onto hands and knees -> one foot forward into a crouch -> stand,
+  hands and knees planted while the weight shifts (key poses blended with eased joint lerps, `jlerp`).

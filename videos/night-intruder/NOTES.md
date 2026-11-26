@@ -50,26 +50,29 @@ Render time at 540: about 1.7 s per frame per core (2400 frames in about 17 min 
 | 1 | 0-4 | ECU on the nightstand: the dark phone lights up at 0.55 s (00:00 lock screen), glow on the wood, the metal lamp and its plug behind; slow push in; a small jolt on the clack at 2.55 |
 | 2 | 4-8 | Top-down CU of ME on the pillow: eyes closed, snap open at 4.3, he tilts his head toward the door during the silence, flinches on the screeches (7.05, 7.58) |
 | 3 | 8-13 | Handheld CU: a striped arm + cartoon hand gropes the nightstand (nudges the phone), grips the lamp stem at 10.1, lifts against the cord, the plug pops out of the socket at 11.6 (sparks, jolt), lamp lifts out of frame |
-| 4 | 13-22 | The bedroom door leaf slides open from a crack, then OTS from behind and above: ME (back view, lamp held up by the arm, left hand on the rail) dips down one step on each audio footstep (14.9 + 1.2 k) while the camera glides continuously down the stairs; nosings rim-lit by the sodium spill, a blurred banister in the foreground, the torch cone sweeping the cabinet through the stair mouth |
+| 4 | 13-22 | The bedroom door leaf slides open from a crack, then OTS from high behind ME: a purpose-drawn back view (`me_stairs_3d`, `body2d`) creeping down, each foot contact on its audio footstep (14.9 + 1.2 k), feet planted on the 3D treads by IK, support knee lowering him, lamp arm lagging, left hand sliding on the partition; the camera floats behind, smoothed. The bottom of the frame is a second plate (`s04_plate_b`: the foot of the stairwell and the living-room cabinet) blended in under a dark seam, the torch beam sweeping across the cabinet |
 | 5 | 22-27 | MCU with a slow push-in: ME pressed to the wall, sweat beads sliding down, the lamp low in his other hand (clear of his head); he leans out and peeks (head moves out, worried -> scared, torch rim on his face); the rummaging torchlight flickers over the walls |
-| 6 | 27-32 | POV past the blurred wall edge: THIEF 1 from behind (peaked hood, torch rim), the crowbar on his hip, the laptop (glinting) slides into the open backpack 28.0-28.8, the zipper pull races across at 30.0, the bag lifts |
+| 6 | 27-32 | POV past the blurred wall edge: THIEF 1 from behind against the lit blinds (peaked hood, strong sodium back-rim on hood + shoulders, torch rim), the crowbar on his hip, the laptop (glinting) slides into the open backpack 28.0-28.8, the torch from under his chin lights the bag (beam + pool), the zipper pull races across at 30.0, the bag lifts |
 | 7 | 32-34.3 | Floor-level ECU: the bare foot comes down past the last step onto a child's toy car, CRACK at 33.2 (shards, a wheel flies, flash, jolt) |
 | 8 | 34.3-38 | Frontal MS: THIEF 1 frozen, face lit from below by the torch; torch off at 34.9; pure black 35.0-37.0 (digital silence in the mix); the street-lamp spill slowly brings both shapes back 37-38 |
 | 9 | 38-42 | Whip pan in (motion blur), profile: THIEF 1 spins and swings the crowbar, ME leans back, CLANG + sparks on the wall corner at 38.5, standoff |
 | 10 | 42-47 | Dutch angle (-15 deg): ME lunges, lamp hits the weapon arm at 43.05 (flash, sparks, jolt), the crowbar falls, clatters and rolls (43.55-46.4) |
-| 11 | 47-55 | Shaky handheld, side-on: the shove, THIEF 1 tips over and lands face-down at 47.3, the backpack flies and lands (47.45-47.85), its contents spill toward the lens (laptop, phones, cables, a watch, glints); ME kneels astride his back, both fists on his collar (`pin_pile`), continuous struggle (legs kicking, arms flailing, ME rocking), slow push-in |
+| 11 | 47-55 | Shaky handheld, 3/4 top-down (`pile_cam`), purpose-drawn bodies (`pile_poses`): the shove in 3 beats (47.0-47.12 ME's shoulder into THIEF 1's back, 47.12-47.3 both topple, impact 47.3 with jolt + dust puff), ME lands astride and settles by 47.55, kneeling with both fists on the collar; THIEF 1 face-down, head turned to us, kicking + flailing; the backpack flies and its contents spill around |
 | 12 | 55-62 | Low, from behind the pile: the front door opens (latch 55.2), a strong sodium wedge on the tiles with THIEF 2's long shadow, THIEF 2 a big backlit silhouette filling the doorway (~60-70% of the frame height, wrench in his right hand); caption 1.3x; steps in 59.5; the slam at 60.0 swallows the light (the door's frosted glass glows after) |
-| 13 | 62-68 | Low CU: THIEF 1's hooded masked head on the tiles with his shoulders behind it and ME's fists on his collar; big eyes in the slot narrow smugly (lids, brows, cheek creases); his sleeve swings up, elbow at 62.9 (flash, ME's hands fly off), whip pan to ME sliding across the tiles 63.6-65.6, he lifts his head |
-| 14 | 68-74 | Camera on the floor behind ME: ME propped on his elbows in the lower foreground (back of the head, striped back, forearms on the tiles), THIEF 2's silhouette walks from the door (glowing glass behind him) toward the lens, one stride per CLOMP (68.5, 69.9, 71.25, 72.5, 73.65), growing until he fills the frame, the wrench glinting |
-| 15 | 74-80 | CU ME looking up in panic, both forearms come up and cross in front of his face 74.75-75.05 (step jolt 74.7); hard cut 75.3 to the low angle (keystoned): THIEF 2 towers, wrench raised high (glint), swings down 75.45-75.95 with a push-in + blur; CUT TO BLACK at 76.000; black to 80.0 |
+| 13 | 62-68 | Low CU on the tiles: THIEF 1's hooded masked head lying on its cheek (card head + hood, tilted 34 deg, floor shadow), ME's fists on his collar; the lids drop into the eye slot (smug squint), the eyes slide up to ME; elbow at 62.9 (flash, ME's hands fly off), whip pan to the slide 63.6-65.6: ME on his back across the foreground, the door glass glowing and THIEF 1 getting up behind (prone -> all fours -> crouch -> stand), ME rolls onto his elbow and lifts his head |
+| 14 | 68-74 | Camera on the floor: ME in the foreground lying on his side propped on one elbow, head turned back up toward THIEF 2 (face in profile/3-4, scared -> surprised, trembling); THIEF 2's silhouette walks from the door toward the lens, one stride per CLOMP (68.5, 69.9, 71.25, 72.5, 73.65), the wrench glinting |
+| 15 | 74-80 | CU ME looking up in panic: the startle (head pulls back 74.70), the hands lead both forearms up with an overshoot, elbows follow, they cross in front of his face 74.74-75.04, tremble; hard cut 75.3 to the low angle (keystoned): THIEF 2 towers, wrench raised high (glint), swings down 75.45-75.95 with a push-in + blur; CUT TO BLACK at 76.000; black to 80.0 |
 
 ## Timing vs the soundtrack
 Shot boundaries are the script's, except shots 7/8: the sound team placed the torch click-off at 34.9 with digital
 silence from 35.0, so the frozen frontal moment of shot 8 runs 34.3-34.9 and black starts at 35.0 (shot 7 is
 32.0-34.3). All other sync points from `audio/night-intruder/cues.md` are matched in the picture (listed above).
-Caption: "You done" / "yet?" / "What's all" / "the noise?" from `audio/night-intruder/words.json`, house sentence
-style (Poppins Bold 3.7% H, white, black outline, soft shadow, 1.08 -> 1.0 pop), baseline at 70% H (on the floor,
-off every face).
+Captions: THIEF 2's line "You done" / "yet?" / "What's all" / "the noise?" (`audio/night-intruder/words.json`) in pale
+sodium yellow, 1.3x, baseline 70% H; ME's whispered narration (`audio/night-intruder/vo_words.json`, 4 lines) in white,
+house size, chunks of 1-3 words (`VO`, built at import), only inside each line's window (0.85-6.23, 14.37-20.21,
+23.62-28.15, 60.55-65.49; line 4 splits around the elbow: "They..." ends 62.44, "weren't alone." 64.4); baseline per
+shot in a clean band (`vo_base`: 62.5% H in shot 4 = the dark seam, 20% H during the slide, else 80% H). House style:
+Poppins Bold 3.7% H, black outline, soft shadow, 1.08 -> 1.0 pop. The preview is muxed with the rebuilt mix (c84b24a).
 
 ## Fix pass 1 (Producer review of the 540 preview, 2026-11-25)
 Rebuilt shots 4, 5, 6, 11, 12, 13 (the CU half), 14 and 15 and the desk lamp; shots 1-3, 7-10, the toy car ECU, the
@@ -79,16 +82,26 @@ black holds and every sync point / shot boundary are unchanged. Iterated on 540 
 - Bugs met on the way (kept here for the next pass): `TL.glow_at` / `add_light` apply their `mix` pull even when k
   is ~0, so a glow faded in with k alone makes a one-frame colour jump; scale `mix` with the fade too.
 
+## Fix pass 2 (Director: "fix it", every shot >= 8/10; plus natural motion; 2026-11-26)
+- New `flat2d/body2d.py`: figures drawn from joints (`figure`), pose builders + 2D/3D IK, `stair_descent` gait (see
+  LESSONS > Natural motion). In night_intruder.py: `head_sprite`/`put_head` (card head + hair / hood + balaclava as a
+  rotatable sprite), `me_style`/`thief_style`, poses `prone_J`, `kneel_J`, `elbow_J`, `slide_J`, `stand_J`,
+  `thief_getup_J`, `jlerp`, `eback` (overshoot ease), `dust`.
+- Rebuilt: shot 4 (gait + reframe + bottom plate), 6 (rims, beam on the bag), 11 (shove + pin), 13 (CU head, slide,
+  get-up), 14 (ME on his elbow), thumbnail (new lamp, plain jacket, the toy car on the bottom step). Motion timing
+  tweaks: 5 (stepped peek), 9 (dodge reflex), 15 (startle + overlap). Narration captions added.
+- Reference clips: YouTube media is blocked by the session proxy, so the motion data are from biomechanics knowledge.
+- Motion QA (impacts list above): 0 pops; frozen spans > 0.4 s only the planned black holds (34.93-37.2, 76.03-80.0).
+
 ## Known issues
 - No sonnet reviewer run (no subagent tool here); stills judged by the Animator only.
-- Shot 4: the stair mouth (and so the torch beam on the cabinet) sits in the upper-middle of the frame, not at its
-  bottom: looking down a flight of stairs the far end always projects above the near steps. The beam reads as a hard
-  white cone/wash through the mouth, ME rides one dip per footstep in screen space (camera "follows" him).
+- Shot 4: looking down a flight from behind, the far end always projects ABOVE the walker, so the cabinet at the
+  bottom of the frame is a cheat: a second plate blended under a dark seam at ~56-67% H. ME's head is big from this
+  high angle (the big-head proportions) and the first 1.5 s (on the landing) shows mostly walls.
 - Shot 5: in the MCU the lamp is held low (base at the hip, arm up beside him), so its shade is partly out of frame.
-- Shot 11: the shove (47.0-47.55) is a quick transition from the falling cards to the pinned pile (`pin_pile`);
-  the bodies are rotated side-view cards (lean -90) rather than bespoke lying/kneeling drawings.
+- Shot 11: during the shove (47.0-47.2) the two bodies overlap (ME's head over THIEF 1's back) for ~6 frames.
+- Shot 13: the CU head is still a round hood + slot (stylised), just tilted onto the cheek with a floor shadow.
 - Shot 12: the pile in the foreground is reduced to ME's back + THIEF 1's legs; THIEF 2 is drawn clipped to the
   door gap while the door swings open, the frosted door glass only glows after the slam (a cheat, not visible).
 - Shot 15: the low angle is a keystoned 2D silhouette, the wrench's swing is a 0.5 s blur into the black.
-- The thumbnail is a dedicated still (`thumb_frame`) and still uses the old THIEF 1 + lamp poses (not re-rendered).
 - 1080 final not rendered (expect about 4x the 540 time: persp.SS = 2 and 4x pixels, roughly 70-90 min on 4 cores).
