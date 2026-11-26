@@ -44,3 +44,12 @@ No narrator, no music bed by default (silence and foley carry the tension; a ver
 
 ## Posting (to confirm with the Director)
 - Title idea: "He Heard a Noise Downstairs at Midnight… 🔦" · Thumbnail: ME on the stairs with the lamp raised, THIEF 1's flashlight face below.
+
+## Voice-over (the Director, 2026-11-26): ME narrating, whispered, low & tense
+Recorded separately from the in-scene breathing/groans. Close-mic whisper (proximity bass), slight rasp, thin breath; restrained, never growled or "ghost-story" acting. No narration during 0:31-0:57 (toy crack + fight) or 1:07-1:20 (footsteps + cut to black). Captioned in the house sentence style.
+| window | intensity | line (English) | the Director's Vietnamese |
+|---|---|---|---|
+| 0:02-0:07 | 3/10, whisper, slow, slightly husky, pauses let the clock and the chair in | "Midnight, exactly... a noise downstairs. Not the wind." | Đúng 12 giờ đêm... tầng dưới có tiếng động. Không phải tiếng gió. |
+| 0:14-0:21 | 5/10, low, held-in, a little faster (with the steps and the heartbeat) | "There was a child in the house. I grabbed the desk lamp... praying it wasn't what I thought." | Trong nhà còn có trẻ nhỏ. Tôi vớ đại chiếc đèn bàn... chỉ mong đó không phải thứ mình đang nghĩ. |
+| 0:23-0:30 | 5/10, breath held, tense | "He was alone. If I could just get behind him..." | Hắn chỉ có một mình. Chỉ cần áp sát từ phía sau... |
+| 0:58-1:06 | 6/10, tight, heavy, suddenly slower | "I got it wrong. They... weren't alone." | Tôi đã tính nhầm. Bọn chúng... không đi một mình. |
