@@ -45,7 +45,7 @@ Render time at 540: about 1.7 s per frame per core (2400 frames in about 17 min 
   cartoon hands (`hand2d`: palm, four fingers, thumb; open / grip); held props get a `fist` with knuckle creases.
 
 ## Shots (times in s)
-The table is the fix-pass-2 state; shots 1, 3-15 changed in fix pass 3 (see that section below).
+The table is the fix-pass-2 state; shots 1, 3-15 changed in fix pass 3, shots 3-6, 9-11, 13-15 again in fix pass 4 (see those sections below).
 | # | time | what the frame does |
 |---|---|---|
 | 1 | 0-4 | ECU on the nightstand: the dark phone lights up at 0.55 s (00:00 lock screen), glow on the wood, the metal lamp and its plug behind; slow push in; a small jolt on the clack at 2.55 |
@@ -146,13 +146,46 @@ studied in the scratchpad only; measurements in LESSONS > Natural motion > Measu
 - Thumbnail: ME bigger, lamp raised beside his head; THIEF 1's eyes narrowed + menacing (`smug_eyes`), the bigger toy
   car on the step below ME; headline "HE HEARD A NOISE... / THERE WERE / TWO".
 
+## Fix pass 4 (the Director's notes on the fix-pass-3 preview + the open issues; 2026-11-26)
+Iterated on 540 strips (6 fps) per changed shot, judged by the Animator (no subagent tool in this toolset).
+- THIEF 1's hood redrawn everywhere (`hood_front` + `thief_eyes`): a fabric shell ~1.1 R (ME's head size) with a
+  slight peak leaning back, the sides falling onto the shoulders into the jacket, folds + a crown seam, a shadowed
+  hood opening framing the black balaclava, an eye SLIT of dark skin (no pale frame) with the eyes drawn in it
+  (expression = lid drop + slant: angry, smug/menace, surprised wide). Used by the card figures (`thief1`), the
+  joint figures (`head_sprite`), the 62 s CU (lids animated through `thief_eyes`) and the thumbnail. The back view
+  is a tighter shell (1.02 R, narrower drape).
+- Shot 4 stairs re-staged as a 3/4 SIDE view from the wall side (cutaway: wall_l + pics removed, a cut stringer
+  `stair_section` with the ink sawtooth of treads/risers and the dark cupboard under the flight): the flight
+  descends LEFT -> RIGHT, ME in 3/4 profile facing down the stairs (scared face, head pitched down), feet planted
+  on the treads by the Muybridge gait (`descent`, re-dressed by `side_descent`: head above the neck, lamp raised
+  back over the shoulder clear of the face, left hand on the partition with a contact shadow, foot contact shadows),
+  camera following his pelvis with a .35 s lag and sinking with him; the warm spill at the foot of the stairs grows.
+  The kid's drawing moved onto the partition (in view). The old OTS camera inside the stairwell (pale partition flash
+  at 14.05, walls cutting the frame) is gone; the partition + room furniture are drawn in a fixed order (painter
+  order failed on the big partition polygon).
+- Shot 10: no Dutch angle (roll 0, figures no longer rotated), figures re-scaled (k 530) and spaced so the bodies
+  keep a gap at the 43.05 contact (only the lamp meets the forearm). Static rolls removed elsewhere (shot 5, 14, 15;
+  only a <=0.4 deg handheld wobble left in 14/15).
+- Shot 11: the floor insert (49.3-51.5) and the end (53.2-55) are a new low SIDE angle of the pin (`pin_side_J`,
+  `s11_side`): THIEF 1 face-down along the tiles, chest + head lifted, his near arm stretching toward the crowbar
+  lying just beyond his fingertips (slaps on 49.6 / 50.55), legs kicking; ME on top: near knee driven into his back
+  (shin along it), far knee on the floor, torso over his shoulders, both fists on the collar behind the hood; a warm
+  pool of street light on the tiles behind them separates the dark thief from the floor; rims on both; he bucks
+  (big buck + jolt on 53.4). The wide (47-49.3) keeps the joint-drawn prone/kneel pile with a stronger rock.
+- Shot 14/15: the propped head sits on a neck continuing from the torso and bending toward upright (head tilt -12
+  deg instead of +22..32 against a 50 deg torso lean); the face turns back to THIEF 2 by the look only.
+- Shot 3: the dark round blob (back of the head, out of focus) replaced by ME's beige striped shoulder + sleeve seam.
+- Shot 5: wider lens, framed so the peeking head stays inside the frame; the lamp clutched at his chest, base up,
+  inside the frame.
+- Shot 6: the laptop drawn as a closed silver laptop (lid face, logo, edge) going from his hand into the bag; glare
+  halved (beam .22, no motes, smaller lens glow), the crowbar hangs from a belt loop on his left hip.
+- Shot 9: THIEF 1's spin is shown: anticipation dip 38.0-38.14, turn from facing away (hood from behind) to profile
+  38.07-38.24 while cocking the bar; the whip pan settles by 38.16 so the turn reads.
+- Thumbnail re-rendered with the new hood (menacing slit eyes, the face glare reduced).
+
 ## Known issues
 - No sonnet reviewer subagents this pass either (the toolset has no subagent tool); strips judged by the Animator only.
-- Shot 4: from behind and above, the swing foot is mostly hidden by the stance leg (true in Muybridge's rear row too);
-  the trailing shin rising reads a little like a kick-back. The partition's upper face flashes pale for ~0.3 s after
-  the cut at 14.05. The door intro is a 2D drawing, not the 3D set.
-- Shot 5: the lamp hangs at the frame's left edge; the peek tilt pivots the trunk on a fixed pelvis (no foot shift).
-- Shots 9-10: the bodies are profile builds, so THIEF 1's back-turned 'spin' at 38.0 is only implied by the whip pan;
-  at the 43.05 contact the bodies overlap a little.
-- Shot 11's wide angle still uses the fix-pass-2 pile; the thumbnail's eye slot shows a pale frame round the eyes.
+- Shot 4: the door intro is a 2D drawing, not the 3D set; the side view is a dollhouse cutaway (no near wall).
+- Shot 5: the peek tilt pivots the trunk on a fixed pelvis (no foot shift).
+- Shot 9: THIEF 1 is partly cropped by the left edge during the wind-up.
 - 1080 final not rendered (expect about 4x the 540 time).
