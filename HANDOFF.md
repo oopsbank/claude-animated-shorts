@@ -54,7 +54,7 @@ Versus Tunguska (60% stayed): opened on a number comparison (1,000x Hiroshima), 
 | 9 | `zebra-stripes` | Why Do Zebras Have Stripes? 🦓 | posted 2026-11-24 (FB/TT via Buffer); YT 2026-11-25 04:30 UTC (Buffer schedule) |
 | 10 | `flamingo-one-leg` | Why Do Flamingos Stand on One Leg? 🦩 | posted 2026-11-25 (YT/FB/TT via Buffer) |
 | 11 | `moth-light` | Why Do Moths Fly Into Lights? 🦋 | posted 2026-11-25 (FB/TT via Buffer); YouTube not posted (schedule cancelled by the Director) |
-| 12 | `plane-windows` | In 1954, They Sank a Whole Airliner in a Tank ✈️ | posted 2026-11-25 (FB/TT via Buffer); YT scheduled in Buffer for 2026-11-26 04:30 UTC |
+| 12 | `plane-windows` | In 1954, They Sank a Whole Airliner in a Tank ✈️ | posted 2026-11-25 (FB/TT via Buffer); YT sent 2026-11-26 04:30 UTC (https://www.youtube.com/shorts/OyP9p7qWaNI) |
 - Links, post ids, build commands and review history: each `videos/<slug>/NOTES.md`. Scripts and sources: `scripts/<slug>/SCRIPT.md` (+ `REVIEW_VI.md` in Vietnamese).
 
 ### Right now

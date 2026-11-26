@@ -253,3 +253,4 @@ The Producer's preview pass found no defects worth a fix session. `plane_windows
 - TikTok 6b06ea74cdd06687d1a38c13 https://tiktok.com/@somecrazythingzz/video/7712109405784870164
 - Facebook 6b06ea7fd1898df0f7fb5695 https://facebook.com/1395801306957363_122109438021549918
 - YouTube: shareNow refused (LimitReachedError, 2 YouTube posts that day); scheduled in Buffer as 6b06ea92d1898df0f7fb6404 for 2026-11-26 04:30 UTC (11:30 Vietnam).
+- YouTube: sent 2026-11-26 04:30 UTC: https://www.youtube.com/shorts/OyP9p7qWaNI
