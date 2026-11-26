@@ -1,22 +1,25 @@
 # Night Intruder: soundtrack cue sheet
 
-Original short film, no narrator, no music bed (a very low drone under shots 2-5 and 12-15). Every sound is procedural numpy/scipy synthesis written for this film (`audio/lib/sfx_night.py`, on the template `dsp.py` / `sfx_gen.py`); no third-party samples or packs were used. THIEF 2's line: Kokoro-82M (Apache-2.0, kokoro-onnx v1.0 model files), voice **am_onyx** at speed 0.9, pitched down 1.5 semitones (rubberband, formants preserved), low shelf +2.5 dB, high shelf -3 dB, hallway + room reverb. Rebuild: `voice_kokoro.py` (once) then `build.py`; the cue list is `sfx.json`.
+Original short film with ME's whispered narration (4 lines, see below), no music bed (a very low drone under shots 2-5 and 12-15). Every sound is procedural numpy/scipy synthesis written for this film (`audio/lib/sfx_night.py`, on the template `dsp.py` / `sfx_gen.py`); no third-party samples or packs were used. THIEF 2's line: Kokoro-82M (Apache-2.0, kokoro-onnx v1.0 model files), voice **am_onyx** at speed 0.9, pitched down 1.5 semitones (rubberband, formants preserved), low shelf +2.5 dB, high shelf -3 dB, hallway + room reverb. Rebuild: `voice_kokoro.py` (once) then `build.py`; the cue list is `sfx.json`.
 
 ## Files
 | file | content |
 |---|---|
 | `mix.wav` | final mix, 48 kHz stereo 24-bit, 3840000 samples = 2400 frames @ 30 fps = 80.000 s |
-| `stem_amb.flac` / `stem_foley.flac` / `stem_body.flac` / `stem_voice.flac` | stems at mix gain, pre-limiter (24-bit FLAC; their sum + the master limiter = the mix) |
+| `stem_amb.flac` / `stem_foley.flac` / `stem_body.flac` / `stem_voice.flac` / `stem_vo.flac` | stems at mix gain, pre-limiter (24-bit FLAC; their sum + the master limiter = the mix) |
 | `voice.wav` | THIEF 2's line with its room, at mix gain (48 kHz stereo); sample 0 = 56.40 s on the picture |
 | `words.json` | the line's 7 words with absolute times (for the caption) |
+| `vo_narration.wav` | ME's whispered narration alone on the 80 s timeline (48 kHz mono 24-bit, at mix gain) |
+| `vo_words.json` | narration words with absolute picture times + line number (for the captions) |
+| `vo_tts.py`, `vo_raw/`, `vo.py` | the ElevenLabs request (one take per line, cached JSON) and the phrase placement / processing |
 | `length.json` | the picture length: 2400 frames |
 | `sfx.json` | the hand-placed cue list (time, generator, level, pan, distance, reverb) |
 | `voice_kokoro.py`, `voice_raw24k.wav`, `words_raw.json` | the Kokoro take and its word split |
 | `qa_mix.png` | waveform + momentary loudness overview with the shot grid |
 
 ## Master loudness (own BS.1770-4 meter)
-- Integrated **-14.1 LUFS** (target -14.0), true peak **-1.4 dBTP** (ceiling -1.2), LRA 10.7 LU
-- Master gain +8.62 dB; limiter max gain reduction 9.95 dB (only on the transients: clang, thwack, slam, final impact)
+- Integrated **-14.0 LUFS** (target -14.0), true peak **-1.4 dBTP** (ceiling -1.2), LRA 9.3 LU
+- Master gain +6.86 dB; limiter max gain reduction 8.42 dB (only on the transients: clang, thwack, slam, final impact)
 - **35.000-37.000 s is digital zero: True** (every sample of both channels); 79.8-80.000 s is digital zero: True
 
 ffmpeg ebur128 cross-check:
@@ -24,14 +27,14 @@ ffmpeg ebur128 cross-check:
 Summary:
 
   Integrated loudness:
-    I:         -14.2 LUFS
-    Threshold: -24.8 LUFS
+    I:         -14.0 LUFS
+    Threshold: -24.7 LUFS
 
   Loudness range:
-    LRA:        10.9 LU
-    Threshold: -34.8 LUFS
-    LRA low:   -22.2 LUFS
-    LRA high:  -11.3 LUFS
+    LRA:         9.4 LU
+    Threshold: -34.7 LUFS
+    LRA low:   -21.5 LUFS
+    LRA high:  -12.1 LUFS
 
   True peak:
     Peak:       -1.4 dBFS
@@ -40,21 +43,31 @@ Summary:
 ## Per shot (max momentary LUFS, sample peak)
 | shot | time | M max | peak dBFS |
 |---|---|---|---|
-| 1 | 0:00.00-0:04.00 | -14.5 | -1.5 |
-| 2 | 0:04.00-0:08.00 | -15.6 | -1.7 |
-| 3 | 0:08.00-0:13.00 | -15.5 | -2.8 |
-| 4 | 0:13.00-0:22.00 | -16.4 | -3.3 |
-| 5 | 0:22.00-0:27.00 | -13.9 | -1.5 |
-| 6 | 0:27.00-0:32.00 | -11.7 | -1.5 |
-| 7 | 0:32.00-0:35.00 | -12.1 | -1.5 |
-| 8 | 0:35.00-0:38.00 | -12.6 | -1.5 |
-| 9 | 0:38.00-0:42.00 | -7.2 | -1.5 |
-| 10 | 0:42.00-0:47.00 | -8.4 | -1.5 |
-| 11 | 0:47.00-0:55.00 | -9.2 | -1.5 |
-| 12 | 0:55.00-1:02.00 | -8.3 | -1.5 |
-| 13 | 1:02.00-1:08.00 | -8.5 | -1.5 |
-| 14 | 1:08.00-1:14.00 | -10.8 | -1.5 |
-| 15 | 1:14.00-1:20.00 | -8.8 | -1.5 |
+| 1 | 0:00.00-0:04.00 | -10.1 | -1.5 |
+| 2 | 0:04.00-0:08.00 | -11.6 | -1.5 |
+| 3 | 0:08.00-0:13.00 | -17.1 | -2.8 |
+| 4 | 0:13.00-0:22.00 | -10.5 | -1.5 |
+| 5 | 0:22.00-0:27.00 | -10.8 | -1.6 |
+| 6 | 0:27.00-0:32.00 | -10.2 | -1.5 |
+| 7 | 0:32.00-0:35.00 | -13.0 | -1.5 |
+| 8 | 0:35.00-0:38.00 | -13.5 | -1.7 |
+| 9 | 0:38.00-0:42.00 | -7.7 | -1.5 |
+| 10 | 0:42.00-0:47.00 | -8.9 | -1.5 |
+| 11 | 0:47.00-0:55.00 | -9.8 | -1.5 |
+| 12 | 0:55.00-1:02.00 | -8.7 | -1.5 |
+| 13 | 1:02.00-1:08.00 | -9.0 | -1.5 |
+| 14 | 1:08.00-1:14.00 | -11.7 | -1.5 |
+| 15 | 1:14.00-1:20.00 | -9.4 | -1.5 |
+
+## Narration (ME, whispered)
+ElevenLabs **eleven_v3**, voice **Will (premade, bIHbv24MWmeRgasZH58o)**, one take per line (cached in `vo_raw/`). Each line is cut into its phrases at the take's own pauses and the phrases are placed one by one into gaps in the foley (onsets in `vo.py` PLACE). Close-mic chain: high-pass 55 Hz, low shelf +4 dB at 160 Hz (proximity), de-esser 5-9.5 kHz, 2:1 compression, breaths kept, 4 % room only. Foley / body / ambience ducked -4 dB under it. No narration 0:31-0:57 or 1:07-1:20.
+
+| line | start | end | text |
+|---|---|---|---|
+| 1 | 0:00.85 | 0:06.23 | [whispers] Midnight, exactly... a noise downstairs. Not the wind. |
+| 2 | 0:14.37 | 0:20.21 | [whispers] [nervous] There was a child in the house. I grabbed the desk lamp... praying it wasn't what I thought. |
+| 3 | 0:23.62 | 0:28.14 | [whispers] He was alone. [exhales] If I could just get behind him... |
+| 4 | 1:00.55 | 1:05.49 | [whispers] I got it wrong. They... weren't alone. |
 
 ## Dialogue
 | word | start | end |
@@ -68,7 +81,7 @@ Summary:
 | noise? | 58.470 | 59.090 |
 
 ## Cues
-time = start on the picture; level = max momentary LUFS of the event before the master gain (+8.6 dB) (bed = integrated). Hard cuts at 35.000 (into digital silence) and 76.000 (cut to black).
+time = start on the picture; level = max momentary LUFS of the event before the master gain (+6.9 dB) (bed = integrated). Hard cuts at 35.000 (into digital silence) and 76.000 (cut to black).
 
 | time | shot | sound | level | stem |
 |---|---|---|---|---|

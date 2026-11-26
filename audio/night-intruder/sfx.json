@@ -1,5 +1,6 @@
 {
  "about": "Hand-placed cue list for night-intruder (times in s on the 80.000 s picture). cue = generator in audio/lib/sfx_night.py; args = its keyword args; level = max momentary LUFS of the event before the master gain (bed: true = integrated LUFS); pan -1..1; dist 0..1 = distance (low-pass + quieter highs); verb house|room|none with wet = send gain; fade = [in, out] s; gain_pts = [[t_rel, dB], ...] automation; stem amb|foley|body. Hard cuts: everything before 35.000 stops at 35.000 (35.000-37.000 digital zero); everything before 76.000 stops at 76.000 (cut to black) except the whoosh that lands on the impact.",
+ "narration": {"source": "vo_raw/lineN.json (ElevenLabs eleven_v3, Will), placed by vo.py", "phrase_onsets": {"1": [0.85, 1.62, 3.05, 5.35], "2": [14.30, 16.55, 18.60], "3": [23.60, 25.90], "4": [60.55, 61.55, 64.40]}, "level": -16.5, "duck_db": -4.0, "no_narration": [[31.0, 57.0], [67.0, 80.0]]},
  "cuts": [35.0, 76.0],
  "silence": [35.0, 37.0],
  "end_fade": [78.6, 79.8],

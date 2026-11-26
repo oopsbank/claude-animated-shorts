@@ -23,6 +23,8 @@ sys.path.insert(0, AUDIO)
 from dsp import (SR, ns, dbg, rng, lp, hp, shelf, pan, place, fades, make_ir, convolve_st, integrated, momentary,  # noqa
                  momentary_max, lra, true_peak, read_wav, write_wav, st)
 import sfx_night as N  # noqa
+sys.path.insert(0, OD)
+import vo as VO  # noqa
 from build_mix import limiter, ffmpeg_ebur, TARGET_LUFS, CEIL_DBTP  # noqa
 
 FPS, FRAMES = 30, 2400
@@ -118,17 +120,21 @@ def main():
     events = [(c, render(c, i)) for i, c in enumerate(spec["cues"])]
     rows = [c for c, _ in events]
     v, words, vmeta = voice_track()
+    vo_st, vo_words, vo_lines, vo_duck = VO.build(NS, IRS)
 
     def assemble(G_est):
         """per-event peak cap: no single event asks the master limiter for more than EVENT_GR dB (impacts are
         limited on their own, so nothing else ducks under them)"""
         cap = dbg(CEIL_DBTP + EVENT_GR - G_est)
-        out = {k: np.zeros((2, NS)) for k in ("amb", "foley", "body", "voice")}
+        out = {k: np.zeros((2, NS)) for k in ("amb", "foley", "body", "voice", "vo")}
         for c, x in events:
             if np.abs(x).max() > cap:
                 x = limiter(x, ceil_db=20 * np.log10(cap), look=0.002, rel=0.05)[0]
             place_cut(out[c.get("stem", "foley")], x, c["t"], cuts, c.get("through", False))
+        for k in ("amb", "foley", "body"):
+            out[k] *= vo_duck[None, :]
         out["voice"] += v
+        out["vo"] += vo_st
         return out
 
     stems = assemble(0.0)
@@ -171,6 +177,13 @@ def main():
         os.remove(tmp)
     write_wav(os.path.join(OD, "voice.wav"), (stems["voice"] * dbg(G))[:, ns(VOICE_WAV_AT):ns(VOICE_WAV_AT + 3.6)])
     json.dump(words, open(os.path.join(OD, "words.json"), "w"), indent=0)
+    tmp = os.path.join(OD, "_vo.wav")
+    write_wav(tmp, stems["vo"] * dbg(G))
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-ac", "1", "-c:a", "pcm_s24le",
+                    os.path.join(OD, "vo_narration.wav")], check=True)
+    os.remove(tmp)
+    json.dump([{k: w[k] for k in ("word", "start", "end", "line")} for w in vo_words],
+              open(os.path.join(OD, "vo_words.json"), "w"), indent=0)
     json.dump({"frames": FRAMES, "fps": FPS, "seconds": DUR, "samples": NS, "sample_rate": SR},
               open(os.path.join(OD, "length.json"), "w"), indent=1)
 
@@ -198,7 +211,7 @@ def main():
     # ---------------------------------------------------------------- cues.md
     fm = lambda t: "%d:%05.2f" % (int(t // 60), t % 60)
     L = ["# Night Intruder: soundtrack cue sheet\n",
-         "Original short film, no narrator, no music bed (a very low drone under shots 2-5 and 12-15). Every sound is "
+         "Original short film with ME's whispered narration (4 lines, see below), no music bed (a very low drone under shots 2-5 and 12-15). Every sound is "
          "procedural numpy/scipy synthesis written for this film (`audio/lib/sfx_night.py`, on the template "
          "`dsp.py` / `sfx_gen.py`); no third-party samples or packs were used. THIEF 2's line: Kokoro-82M "
          f"(Apache-2.0, kokoro-onnx v1.0 model files), voice **{vmeta['voice']}** at speed {vmeta['speed']}, pitched "
@@ -206,10 +219,13 @@ def main():
          "reverb. Rebuild: `voice_kokoro.py` (once) then `build.py`; the cue list is `sfx.json`.\n",
          "## Files", "| file | content |", "|---|---|",
          f"| `mix.wav` | final mix, 48 kHz stereo 24-bit, {NS} samples = {FRAMES} frames @ {FPS} fps = {DUR:.3f} s |",
-         "| `stem_amb.flac` / `stem_foley.flac` / `stem_body.flac` / `stem_voice.flac` | stems at mix gain, pre-limiter "
+         "| `stem_amb.flac` / `stem_foley.flac` / `stem_body.flac` / `stem_voice.flac` / `stem_vo.flac` | stems at mix gain, pre-limiter "
          "(24-bit FLAC; their sum + the master limiter = the mix) |",
          f"| `voice.wav` | THIEF 2's line with its room, at mix gain (48 kHz stereo); sample 0 = {VOICE_WAV_AT:.2f} s on the picture |",
          "| `words.json` | the line's 7 words with absolute times (for the caption) |",
+         "| `vo_narration.wav` | ME's whispered narration alone on the 80 s timeline (48 kHz mono 24-bit, at mix gain) |",
+         "| `vo_words.json` | narration words with absolute picture times + line number (for the captions) |",
+         "| `vo_tts.py`, `vo_raw/`, `vo.py` | the ElevenLabs request (one take per line, cached JSON) and the phrase placement / processing |",
          "| `length.json` | the picture length: 2400 frames |",
          "| `sfx.json` | the hand-placed cue list (time, generator, level, pan, distance, reverb) |",
          "| `voice_kokoro.py`, `voice_raw24k.wav`, `words_raw.json` | the Kokoro take and its word split |",
@@ -225,6 +241,14 @@ def main():
          "## Per shot (max momentary LUFS, sample peak)", "| shot | time | M max | peak dBFS |", "|---|---|---|---|"]
     for s, t0, t1, mm, pk in per_shot:
         L.append(f"| {s} | {fm(t0)}-{fm(t1)} | {mm:.1f} | {pk:.1f} |")
+    L += ["\n## Narration (ME, whispered)",
+          f"ElevenLabs **{VO.MODEL}**, voice **{VO.VOICE}**, one take per line (cached in `vo_raw/`). Each line is cut "
+          "into its phrases at the take's own pauses and the phrases are placed one by one into gaps in the foley "
+          f"(onsets in `vo.py` PLACE). Close-mic chain: high-pass 55 Hz, low shelf +4 dB at 160 Hz (proximity), "
+          f"de-esser 5-9.5 kHz, 2:1 compression, breaths kept, 4 % room only. Foley / body / ambience ducked "
+          f"{VO.DUCK_DB:.0f} dB under it. No narration 0:31-0:57 or 1:07-1:20.\n",
+          "| line | start | end | text |", "|---|---|---|---|"]
+    L += [f"| {x['line']} | {fm(x['start'])} | {fm(x['end'])} | {x['text']} |" for x in vo_lines]
     L += ["\n## Dialogue", "| word | start | end |", "|---|---|---|"]
     L += [f"| {w['word']} | {w['start']:.3f} | {w['end']:.3f} |" for w in words]
     L += ["\n## Cues", "time = start on the picture; level = max momentary LUFS of the event before the master gain "
@@ -248,7 +272,7 @@ def qa_sheet(y, stems, G, words, spec):
     f = ImageFont.truetype(fp, 18) if os.path.exists(fp) else ImageFont.load_default()
     rows = [("mix", y, (40, 40, 40))] + [(k, stems[k] * dbg(G), c) for k, c in
                                          (("foley", (30, 150, 80)), ("body", (200, 60, 60)), ("amb", (200, 120, 30)),
-                                          ("voice", (40, 90, 200)))]
+                                          ("voice", (40, 90, 200)), ("vo", (120, 40, 170)))]
     H = ROW * (len(rows) + 1) + 70
     img = Image.new("RGB", (W, H), "white")
     d = ImageDraw.Draw(img)
