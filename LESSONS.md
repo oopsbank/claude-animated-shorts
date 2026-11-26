@@ -154,6 +154,36 @@ Each line is a mistake already made once, phrased as an instruction. Add a line 
 - A camera shake that adds a fixed cover zoom only while it shakes pops on its last frame (the zoom snaps back to 1.0): scale the cover zoom with the shake amplitude so it lands on 1.0 (`plane_windows.shake_cam`).
 - Repeating beats (flight cycles, pulses) must not overlap: a new cycle that restarts its phase before the last one ends makes every value it drives jump (the s10 sky flipped between dusk and altitude). Clip each cycle's length to the gap before the next one.
 
+### Measured from Muybridge (video 13 fix pass 3, 2026-11-26)
+Source: Eadweard Muybridge, *Animal Locomotion* (1887), pl. 127 "man descending stairs" (side, front and REAR rows,
+6 phases each), public domain, fetched from Wikimedia Commons (upload.wikimedia.org thumbnails by the md5 path; the
+Commons API rate-limits fast with 429, so skip the search API and build the URL from the file name). Studied in the
+scratchpad only: never commit third-party frames. Pl. 134 (a woman with a basin) hides the legs under the dress.
+- **Trunk stays upright** through the whole stair cycle (no forward pitch; a few degrees BACK at the lead foot's
+  contact). Only the head pitches down (~25-30 deg) toward the next treads. A creep may add ~5 deg forward lean.
+- **Toe-first contact with an almost straight lead leg:** the lead foot reaches down plantar-flexed (toes ~30-40 deg
+  below the heel, frames 3-4), the knee is nearly straight (~10-15 deg) when the toes touch; the heel lowers after,
+  while the knee flexes ~20 deg to take the weight (the small dip).
+- **The lowering is done by the TRAILING knee:** before contact the stance knee bends ~30-40 deg (frame 3) and the
+  pelvis drops by about a riser height while the lead foot is still in the air.
+- **Trailing foot:** right after the lead contact its heel lifts (toes on the upper tread, frame 4-5), then it toes off
+  with the knee well bent; seen from behind and above the swinging shin rises behind the stance leg (reads like a
+  small kick-back; it is real). It passes beside the stance foot and drops TWO treads (step-over-step).
+- **Rear view (row 3):** the pelvis shifts ~2-3 cm over the stance foot, the shoulders counter-tilt a little, the arms
+  hang with only a small swing; the swing foot is mostly hidden behind the stance leg - the step edges and the knee
+  bend sell the descent, not the feet.
+- **Timing:** the plate shows a normal pace (~0.6 s per step). Our creep stretches it to 1.2 s per step (the sound),
+  keeping the ORDER: heel-lift 0.3 s, swing 0.78 s (forward over the nosing in the first half, down in the second),
+  toe contact on the sound, heel settle 0.16 s, pelvis dip and recover in 0.5 s. Implemented in
+  `night_intruder.descent()`; in shot 4 the camera follows with a 0.35 s lag so it never snaps on a step.
+- **Reading a flight from above:** with the camera pitch shallower than the stair slope (42 deg here) the treads
+  foreshorten into a ramp; pitch the camera steeper than the slope and draw each nosing (pale edge + the dark drop
+  to the tread below). Full-height step boxes hide the treads in painter order: use tread + riser + a stringer band.
+- **Not measured (biomechanics, as in fix pass 2):** startle/flinch, the fight beats, the get-up. Fight beats in
+  fix pass 3: anticipation 0.15-0.3 s, the swing ease-IN 0.2 s, a 3-4 frame contact hold, recoil with ease-out,
+  overshoot-and-settle; the defender reacts ~0.15 s after the wind-up starts. Get-up: hands press (chest up) ->
+  a knee comes under -> one foot forward -> stand, with the hips/legs leading and the torso + head LAST.
+
 ## Style test: stickmen in perspective toon rooms (Producer, 2026-11-25; `flat2d/style_test_rooms.py`)
 The Director's style target is a stickman story short with real perspective rooms and a moving camera. Four quick iterations with `persp` + `cine`, on CPU, compared side by side with the reference:
 - **Wall winding:** a room is seen from inside, so every wall polygon and wall decal must face into the room (`persp` culls back faces). Wrong winding showed black walls and no decals. Give wall decals an explicit `normal=`.

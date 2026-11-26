@@ -269,30 +269,30 @@ def hood_mask(lay, g, back=False, col=THIEF1_C):
     if back:
         # the hood from behind: a rounded shell with a soft peak, draping wide onto the shoulders, a centre seam + folds
         shell = []
-        for th in np.linspace(math.pi * .82, math.pi * 2.18, 41):
-            pk = 1 + .1 * math.exp(-((th - math.pi * 1.5) / .32) ** 2)
-            shell.append((hx + R * 1.2 * math.cos(th), hy - R * .02 + R * 1.17 * pk * math.sin(th)))
-        pts = [(hx - R * 1.55, hy + R * 1.55), (hx - R * 1.3, hy + R * .9)] + shell + [(hx + R * 1.3, hy + R * .9), (hx + R * 1.55, hy + R * 1.55)]
+        for th in np.linspace(math.pi * .8, math.pi * 2.2, 41):
+            pk = 1 + .07 * math.exp(-((th - math.pi * 1.5) / .3) ** 2)
+            shell.append((hx + R * 1.07 * math.cos(th), hy + R * 1.06 * pk * math.sin(th)))
+        pts = [(hx - R * 1.12, hy + R * 1.18), (hx - R * 1.08, hy + R * .7)] + shell + [(hx + R * 1.08, hy + R * .7), (hx + R * 1.12, hy + R * 1.18)]
         d.polygon(pts, fill=INKC); d.line(pts + pts[:1], fill=INKC, width=ow * 2, joint='curve')
-        d.polygon([(x_ + (hx - x_) * .045, y_ + (hy + R * .3 - y_) * .045) for x_, y_ in pts], fill=col)
-        d.line([(hx, hy - R * 1.22), (hx + R * .04, hy + R * .5), (hx, hy + R * 1.35)], fill=shade(col, .6), width=max(1, ow))
+        d.polygon([(x_ + (hx - x_) * .05, y_ + (hy + R * .2 - y_) * .05) for x_, y_ in pts], fill=col)
+        d.line([(hx, hy - R * 1.1), (hx + R * .03, hy + R * .4), (hx, hy + R * 1.1)], fill=shade(col, .6), width=max(1, ow))
         for j, (a0, a1) in enumerate(((205, 245), (295, 335))):
-            d.arc((hx - R * .95, hy - R * .9, hx + R * .95, hy + R * 1.0), a0, a1, fill=shade(col, .7), width=max(1, ow))
-        d.arc((hx - R * 1.25, hy + R * .55, hx + R * 1.25, hy + R * 1.5), 20, 160, fill=shade(col, .65), width=max(1, ow))
+            d.arc((hx - R * .85, hy - R * .82, hx + R * .85, hy + R * .9), a0, a1, fill=shade(col, .7), width=max(1, ow))
+        d.arc((hx - R * 1.0, hy + R * .55, hx + R * 1.0, hy + R * 1.2), 25, 155, fill=shade(col, .65), width=max(1, ow))
         return
     # hood: a big rounded shell around the head, a little higher, a peak at the top
-    hood = [(hx + R * 1.2 * math.cos(th), hy - R * .06 + R * 1.18 * math.sin(th)) for th in np.linspace(0, 2 * math.pi, 48)]
+    hood = [(hx + R * 1.08 * math.cos(th), hy - R * .03 + R * (1.07 + .06 * max(0, -math.sin(th)) ** 6) * math.sin(th)) for th in np.linspace(0, 2 * math.pi, 48)]
     d.polygon(hood, fill=INKC);
-    hood_i = [(hx + R * 1.12 * math.cos(th), hy - R * .06 + R * 1.10 * math.sin(th)) for th in np.linspace(0, 2 * math.pi, 48)]
+    hood_i = [(hx + R * 1.01 * math.cos(th), hy - R * .03 + R * (1.0 + .06 * max(0, -math.sin(th)) ** 6) * math.sin(th)) for th in np.linspace(0, 2 * math.pi, 48)]
     d.polygon(hood_i, fill=col)
     if back:
         d.arc((hx - R * .9, hy - R * 1.0, hx + R * .9, hy + R * .9), 200, 340, fill=shade(col, .7), width=ow)
         d.line([(hx, hy - R * 1.1), (hx, hy + R * .8)], fill=shade(col, .75), width=max(1, ow // 2))
         return
-    cx0 = hx + lk * 30 * kf * kk
-    face = [(cx0 + R * .86 * math.cos(th), hy + R * .06 + R * .9 * math.sin(th)) for th in np.linspace(0, 2 * math.pi, 48)]
+    cx0 = hx + lk * 20 * kf * kk
+    face = [(cx0 + R * .8 * math.cos(th), hy + R * .08 + R * .82 * math.sin(th)) for th in np.linspace(0, 2 * math.pi, 48)]
     d.polygon(face, fill=INKC)
-    face_i = [(cx0 + R * .80 * math.cos(th), hy + R * .06 + R * .84 * math.sin(th)) for th in np.linspace(0, 2 * math.pi, 48)]
+    face_i = [(cx0 + R * .74 * math.cos(th), hy + R * .08 + R * .76 * math.sin(th)) for th in np.linspace(0, 2 * math.pi, 48)]
     d.polygon(face_i, fill=MASK_C)
     # the eye slot: the card's eyes show through (re-pasted from the card layer by the caller via eye_slot box)
     return (cx0 - R * .66, hy - R * .22, cx0 + R * .66, hy + R * .36)
@@ -575,7 +575,7 @@ def soles_for(u, v, tx, ty, sc, lean=0.0):
 HEAD_V = 232.6                      # the card's head centre (y) in card px
 
 
-def crowbar2d(lay, x, y, ang, m, L=.62, hilite=1.0):
+def crowbar2d(lay, x, y, ang, m, L=.62, hilite=1.0, col=(46, 50, 62)):
     """A short crowbar gripped at x, y: ang = direction from the grip to the hooked end."""
     d = ImageDraw.Draw(lay); o = max(1.5, .006 * m); w = .03 * m
     ca, sa = math.cos(math.radians(ang)), math.sin(math.radians(ang)); nx, ny = -sa, ca
@@ -585,7 +585,7 @@ def crowbar2d(lay, x, y, ang, m, L=.62, hilite=1.0):
     for path in (pts, hook):
         d.line(path, fill=INKC, width=int(w + 2 * o), joint='curve')
     for path in (pts, hook):
-        d.line(path, fill=(46, 50, 62), width=int(w), joint='curve')
+        d.line(path, fill=col, width=int(w), joint='curve')
     d.line([P(-.1, -.009), P(L * .82, -.009)], fill=STEEL_HI, width=max(1, int(w * .28 * hilite)))
     d.polygon([P(-.12, -.02), P(-.17, -.005), P(-.17, .005), P(-.12, .02)], fill=(46, 50, 62), outline=INKC)
     return P(L * .97, .12)
@@ -1293,7 +1293,7 @@ def lamp_standing(lay, bx, by, sc, rot=0.0, hilite=1.0):
 def s01(t, u):
     """ECU level with the nightstand top: the phone lights up by itself in the dark, 00:00. Slow push in."""
     img = bedroom_bg(1).copy()
-    lit = sm(seg(u, .55, .75)) * (1 + .15 * math.exp(-max(0, u - .75) * 6))
+    lit = .94 + .06 * math.sin(u * 2.2)                         # lit from frame 0 (the hook), a slow glow pulse
     # the nightstand top
     lay = layer()
     wood_top(lay, S(1240), S(1560), S(-200), S(1280), S(540))
@@ -1305,9 +1305,10 @@ def s01(t, u):
     d.line([(S(1045), S(1095)), (S(1040), S(1200)), (bx + S(130), by - S(20))], fill=(10, 10, 14, 255), width=max(2, int(S(10))), joint='curve')
     d.rounded_rectangle((S(10), S(1225), S(290), S(1262)), S(6), fill=(150, 50, 56, 255), outline=INKC + (255,), width=max(2, int(S(4))))
     d.rounded_rectangle((S(20), S(1195), S(300), S(1228)), S(6), fill=(60, 90, 140, 255), outline=INKC + (255,), width=max(2, int(S(4))))
-    d.polygon([(S(80), S(980)), (S(210), S(980)), (S(200), S(1196)), (S(90), S(1196))], fill=(120, 150, 190, 140), outline=INKC + (255,))
-    d.polygon([(S(84), S(1060)), (S(206), S(1060)), (S(200), S(1196)), (S(90), S(1196))], fill=(90, 130, 190, 150))
-    d.line([(S(110), S(1000)), (S(116), S(1180))], fill=(230, 240, 255, 200), width=max(1, int(S(8))))
+    sv = S(5) * math.sin(u * 95) * math.exp(-max(0.0, u - 2.55) * 7) * (u >= 2.55)       # the glass shivers on the clack
+    d.polygon([(S(80) + sv, S(980)), (S(210) + sv, S(980)), (S(200), S(1196)), (S(90), S(1196))], fill=(120, 150, 190, 140), outline=INKC + (255,))
+    d.polygon([(S(84) + sv * .6, S(1060) - abs(sv) * .5), (S(206) + sv * .6, S(1060) + abs(sv) * .5), (S(200), S(1196)), (S(90), S(1196))], fill=(90, 130, 190, 150))
+    d.line([(S(110) + sv, S(1000)), (S(116), S(1180))], fill=(230, 240, 255, 200), width=max(1, int(S(8))))
     lamp_standing(lay, bx, by, S(1.0))
     lay = tint(lay, (120, 128, 170))
     img.alpha_composite(lay)
@@ -1328,7 +1329,7 @@ def s01(t, u):
     if lit > 0:
         TL.glow_at(img, px + pw / 2, py - ph * .62, S(260), (200, 220, 255), k=.25 * lit, core=0, mix=.1)
     img = finish(img, u, vig=.4, bloom_k=.45)
-    z = 1.0 + .07 * sm(u / 4.0)
+    z = 1.02 + .1 * (u / 4.0)
     dx, dy = shake(u, S(6), .8)
     jx, jy = jolt(u, 2.55, S(12))
     return camxf(img, z, dx + jx, dy + jy, fx=px + pw / 2, fy=py - ph / 2)
@@ -1421,14 +1422,15 @@ def s03(t, u):
     lay = tint(lay, (110, 120, 170))
     img.alpha_composite(lay)
     # the phone lying flat, screen up (light source), nudged by the groping hand at ~1.0 s
-    nud = S(40) * sm(seg(u0, .95, 1.15))
-    ph = Image.new('RGBA', (int(S(330)), int(S(600))), (0, 0, 0, 0))
-    ph.paste(phone_screen(S(330), S(600), 1.0, u), (0, 0))
-    ph = ph.transform(ph.size, Image.PERSPECTIVE, _persp_coeffs(ph.size, 0), Image.BICUBIC)
-    ph = ph.resize((ph.width, int(ph.height * .55)), Image.LANCZOS).rotate(8, expand=True, resample=Image.BICUBIC)
-    ppx, ppy = S(90) - nud, S(1250) + nud * .3
-    TL.add_light(img, TL.ellipse_soft(SIZE, ppx + ph.width / 2, ppy + ph.height / 2, S(420), S(260), S(90)), PHONE, .5, mix=.2)
-    _paste(img, ph, int(ppx), int(ppy))
+    # the phone upright on its little stand (as in shot 1: screen toward us, left of the lamp, same scale vs the lamp),
+    # rocking when the groping hand knocks it (~1.0 s)
+    wob = 6 * math.sin(max(0.0, u0 - .98) * 22) * math.exp(-max(0.0, u0 - .98) * 4) * (u0 > .98)
+    pw3, ph3 = S(300), S(600)
+    ph = phone_screen(pw3, ph3, .94 + .06 * math.sin(u * 2.2), u).rotate(wob, expand=True, resample=Image.BICUBIC, center=(pw3 / 2, ph3))
+    ppx, ppy = S(60), S(1330)
+    TL.add_light(img, TL.ellipse_soft(SIZE, ppx + pw3 / 2, ppy, S(380), S(120), S(70)), PHONE, .5, mix=.2)
+    ImageDraw.Draw(img).polygon([(ppx - S(15), ppy), (ppx + pw3 + S(15), ppy), (ppx + pw3 - S(15), ppy - S(30)), (ppx + S(15), ppy - S(30))], fill=(30, 30, 38, 255), outline=INKC)
+    _paste(img, ph, int(ppx - (ph.width - pw3) / 2), int(ppy - S(20) - ph3 - (ph.height - ph3) / 2))
     # hand path (wrist position, finger direction, kind) over time
     keys = [(0.0, (1250, 2050), -125, 'open'), (.6, (880, 1500), -140, 'open'), (.85, (640, 1430), -150, 'open'),
             (1.05, (560, 1360), -160, 'open'), (1.3, (700, 1250), -120, 'open'), (1.65, (760, 1040), -110, 'open'),
@@ -1476,15 +1478,21 @@ def s03(t, u):
     fa = ang if u0 < 2.0 else 175
     wr = (gx - math.cos(math.radians(fa)) * S(70), gy - math.sin(math.radians(fa)) * S(70))
     el = (wr[0] + S(330), wr[1] + S(520))
-    sleeve(L2, (S(1500), S(2300)), el, S(150), (217, 191, 148))
+    sleeve(L2, (S(1000), S(1880)), el, S(150), (217, 191, 148))
     d2 = ImageDraw.Draw(L2)
     d2.line([el, wr], fill=INKC + (255,), width=int(S(120)))
     d2.line([el, wr], fill=(236, 240, 252, 255), width=int(S(104)))
-    sleeve(L2, (S(1500), S(2300)), el, S(150), (217, 191, 148))
+    sleeve(L2, (S(1000), S(1880)), el, S(150), (217, 191, 148))
     hand2d(L2, gx, gy, fa, S(78), kind if u0 < 2.0 else 'grip', spread=.9)
     L2 = tint(L2, (140, 150, 200))
     L2 = rim_layer(L2, (-1, .3), PHONE, .8)
     img.alpha_composite(L2)
+    fg = layer(); fd = ImageDraw.Draw(fg)                         # his shoulder + the back of his head (OTS, out of focus)
+    fd.ellipse((S(820), S(1720), S(1600), S(2600)), fill=INKC); fd.ellipse((S(835), S(1735), S(1585), S(2585)), fill=(217, 191, 148))
+    for j in range(4): fd.line([(S(900 + j * 130), S(1780)), (S(880 + j * 130), S(2400))], fill=(236, 214, 176), width=int(S(12)))
+    back_head(fg, S(1020), S(1620) + S(6) * math.sin(u0 * 3), S(220), turn=-1, pitch=.3)
+    fg = rim_layer(tint(fg, (140, 150, 200)), (-1, -.3), PHONE, .8)
+    img.alpha_composite(cine.defocus(fg, S(10)))
     if pulled: sparks(img, sx_, sy_, u0 - 3.6, n=6, r=60, col=(255, 240, 200))
     img = finish(img, u, vig=.42, bloom_k=.3)
     dx, dy = shake(u, S(9), .9, 4)
@@ -1581,15 +1589,20 @@ def s07(t, u):
     TL.add_light(img, TL.ellipse_soft(SIZE, gx, gy, S(180), S(40), S(30)), TORCH, .25)
     lay = layer()
     land = 1.2
+    # the foot comes down past the last step: reaches toe-first (toes pointing down ~16 deg), the toes land on the back
+    # of the toy car ON the crack (33.2), the heel starts to settle, then the foot flinches UP off it (33.3-33.5) and
+    # hangs there, toes curled, 0.3 s; the crushed car + its pieces stay in view
     f = seg(u0, .0, land)
-    Ppos = (lerp(.55, .55, f), lerp(4.42, 4.05, eo(f)), max(0.0, lerp(.3, 0.0, sm(f)) + .08 * math.sin(math.pi * f)))
+    flinch = eo(seg(u0, land + .08, land + .28)) * (1 - .25 * sm(seg(u0, land + .6, land + 1.1)))
+    Ppos = (.55, lerp(4.4, 4.13, eo(f)), max(0.0, lerp(.32, 0.0, sm(f)) + .07 * math.sin(math.pi * f)) + .09 * flinch)
     fx_, fy_ = cam.p(Ppos); ppm = cam.px_per_m(Ppos)
-    cxy = cam.p((.58, 4.02, 0)); cs = cam.px_per_m((.58, 4.02, 0)) * .11
-    broken = seg(u0, land, land + .6)
-    toycar2d(lay, cxy[0], cxy[1], cs * 1.6, broken, u)
-    tremble = S(2) * math.sin(u0 * 40) * (u0 > land)
-    foot2d(lay, fx_ - ppm * .12 + tremble, fy_ - ppm * .01 * (u0 > land), ppm * .27, -4 * (1 - f))
-    chars_pass(img, lay, [((1, 0), SODIUM, .5), ((0, -1), (200, 210, 255), .3)])
+    cxy = cam.p((.6, 4.0, 0)); cs = cam.px_per_m((.6, 4.0, 0)) * .11
+    broken = seg(u0, land, land + .5)
+    toycar2d(lay, cxy[0], cxy[1], cs * 2.5, broken, u)
+    tremble = S(2.5) * math.sin(u0 * 40) * (u0 > land)
+    ang = 16 * (1 - sm(seg(u0, land - .25, land + .1))) - 10 * flinch
+    foot2d(lay, fx_ - ppm * .12 + tremble, fy_, ppm * .27, ang)
+    chars_pass(img, lay, [((1, 0), SODIUM, .5), ((0, -1), (200, 210, 255), .3)], tint_col=(196, 190, 205))
     if u0 > land:
         sparks(img, cxy[0], cxy[1] - cs * .3, u0 - land, n=10, r=90, col=(255, 210, 200), seed=3)
         k_ = max(0.0, 1 - (u0 - land) / .25)
@@ -1609,7 +1622,7 @@ def s07(t, u):
 def s08(t, u):
     u0 = u - 34.3
     cam = Cam((1.15 + .12 * u0, 3.35 - .1 * u0, 1.5), (2.3, 1.15, 1.25), fov=46 - 2 * u0, size=SIZE)
-    if 0.7 <= u0 < 2.7: return new((0, 0, 0))
+    if 0.7 <= u0 < 3.5: return new((0, 0, 0))                    # pure black to 37.8 (the mix: silence, then breathing)
     img, near = render_house(cam)
     blinds_light(img, cam, .9)
     lay = layer()
@@ -1618,7 +1631,12 @@ def s08(t, u):
     g = None
     if xy:
         x, y, sc, ppm = xy
-        g = thief1(lay, x, y, sc, u, 'surprised', POSE['frozen'], look=-.05, bar='hip', idle=.15)
+        # the startle (34.33-34.45): shoulders hunch up, the head jerks toward the noise (us), his right hand snaps to
+        # the crowbar on his hip and grips it (34.5)
+        hun = eback(seg(u0, .03, .15), 1.2); grab = eo(seg(u0, .12, .25))
+        pz = mix_pose(POSE['frozen'], dict(armL=(25, 50), armR=(-10, -25), legL=(16, 4), legR=(-16, -4)), grab)
+        g = thief1(lay, x, y + ppm * .04 * hun, sc * (1 - .02 * hun), u, 'surprised', pz, look=-.05 - .25 * hun, lean=-3 * hun,
+                   bar='hip' if grab < .6 else 100, idle=.15)
         bk = layer(); backpack2d(bk, x + ppm * .32, y - ppm * .55, ppm * .3, ppm * .4, ang=12, col=(30, 34, 50)); bk.alpha_composite(lay); lay = bk
     if on and g:
         hx, hy = g['head']; R = g['R']
@@ -1630,7 +1648,7 @@ def s08(t, u):
         chars_pass(img, lay, [((-1, 0), SODIUM, .5)])
     img = finish(img, u, vig=.5)
     if not on:                          # after the click: the eye adapts, two shapes in the street-lamp spill
-        img = darken(img, 1 - .22 * sm(seg(u0, 2.7, 3.7)))
+        img = darken(img, 1 - .22 * sm(seg(u0, 3.5, 3.7)))
     return img
 
 
@@ -1644,100 +1662,247 @@ def fight_cam(u0, base, roll=0.0):
     return Cam(base[0], base[1], base[2], roll, size=SIZE)
 
 
+# ------------------------------------------------------------------ shots 9-10: the fight, purpose-drawn profiles
+def side_J(fx, fy, k, lean=0.0, crouch=0.0, legs=None, feet=None, arms=None, head_off=0.0, face=1):
+    """A profile figure built FACING RIGHT (then mirrored about fx if face = -1): lean = trunk angle forward from
+    vertical (deg, - = leaning back), crouch = how far the pelvis sits below standing (m), arms = {'L'/'R': (upper,
+    fore)} absolute screen angles (0 = forward, -90 = up), feet = {'L'/'R': (dx m from fx, lift m)} planted points:
+    each leg is solved by IK onto its foot (knee forward), so the feet never slide."""
+    feet = feet or {'L': (-.16, 0), 'R': (.16, 0)}
+    py = fy - (.86 - crouch) * k
+    px = fx + sum(v[0] for v in feet.values()) / 2 * k
+    J = B2.build((px, py), k, -90 + lean, legs={'L': (90, 90, 0), 'R': (90, 90, 0)}, arms=arms or {'L': (70, 100), 'R': (110, 80)},
+                 head_off=head_off, sh_w=.03, hip_w=.02)
+    for s_, (dx, lift) in feet.items():
+        an = (fx + dx * k, fy - (.06 + lift) * k)
+        kn1, a1 = B2.ik2(J['hip' + s_], an, B2.THIGH * k, B2.SHIN * k, 1)
+        kn2, a2 = B2.ik2(J['hip' + s_], an, B2.THIGH * k, B2.SHIN * k, -1)
+        J['kn' + s_], J['an' + s_] = (kn1, a1) if kn1[0] > kn2[0] else (kn2, a2)
+        J['toe' + s_] = (J['an' + s_][0] + .12 * k, J['an' + s_][1] + .03 * k - lift * .5 * k)
+    J['head'] = B2.polar(J['neck'], -90 + lean + head_off, B2.HEAD_R * .55 * k)
+    if face < 0: J = jmirror(J, fx)
+    return J
+
+
+def _pose(keys, t):
+    """Interpolate keyed pose dicts [(time, dict, ease)] at t (numbers / tuples / nested dicts)."""
+    if t <= keys[0][0]: return keys[0][1]
+    for (t0, a, _), (t1, b, ez) in zip(keys, keys[1:]):
+        if t < t1:
+            f = (ez or sm)(seg(t, t0, t1))
+            def mix(x, y):
+                if isinstance(x, dict): return {k_: mix(x[k_], y[k_]) for k_ in x}
+                if isinstance(x, tuple): return tuple(mix(p, q) for p, q in zip(x, y))
+                return x + (y - x) * f
+            return mix(a, b)
+    return keys[-1][1]
+
+
+def _fig_side(lay, J, k, who, expr, look, prop=None, near='R'):
+    """Draw a profile figure: the far arm/leg first (dimmed), body, near leg + arm, head; prop(lay, J, k) after the
+    hand that holds it."""
+    st = (me_style if who == 'me' else thief_style)(expr, look, far='L' if near == 'R' else 'R')
+    order = ['arm_far', 'leg_far', 'leg_near', 'body', 'head', 'arm_near']
+    if prop: order.insert(order.index('arm_near') + (1 if prop[1] == 'near' else -4), prop[0])
+    B2.figure(lay, J, k, st, order=order)
+
+
+# THIEF 1 key poses (facing right; R = near arm with the crowbar)
+T9 = [(0.0, dict(lean=-4, crouch=.04, feet={'L': (-.2, 0), 'R': (.14, 0)}, arms={'L': (60, 30), 'R': (-120, -160)}, bar=215), None),
+      (.16, dict(lean=-14, crouch=.08, feet={'L': (-.2, 0), 'R': (.14, .04)}, arms={'L': (40, 10), 'R': (-150, -200)}, bar=185), eo),
+      (.3, dict(lean=-16, crouch=.09, feet={'L': (-.2, 0), 'R': (.2, .05)}, arms={'L': (30, 0), 'R': (-160, -205)}, bar=200), sm),
+      (.5, dict(lean=14, crouch=.1, feet={'L': (-.22, 0), 'R': (.34, 0)}, arms={'L': (150, 120), 'R': (-30, -33)}, bar=329), ei),
+      (.62, dict(lean=15, crouch=.11, feet={'L': (-.22, 0), 'R': (.34, 0)}, arms={'L': (150, 120), 'R': (-28, -31)}, bar=331), None),
+      (1.0, dict(lean=6, crouch=.1, feet={'L': (-.22, 0), 'R': (.34, 0)}, arms={'L': (120, 80), 'R': (20, 40)}, bar=390), eo),
+      (1.6, dict(lean=-2, crouch=.08, feet={'L': (-.22, 0), 'R': (.2, 0)}, arms={'L': (80, 40), 'R': (40, -30)}, bar=300), sm),
+      (3.0, dict(lean=-6, crouch=.08, feet={'L': (-.22, 0), 'R': (.2, 0)}, arms={'L': (70, 30), 'R': (-100, -140)}, bar=230), sm),
+      (5.05, dict(lean=-8, crouch=.08, feet={'L': (-.22, 0), 'R': (.2, 0)}, arms={'L': (60, 20), 'R': (-115, -150)}, bar=215), sm)]
+# ME key poses (built facing right, mirrored to face left; R = his right hand with the lamp = the far arm)
+M9 = [(0.0, dict(lean=4, crouch=.08, feet={'L': (.12, 0), 'R': (-.18, 0)}, arms={'L': (60, 10), 'R': (-50, -100)}, lamp=-95), None),
+      (.3, dict(lean=4, crouch=.08, feet={'L': (.12, 0), 'R': (-.18, 0)}, arms={'L': (60, 10), 'R': (-50, -100)}, lamp=-95), None),
+      (.46, dict(lean=-12, crouch=.3, feet={'L': (.12, 0), 'R': (-.2, .07)}, arms={'L': (-20, -110), 'R': (-120, -150)}, lamp=-150), eo),
+      (.62, dict(lean=-12, crouch=.38, feet={'L': (.1, 0), 'R': (-.32, 0)}, arms={'L': (-10, -100), 'R': (-140, -170)}, lamp=-165), eback),
+      (1.1, dict(lean=-8, crouch=.28, feet={'L': (.1, 0), 'R': (-.32, 0)}, arms={'L': (10, -80), 'R': (-100, -140)}, lamp=-120), sm),
+      (2.0, dict(lean=0, crouch=.15, feet={'L': (.1, 0), 'R': (-.3, 0)}, arms={'L': (50, -10), 'R': (-70, -120)}, lamp=-100), sm),
+      (3.2, dict(lean=-2, crouch=.13, feet={'L': (.1, 0), 'R': (-.3, 0)}, arms={'L': (50, -10), 'R': (-80, -125)}, lamp=-105), sm),
+      (4.4, dict(lean=-10, crouch=.15, feet={'L': (.1, 0), 'R': (-.3, 0)}, arms={'L': (40, -20), 'R': (-140, -200)}, lamp=165), sm),
+      (4.7, dict(lean=-12, crouch=.16, feet={'L': (.1, 0), 'R': (-.32, 0)}, arms={'L': (40, -20), 'R': (-150, -210)}, lamp=160), sm),
+      # shot 10 (u0 = 4.0 + ...): lunge, contact at 5.05 (43.05), follow through, recover, heave
+      (4.85, dict(lean=6, crouch=.18, feet={'L': (.28, .1), 'R': (-.38, 0)}, arms={'L': (60, 20), 'R': (-120, -150)}, lamp=-140), eo),
+      (5.05, dict(lean=18, crouch=.2, feet={'L': (.3, 0), 'R': (-.3, 0)}, arms={'L': (110, 90), 'R': (-10, 20)}, lamp=30), ei),
+      (5.15, dict(lean=19, crouch=.21, feet={'L': (.3, 0), 'R': (-.3, 0)}, arms={'L': (110, 90), 'R': (-4, 26)}, lamp=36), None),
+      (5.45, dict(lean=24, crouch=.22, feet={'L': (.3, 0), 'R': (-.3, 0)}, arms={'L': (120, 100), 'R': (50, 80)}, lamp=95), eo),
+      (6.3, dict(lean=6, crouch=.14, feet={'L': (.3, 0), 'R': (-.14, 0)}, arms={'L': (60, 10), 'R': (-60, -110)}, lamp=-100), sm),
+      (9.1, dict(lean=8, crouch=.14, feet={'L': (.3, 0), 'R': (-.14, 0)}, arms={'L': (60, 10), 'R': (-55, -105)}, lamp=-100), sm)]
+T10 = [(4.0, dict(lean=-8, crouch=.08, feet={'L': (-.22, 0), 'R': (.2, 0)}, arms={'L': (60, 20), 'R': (-115, -150)}, bar=245, held=1), None),
+       (4.9, dict(lean=-10, crouch=.09, feet={'L': (-.22, 0), 'R': (.2, 0)}, arms={'L': (50, 10), 'R': (-125, -160)}, bar=240, held=1), sm),
+       (5.05, dict(lean=-4, crouch=.1, feet={'L': (-.22, 0), 'R': (.2, 0)}, arms={'L': (50, 10), 'R': (-70, -60)}, bar=250, held=1), ei),
+       (5.25, dict(lean=22, crouch=.16, feet={'L': (-.28, 0), 'R': (.12, .04)}, arms={'L': (60, -30), 'R': (70, 110)}, bar=150, held=0), eo),
+       (5.7, dict(lean=26, crouch=.18, feet={'L': (-.32, 0), 'R': (-.02, 0)}, arms={'L': (50, -60), 'R': (60, 150)}, bar=150, held=0), sm),
+       (9.1, dict(lean=18, crouch=.16, feet={'L': (-.32, 0), 'R': (-.02, 0)}, arms={'L': (55, -55), 'R': (62, 150)}, bar=150, held=0), sm)]
+
+
+def fight_figs(lay, u0, X_t, X_m, fy, k, rot_bg=0.0):
+    """Both fighters at shot-9 time u0 (0 = 38.0; shot 10 continues at 4.0 = 42.0). Returns key points."""
+    out = {}
+    tp = _pose(T9 if u0 < 4.0 else T10, u0)
+    mp = _pose(M9, u0)
+    ex_t = 'angry' if u0 < 5.05 else 'sad'
+    ex_m = 'scared' if u0 < 1.6 else ('worried' if u0 < 2.6 else 'angry')
+    breath = .012 * math.sin(u0 * 2 * math.pi / .7) * (u0 > 5.8)
+    Jt = side_J(X_t, fy, k, tp['lean'], tp['crouch'], feet=tp['feet'], arms=tp['arms'])
+    Jm = side_J(X_m, fy, k, mp['lean'] + 60 * breath, mp['crouch'] - breath, feet=mp['feet'], arms=mp['arms'], face=-1)
+    w_c = math.sin(math.pi * seg(u0, 4.93, 5.22)) ** .7 if 4.0 <= u0 else 0.0
+    if w_c > 0:                                   # contact: the lamp base lands ON the thief's forearm
+        fm = B2.lerpv(Jt['elR'], Jt['haR'], .55); a_ = math.radians(180 - mp['lamp'])
+        want = (fm[0] - math.cos(a_) * k * .2, fm[1] - math.sin(a_) * k * .2)
+        tgt = B2.lerpv(Jm['haR'], want, w_c)
+        c1 = B2.ik2(Jm['shR'], tgt, B2.ARM * k, B2.ARM * k, 1); c2 = B2.ik2(Jm['shR'], tgt, B2.ARM * k, B2.ARM * k, -1)
+        Jm['elR'], Jm['haR'] = c1 if c1[0][1] < c2[0][1] else c2
+    def bar_(l_, J_, k_):
+        if tp.get('held', 1) < .5: return
+        hx, hy = J_['haR']; tip = crowbar2d(l_, hx, hy, tp['bar'], k_ * .62 * 1.45, col=(120, 126, 142)); fist(l_, hx, hy, k_ * .06, col=THIEF1_C, ang=tp['bar'])
+        out['tip'] = tip
+    def lamp_(l_, J_, k_):
+        hx, hy = J_['haR']; a_ = 180 - mp['lamp']
+        lamp2d(l_, hx, hy, a_, k_ * .42 * PROP_K, swing=math.sin(u0 * 3)); fist(l_, hx, hy, k_ * .065, ang=a_)
+        out['lamp_base'] = (hx + math.cos(math.radians(a_)) * k_ * .2, hy + math.sin(math.radians(a_)) * k_ * .2)
+    _fig_side(lay, Jt, k, 'thief', ex_t, .75, (bar_, 'near'), near='R')
+    _fig_side(lay, Jm, k, 'me', ex_m, -.75, (lamp_, 'far'), near='L')
+    out['Jt'], out['Jm'] = Jt, Jm
+    return out
+
+
+def feet_shadows(img, Js, fy, k):
+    m = layer(); d = ImageDraw.Draw(m)
+    for J in Js:
+        for s_ in 'LR':
+            ax = J['an' + s_][0]; h = clamp(1 - (fy - J['an' + s_][1]) / (.25 * k))
+            if h > 0: d.ellipse((ax - k * .16, fy - k * .035, ax + k * .2, fy + k * .035), fill=(0, 0, 8, int(150 * h)))
+    img.alpha_composite(m.filter(ImageFilter.GaussianBlur(k * .02)))
+
+
+FY9, X9 = 1670, (175, 690)
+
+
 def s09(t, u):
+    """38-42: whip pan in; THIEF 1 (left, facing right) spins into a wind-up (38.0-38.3, the bar cocked behind his
+    head), swings flat at shoulder height (38.3-38.5, ease-in + smear); ME (right, facing left) reacts ~.15 s after
+    the wind-up: trunk whips back, knees drop, the back foot steps away, arms fling up; the bar misses him by an inch
+    and hits the wall edge behind him ON the clang (38.5): 4-frame contact hold, sparks, flash, shake. Then he yanks
+    it free and re-cocks; ME's fear turns to adrenaline and he winds the lamp back over his shoulder (into shot 10)."""
     u0 = u - 38.0
-    pan = 1 - eo(seg(u0, 0, .32))                      # whip pan in from the left
+    pan = 1 - eo(seg(u0, 0, .3))
     tgt = (lerp(1.45, 2.4, pan * .9), lerp(2.95, 1.6, pan), 1.05)
-    cam = Cam((2.95 + .05 * math.sin(u0), 5.0, 1.3), tgt, fov=56, size=SIZE)
+    cam = Cam((2.95 + .03 * math.sin(u0), 5.0, 1.3), tgt, fov=56, size=SIZE)
     img, near = render_house(cam)
-    blinds_light(img, cam, 1.0)
+    blinds_light(img, cam, .8)
+    img = darken(img, .25)
+    k = S(600); fy = S(FY9)
+    # the wall edge the bar will hit: the corner of the partition right behind ME (lit edge + the darker return)
+    tipx = _tip9()[0] + S(250) * pan
+    wl = layer(); wd = ImageDraw.Draw(wl)
+    wd.polygon([(tipx, 0), (W + S(50), 0), (W + S(50), fy + S(60)), (tipx, fy + S(10))], fill=(14, 20, 52, 255))
+    wd.line([(tipx, 0), (tipx, fy + S(10))], fill=(200, 140, 90, 255), width=max(2, int(S(7))))
+    img.alpha_composite(wl)
     lay = layer()
-    # THIEF 1: spins (0-0.15 back to us), winds up, swings at 38.30-38.50, the bar hits the wall corner at 38.50
-    sw = seg(u0, .3, .5); back = sm(seg(u0, .1, .3)) * (1 - sw); rec = sm(seg(u0, .85, 1.4))
-    pose_t = mix_pose(mix_pose(POSE['stuff'], POSE['swing_back'], sm(seg(u0, .05, .3))), POSE['swing_fwd'], ei(sw))
-    pose_t = mix_pose(pose_t, POSE['swing_back'], rec * .5)
-    xt = at3d(cam, (THF[0], THF[1], 0), 1.75)
-    lead = .12 * ei(sw) - .1 * rec
-    if xt:
-        x, y, sc, ppm = xt
-        bar_ang = lerp(lerp(-100, 200, sm(seg(u0, .05, .3))), 360 + 0, ei(sw))
-        bar_ang = lerp(bar_ang, 250, rec)
-        g1 = thief1(lay, x + ppm * lead, y, sc, u, 'angry', pose_t, look=.7, lean=8 * ei(sw) - 6 * rec, bar=bar_ang, pack=True, idle=.4)
-    # ME: dodges back (lean away) as the bar comes, recovers, raises the lamp
-    d_ = eback(seg(u0, .3, .47), 1.0) * (1 - .7 * sm(seg(u0, 1.0, 1.8)))       # a reflex: fast out, small overshoot
-    pm = mix_pose(POSE['lamp_ready'], POSE['dodge'], d_)
-    pm['_side'] = True; pm['_name'] = 'dodge'
-    xm = at3d(cam, (MEF[0], MEF[1], 0), 1.75)
-    if xm:
-        x, y, sc, ppm = xm
-        windup = sm(seg(u0, 3.3, 4.0))
-        pm = mix_pose(pm, POSE['lunge'], windup * .4)
-        me(lay, x + ppm * .12 * d_, y, sc, u, 'scared' if u0 < 1.5 else 'determined', pm, look=-.7, lean=-24 * d_ + 6 * windup,
-           flip=True, lamp=-120 + 40 * d_)
+    o = fight_figs(lay, u0, S(X9[0]) + S(250) * pan, S(X9[1]) + S(250) * pan, fy, k)
+    feet_shadows(img, (o['Jt'], o['Jm']), fy, k)
+    # the swing smear: a soft arc behind the bar tip while it is fast (38.36-38.5)
+    if .34 < u0 < .5 and 'tip' in o:
+        sm_ = layer(); ds = ImageDraw.Draw(sm_)
+        hx, hy = o['Jt']['haR']; r = math.hypot(o['tip'][0] - hx, o['tip'][1] - hy)
+        a1 = math.degrees(math.atan2(o['tip'][1] - hy, o['tip'][0] - hx))
+        ds.arc((hx - r, hy - r, hx + r, hy + r), a1 - 70, a1, fill=(220, 230, 255, 110), width=int(k * .07))
+        img.alpha_composite(sm_.filter(ImageFilter.GaussianBlur(k * .015)))
     sun = side_dir(cam, (1.5, 2.9, 1.0), WINDOW_C)
-    chars_pass(img, lay, [(sun, SODIUM, .9), ((0, -1), (170, 190, 255), .3)])
-    corner = cam.p((SX + .12, YMOUTH, 1.45))
-    sparks(img, corner[0], corner[1], u0 - .5, n=16, r=130)
-    img = finish(img, u, vig=.45)
+    chars_pass(img, lay, [(sun, SODIUM, .9), ((0, -1), SODIUM, .35)], tint_col=(150, 160, 205))
+    if 'tip' in o and .48 <= u0 < .62:
+        TL.glow_at(img, o['tip'][0], o['tip'][1], S(160), (255, 230, 170), k=1.0, core=.35)
+    if 'tip' in o and u0 >= .5:
+        gx, gy = _tip9()
+        ImageDraw.Draw(img).line([(gx - S(14), gy - S(4)), (gx + S(6), gy + S(5))], fill=(10, 12, 26, 255), width=max(2, int(S(7))))
+        sparks(img, gx, gy, u0 - .5, n=18, r=140)
+    img = finish(img, u, vig=.5)
     if pan > .01:
         a = np.asarray(img, np.float32); acc = np.zeros_like(a); n = 0; rad = int(S(90) * pan)
-        for o in range(-rad, rad + 1, max(1, rad // 6 or 1)):
-            acc += np.roll(a, o, axis=1); n += 1
+        for o_ in range(-rad, rad + 1, max(1, rad // 6 or 1)):
+            acc += np.roll(a, o_, axis=1); n += 1
         img = Image.fromarray((acc / n).astype(np.uint8), 'RGBA')
-    jx, jy = jolt(u0, .5, S(22), .4)
+    jx, jy = jolt(u0, .5, S(24), .4)
     dx, dy = shake(u, S(5), .8, 12)
     return camxf(img, 1.0, jx + dx, jy + dy)
 
 
-def crowbar_floor(u0):
-    """The dropped crowbar: (world centre, screen-plane angle deg, z) after the THWACK (u0 = s since 43.05)."""
-    if u0 < .5:
-        f = u0 / .5; z = lerp(1.15, .02, f * f); x = lerp(1.82, 1.6, f); y = lerp(2.75, 2.95, f); ang = lerp(200, 160, f) + 200 * f
-        return (x, y, z), ang
-    b = u0 - .5
-    hop = abs(math.sin(b * 9)) * .12 * math.exp(-b * 4.5)
-    roll = 1 - math.exp(-b * 1.1)
-    return (1.6 - .55 * roll, 2.95 + .4 * roll, .02 + hop), 360 + 175 + 40 * math.sin(b * 6) * math.exp(-b * 2) + 160 * roll
+@functools.lru_cache(maxsize=1)
+def _tip9():
+    return fight_figs(layer(), .5, S(X9[0]), S(X9[1]), S(FY9), S(600))['tip']
+
+
+@functools.lru_cache(maxsize=1)
+def _release10():
+    o = fight_figs(layer(), 5.07, S(300), S(870), S(1700), S(600))
+    return o['Jt']['haR']
+
+
+def bar_fall(u0, fy, k):
+    """The dropped crowbar (screen px, upright frame) at shot time u0 (5.07 = released): an arc out of the opened hand
+    down to the tiles (43.55), a bounce, then it skids and rolls toward screen left, staying in frame."""
+    x0, y0 = _release10(); t_ = u0 - 5.07
+    if t_ < 0: return None
+    T1 = .48; vx = -S(260); g = S(5200)
+    vy = (fy - k * .05 - y0 - .5 * g * T1 * T1) / T1
+    if t_ < T1:
+        return (x0 + vx * t_, y0 + vy * t_ + .5 * g * t_ * t_), 215 - 420 * t_
+    b = t_ - T1
+    hop = abs(math.sin(b * 8.5)) * k * .09 * math.exp(-b * 4)
+    dist = S(330) * (1 - math.exp(-b * 1.3))
+    return (x0 + vx * T1 - dist, fy - k * .05 - hop), 15 + 30 * math.sin(b * 7) * math.exp(-b * 2.5) - dist / S(330) * 180
 
 
 def s10(t, u):
-    u0 = u - 42.0
-    cam = Cam((3.05 + .03 * math.sin(u0), 4.85, 1.1), (1.5, 2.85, .95), fov=52, roll=-15 - 2 * sm(seg(u0, 1.0, 1.3)), size=SIZE)
+    """42-47, Dutch angle: ME's counter. 42.0-42.85 wind-up (the lamp cocked back over his shoulder, weight back), the
+    lead foot steps in (42.6-42.85) and the lamp comes down diagonally onto THIEF 1's raised weapon arm: contact on
+    the THWACK (43.05) with a 3-frame hold, flash + sparks + jolt; his arm is knocked down, the hand opens, the bar
+    drops (arc, clatter 43.55, bounce, roll left, stays in frame); he folds over, clutching the forearm, steps back;
+    ME follows through, recovers and stands there heaving."""
+    u0 = u - 38.0
+    roll = -15 - 2 * sm(seg(u0, 5.0, 5.3))
+    cam = Cam((3.05 + .03 * math.sin(u0), 4.85, 1.1), (1.5, 2.85, .95), fov=52, roll=roll, size=SIZE)
     img, near = render_house(cam)
-    blinds_light(img, cam, 1.0)
+    blinds_light(img, cam, .8)
+    img = darken(img, .3)
+    k = S(600); fy = S(1700)
     lay = layer()
-    hit = 1.05
-    wind = sm(seg(u0, .2, .85)); swing = ei(seg(u0, .85, hit)); after = sm(seg(u0, hit, hit + .5))
-    xt = at3d(cam, (THF[0] - .2, THF[1] + .2, 0), 1.75)
-    if xt:
-        x, y, sc, ppm = xt
-        pt = mix_pose(POSE['swing_back'], POSE['hurt'], after)
-        bar = None if u0 > hit + .05 else 230
-        g1 = thief1(lay, x, y, sc, u, 'angry' if u0 < hit else 'sad', pt, look=.7, lean=-14 * after, bar=bar, pack=True, idle=.4)
-    xm = at3d(cam, (MEF[0] + .05, MEF[1] - .05, 0), 1.75)
-    if xm:
-        x, y, sc, ppm = xm
-        pm = mix_pose(mix_pose(POSE['lamp_ready'], dict(POSE['lunge']), wind), POSE['hit'], swing)
-        pm['_side'] = True; pm['_name'] = 'lunge'
-        lamp_a = lerp(lerp(-110, -40, wind), 120, swing)
-        me(lay, x - ppm * .25 * swing, y, sc, u, 'angry', pm, look=-.7, lean=-15 * swing + 6 * wind, flip=True, lamp=lamp_a)
-    if u0 >= hit - .02:
-        cp, ca = crowbar_floor(u0 - hit)
-        if cam.depth(cp) > .2:
-            px_, py_ = cam.p(cp); m = cam.px_per_m(cp)
-            crowbar2d(lay, px_ - m * .25, py_, ca, m)
-    sun = side_dir(cam, (1.5, 2.9, 1.0), WINDOW_C)
-    chars_pass(img, lay, [(sun, SODIUM, .9), ((0, -1), (170, 190, 255), .3)])
-    if xt:
-        hp = (x, y)
-    imp = cam.p((1.7, 2.8, 1.2))
-    sparks(img, imp[0], imp[1], u0 - hit, n=10, r=90, col=(255, 236, 200), seed=5)
-    if 0 <= u0 - hit < .08: img = TL.add_light(img, Image.new('L', SIZE, 70), (255, 255, 255), 1.0)
-    img = finish(img, u, vig=.45)
-    jx, jy = jolt(u0, hit, S(26), .45)
-    j2x, j2y = jolt(u0, 1.55, S(6), .25)
+    o = fight_figs(lay, u0, S(300), S(870), fy, k)
+    shad = layer(); feet_shadows(shad, (o['Jt'], o['Jm']), fy, k)
+    bf = bar_fall(u0, fy, k)
+    if bf:
+        (bx, by), ba = bf; crowbar2d(lay, bx, by, ba, k * .62 * 1.35, col=(120, 126, 142))
+    if 4.85 < u0 < 5.06:
+        hx, hy = o['Jm']['haR']; sm_ = layer(); ds = ImageDraw.Draw(sm_)
+        ds.arc((hx - k * .5, hy - k * .5, hx + k * .5, hy + k * .5), 200, 300, fill=(230, 220, 190, 90), width=int(k * .09))
+        lay.alpha_composite(sm_.filter(ImageFilter.GaussianBlur(k * .02)))
+    lay = light_chars(lay, [((-.3, -1), SODIUM, .9), ((1, 0), SODIUM, .4)], tint_col=(150, 160, 205))
+    full = shad; full.alpha_composite(lay)
+    full = full.rotate(-roll * .9, resample=Image.BICUBIC, center=(W / 2, H * .6))
+    img.alpha_composite(full)
+    hit = 5.05
+    if 'lamp_base' in o and 0 <= u0 - hit < .14:
+        c = o['lamp_base']; c = _rotp(c, -roll * .9, (W / 2, H * .6))
+        sparks(img, c[0], c[1], u0 - hit, n=12, r=100, col=(255, 236, 200), seed=5)
+        TL.glow_at(img, c[0], c[1], S(190), (255, 240, 210), k=1.0, core=.4)
+    if 0 <= u0 - hit < .07: img = TL.add_light(img, Image.new('L', SIZE, 60), (255, 255, 255), 1.0)
+    img = finish(img, u, vig=.5)
+    jx, jy = jolt(u0, hit, S(28), .45)
+    j2x, j2y = jolt(u0, 5.55, S(7), .25)
     dx, dy = shake(u, S(5), .8, 14)
-    return camxf(img, 1.05, jx + j2x + dx, jy + j2y + dy)
+    return camxf(img, 1.03, jx + j2x + dx, jy + j2y + dy)
+
+
+def _rotp(p, ang, c):
+    a = math.radians(-ang); x, y = p[0] - c[0], p[1] - c[1]
+    return (c[0] + x * math.cos(a) - y * math.sin(a), c[1] + x * math.sin(a) + y * math.cos(a))
 
 
 def toycar2d(lay, x, y, s, broken=0.0, t=0.0):
@@ -1793,9 +1958,15 @@ def thief_getup_J(u0, X, Y, k):
     C['head'] = B2.polar(C['neck'], -115, B2.HEAD_R * .45 * k)
     St = stand_J(X + .05 * k, Y - .8 * k, k, 6, legs={'L': (95, 90, 180), 'R': (82, 88, 180)}, arms={'L': (80, 95), 'R': (100, 70)})
     St['head'] = B2.polar(St['neck'], -95, B2.HEAD_R * .4 * k)
-    if u0 < 2.6: return jlerp(P, A, sm(seg(u0, 1.9, 2.6)))
-    if u0 < 3.6: return jlerp(A, C, sm(seg(u0, 2.9, 3.6)))
-    return jlerp(C, St, eback(seg(u0, 3.8, 4.7), .8))
+    Pu = dict(P); Pu.update({k_: B2.add(P[k_], (0, -.22 * k)) for k_ in ('neck', 'head', 'shL', 'shR', 'elL', 'elR')})
+    Pu['haL'], Pu['haR'] = B2.add(P['neck'], (-.05 * k, .02 * k)), B2.add(P['neck'], (.1 * k, .03 * k))    # palms under the shoulders
+    def lagged(A_, B_, f):                     # hips and legs first, the torso and head follow (torso last)
+        lo = sm(seg(f, 0, .7)); hi = sm(seg(f, .3, 1.0))
+        return {k_: B2.lerpv(A_[k_], B_[k_], hi if k_ in ('neck', 'head', 'shL', 'shR', 'elL', 'elR', 'haL', 'haR') else lo) for k_ in A_ if k_ in B_}
+    if u0 < 2.25: return jlerp(P, Pu, sm(seg(u0, 1.85, 2.25)))          # hands press, chest comes up
+    if u0 < 2.9: return lagged(Pu, A, seg(u0, 2.25, 2.9))                # a knee comes under: all fours
+    if u0 < 3.7: return lagged(A, C, seg(u0, 2.95, 3.7))                 # one foot forward, hips up
+    return lagged(C, St, seg(u0, 3.75, 4.8))                            # stand: legs first, torso last
 
 
 def s13_slide(t, u0, u):
@@ -1814,7 +1985,7 @@ def s13_slide(t, u0, u):
     chars_pass(img, lay, [(sun, SODIUM, 1.0), ((0, -1), SODIUM, .5)])
     f = eo(seg(u0, 1.55, 3.6))
     k = S(560)
-    px, py = lerp(W * 1.3, W * .3, f), H * .88 + S(10) * math.sin(u0 * 9) * (1 - f)
+    px, py = lerp(W * .98, W * .3, f), H * .74 + S(10) * math.sin(u0 * 9) * (1 - f)
     rise = sm(seg(u0, 4.3, 5.8))
     flail = (1 - f) * (.5 + .5 * math.sin(u0 * 11))
     J = jlerp(slide_J(px, py, k, flail), elbow_J(px, py, k, rise=.3 + .7 * rise), sm(seg(u0, 3.6, 4.6)))
@@ -1902,156 +2073,417 @@ def banister(cam, blur):
 
 
 def tread4(i):
-    """Foot spot (y, z) on tread i for the shot-4 descent (i = -1: the landing edge)."""
+    """Ankle spot (y, z) on tread i for the shot-4 descent (i = -1: the landing). The ankle sits over the back half of
+    the tread so the toes stay on it (the walker faces -y; the tread runs y1 = back .. y1 - RUN = nosing)."""
     if i < 0: return (YTOP + .12, ZT)
-    i = min(i, NST - 1); return (tread_y(i) + .02, tread_z(i))
+    i = min(i, NST - 1); return (YTOP - i * RUN - .085, tread_z(i))
 
 
-def me_stairs_3d(T):
-    """ME creeping down the stairs (3D joints, metres), every foot contact on its audio footstep (STEP4): the lead
-    foot reaches down toe-first, the support knee bends to lower him, the heel settles, a held pause, next step.
-    The torso leans a little forward and down, the left hand slides on the wall with a lag, the lamp arm up high."""
-    sd = B2.stair_descent(T, STEP4, tread4, lateral=.085)
-    py = sd['pelvis'][1]; pz = sd['pelvis'][2] + .76
-    walk = sm(seg(T, 13.55, 14.45))
-    if T < 14.3: py = lerp(YTOP + .6, py, walk)
-    X0 = .52 + .015 * math.sin(T * .9)
-    Pv = (X0, py, pz)
-    lean = math.radians(8 + 5 * math.sin(math.pi * clamp(sd['lower'] % 1.0)) + 3 * sd['dip'] / .03)
-    sway = .02 * math.sin(T * 2 * math.pi / 2.4)                         # weight over the support foot
-    neck = (X0 + sway, py - math.sin(lean) * .5, pz + math.cos(lean) * .5)
-    J = {'pelvis': (X0 + sway * .5, py, pz), 'neck': neck, 'head': (neck[0], neck[1] - .04, neck[2] + .08)}
-    for sd_, side in ((1, 'L'), (-1, 'R')):            # facing -y: his left is +x (screen left from behind)
-        hip = (X0 + sd_ * .075 + sway * .4, py + .02, pz - .04)
-        (fx, fy, fz), drop = sd['feet'][side]
-        if T < 14.3: fy = lerp(YTOP + .6 + (.1 if side == 'L' else -.1) * math.sin(T * 6), fy, walk)
-        fx = X0 - fx; an = (fx, fy + .02, fz + .07)
-        kn, an = B2.ik3(hip, an, B2.THIGH * .98, B2.SHIN * .98, (sd_ * .15, -1, .1))
-        J['hip' + side], J['kn' + side], J['an' + side] = hip, kn, an
-        J['toe' + side] = (an[0] + sd_ * .02, an[1] - .12, an[2] - .05 - drop)
-    sh = {s_: (neck[0] + sd_ * .12, neck[1] + .02, neck[2] - .09) for sd_, s_ in ((1, 'L'), (-1, 'R'))}
-    # left hand on the wall (x = 0): it slides along with the body ~.3 s late, at hip height
-    lag = B2.stair_descent(T - .3, STEP4, tread4)['pelvis']
-    hl = (SX - .03, lag[1] - .25, lag[2] + .95)
-    elL, hl = B2.ik3(sh['L'], hl, B2.ARM, B2.ARM, (.2, .4, -1))
-    # right hand holds the lamp high; it lags the body's drop on each step (follow-through) and steadies
-    d2 = B2.stair_descent(T - .12, STEP4, tread4)
-    hr = (sh['R'][0] - .1, sh['R'][1] - .12, d2['pelvis'][2] + .76 + .5 + .4)
-    elR, hr = B2.ik3(sh['R'], hr, B2.ARM, B2.ARM, (-.6, .3, -.4))
+def rail_z(y):
+    """Height of the handrail top over the nosing line at y (shot 4's open balustrade)."""
+    return max(0.0, ZT - (YTOP - y) / RUN * RISE) + .92 if y < YTOP else ZT + .92
+
+
+FOOT_L, ANK_H, FOOT_A0 = .13, .07, 16.0      # foot length (ankle -> toe), ankle height, flat-foot toe angle (deg)
+
+
+def _foot(ank, a):
+    """Toe point for an ankle and a plantar-flexion a (deg, 0 = flat on the tread, + = toes pointing down)."""
+    r = math.radians(FOOT_A0 + a); return (ank[0], ank[1] - FOOT_L * math.cos(r), ank[2] - FOOT_L * math.sin(r))
+
+
+def descent(T, contacts=None):
+    """ME creeping down the stairs, 3D joints in metres (world: he faces -y, his left = +x), measured from Muybridge
+    (Animal Locomotion pl. 127, a man descending stairs; LESSONS > Natural motion): step-over-step, each foot drops two
+    treads; the swing foot toes off behind (heel first up, toe last), its knee comes forward, the foot passes the
+    stance tread's nosing, then reaches DOWN plantar-flexed (~35 deg) with the leg almost straight; TOE contact on the
+    footstep sound, the heel lowers over .15 s while the knee takes the weight (pelvis dips 4 cm, recovers). Most of
+    the lowering is the stance knee bending BEFORE contact. Trunk upright (Muybridge: no forward pitch; a creep adds
+    ~5 deg), head pitched down at the next treads, weight shifting over the stance foot (~2.5 cm)."""
+    C = contacts or STEP4
+    X0 = .74
+    feet = {}
+    for side, par, sx in (('L', 0, 1), ('R', 1, -1)):
+        mine = [(i, C[i]) for i in range(len(C)) if i % 2 == par]
+        prev = -1; nxt = None
+        for i, c in mine:
+            if T >= c: prev = i
+            else: nxt = (i, c); break
+        ax = X0 + sx * .085
+        py_, pz_ = tread4(prev); a = 0.0; ank = (ax, py_, pz_ + ANK_H)
+        cprev = dict(mine).get(prev, -9)
+        if cprev > -9 and T < cprev + .16:                     # heel settling after the toe contact
+            a = 35 * (1 - eo(seg(T, cprev, cprev + .16)))
+            toe = _foot((ax, py_, pz_ + ANK_H), 0)
+            r = math.radians(FOOT_A0 + a)
+            ank = (ax, toe[1] + FOOT_L * math.cos(r), toe[2] + FOOT_L * math.sin(r))
+        if nxt:
+            i, c = nxt; s0 = c - .78
+            if s0 - .32 <= T < s0:                              # heel rises, toe stays (the other foot is taking weight)
+                h = sm(seg(T, s0 - .32, s0)) * 28
+                toe = _foot((ax, py_, pz_ + ANK_H), 0); r = math.radians(FOOT_A0 + h)
+                ank = (ax, toe[1] + FOOT_L * math.cos(r), toe[2] + FOOT_L * math.sin(r)); a = h
+            elif T >= s0:                                       # swing: forward over the nosing first, then down
+                f = seg(T, s0, c)
+                ny_, nz_ = tread4(i)
+                r1 = math.radians(FOOT_A0 + 35)
+                toe_c = (ax, ny_ - FOOT_L * math.cos(math.radians(FOOT_A0)), nz_ + ANK_H - FOOT_L * math.sin(math.radians(FOOT_A0)))
+                B = (ax, toe_c[1] + FOOT_L * math.cos(r1), toe_c[2] + FOOT_L * math.sin(r1))
+                toe0 = _foot((ax, py_, pz_ + ANK_H), 0); r0 = math.radians(FOOT_A0 + 28)
+                A = (ax, toe0[1] + FOOT_L * math.cos(r0), toe0[2] + FOOT_L * math.sin(r0))
+                fy = lerp(A[1], B[1], eo(seg(f, .05, .8)))
+                fz = lerp(A[2], B[2], sm(seg(f, .42, 1.0)) ** 1.3) + .06 * math.sin(math.pi * seg(f, 0, .7))
+                ank = (ax - sx * .01 * math.sin(math.pi * f), fy, fz)
+                a = 28 + (-14) * math.sin(math.pi * seg(f, 0, .6)) + 21 * sm(seg(f, .55, 1.0))
+        feet[side] = (ank, _foot(ank, a))
+    # pelvis: lowered by the stance knee before each contact, a dip after it, forward over the new foot
+    HS = .835
+    zc = ZT + HS; yc = YTOP + .12 + .02; xc = X0
+    for n, c in enumerate(C):
+        y0_, z0_ = tread4(n - 1); y1_, z1_ = tread4(n)
+        zc += (z1_ - z0_) * sm(seg(T, c - .62, c + .05))
+        yc += (y1_ - y0_) * sm(seg(T, c - .6, c + .4))
+        xc += (.025 if n % 2 == 0 else -.025) * (sm(seg(T, c - .1, c + .35)) * (1 if n > 0 else .5)) * (2 if n > 0 else 1)
+    dip = sum(.045 * math.sin(math.pi * seg(T, c, c + .5)) ** 1.5 for c in C)
+    pel = (xc, yc, zc - dip)
+    # trunk: upright + a creep's forward lean, a little back at each contact (Muybridge frame 4)
+    pulse = sum(math.sin(math.pi * seg(T, c - .15, c + .3)) for c in C)
+    lean = math.radians(6 - 4 * pulse)
+    twist = .02 * math.sin(math.pi * (sum(sm(seg(T, c - .6, c + .2)) for c in C)))
+    neck = (pel[0], pel[1] - math.sin(lean) * B2.TORSO, pel[2] + math.cos(lean) * B2.TORSO)
+    head = (neck[0], neck[1] - .07, neck[2] + .075)
+    J = {'pelvis': pel, 'neck': neck, 'head': head}
+    pole = (0, -1, .15)
+    for side, sx in (('L', 1), ('R', -1)):
+        hip = (pel[0] + sx * .07, pel[1] + .01 + sx * twist, pel[2] - .02)
+        ank, toe = feet[side]
+        kn, an = B2.ik3(hip, ank, B2.THIGH, B2.SHIN, (sx * .12, -1, .05))
+        J['hip' + side], J['kn' + side], J['an' + side], J['toe' + side] = hip, kn, an, toe
+    sh = {s_: (neck[0] + sx * .105, neck[1] + .02 - sx * twist, neck[2] - .1) for sx, s_ in ((1, 'L'), (-1, 'R'))}
+    # left hand slides along the rail ~.3 s behind the body
+    lag = descent_pel(T - .3, C)
+    yh = lag[1] - .12; hl = (SX - .03, yh, lag[2] + .32)
+    elL, hl = B2.ik3(sh['L'], hl, B2.ARM, B2.ARM, (.4, .6, -1))
+    # right hand: the lamp raised beside the head, lagging each drop by ~.12 s (follow-through) then steadying
+    lag2 = descent_pel(T - .12, C)
+    hr = (sh['R'][0] - .3, sh['R'][1] - .02, lag2[2] + B2.TORSO + .02 - .02 * math.sin(T * 5.1))
+    elR, hr = B2.ik3(sh['R'], hr, B2.ARM, B2.ARM, (-.8, .4, -.2))
     J.update(shL=sh['L'], elL=elL, haL=hl, shR=sh['R'], elR=elR, haR=hr)
     return J
 
 
-@functools.lru_cache(maxsize=2)
-def s04_plate_b():
-    """The foot of the stairwell seen from the lower steps: the stair mouth (header above), the tiles and the display
-    cabinet beyond it - the flashlight sweeps across it (composited into the bottom of the shot-4 frame)."""
-    cam = Cam((.6, YBOT + .9, 1.6), (.8, .3, .95), fov=48, size=SIZE)
-    img, near = render_house(cam)
-    stair_rims(img, cam, .8)
-    blinds_light(img, cam, .9, window=False)
-    return img, cam
+def descent_pel(T, C):
+    HS = .835; zc = ZT + HS; yc = YTOP + .14
+    for n, c in enumerate(C):
+        y0_, z0_ = tread4(n - 1); y1_, z1_ = tread4(n)
+        zc += (z1_ - z0_) * sm(seg(T, c - .62, c + .05)); yc += (y1_ - y0_) * sm(seg(T, c - .6, c + .4))
+    return (0.0, yc, zc)
+
+
+def back_head(lay, x, y, R, turn=1.0, pitch=.4, col=HAIR_C):
+    """ME's head from behind / 3-4 behind: skin, the messy hair cap over the crown and the back of the head down to a
+    wavy hairline above the nape (higher on the skin when he looks down, pitch 0..1), an ear on the side toward the
+    camera (turn = +1 screen right, -1 left). Reads as a person's head, not a black disc."""
+    d = ImageDraw.Draw(lay); o = max(2, int(R * .07)); skin = (236, 240, 252)
+    ex, ey = x + turn * R * .9, y + R * (.18 - .25 * pitch)
+    def ear():
+        d.ellipse((ex - R * .19 - o, ey - R * .28 - o, ex + R * .19 + o, ey + R * .28 + o), fill=INKC)
+        d.ellipse((ex - R * .19, ey - R * .28, ex + R * .19, ey + R * .28), fill=skin)
+        d.arc((ex - R * .09, ey - R * .15, ex + R * .09, ey + R * .15), -100 if turn > 0 else 100, 100 if turn > 0 else 280, fill=shade(skin, .66), width=max(1, o // 2))
+    ear()
+    d.ellipse((x - R - o, y - R - o, x + R + o, y + R + o), fill=INKC)
+    d.ellipse((x - R, y - R, x + R, y + R), fill=skin)
+    n = int(R * 3); hl = Image.new('RGBA', (n, n), (0, 0, 0, 0)); hd = ImageDraw.Draw(hl); c = n / 2
+    pts = []
+    for i in range(32):
+        th = 2 * math.pi * i / 32; rr = R * (1.1 if i % 2 else 1.0)
+        pts.append((c + rr * math.cos(th), c + rr * math.sin(th)))
+    hd.polygon(pts, fill=INKC); hd.polygon([(c + (px - c) * .93, c + (py - c) * .93) for px, py in pts], fill=col)
+    for j in range(7):
+        a0 = 190 + j * 23
+        hd.arc((c - R * .72, c - R * .78, c + R * .72, c + R * .5), a0, a0 + 14, fill=shade(col, 1.6), width=max(1, o // 2))
+    m = Image.new('L', (n, n), 0); md = ImageDraw.Draw(m)
+    line = R * (.42 - .45 * pitch)             # hairline below the centre (px); higher when looking down
+    wav = [(c - R * 1.3, c - R * 1.3)] + [(c + R * (-1.2 + 2.4 * i / 12), c + line + R * (.12 if i % 2 else -.02) - R * .18 * abs(-1 + 2 * i / 12) ** 2) for i in range(13)] + [(c + R * 1.3, c - R * 1.3)]
+    md.polygon(wav, fill=255)
+    hl.putalpha(ImageChops.multiply(hl.split()[3], m))
+    _paste(lay, hl, int(x - c), int(y - c))
+    d = ImageDraw.Draw(lay)
+    # the ear sits in front of the hair at the side
+    d.ellipse((ex - R * .17 - o, ey - R * .26 - o, ex + R * .17 + o, ey + R * .26 + o), fill=INKC)
+    d.ellipse((ex - R * .17, ey - R * .26, ex + R * .17, ey + R * .26), fill=skin)
+    d.arc((ex - R * .08, ey - R * .14, ex + R * .08, ey + R * .14), -100 if turn > 0 else 100, 100 if turn > 0 else 280, fill=shade(skin, .66), width=max(1, o // 2))
+
+
+def stairs4():
+    """Shot 4's flight seen from the open side: each step = a wood tread (runner + white nosing) and a white riser, and
+    a stringer band along the open side (no full-height box sides, which hid the treads in painter order)."""
+    out = []
+    for i in range(NST):
+        st = Part(f's4step{i}', sil=False)
+        z = tread_z(i); y1, y0 = YTOP - i * RUN, YTOP - (i + 1) * RUN
+        st.poly([(0, y0, z), (SX, y0, z), (SX, y1, z), (0, y1, z)], (214, 168, 120), ink=True)
+        st.poly([(0, y0, z - RISE), (SX, y0, z - RISE), (SX, y0, z), (0, y0, z)][::-1], (236, 234, 228), ink=True)
+        st.decal([(.22, y0 + .05, z + .003), (SX - .22, y0 + .05, z + .003), (SX - .22, y1, z + .003), (.22, y1, z + .003)], (160, 64, 74), normal=(0, 0, 1))
+        st.decal([(0, y0 + .005, z + .002), (SX, y0 + .005, z + .002), (SX, y0 + .045, z + .002), (0, y0 + .045, z + .002)], (250, 246, 236), normal=(0, 0, 1))
+        st.poly([(SX, y0, z - RISE - .22), (SX, y1, z - .22), (SX, y1, z), (SX, y0, z)][::-1], (236, 232, 222), ink=True)
+        out.append(st)
+    return out
+
+
+def kids_drawing():
+    """A child's crayon drawing taped to the stair wall (x = 0) above the landing: the plant for 'a child lives here'."""
+    p = Part('kids', sil=False); y0, z0 = 5.55, 2.05; w, h = .5, .4
+    wrect(p, 'x', 0, y0 - w, y0, z0, z0 + h, (250, 248, 236), 1, ink=True, e=.006)
+    # sun, house, two stick people (crayon colours)
+    cy, cz = y0 - .1, z0 + .3
+    p.decal([(0.008, cy + .05 * math.cos(a), cz + .05 * math.sin(a)) for a in np.linspace(0, 2 * math.pi, 12)[:-1]], (250, 200, 40), normal=(1, 0, 0))
+    p.decal([(0.008, y0 - .36, z0 + .04), (0.008, y0 - .2, z0 + .04), (0.008, y0 - .2, z0 + .16), (0.008, y0 - .36, z0 + .16)][::-1], (220, 70, 60), normal=(1, 0, 0))
+    p.decal([(0.008, y0 - .38, z0 + .16), (0.008, y0 - .18, z0 + .16), (0.008, y0 - .28, z0 + .26)][::-1], (60, 110, 200), normal=(1, 0, 0))
+    for k_, yy in enumerate((y0 - .13, y0 - .07)):
+        hh = .1 if k_ == 0 else .07
+        p.decal([(0.008, yy - .012, z0 + .04), (0.008, yy + .012, z0 + .04), (0.008, yy + .012, z0 + .04 + hh), (0.008, yy - .012, z0 + .04 + hh)][::-1], (60, 160, 80), normal=(1, 0, 0))
+    for k_, (yy, zz) in enumerate(((y0 - .44, z0 + .08), (y0 - .46, z0 + .13))):
+        p.decal([(0.008, yy, zz), (0.008, yy + .04, zz), (0.008, yy + .04, zz + .012), (0.008, yy, zz + .012)][::-1], (240, 120, 180), normal=(1, 0, 0))
+    return p
+
+
+def landing2():
+    lt = Part('landing2', sil=True)
+    box((0, YTOP, ZT - .12), (SX, RY + 2, ZT), WHITE, part=lt, cols={'top': (182, 132, 86)})
+    return lt
+
+
+def balustrade(cam):
+    """The open side of the flight in shot 4: a wooden handrail on posts + thin balusters (drawn over the figure; the
+    legs stay visible between them)."""
+    lay = layer(); d = ImageDraw.Draw(lay); xr = SX - .04
+    ys = list(np.linspace(YTOP + 1.2, YBOT - .25, 46))
+    pts = [(xr, y, rail_z(y)) for y in ys]
+    vis = [cam.p(p) for p in pts if cam.depth(p) > .15]
+    for i in range(-3, NST + 1):
+        y = YTOP - (i + .5) * RUN if i >= 0 else YTOP + (-i - .5) * .3
+        top = (xr, y, rail_z(y)); bot = (xr, y, ZT if y >= YTOP else tread_z(min(NST - 1, i)))
+        if cam.depth(top) > .15 and cam.depth(bot) > .15:
+            w = cam.px_per_m(top) * .03
+            d.line([cam.p(top), cam.p(bot)], fill=(20, 14, 14, 255), width=max(2, int(w * 1.6)))
+            d.line([cam.p(top), cam.p(bot)], fill=(236, 232, 222, 255), width=max(1, int(w)))
+    if len(vis) > 1:
+        w = cam.px_per_m(pts[len(pts) // 2]) * .06
+        d.line(vis, fill=(22, 14, 12, 255), width=max(3, int(w * 1.5)), joint='curve')
+        d.line(vis, fill=(132, 88, 58, 255), width=max(2, int(w)), joint='curve')
+    lay = night(lay)
+    return rim_layer(lay, (-.6, -.8), SODIUM, .8, w=max(2, int(S(6))))
+
+
+def s04_door(t, u):
+    """13.0-14.05: the bedroom door from inside, over ME's shoulder: his left hand on the lever, presses it, pulls the
+    door open a crack (13.25 creak); the dark landing beyond with the warm glow coming up the stairwell. The arm runs
+    from his shoulder (his head and back in the foreground), the lamp raised in his right hand."""
+    u0 = u - 13.0
+    img = new((6, 8, 20)); d = ImageDraw.Draw(img)
+    # beyond the door: the landing, the top of the stairwell, the warm spill coming up from below
+    d.rectangle((0, 0, W, H), fill=(16, 22, 52, 255))
+    d.polygon([(0, H * .62), (W, H * .58), (W, H), (0, H)], fill=(26, 30, 62, 255))
+    for i in range(6):
+        yy = H * (.66 + i * .055); d.line([(0, yy), (W, yy - S(30))], fill=(120, 84, 60, 255), width=max(1, int(S(6))))
+    TL.glow_at(img, W * .4, H * .72, S(420), SODIUM, k=.55, core=.12, mix=.4)
+    open_ = eo(seg(u0, .3, 1.0)) * .85 + .15 * sm(seg(u0, 1.0, 1.4))
+    press = sm(seg(u0, .02, .22)) * (1 - sm(seg(u0, .75, .95)))
+    xe = lerp(W * .21, W * .74, open_)                # the door's free edge swinging toward us (to the right)
+    dl = layer(); dd = ImageDraw.Draw(dl)
+    dd.rectangle((0, 0, W * .21, H), fill=(30, 34, 64, 255))                     # the jamb + wall on the left
+    dd.rectangle((W * .18, 0, W * .21, H), fill=(70, 76, 112, 255))
+    wleaf = W * 1.2 - xe
+    dd.polygon([(xe, -S(20)), (W + S(300), -S(140) * open_ - S(20)), (W + S(300), H + S(140) * open_ + S(20)), (xe, H + S(20))], fill=(52, 60, 104, 255))
+    for (a0, a1) in ((.07, .44), (.52, .93)):
+        dd.polygon([(xe + S(60), H * a0 - S(10) * open_), (xe + S(60) + wleaf * .62, H * a0 - S(70) * open_), (xe + S(60) + wleaf * .62, H * a1 + S(70) * open_), (xe + S(60), H * a1 + S(10) * open_)],
+                   outline=(34, 38, 70, 255), width=max(2, int(S(10))))
+    dd.line([(xe, 0), (xe, H)], fill=(110, 116, 150, 255), width=max(2, int(S(16))))
+    hy_ = H * .5; la = math.radians(28 * press)
+    lx0, ly0 = xe + S(36), hy_
+    lx1, ly1 = lx0 + S(140) * math.cos(la), ly0 + S(140) * math.sin(la)
+    dd.ellipse((lx0 - S(28), ly0 - S(28), lx0 + S(28), ly0 + S(28)), fill=(190, 160, 100, 255), outline=INKC + (255,), width=max(2, int(S(5))))
+    dd.line([(lx0, ly0), (lx1, ly1)], fill=INKC + (255,), width=int(S(36))); dd.line([(lx0, ly0), (lx1, ly1)], fill=(226, 196, 130, 255), width=int(S(24)))
+    img.alpha_composite(dl)
+    # ME from behind in the foreground: head, shoulders, left arm to the lever, the lamp up in his right hand
+    lay = layer()
+    let_go = sm(seg(u0, .95, 1.25))
+    k = S(1000)
+    neck = (W * .3 + S(40) * open_, H * .8)
+    J = {'neck': neck, 'pelvis': (neck[0] + S(10), neck[1] + .54 * k), 'head': (neck[0] - S(5), neck[1] - .2 * k)}
+    J['shL'] = (neck[0] - .17 * k, neck[1] + .09 * k); J['shR'] = (neck[0] + .17 * k, neck[1] + .09 * k)
+    grip = lerp2((lx0, ly0), (lx1, ly1), .62)
+    tgt = lerp2(grip, (neck[0] + .2 * k, neck[1] - .05 * k), let_go)
+    J['elR'], J['haR'] = B2.ik2(J['shR'], tgt, .3 * k, .3 * k, 1)
+    J['elL'], J['haL'] = B2.ik2(J['shL'], (neck[0] - .2 * k, neck[1] - .4 * k), .3 * k, .3 * k, -1)
+    o = max(2, k * .009); pj, ps = (217, 191, 148), (236, 214, 176)
+    d2 = ImageDraw.Draw(lay)
+    B2.limb(d2, J['shL'], J['elL'], J['haL'], .12 * k, pj, o, ps)
+    lamp2d(lay, J['haL'][0], J['haL'][1], -96, k * .42 * PROP_K * .6, swing=math.sin(u0 * 2.4))
+    fist(lay, J['haL'][0], J['haL'][1], .06 * k, ang=-96)
+    d2 = ImageDraw.Draw(lay)
+    B2.torso(d2, J['neck'], J['pelvis'], .3 * k, pj, o, ps, back=True)
+    B2.limb(d2, J['shR'], J['elR'], J['haR'], .12 * k, pj, o, ps)
+    ang = math.degrees(math.atan2(J['haR'][1] - J['elR'][1], J['haR'][0] - J['elR'][0]))
+    if let_go < .5: hand2d(lay, J['haR'][0], J['haR'][1], ang + 60, .05 * k, 'grip')
+    else: B2.hand(ImageDraw.Draw(lay), J['haR'], .06 * k, (236, 240, 252), o)
+    back_head(lay, J['head'][0], J['head'][1], .26 * k, turn=1, pitch=.15)
+    img.alpha_composite(light_chars(lay, [((0, 1), SODIUM, .5), ((1, 0), (190, 210, 255), .35)], tint_col=(200, 194, 205)))
+    img = finish(img, u, vig=.45)
+    if u0 < .2: img = darken(img, .5 * (1 - u0 / .2))
+    dx, dy = shake(u, S(5), .8, 6)
+    return camxf(img, 1.0 + .03 * u0, dx, dy)
+
+
+def nosings(img, cam):
+    """Seen from above and behind only the tread tops show, so each step edge is drawn: a pale nosing line and the
+    dark drop to the tread below it (what makes a flight read as steps, not a ramp)."""
+    d = ImageDraw.Draw(img)
+    for i in range(NST):
+        z = tread_z(i); y0 = YTOP - (i + 1) * RUN
+        a, b = (.02, y0, z), (SX - .02, y0, z); a2, b2 = (.02, y0 - .05, z - RISE), (SX - .02, y0 - .05, z - RISE)
+        if min(cam.depth(p_) for p_ in (a, b, a2, b2)) < .25: continue
+        w = cam.px_per_m(a) * .02
+        d.polygon([cam.p(a), cam.p(b), cam.p(b2), cam.p(a2)], fill=(5, 7, 20, 255))
+        d.line([cam.p(a), cam.p(b)], fill=(150, 160, 200, 255), width=max(1, int(w)))
+
+
+def s04_cam(u):
+    """The camera floats behind ME on the open side of the flight (3/4 behind, a little above), easing down with him
+    (smoothed by a .35 s lag, so it never snaps on a step): the flight and the lit living room open up below."""
+    P = descent_pel(u - .35, STEP4)
+    y, z = P[1], P[2]
+    return Cam((.36, y + 1.75, z + 1.85), (.72, y - 1.0, z - 1.42), fov=60, roll=1.2 * math.sin((u - 13) * .6), size=SIZE)
 
 
 def s04(t, u):
+    if u < 14.05: return s04_door(t, u)
     u0 = u - 13.0
-    J3 = me_stairs_3d(u)
-    Pv = J3['pelvis']
-    # the camera floats high behind ME, tilted down, gliding on with him (smoothed: no snap on the steps)
-    cy = B2.stair_descent(u - .35, STEP4, tread4)['pelvis']
-    cyy = lerp(YTOP + .6, cy[1], sm(seg(u, 13.55, 14.6))); czz = cy[2]
-    cam = Cam((.74, min(9.4, cyy + 3.3), czz + 1.95), (.55, cyy - 1.6, czz - .1), fov=54, roll=1.0 * math.sin(u0 * .6), size=SIZE)
-    img, near = render_house(cam)
+    cam = s04_cam(u)
+    img, near = render_house(cam, extra=[landing2(), kids_drawing()] + stairs4(),
+                             exclude=('landing', 'wall_b', 'ceiling') + tuple(f'step{i}' for i in range(NST)))
+    nosings(img, cam)
     stair_rims(img, cam, 1.0)
-    # the room beyond the stair mouth stays dark up here (its light belongs to the bottom of the frame)
-    mq = [(-.2, YMOUTH, 0), (SX + .2, YMOUTH, 0), (SX + .2, YMOUTH - 4, 0), (-.2, YMOUTH - 4, 0)]
-    if all(cam.depth(p_) > .2 for p_ in mq):
-        img = Image.composite(darken(img.copy(), .7), img, soft_mask_poly([cam.p(p_) for p_ in mq], S(10)))
-    lay = layer()
+    blinds_light(img, cam, .8, window=False)
+    # the flashlight: from round the corner (off frame), its cone sweeping across the display cabinet
+    sweep = math.sin(u0 * .8 + .4)
+    src = (2.55, .95, 1.3)
+    tgt = (lerp(CAB[0] + .2, CAB[1] - .1, .5 + .45 * sweep), .45, 1.0 + .35 * math.sin(u0 * 1.3))
+    on = sm(seg(u, 14.1, 14.6))
+    if cam.depth(src) > .3 and cam.depth(tgt) > .3:
+        sp = cam.p(src); dp = cam.p(tgt); r1 = cam.px_per_m(tgt) * .38
+        beam(img, sp, dp, cam.px_per_m(src) * .03, r1, TORCH, .85 * on, t)
+        TL.add_light(img, TL.ellipse_soft(SIZE, dp[0], dp[1], r1 * 1.7, r1 * 1.4, r1 * .7), TORCH, .5 * on, mix=.3 * on)
+    J3 = descent(u)
     J = {k_: cam.p(v) for k_, v in J3.items()}
-    k = cam.px_per_m(Pv)
-    st = me_style('neutral', 0, 0, back=True, far='L')
+    k = cam.px_per_m(J3['pelvis'])
+    lay = layer()
+    hd = J['head']; hR = B2.HEAD_R * k
     def lamp_(l_, J_, k_):
-        hx_, hy_ = J_['haR']; lamp2d(l_, hx_, hy_, 68 + 5 * math.sin(u0 * 1.3), k_ * .42 * PROP_K, swing=math.sin(u0 * 2.1)); fist(l_, hx_, hy_, k_ * .06, ang=68)
-    B2.figure(lay, J, k, st, order=['leg_far', 'leg_near', 'arm_far', 'body', lamp_, 'arm_near', 'head'])
-    chars_pass(img, lay, [((0, 1), SODIUM, .75), ((1, 0), SODIUM, .45), ((-1, -.3), (200, 220, 255), .35)])
-    img.alpha_composite(banister(cam, S(14)))
-    # the bottom of the frame: the foot of the stairwell + the living-room cabinet, the torch beam sweeping across it
-    pb, camb = s04_plate_b(); pb = pb.copy()
-    on = sm(seg(u0, .9, 1.5)); sweep = math.sin(u0 * .85 + .4)
-    if on > 0:
-        a_ = camb.p((CAB[0] + .1, .43, .4)); b_ = camb.p((CAB[1] - .1, .43, 1.75))
-        src = camb.p((CAB[1] + .9, 1.6, 1.25))
-        dst = (lerp(a_[0], b_[0], .5 + .42 * sweep), lerp(b_[1], a_[1], .45 + .12 * math.sin(u0 * 1.6)))
-        mw = abs(b_[0] - a_[0])
-        beam(pb, src, dst, mw * .02, mw * .16, TORCH, .9 * on, t)
-        TL.glow_at(pb, dst[0], dst[1], mw * .18, TORCH, k=.3 * on, core=.2, mix=.2)
-        pool = TL.ellipse_soft(SIZE, dst[0], dst[1], mw * .42, mw * .36, mw * .2)
-        TL.add_light(pb, pool, TORCH, .75 * on, mix=.35 * on)
-    ct = camb.p((sum(CAB) / 2, .42, 1.0))[1]
-    sh_ = int(H * .82 - ct)
-    pbs = Image.new('RGBA', SIZE, (0, 0, 0, 255)); pbs.paste(pb.crop((0, -min(0, sh_), W, H - max(0, sh_))), (0, max(0, sh_)))
-    yy = np.arange(H, dtype=np.float32)[:, None]
-    mk = np.clip((yy - H * .56) / (H * .11), 0, 1); mk = mk * mk * (3 - 2 * mk)
-    A = np.asarray(img, np.float32); Bp = np.asarray(pbs, np.float32)
-    out = A * (1 - mk[..., None]) + Bp * mk[..., None]
-    out[..., :3] *= (1 - .55 * np.sin(np.pi * mk))[..., None]
-    out[..., 3] = 255
-    img = Image.fromarray(out.astype(np.uint8), 'RGBA')
-    # the door crack at the start: the bedroom door leaf (right) slides open, the frame (left)
-    if u0 < 1.5:
-        k = eo(seg(u0, .25, 1.45))
-        xe = lerp(W * .44, W * 1.25, k)
-        dl = layer(); dd = ImageDraw.Draw(dl)
-        dd.rectangle((0, 0, W * .2 - W * .2 * k, H), fill=(6, 7, 16, 255))
-        if xe < W: dd.rectangle((xe, 0, W, H), fill=(14, 16, 30, 255))
-        dd.rectangle((xe + S(40), S(160), xe + S(330), S(860)), outline=(24, 27, 48, 255), width=max(2, int(S(10))))
-        dd.rectangle((xe + S(40), S(980), xe + S(330), S(1760)), outline=(24, 27, 48, 255), width=max(2, int(S(10))))
-        dd.ellipse((xe + S(50), S(1020) - S(26), xe + S(102), S(1020) + S(26)), fill=(60, 54, 40, 255))
-        dd.line([(xe, 0), (xe, H)], fill=(150, 120, 90, 255), width=max(2, int(S(7))))
-        dl.putalpha(ImageChops.multiply(dl.split()[3], Image.new('L', SIZE, int(255 * (1 - sm(seg(u0, 1.1, 1.5)))))))
-        img.alpha_composite(dl)
-        if u0 < .25: img = darken(img, .55 * (1 - u0 / .25))
-    img = finish(img, u, vig=.4)
+        hx_, hy_ = J_['haR']
+        ang = -84 + 5 * math.sin(u0 * 1.4)
+        lamp2d(l_, hx_, hy_, ang, k_ * .42 * PROP_K, swing=math.sin(u0 * 2.1)); fist(l_, hx_, hy_, k_ * .065, ang=ang)
+    def head_(l_, J_, k_):
+        d_ = ImageDraw.Draw(l_); n_ = J_['neck']
+        d_.line([n_, B2.lerpv(n_, J_['head'], .9)], fill=INKC, width=int(k_ * .11)); d_.line([n_, B2.lerpv(n_, J_['head'], .9)], fill=(236, 240, 252), width=int(k_ * .08))
+        back_head(l_, J_['head'][0], J_['head'][1], hR, turn=1, pitch=.55)
+    st = dict(top=(217, 191, 148), bottom=(210, 184, 142), skin=(236, 240, 252), stripes=True, far='L', back=True)
+    def wallhand(l_, J_, k_):
+        hx_, hy_ = J_['haL']; sh_ = layer(); ImageDraw.Draw(sh_).ellipse((hx_ - k_ * .1, hy_ - k_ * .05, hx_ + k_ * .03, hy_ + k_ * .08), fill=(0, 0, 8, 150))
+        img.alpha_composite(sh_.filter(ImageFilter.GaussianBlur(k_ * .02)))
+    wallhand(None, J, k)
+    st['hands'] = True
+    B2.figure(lay, J, k, st, order=['arm_far', 'leg_far', 'leg_near', 'body', head_, 'arm_near', lamp_])
+    img.alpha_composite(light_chars(lay, [((0, 1), SODIUM, .7), ((-1, .2), SODIUM, .4), ((1, -.4), (200, 220, 255), .35)], tint_col=(200, 194, 205)))
+    img = finish(img, u, vig=.42)
+    if u < 14.2: img = darken(img, .4 * (1 - seg(u, 14.05, 14.2)))
     dx, dy = shake(u, S(4), .7, 6)
     return camxf(img, 1.0, dx, dy)
 
 
 # ------------------------------------------------------------------ shot 5: back to the wall, the peek
+def sweat_post(drops):
+    """Sweat on the upright head sprite: 2-3 drops (teardrop + highlight) running down at their own pace."""
+    def f(im, cx, cy, R):
+        d = ImageDraw.Draw(im); o = max(1, int(R * .03))
+        for (ox, oy, rr, sp, ph) in drops:
+            k_ = (anim.NOW * sp + ph) % 1.0; y_ = cy + (oy + .55 * k_ ** 1.6) * R; x_ = cx + ox * R; r_ = rr * R
+            if k_ > .92: continue
+            d.polygon([(x_, y_ - r_ * 1.9), (x_ + r_, y_), (x_ - r_, y_)], fill=INKC); d.ellipse((x_ - r_ - o, y_ - r_ - o, x_ + r_ + o, y_ + r_ + o), fill=INKC)
+            d.polygon([(x_, y_ - r_ * 1.6), (x_ + r_ * .8, y_), (x_ - r_ * .8, y_)], fill=(190, 228, 255)); d.ellipse((x_ - r_, y_ - r_, x_ + r_, y_ + r_), fill=(190, 228, 255))
+            d.ellipse((x_ - r_ * .5, y_ - r_ * .7, x_ - r_ * .05, y_ - r_ * .2), fill=(255, 255, 255))
+    return f
+
+
 def s05(t, u):
+    """22-27: MCU at eye level in the stair foot, looking at the partition's stair face: ME's back flat against it right
+    by its end (screen right; the lit living room beyond the edge). Breath, eyes slide right first, then the peek in
+    stepped moves (inch out - freeze - flinch back - inch further): the trunk tilts from the hips against the wall,
+    the head leads past the edge and turns toward the room, the torch rim catches his face. The lamp clutched up
+    against his chest in his right hand, the left palm flat on the wall at the corner."""
     u0 = u - 22.0
-    cam = Cam((.12 + .03 * math.sin(u0), 4.55, 1.38), (1.15, 3.55, 1.2), fov=66, roll=-1.0, size=SIZE)
-    img, near = render_house(cam)
+    cam = Cam((-.85 + .02 * math.sin(u0 * .8), 4.52, 1.3), (SX, 3.84, 1.12), fov=50, roll=-1.2, size=SIZE)
+    img, near = render_house(cam, exclude=('wall_l', 'pics'))
     blinds_light(img, cam, .7)
-    # the rummaging torchlight flickering on the walls round the corner
     fl = .55 + .45 * abs(math.sin(u0 * 2.3) * math.sin(u0 * .9 + 1)) + .15 * math.sin(u0 * 17)
-    for j, (bx_, by_, r_) in enumerate(((S(860), S(700), S(230)), (S(980), S(1150), S(170)), (S(700), S(420), S(150)))):
-        ox = S(120) * math.sin(u0 * (1.1 + j * .37) + j * 2); oy = S(80) * math.sin(u0 * (.8 + j * .29) + j)
-        TL.glow_at(img, bx_ + ox, by_ + oy, r_, TORCH, k=(.45 - j * .1) * fl, core=.15, mix=.25)
-    # a real peek goes in small moves with held pauses (inch out, freeze, inch again), not one slow slide
-    peek = .42 * sm(seg(u0, 1.0, 1.7)) + .38 * sm(seg(u0, 2.4, 3.1)) + .2 * sm(seg(u0, 3.9, 4.6))
-    lay = layer()
-    sc = S(285) / stickman.R * (1 + .006 * math.sin(u0 * 2.5))
-    lean = -3 + 11 * peek + .6 * math.sin(u0 * 7) * peek
-    hx, hy = S(400) + S(10) * math.sin(u0 * 1.3), S(560)
-    X, Y = soles_for(300, HEAD_V, hx, hy, sc, -3)
-    pose = dict(armL=(28, 12), armR=(-20 - 15 * peek, -60 - 30 * peek), legL=(8, 1), legR=(-8, -1))
+    # the room beyond the corner: torchlight flickering on the walls / floor there
+    edge_top, edge_bot = cam.p((SX + .12, YMOUTH, 2.0)), cam.p((SX + .12, YMOUTH, 0))
+    for j, (dy_, r_) in enumerate(((.0, S(240)), (.35, S(170)))):
+        TL.glow_at(img, edge_top[0] + S(150) + S(60) * math.sin(u0 * (1.1 + j * .4)), lerp(edge_top[1], edge_bot[1], .3 + dy_), r_, TORCH, k=(.45 - j * .12) * fl, core=.15, mix=.25)
+    # timeline: eyes first, then the stepped peek
+    eyes = sm(seg(u0, .55, .8)) * .5 + sm(seg(u0, 1.25, 1.4)) * .5
+    p1 = eback(seg(u0, 1.4, 2.05), .8); back_ = sm(seg(u0, 2.75, 2.92)) * (1 - sm(seg(u0, 3.05, 3.4)))
+    p2 = sm(seg(u0, 3.3, 4.1)); pull = sm(seg(u0, 4.55, 4.75)) * .25
+    peek = clamp(.45 * p1 - .2 * back_ + .55 * p2 - pull * .4)
+    br = math.sin(u0 * 2 * math.pi / (1.6 if u0 < 1.4 else 1.1))         # breathing (faster once he commits)
+    # 3D skeleton: he faces -x, back on the wall (x = SX), his left (-y) toward the edge
+    Xw = SX - .13; Yp = YMOUTH + .42
+    pel = (Xw, Yp, .86)
+    tilt = math.radians(2 + 22 * peek)
+    neck = (Xw - .01 - .01 * br, Yp - math.sin(tilt) * B2.TORSO, .9 + math.cos(tilt) * B2.TORSO + .006 * br)
+    head = (neck[0] - .03 - .03 * peek, neck[1] - .17 * peek - .02, neck[2] + .09 - .02 * peek)
+    J3 = {'pelvis': pel, 'neck': neck, 'head': head}
+    for side, sy in (('L', -1), ('R', 1)):
+        hip = (Xw, Yp + sy * .075, .86)
+        an = (Xw - .1, Yp + sy * .13, .08); toe = (an[0] - .12, an[1] + sy * .03, .02)
+        kn, an = B2.ik3(hip, an, B2.THIGH, B2.SHIN, (-1, 0, 0))
+        J3.update({'hip' + side: hip, 'kn' + side: kn, 'an' + side: an, 'toe' + side: toe})
+    ca, sa = math.cos(tilt), math.sin(tilt)
+    shL = (neck[0] + .02, neck[1] - .11 * ca, neck[2] - .11 * sa - .08); shR = (neck[0] + .02, neck[1] + .11 * ca, neck[2] + .11 * sa - .08)
+    haL = (SX - .03, YMOUTH + .07, 1.28 + .05 * peek)                          # palm flat on the wall at the corner
+    elL, haL = B2.ik3(shL, haL, B2.ARM, B2.ARM, (.3, -.5, -1))
+    haR = (Xw - .1, Yp + .27, .74 + .01 * br)                                   # the lamp gripped low at his side
+    elR, haR = B2.ik3(shR, haR, B2.ARM, B2.ARM, (.3, .6, -.3))
+    J3.update(shL=shL, elL=elL, haL=haL, shR=shR, elR=elR, haR=haR)
+    J = {k_: cam.p(v) for k_, v in J3.items()}
+    k = cam.px_per_m(pel)
     expr = 'worried' if peek < .5 else 'scared'
-    g = me(lay, X, Y, sc, u, expr, pose, look=-.1 + .95 * peek, lean=lean, lamp=72, lamp_hand='L', idle=1.0, swing=math.sin(u0 * 1.7), m=sc * 930 / 1.75 * .8)
-    hx, hy = g['head']; R = g['R']; dd = ImageDraw.Draw(lay)
-    for j, (ox, oy, rr) in enumerate(((-.5, -.6, .075), (-.18, -.72, .065), (.28, -.66, .06), (.55, -.4, .055), (-.62, -.2, .06))):
-        drip = ((u0 * (.18 + j * .05) + j * .27) % 1.0)
-        sy = oy + .55 * drip ** 2
-        a = math.radians(lean); px_ = hx + (ox * math.cos(a) - sy * math.sin(a)) * R; py_ = hy + (ox * math.sin(a) + sy * math.cos(a)) * R
-        dd.ellipse((px_ - rr * R, py_ - rr * R * 1.35, px_ + rr * R, py_ + rr * R), fill=(185, 228, 255, 255), outline=INKC + (255,), width=max(1, int(S(3))))
-        dd.ellipse((px_ - rr * R * .35, py_ - rr * R * .7, px_ + rr * R * .05, py_ - rr * R * .2), fill=(255, 255, 255, 255))
-    rims = [((1, -.1), TORCH, .3 + .8 * peek * fl), ((1, .4), SODIUM, .25)]
-    chars_pass(img, lay, rims)
-    if peek > .15:
-        TL.add_light(img, TL.ellipse_soft(SIZE, hx + R * .7, hy, R * .8, R * 1.0, R * .45), TORCH, .4 * peek * fl, mix=.1)
+    look = .25 * eyes + .75 * peek
+    rot = -(4 + 14 * peek) + .8 * math.sin(u0 * 9) * peek
+    drops = ((-.48, -.62, .07, .21, .1), (.3, -.7, .06, .16, .55), (.6, -.35, .055, .26, .8))
+    st = me_style(expr, look, rot, far='L', post=sweat_post(drops))
+    def lamp_(l_, J_, k_):
+        hx_, hy_ = J_['haR']; ang_ = 96 + 4 * math.sin(u0 * 1.7)
+        lamp2d(l_, hx_, hy_, ang_, k_ * .42 * PROP_K, swing=math.sin(u0 * 1.7)); fist(l_, hx_, hy_, k_ * .065, ang=ang_)
+    def palm(l_, J_, k_):
+        hx_, hy_ = J_['haL']; hand2d(l_, hx_, hy_, -95, k_ * .05, 'open', spread=1.1)
+    lay = layer()
+    # his contact shadow on the wall (the back is ON the wall)
+    shw = layer(); sd = ImageDraw.Draw(shw)
+    pts = [J['neck'], J['shL'], J['pelvis'], J['shR']]
+    cxs = sum(p_[0] for p_ in pts) / 4; cys = sum(p_[1] for p_ in pts) / 4
+    sd.ellipse((cxs - k * .24, cys - k * .42, cxs + k * .24, cys + k * .42), fill=(0, 0, 10, 140))
+    img.alpha_composite(shw.filter(ImageFilter.GaussianBlur(k * .05)))
+    B2.figure(lay, J, k, st, order=['leg_far', 'leg_near', 'arm_far', palm, 'body', lamp_, 'arm_near', 'head'])
+    rims = [((1, -.1), TORCH, .25 + .9 * peek * fl), ((1, .4), SODIUM, .25)]
+    chars_pass(img, lay, rims, tint_col=(190, 186, 205))
+    hx, hy = J['head']; R = B2.HEAD_R * k
+    if peek > .2:
+        TL.add_light(img, TL.ellipse_soft(SIZE, hx + R * .6, hy, R * .8, R * 1.0, R * .45), TORCH, .38 * peek * fl, mix=.1)
     img = finish(img, u, vig=.45)
     dx, dy = shake(u, S(4), .6, 8)
-    return camxf(img, 1.0 + .14 * sm(u0 / 5), dx, dy, fx=S(520), fy=S(640))
+    return camxf(img, 1.0 + .1 * sm(u0 / 5), dx, dy, fx=S(560), fy=S(560))
 
 
 # ------------------------------------------------------------------ shot 6: POV, THIEF 1 at the sideboard
@@ -2084,7 +2516,8 @@ def s06(t, u):
         x, y, sc, ppm = xy
         pose = dict(armL=(-20 + 8 * stuff, -70 + 10 * stuff, .9), armR=(-52 - 10 * stuff - 8 * push, -95 + 25 * push - 25 * zip_, .9),
                     legL=(6, 1), legR=(-6, -1))
-        g = thief1(lay, x, y, sc, u, 'angry', pose, look=.0, back=True, bar=None, idle=.6)
+        jerk = math.exp(-((u0 - 3.0) / .06) ** 2)                     # the decisive zip (30.0) jerks his shoulders
+        g = thief1(lay, x - ppm * .02 * jerk, y - ppm * .015 * jerk, sc, u, 'angry', pose, look=.0, lean=2.5 * jerk, back=True, bar=None, idle=.6)
         hx, hy = g['head']; R = g['R']
         # the crowbar hanging on his left hip (screen left), steel edge catching the street light
         crowbar2d(lay, hx - R * .75, hy + R * 2.7, 100, ppm * 1.1)
@@ -2112,9 +2545,9 @@ def s06(t, u):
         lens_px = (hx + R * .85, hy + R * .85)
     chars_pass(img, lay, [((1, -.15), TORCH, 1.1), ((1, .5), TORCH, .6), ((-1, 0), SODIUM, .8), ((0, -1), SODIUM, 1.1), ((-.6, -1), SODIUM, .7)])
     if lens_px:
-        beam(img, lens_px, (bx, by - R * .9), S(10), R * .9, TORCH, .75, t, motes=True)
-        TL.add_light(img, TL.ellipse_soft(SIZE, bx, by - R * .3, R * 1.0, R * 1.0, R * .5), TORCH, .45, mix=.15)
-        TL.glow_at(img, lens_px[0], lens_px[1], R * .7, TORCH, k=.35, core=.2)
+        beam(img, lens_px, (bx, by - R * .9), S(10), R * .9, TORCH, .45, t, motes=True, spot=False)
+        TL.add_light(img, TL.ellipse_soft(SIZE, bx, by - R * .3, R * 1.0, R * 1.0, R * .5), TORCH, .22, mix=.1)
+        TL.glow_at(img, lens_px[0], lens_px[1], R * .45, TORCH, k=.2, core=.2)
         if zip_ < .3:
             gx, gy = (bx + R * .1, by - R * 1.0 - R * 1.25 * (1 - push) + R * .55 * push - R * .6)
             glint(img, gx, gy, S(22), k=.8 + .2 * math.sin(u0 * 9), ang=20)
@@ -2122,6 +2555,13 @@ def s06(t, u):
         glint(img, hx - R * .7 + ppm * .05, hy + R * 3.2, S(12), col=(255, 210, 160), k=.6 + .3 * math.sin(u0 * 3))
     nl = near_layer(cam, near, 12)
     if nl: img.alpha_composite(nl)
+    # POV: the wall edge ME hides behind (left) and his own shoulder in the blurred foreground (bottom left)
+    fg = layer(); fd = ImageDraw.Draw(fg)
+    fd.polygon([(0, 0), (S(150) + S(8) * math.sin(u0 * .7), 0), (S(170) + S(8) * math.sin(u0 * .7), H), (0, H)], fill=(18, 24, 56, 255))
+    fd.ellipse((S(-260), S(1540), S(520), S(2300)), fill=INKC); fd.ellipse((S(-245), S(1555), S(505), S(2285)), fill=(217, 191, 148))
+    for j in range(4): fd.line([(S(-120 + j * 140), S(1600)), (S(-140 + j * 140), S(2200))], fill=(236, 214, 176), width=int(S(12)))
+    fg = light_chars(fg, [((1, -.3), SODIUM, .6)], tint_col=(170, 166, 190))
+    img.alpha_composite(cine.defocus(fg, S(14)))
     img = finish(img, u, vig=.45)
     dx, dy = shake(u, S(6), .5, 10)
     jx, jy = jolt(u, 30.0, S(4))
@@ -2189,7 +2629,7 @@ def pile_poses(u0, X, Y, k):
         rot1 = th
         # ME: the shoulder drive (lean 35) then the dive after him (lean 70), feet leaving the floor
         ml = 35 * eo(seg(u0, 0, .1)) + 35 * sm(seg(u0, .12, .3))
-        mf = (F[0] + .9 * k - .65 * k * sm(seg(u0, 0, .3)), floor - .25 * k * sm(seg(u0, .15, .3)))
+        mf = (F[0] + .62 * k - .37 * k * sm(seg(u0, 0, .3)), floor - .25 * k * sm(seg(u0, .15, .3)))
         mp = (mf[0] - .78 * k * math.sin(math.radians(ml)), mf[1] - .78 * k * math.cos(math.radians(ml)))
         ma = 90 - ml
         J2 = stand_J(mp[0], mp[1], k, ml, legs={'L': (ma - 25, ma + 20, 180 - ml), 'R': (ma + 30, ma + 5, 180 - ml)},
@@ -2201,7 +2641,7 @@ def pile_poses(u0, X, Y, k):
                  kick=st * max(0, math.sin(u0 * 7.3)) + .25 * (1 - seg(u0, .3, .5)), kick2=st * max(0, math.sin(u0 * 6.1 + 2)),
                  flail=st * (.5 + .5 * math.sin(u0 * 5.3)), flail2=st * (.5 + .5 * math.sin(u0 * 4.1 + 1)), lift=st * (.5 + .5 * math.sin(u0 * 4.3)))
     rot1 = 90 + 6 * st * math.sin(u0 * 4.3)
-    rock = st * math.sin(u0 * 6.1 + 1)
+    rock = st * math.sin(u0 * 6.1 + 1) * (1 + 1.2 * math.exp(-((u0 - 6.55) / .35) ** 2))
     col = J1['neck']; hands = (B2.add(col, (-.02 * k, .0)), B2.add(col, (.09 * k, .03 * k)))
     kn = kneel_J(TP[0] + .2 * k + .03 * k * rock, floor - .45 * k + .02 * k * abs(rock), k, ba=-138 + 7 * rock, hands=hands)
     # the dive's end pose (at .3) -> the kneel, landing with a small overshoot (the knees hit, the body settles)
@@ -2218,8 +2658,76 @@ def pile_poses(u0, X, Y, k):
     return J1, J2, rot1, 'angry' if u0 > .5 else 'surprised', 22 + 5 * rock, (TP[0] - .2 * k, floor)
 
 
+def s11_reach(t, u0, u):
+    """49.3-51.5, floor level: THIEF 1's masked head pressed to the tiles (left), his free arm stretching across the
+    floor toward the dropped crowbar just out of reach (right), fingers clawing, slapping the tiles (the strain at
+    49.6), ME's fists on his collar with the sleeves running up into ME's out-of-focus body at the top."""
+    img = floor_bg('thief')[0].copy()
+    hl = layer(); hd = ImageDraw.Draw(hl)
+    R = S(170); hx, hy = S(300) + S(10) * math.sin(u0 * 5), S(1240) + S(8) * math.sin(u0 * 7.3)
+    # the crowbar on the tiles, glinting (it stays put: his reach is what moves)
+    bx, by = S(830), S(1475)
+    crowbar2d(hl, bx, by, -4, S(520), col=(120, 126, 142))
+    # his body behind the head (dark jacket, going away up-right)
+    hd.ellipse((S(380), S(640), S(1180), S(1200)), fill=INKC); hd.ellipse((S(390), S(650), S(1170), S(1190)), fill=shade(THIEF1_C, .75))
+    # the reaching arm: shoulder by the head, elbow, hand clawing toward the bar; slaps at 49.6 and 50.55
+    r = .5 + .5 * math.sin(u0 * 2.1); slap = math.exp(-((u0 - 2.6) / .06) ** 2) + math.exp(-((u0 - 3.55) / .06) ** 2)
+    sh_p = (S(470), S(1200)); hand = (lerp(S(640), S(720), r), S(1450) - S(70) * (1 - slap) * abs(math.sin(u0 * 4.2)))
+    el, hand = B2.ik2(sh_p, hand, S(170), S(170), 1)
+    for p0, p1 in ((sh_p, el), (el, hand)):
+        hd.line([p0, p1], fill=INKC, width=int(S(78))); hd.line([p0, p1], fill=THIEF1_C, width=int(S(62)))
+    hand2d(hl, hand[0], hand[1], -8 + 10 * math.sin(u0 * 6), S(38), 'open' if r > .5 else 'grip', col=(46, 50, 64), spread=1.2)
+    put_head(hl, hx, hy, R, rot=30 + 3 * math.sin(u0 * 4.4), who='thief', expr='angry', look=.6)
+    # ME above: his blurred torso across the top, both sleeves running down to the fists on the collar
+    me_l = layer(); md = ImageDraw.Draw(me_l)
+    md.rounded_rectangle((S(60), S(-500), S(1020), S(470)), S(260), fill=INKC); md.rounded_rectangle((S(75), S(-485), S(1005), S(455)), S(250), fill=(217, 191, 148))
+    for j in range(5): md.line([(S(200 + j * 160), S(-300)), (S(190 + j * 165), S(440))], fill=(236, 214, 176), width=int(S(10)))
+    rock = S(14) * math.sin(u0 * 6.3)
+    for j, (a_, b_) in enumerate((((S(330), S(380)), (S(420) + rock, S(980))), ((S(760), S(400)), (S(600) + rock, S(1010))))):
+        sleeve(hl, a_, b_, S(105), (217, 191, 148)); fist(hl, b_[0], b_[1], S(52), ang=100)
+    hl = light_chars(hl, [((1, -.4), SODIUM, .9), ((-1, 0), (170, 190, 255), .3)])
+    img.alpha_composite(hl)
+    img.alpha_composite(light_chars(cine.defocus(me_l, S(9)), [((0, 1), SODIUM, .5)]))
+    glint(img, bx + S(150), by - S(8), S(16), k=.7 + .3 * math.sin(u0 * 5))
+    if slap > .3: dust(img, hand[0], hand[1] + S(30), S(80), clamp((u0 - 2.6) % .95 / .5), .6, 9)
+    img = finish(img, u, vig=.5)
+    dx, dy = shake(u, S(9), 1.5, 21)
+    return camxf(img, 1.03, dx, dy)
+
+
+def s11_face(t, u0, u):
+    """51.5-53.2, low CU: ME straining over him, face from below (gritted teeth, sweat), both arms running from his
+    shoulders down out of frame to the collar; THIEF 1 bucks under him (53.0) and he rocks, nearly thrown."""
+    img = cine.defocus(floor_bg('slide')[0], S(6)); img = darken(img.copy(), .35)
+    lay = layer(); k = S(1250)
+    buck = math.sin(u0 * 7.1) * .6 + .4 * math.sin(u0 * 3.3)
+    nx, ny = W * .5 + S(40) * buck, H * .56 + S(14) * abs(buck)
+    J = {'neck': (nx, ny), 'pelvis': (nx + S(30) * buck, ny + .6 * k)}
+    J['head'] = (nx - S(20) * buck, ny - .2 * k)
+    J['shL'], J['shR'] = (nx + .29 * k, ny + .12 * k), (nx - .29 * k, ny + .12 * k)
+    for s_, sx in (('L', 1), ('R', -1)):
+        J['el' + s_], J['ha' + s_] = B2.ik2(J['sh' + s_], (nx + sx * .2 * k, H + S(260)), .3 * k, .3 * k, -sx)
+    o = max(2, k * .008); pj, ps = (217, 191, 148), (236, 214, 176)
+    d = ImageDraw.Draw(lay)
+    B2.torso(d, J['neck'], J['pelvis'], .28 * k, pj, o, ps)
+    for s_ in 'LR': B2.limb(d, J['sh' + s_], J['el' + s_], J['ha' + s_], .13 * k, pj, o, ps)
+    drops = ((-.5, -.55, .07, .3, .1), (.42, -.6, .06, .24, .5), (.62, -.2, .05, .34, .8))
+    put_head(lay, J['head'][0], J['head'][1], .27 * k, rot=-6 * buck, who='me', expr='angry', look=-.2, post=sweat_post(drops))
+    img.alpha_composite(light_chars(lay, [((1, -.3), SODIUM, .8), ((-1, -.2), (170, 190, 255), .4)]))
+    # THIEF 1's hood in the blurred foreground (bottom), heaving
+    fg = layer(); fd = ImageDraw.Draw(fg); cy = H * 1.02 - S(40) * max(0, buck)
+    fd.ellipse((W * .1, cy - S(260), W * .9, cy + S(260)), fill=(10, 10, 16, 255))
+    img.alpha_composite(cine.defocus(fg, S(14)))
+    img = finish(img, u, vig=.55)
+    dx, dy = shake(u, S(10), 1.8, 23)
+    jx, jy = jolt(u - 47.0, 6.0, S(16), .3)
+    return camxf(img, 1.0, dx + jx, dy + jy)
+
+
 def s11(t, u):
     u0 = u - 47.0
+    if 2.3 <= u0 < 4.5: return s11_reach(t, u0, u)
+    if 4.5 <= u0 < 6.2: return s11_face(t, u0, u)
     cam = pile_cam(u0)
     img, near = render_house(cam)
     blinds_light(img, cam, 1.0)
@@ -2271,8 +2779,9 @@ def s12(t, u):
     blinds_light(img, cam, .9, door_gap=opn < .05)
     if u0 > 4.95: door_glass(img, cam, sm(seg(u0, 4.95, 5.4)))     # the glass only reads once the door is shut again
     # the spill through the open door: a long warm wedge on the tiles toward us + a haze in the doorway
-    step = sm(seg(u0, 4.35, 4.9))
-    P2 = (3.95, lerp(-.25, .5, step), 0)
+    s1 = sm(seg(u0, 3.95, 4.3)); s2 = sm(seg(u0, 4.3, 4.65)); step = .5 * s1 + .5 * s2      # two strides in (the 2nd lands on 59.5)
+    bob = .025 * (math.sin(math.pi * seg(u0, 3.95, 4.3)) + math.sin(math.pi * seg(u0, 4.3, 4.65)))
+    P2 = (3.95, lerp(-.3, .42, step), bob)
     x2 = at3d(cam, P2, 2.05)
     if opn > .02:
         d0, d1 = DOOR; L = 3.4 * opn
@@ -2291,17 +2800,15 @@ def s12(t, u):
     if x2 and (opn > .01 or u0 > 4):
         x, y, sc, ppm = x2
         l2 = layer()
-        walkph = math.pi * step * 2 if 0 < step < 1 else 0.0
+        walkph = 2 * math.pi * step if 0 < step < 1 else 0.0
         hx_, hy_, wa = thief2_sil(l2, x, y, ppm, u, walk=walkph)
         l2 = sil_finish(l2, .45 + .7 * opn)
-        jaw = wrench2d(l2, hx_, hy_, wa, ppm)
+        jaw = wrench2d(l2, hx_, hy_, wa, ppm * 1.3)
         fist(l2, hx_, hy_, ppm * .085, col=SIL, ang=wa)
         if opn < .05 and u0 > 5: l2 = darken(l2, .2)
-        rel = max(sm(seg(opn, .7, .98)) if u0 < 3 else 1.0, sm(seg(step, 0, .35)))
-        if rel < 1:                                # still outside: only the open gap of the doorway shows him
+        if P2[1] < .05:                            # still outside: only the open gap of the doorway shows him (no crossfade)
             d0, d1 = DOOR; xf = d1 - (d1 - d0) * math.cos(math.radians(ang))
-            gap = soft_mask_poly([cam.p((d0, 0, 0)), cam.p((xf, 0, 0)), cam.p((xf, 0, 2.15)), cam.p((d0, 0, 2.15))], 0)
-            gap = Image.blend(gap, Image.new('L', SIZE, 255), rel)
+            gap = soft_mask_poly([cam.p((d0, 0, -.5)), cam.p((xf, 0, -.5)), cam.p((xf, 0, 2.15)), cam.p((d0, 0, 2.15))], 0)
             l2.putalpha(ImageChops.multiply(l2.split()[3], gap))
         img.alpha_composite(l2)
         if l2.getpixel((int(clamp(jaw[0], 0, W - 1)), int(clamp(jaw[1], 0, H - 1))))[3] > 0 or step >= .5:
@@ -2309,9 +2816,14 @@ def s12(t, u):
     # the pile in the foreground (from behind ME): his back and messy hair bottom left, THIEF 1's legs bottom right
     lay = layer()
     turn = sm(seg(u0, .6, 1.5))
-    sc = S(150) / stickman.R
-    mx, my = soles_for(300, HEAD_V, S(220) + S(30) * turn, S(1580) - S(70) * turn + S(6) * math.sin(u0 * 5), sc, -12 + 10 * turn)
-    me(lay, mx, my, sc, u, 'scared', dict(armL=(40, 60), armR=(-30, -50), legL=(8, 1), legR=(-8, -1)), back=True, lean=-12 + 10 * turn, idle=.8)
+    k_ = S(640); nx_, ny_ = S(110) + S(25) * turn, S(1720) - S(30) * turn + S(5) * math.sin(u0 * 5)
+    J_ = {'neck': (nx_, ny_), 'pelvis': (nx_ - S(40), ny_ + .6 * k_), 'head': (nx_ + S(8) * turn, ny_ - .17 * k_)}
+    J_['shL'], J_['shR'] = (nx_ - .2 * k_, ny_ + .1 * k_), (nx_ + .2 * k_, ny_ + .1 * k_)
+    for s_, sx in (('L', -1), ('R', 1)): J_['el' + s_], J_['ha' + s_] = B2.ik2(J_['sh' + s_], (nx_ + sx * .3 * k_, H + S(60)), .3 * k_, .3 * k_, sx)
+    dme = ImageDraw.Draw(lay); o_ = max(2, k_ * .009)
+    for s_ in 'LR': B2.limb(dme, J_['sh' + s_], J_['el' + s_], J_['ha' + s_], .12 * k_, (217, 191, 148), o_, (236, 214, 176))
+    B2.torso(dme, J_['neck'], J_['pelvis'], .27 * k_, (217, 191, 148), o_, (236, 214, 176), back=True)
+    back_head(lay, J_['head'][0], J_['head'][1], .24 * k_, turn=1 if turn > .5 else 0.0, pitch=-.2)
     dd = ImageDraw.Draw(lay)
     kick = math.sin(u0 * 8) * (1 - sm(seg(u0, .8, 1.8)))
     for j, (bx_, ang_) in enumerate(((S(760), 8), (S(900), -6))):
@@ -2322,7 +2834,10 @@ def s12(t, u):
     chars_pass(img, lay, [((0, -1), SODIUM, .9 * opn + .2), ((1, -.4), SODIUM, .5 * opn + .1)])
     img = finish(img, u, vig=.42)
     if u0 > 5.0: img = darken(img, .25 * sm(seg(u0, 5.0, 5.2)))
-    jx, jy = jolt(u0, 5.0, S(16), .45)
+    if u0 >= 5.0:                                  # the slam knocks dust off the door frame
+        for xx_ in (DOOR[0] - .05, DOOR[1] + .05):
+            dp = cam.p((xx_, .02, 2.2)); dust(img, dp[0], dp[1], S(110), seg(u0, 5.0, 5.9), .8, 11)
+    jx, jy = jolt(u0, 5.0, S(30), .5)
     return camxf(img, 1.0 + .05 * sm(u0 / 7), jx, jy, fy=H * .45)
 
 
@@ -2371,10 +2886,17 @@ def s13(t, u):
         hd.line([(S(700), S(1000)), (S(1300), S(900))], fill=shade(THIEF1_C, .5), width=int(S(8)))
         sh_ = layer(); ImageDraw.Draw(sh_).ellipse((hx - R * 1.3, hy + R * .85, hx + R * 1.9, hy + R * 1.45), fill=(0, 0, 8, 150))
         img.alpha_composite(sh_.filter(ImageFilter.GaussianBlur(S(18))))
-        # ME's forearms + fists gripping the collar (from the top right), they fly off after the elbow
+        # ME's body above (out of focus, top right): the sleeves run into it; on the elbow it folds and is thrown off
         flyoff = ei(seg(u0, elbow + .02, elbow + .4))
+        fold = eo(seg(u0, elbow, elbow + .08)) * (1 - sm(seg(u0, elbow + .2, elbow + .5)))
+        tl = layer(); td = ImageDraw.Draw(tl)
+        ox, oy = S(420) * flyoff + S(60) * fold, -S(560) * flyoff - S(40) * fold
+        td.rounded_rectangle((S(760) + ox, S(-560) + oy, S(1500) + ox, S(330) + oy - S(80) * fold), S(260), fill=INKC)
+        td.rounded_rectangle((S(775) + ox, S(-545) + oy, S(1485) + ox, S(315) + oy - S(80) * fold), S(250), fill=(217, 191, 148))
+        for j in range(4): td.line([(S(860 + j * 150) + ox, S(-300) + oy), (S(840 + j * 150) + ox, S(300) + oy - S(80) * fold)], fill=(236, 214, 176), width=int(S(10)))
+        hl.alpha_composite(cine.defocus(tl, S(8)))
         for j, (a_, b_) in enumerate((((S(1250), S(120)), (S(720), S(820))), ((S(1300), S(420)), (S(800), S(1000))))):
-            a_ = (a_[0] + S(400) * flyoff, a_[1] - S(500) * flyoff); b_ = (b_[0] + S(450) * flyoff, b_[1] - S(650) * flyoff - S(10) * math.sin(u0 * 11 + j))
+            a_ = (a_[0] + S(400) * flyoff + S(60) * fold, a_[1] - S(500) * flyoff - S(40) * fold); b_ = (b_[0] + S(450) * flyoff, b_[1] - S(650) * flyoff - S(10) * math.sin(u0 * 11 + j))
             mid = lerp2(a_, b_, .55)
             sleeve(hl, a_, mid, S(120), (217, 191, 148))
             hd = ImageDraw.Draw(hl)
@@ -2399,7 +2921,7 @@ def s13(t, u):
         put_head(hl, hx, hy, R, rot=34 + 2 * math.sin(u0 * 2.6), who='thief', expr='neutral', look=lk, post=lids)
         # the elbow: his dark sleeve swings up from the bottom into ME's ribs (off frame, top right)
         if u0 > elbow - .3:
-            e = sm(seg(u0, elbow - .3, elbow)) - .3 * sm(seg(u0, elbow + .15, 1.5))
+            e = ei(seg(u0, elbow - .22, elbow)) - .3 * sm(seg(u0, elbow + .12, 1.5))      # fast in, held 3 frames on the ribs
             p0 = (S(900), S(1500)); p1 = (lerp(S(700), S(1080), e), lerp(S(1700), S(560), e))
             hd = ImageDraw.Draw(hl)
             hd.line([p0, p1], fill=INKC, width=int(S(170))); hd.line([p0, p1], fill=THIEF1_C, width=int(S(150)))
@@ -2436,22 +2958,31 @@ def s14(t, u):
     x2 = at3d(cam, P2, 2.05)
     if x2:
         x, y, sc, ppm = x2
+        # weight on each CLOMP: the body drops onto the heel (~3 cm) and rises, the shoulders rock toward the new
+        # stance foot, the wrench swings a little late; a glint on every step
+        hit = sum(math.exp(-((u - s_) / .09) ** 2) for s_ in STEPS)
+        after = sum(math.sin(math.pi * seg(u, s_, s_ + .45)) for s_ in STEPS)
+        side_ = 1 if n % 2 else -1
         l2 = layer()
-        hx_, hy_, wa = thief2_sil(l2, x, y, ppm, u, walk=math.pi * prog)
-        l2 = sil_finish(l2, 1.0)
-        jaw = wrench2d(l2, hx_, hy_, wa + 4 * math.sin(u0 * 1.7), ppm)
+        hx_, hy_, wa = thief2_sil(l2, x, y + ppm * (.035 * hit - .015 * after), ppm, u, walk=math.pi * prog)
+        jaw = wrench2d(l2, hx_, hy_, wa + 6 * math.sin(math.pi * prog + .8), ppm * 1.35)
         fist(l2, hx_, hy_, ppm * .085, col=SIL, ang=wa)
+        l2 = sil_finish(l2, 1.0)
+        l2 = l2.rotate(side_ * 2.2 * min(1.0, after + hit), resample=Image.BICUBIC, center=(x, y))
         img.alpha_composite(l2)
-        glint(img, jaw[0], jaw[1], S(16) + ppm * .06, k=.6 + .4 * abs(math.sin(u0 * 2.2)))
+        glint(img, jaw[0], jaw[1], S(16) + ppm * .06, k=.45 + .55 * min(1.0, hit * 1.5) + .2 * abs(math.sin(u0 * 2.2)))
         glint(img, lerp(hx_, jaw[0], .45), lerp(hy_, jaw[1], .45), S(9) + ppm * .03, k=.4 + .4 * abs(math.sin(u0 * 3.1 + 1)))
     lay = layer()
-    pu = sm(seg(u0, .1, 1.2)) - .5 * sm(seg(u0, 1.6, 2.4))
+    # he tries to push up; the hand slips on the tiles (70.85), he tries again, slips again (72.95)
+    pu = sm(seg(u0, .1, 1.2)) - .8 * ei(seg(u0, 2.75, 2.9)) + .6 * sm(seg(u0, 3.3, 4.3)) - .55 * ei(seg(u0, 4.85, 5.0))
     tr = sm(seg(u0, 2.0, 3.0)) * math.sin(u * 31) * S(3)
     k = S(820)
     J = elbow_J(S(150) + S(10) * math.sin(u0 * .8) + tr, S(1860), k, rise=.55 + .45 * pu, look_back=1.0, arm2=pu)
     lk = -.85 + .1 * math.sin(u0 * .7)
     B2.figure(lay, J, k, me_style('scared' if u0 < 3 else 'surprised', lk, 22 + 10 * sm(seg(u0, 2, 5)), far='R'))
     chars_pass(img, lay, [((.4, -1), SODIUM, .8), ((1, 0), SODIUM, .5)])
+    for ts_ in (2.75, 4.85):
+        if ts_ <= u0 < ts_ + .6: hp = J['haR']; dust(img, hp[0] + S(30), hp[1] + S(20), S(70), seg(u0, ts_, ts_ + .6), .6, 13)
     img = finish(img, u, vig=.45)
     jx = jy = 0.0
     for s_ in STEPS:
@@ -2464,53 +2995,74 @@ def s15(t, u):
     u0 = u - 74.0
     if u >= 76.0: return new((0, 0, 0))
     if u < 75.3:
-        img = floor_bg('slide')[0].copy()
-        img = darken(img, .35)
-        lay = layer()
-        mult = S(300) / stickman.R
-        c = big_card('scared', 'stand', 0.0, mult, **ME)
-        up = sm(seg(u0, .0, .5))
-        flinch = eo(seg(u0, .7, .82)) * (1 - .4 * sm(seg(u0, .82, 1.1)))   # the startle: head pulls back + down first
-        paste_card(lay, c, S(540), S(930) - S(40) * up + S(50) * flinch, (1.0 + .03 * sm(u0 / 1.3)) * (1 - .05 * flinch), -6 + 4 * up)
-        # both forearms come up and cross in front of his face (74.75-75.05): hands lead, elbows follow, a small
-        # overshoot, then the tremble
-        a = eback(seg(u0, .74, .98), 1.3); ae = eback(seg(u0, .78, 1.04), 1.0); tr = S(6) * math.sin(u0 * 37) * min(1, a)
-        for side_ in (-1, 1):
-            el = (S(540 + side_ * 470), lerp(S(2250), S(1500), ae))
-            hd = (S(540 - side_ * lerp(-330, 300, a)) + tr, lerp(S(2200), S(800), a))
-            mid = lerp2(el, hd, .5)
-            sleeve(lay, el, mid, S(170), (217, 191, 148))
-            dd = ImageDraw.Draw(lay)
-            dd.line([mid, hd], fill=INKC, width=int(S(140))); dd.line([mid, hd], fill=(236, 240, 252), width=int(S(122)))
-            sleeve(lay, el, mid, S(170), (217, 191, 148))
-            ang = math.degrees(math.atan2(hd[1] - el[1], hd[0] - el[0]))
-            hand2d(lay, hd[0], hd[1], ang, S(86), 'open', spread=1.0)
-        lay = light_chars(lay, [((1, -1), SODIUM, .9)])
-        img.alpha_composite(lay)
+        # same set + camera as shot 14 (ME on the floor on his elbow, THIEF 2's legs right in front), pushing in to a CU
+        cam = Cam((2.2, 4.45, .32), (3.3, .5, 1.15), fov=62, roll=-1.5 + .8 * math.sin(6.0 * .5), size=SIZE)
+        img, near = render_house(cam)
+        blinds_light(img, cam, 1.0); door_glass(img, cam, 1.0)
+        x2 = at3d(cam, (2.45, 3.05, 0), 2.05)
+        if x2:
+            x, y, sc, ppm = x2; l2 = layer()
+            thief2_sil(l2, x, y + ppm * .035 * math.exp(-((u - 74.7) / .09) ** 2), ppm, u, walk=0.0)
+            img.alpha_composite(sil_finish(l2, 1.0))
+        lay = layer(); k = S(820)
+        st_ = eo(seg(u0, .7, .8))                                 # the startle on CLOMP 6 (74.7)
+        a1 = eback(seg(u0, .74, .95), 1.3)                         # the free arm first (hand leads)
+        a2 = eback(seg(u0, .86, 1.1), 1.0)                         # then the propping arm leaves the floor
+        J = elbow_J(S(150) + S(10) * math.sin(u0 * .8), S(1860), k, rise=1.0 - .35 * a2, look_back=1.0 - .4 * st_, arm2=0)
+        hdx, hdy = J['head']
+        J['head'] = (hdx - S(22) * st_, hdy + S(38) * st_)        # turtles: head pulls down + back into the shoulders
+        tr = S(5) * math.sin(u0 * 37) * min(1, a1)
+        tgtR = (hdx + S(30) + tr, hdy - S(250))                    # forearm across the brow (the eyes still show below)
+        def far_ik(sh_, tg_):                                     # the elbow goes OUT, away from the face
+            c1 = B2.ik2(sh_, tg_, B2.ARM * k, B2.ARM * k, 1); c2 = B2.ik2(sh_, tg_, B2.ARM * k, B2.ARM * k, -1)
+            return c1 if math.hypot(c1[0][0] - hdx, c1[0][1] - hdy) > math.hypot(c2[0][0] - hdx, c2[0][1] - hdy) else c2
+        J['elR'], J['haR'] = far_ik(J['shR'], B2.lerpv(J['haR'], tgtR, a1))
+        tgtL = (hdx - S(250) - tr, hdy - S(90))
+        J['elL'], J['haL'] = far_ik(J['shL'], B2.lerpv(J['haL'], tgtL, a2))
+        lk = -.85 + .3 * st_
+        B2.figure(lay, J, k, me_style('scared', lk, 22 - 14 * st_ + 3 * math.sin(u0 * 23) * st_, far='R'),
+                  order=['leg_far', 'leg_near', 'body', 'head', 'arm_far', 'arm_near'] if a1 > .3 else None)
+        chars_pass(img, lay, [((.4, -1), SODIUM, .8), ((1, 0), SODIUM, .5)])
         img = finish(img, u, vig=.5)
-        jx, jy = jolt(u, 74.7, S(16))
-        return camxf(img, 1.0 + .04 * sm(u0 / 1.3), jx, jy)
+        pz = sm(seg(u0, 0, 1.25)); z = 1.0 + .6 * pz
+        jx, jy = jolt(u, 74.7, S(14))
+        return camxf(img, z, jx + (W * .45 - hdx) * pz * .55, jy + (H * .62 - hdy) * pz * .45, fx=hdx, fy=hdy)
     # the low angle: THIEF 2 towering over the lens, the wrench high (glint), swinging down at 75.45
     cam = Cam((2.0, 3.75, .12), (2.35, 2.4, 2.2), fov=74, size=SIZE)
     img, near = render_house(cam)
     blinds_light(img, cam, 1.0)
     door_glass(img, cam, 1.0)
-    sw = ei(seg(u, 75.45, 75.95))
+    # wind-up (75.3-75.48: the arm rises further back), top hold 4 frames (to 75.62), the blow in 10 frames (to 75.95)
+    wind = eo(seg(u, 75.3, 75.48)); sw = ei(seg(u, 75.62, 75.95))
     l2 = layer(); ppm = S(720)
-    gx, gy, wa = thief2_sil(l2, S(600), S(2020), ppm, u, arm=1.0, swing=sw if u >= 75.45 else None)
+    gx, gy, wa = thief2_sil(l2, S(600), S(2020) + S(20) * wind, ppm, u, arm=.82 + .18 * wind, swing=sw if u >= 75.62 else None)
     l2 = l2.transform(SIZE, Image.PERSPECTIVE, _keystone(.28), Image.BICUBIC)
     l2 = sil_finish(l2, 1.0, w=max(2, int(S(11))))
     gx, gy = _key_pt(gx, gy, .28)
     w2 = layer(); jaw = wrench2d(w2, gx, gy, wa, ppm * 1.15)
     fist(w2, gx, gy, ppm * .07, col=SIL, ang=wa)
-    if sw > .05: w2 = cine.defocus(w2, S(14) * sw)
+    if sw > .05:                                   # smear: fading copies of the wrench back along the arc
+        for j in range(1, 5):
+            u_ = max(75.62, u - j * .022); sw_ = ei(seg(u_, 75.62, 75.95))
+            tmp = layer(); g_ = thief2_sil(tmp, S(600), S(2020) + S(20), ppm, u_, arm=1.0, swing=sw_)
+            q = _key_pt(g_[0], g_[1], .28); ws = layer(); wrench2d(ws, q[0], q[1], g_[2], ppm * 1.15)
+            ws.putalpha(ws.split()[3].point(lambda v, j=j: int(v * .35 / j)))
+            w2.alpha_composite(ws)
+        w2 = cine.defocus(w2, S(10) * sw)
     l2.alpha_composite(w2)
     img.alpha_composite(l2)
-    if sw < .25: glint(img, jaw[0], jaw[1], S(48), k=1.0)
+    # ME's head and raised forearms in the foreground (scale: THIEF 2 towers over him)
+    fg = layer(); kk = S(1300); hxm, hym = W * .5 + S(30), H * 1.04
+    back_head(fg, hxm, hym, .24 * kk, turn=0.0, pitch=-.5)
+    for sx in (-1, 1):
+        shp = (hxm + sx * S(230), H + S(120)); hdp = (hxm + sx * S(110) + S(8) * math.sin(u * 40), H * .8)
+        sleeve(fg, shp, hdp, S(120), (217, 191, 148)); hand2d(fg, hdp[0], hdp[1], -90 - sx * 15, S(52), 'open')
+    img.alpha_composite(light_chars(fg, [((0, -1), SODIUM, .7)], tint_col=(90, 90, 120)))
+    if u < 75.62: glint(img, jaw[0], jaw[1], S(48), k=1.0)
     img = finish(img, u, vig=.5)
-    img = darken(img, sm(seg(u, 75.82, 76.0)) * .9)
-    jx, jy = jolt(u, 75.3, S(8))
-    return camxf(img, 1.0 + .3 * sw, jx, jy, fy=H * .35)
+    if u >= 75.9: img = TL.add_light(img, Image.new('L', SIZE, int(200 * seg(u, 75.9, 75.97))), (255, 255, 255), 1.0)   # impact flash
+    jx, jy = jolt(u, 75.3, S(8)); j2x, j2y = jolt(u, 75.9, S(30), .2)
+    return camxf(img, 1.0 + .3 * sw, jx + j2x, jy + j2y, fy=H * .35)
 
 
 def _keystone(k):
@@ -2539,19 +3091,22 @@ def thumb_frame():
     img, near = render_house(cam)
     blinds_light(img, cam, 1.0)
     lay = layer()
-    xm = at3d(cam, (.38,) + stairs_point(5.0)[1:], 1.75)
+    xm = at3d(cam, (.5,) + stairs_point(7.2)[1:], 1.75)
     if xm:
         x, y, sc, ppm = xm
-        me(lay, x, y, sc, 0.0, 'scared', dict(armL=(40, 70), armR=(-150, -178), legL=(12, 2), legR=(-12, -2)), look=.1, lamp=70, idle=0)
-    chars_pass(img, lay, [((0, 1), TORCH, .5), ((1, 0), SODIUM, .6)])
+        me(lay, x, y, sc * 1.12, 0.0, 'scared', dict(armL=(40, 70), armR=(-120, -170), legL=(12, 2), legR=(-12, -2)), look=.05, lamp=-55, idle=0)
+        cp = at3d(cam, (.75,) + stairs_point(8.6)[1:], 1.75)                    # the child's toy car on the step below him
+        if cp: toycar2d(lay, cp[0], cp[1], cp[3] * .6)
+    chars_pass(img, lay, [((0, 1), TORCH, .5), ((1, 0), SODIUM, .6)], tint_col=(205, 192, 196))
     lay = layer()
     xt = at3d(cam, (1.0, 3.35, 0), 1.75)
     if xt:
         x, y, sc, ppm = xt
         g = thief1(lay, x, y, sc, 0.0, 'angry', dict(armL=(30, 50), armR=(-60, -150, .9), legL=(12, 2), legR=(-12, -2)), look=-.25, bar=None, idle=0)
         hx, hy = g['head']; R = g['R']
-        cp = at3d(cam, (.3, YBOT + .5, tread_z(NST - 2)), 1.75)                       # the child's toy car on the tiles by his feet
-        if cp: toycar2d(lay, cp[0], cp[1], cp[3] * .34)
+        cx0 = hx + g['look'] * 20 * (stickman.R / 98.0) * (R / stickman.R)
+        ImageDraw.Draw(lay).ellipse((cx0 - R * .73, hy + R * .08 - R * .75, cx0 + R * .73, hy + R * .08 + R * .75), fill=MASK_C)
+        smug_eyes(lay, cx0, hy + R * .05, R * .9, .55, (-.5, -.3))                   # narrowed, menacing, looking up at ME
         chars_pass(img, lay, [((0, 1), TORCH, 1.0), ((1, 0), SODIUM, .5)])
         TL.add_light(img, TL.ellipse_soft(SIZE, hx, hy + R * .3, R * 1.05, R * 1.0, R * .45), TORCH, .5, mix=.1)
         hxr, hyr, _ = g['hands']['R']
@@ -2569,51 +3124,78 @@ SHOTS = [('s01', 0.0, 4.0, s01), ('s02', 4.0, 8.0, s02), ('s03', 8.0, 13.0, s03)
          ('s13', 62.0, 68.0, s13), ('s14', 68.0, 74.0, s14), ('s15', 74.0, 80.0, s15)]
 KEY_AT = {'s01': 2.0, 's02': 5.6, 's03': 10.3, 's04': 19.5, 's05': 24.8, 's06': 29.0, 's07': 33.3, 's08': 34.6, 's09': 38.55,
           's10': 43.1, 's11': 51.0, 's12': 58.0, 's13': 62.7, 's14': 72.6, 's15': 75.5}
-CAPS = [(56.63, 57.27, 'You done'), (57.27, 57.82, 'yet?'), (57.82, 58.33, "What's all"), (58.33, 59.45, 'the noise?')]
+CAPS = [(56.6, 57.8, 'You done yet?'), (57.8, 59.7, "What's all the noise?")]
+CAP_K = .037 * 1.2                  # caption font size (fraction of H): the house size + 20 %
+VO_ZONE = .905                      # narration: ONE fixed zone, the last line's baseline (fraction of H)
+T2_ZONE = .155                       # THIEF 2's line: upper third, above the door
 
 
 def _vo_chunks():
-    """ME's whispered narration (audio/night-intruder/vo_words.json) in house-style chunks of 1-3 words, each held
-    until the next chunk (or briefly after its last word), never outside its line's window."""
+    """ME's whispered narration (audio/night-intruder/vo_words.json) as full short phrases (cut at . ? ! and at a long
+    pause after '...'), each from just before its first word until the next phrase (>= 1.2 s on screen when the next
+    phrase allows), never outside the narration."""
     import json
     try: words = json.load(open(os.path.join(ROOT, 'audio', 'night-intruder', 'vo_words.json')))
     except OSError: return []
-    out = []
+    phrases = []
     for ln in sorted({w['line'] for w in words}):
-        ws = [w for w in words if w['line'] == ln]; lend = ws[-1]['end']
-        ch = []
+        ws = [w for w in words if w['line'] == ln]; cur = []
         for i, w in enumerate(ws):
-            ch.append(w)
-            txt = ' '.join(c['word'] for c in ch)
-            nxt = ws[i + 1] if i + 1 < len(ws) else None
-            brk = nxt is None or len(txt + ' ' + nxt['word']) > 15 or nxt['start'] - w['end'] > .35 or w['word'][-1] in '.,?!'
-            if brk:
-                end = min(nxt['start'], w['end'] + .45) if nxt else lend
-                if nxt is None and w['end'] - ch[0]['start'] < .45 and out and out[-1][1] >= ch[0]['start'] - .01 and len(out[-1][2] + txt) < 18:
-                    out[-1] = (out[-1][0], lend, out[-1][2] + ' ' + txt)          # a too-short last chunk joins the previous
-                else:
-                    out.append((ch[0]['start'], max(end, w['end']), txt))
-                ch = []
+            cur.append(w); nxt = ws[i + 1] if i + 1 < len(ws) else None
+            end_word = w['word'].endswith(('.', '?', '!')) and not w['word'].endswith('...')
+            long_pause = nxt is not None and nxt['start'] - w['end'] > .5
+            if nxt is None or end_word or long_pause:
+                phrases.append([cur[0]['start'], cur[-1]['end'], ' '.join(c['word'] for c in cur), ln]); cur = []
+    out = []
+    for i, (a, b, txt, ln) in enumerate(phrases):
+        nxt = phrases[i + 1] if i + 1 < len(phrases) else None
+        s0 = a - .08; e = max(b + .55, s0 + 1.3)
+        if nxt and nxt[3] == ln:
+            if txt.endswith('...') and nxt[0] - b > 1.5: e = nxt[0] - .1          # "They..." (held over the elbow)
+            e = min(e, nxt[0] - .1)
+        out.append((s0, e, txt))
+    # a card shorter than 1.2 s merges with the next one of its line ("I got it wrong. They...")
+    i = 0
+    while i < len(out) - 1:
+        if out[i][1] - out[i][0] < 1.2 and out[i + 1][0] - out[i][1] < .3:
+            out[i:i + 2] = [(out[i][0], out[i + 1][1], out[i][2] + ' ' + out[i + 1][2])]
+        else: i += 1
+    # "They..." then "They... weren't alone." (the second card carries the whole phrase)
+    for i in range(len(out) - 1):
+        if out[i][2].endswith('They...') and out[i + 1][0] - out[i][1] < .3:
+            out[i + 1] = (out[i + 1][0], out[i + 1][1], 'They... ' + out[i + 1][2])
     return out
 
 
 VO = _vo_chunks()
 
 
-def vo_base(T):
-    """Caption baseline (fraction of H) kept in a clean band off the faces of each shot."""
-    if 13.0 <= T < 22.0: return .625            # shot 4: the dark seam between ME and the lit cabinet
-    if 63.55 <= T < 68.0: return .2             # the slide: ME along the bottom, THIEF 1 mid-frame
-    return .8
+def _wrap(text, f, maxw):
+    lines, cur = [], ''
+    for w in text.split():
+        t = (cur + ' ' + w).strip()
+        if cur and kit.text_w(t, f) > maxw: lines.append(cur); cur = w
+        else: cur = t
+    if cur: lines.append(cur)
+    return lines
 
 
-def draw_caption(img, text, base, scale=1.0, fill='white'):
-    size = int(round(0.037 * img.height * scale)); f = kit.font(size, bold=True)
-    w = kit.text_w(text, f); x = (img.width - w) / 2
-    sh = layer()
-    ImageDraw.Draw(sh).text((x + 3 * KK, base + 5 * KK), text, font=f, fill=(0, 0, 0, 200), anchor='ls', stroke_width=int(size * .16), stroke_fill=(0, 0, 0, 200))
-    img.alpha_composite(cine.defocus(sh, 7 * KK))
-    ImageDraw.Draw(img).text((x, base), text, font=f, fill=fill, anchor='ls', stroke_width=max(2, int(size * .1)), stroke_fill='black')
+def draw_caption(img, text, base, scale=1.0, fill='white', anchor_last=True):
+    """House sentence style, wrapped to the frame (side margins 7 %): Poppins Bold, a dark stroke + soft shadow.
+    base = the baseline of the LAST line (anchor_last) or of the first line."""
+    size = int(round(CAP_K * img.height * scale)); f = kit.font(size, bold=True)
+    lines = _wrap(text, f, img.width * .86 * scale)                    # wrap at the settled size (the pop never re-wraps)
+    lh = size * 1.18
+    y0 = base - lh * (len(lines) - 1) if anchor_last else base
+    sh = layer(); dsh = ImageDraw.Draw(sh)
+    for i, ln in enumerate(lines):
+        x = (img.width - kit.text_w(ln, f)) / 2; y = y0 + i * lh
+        dsh.text((x + 3 * KK, y + 5 * KK), ln, font=f, fill=(0, 0, 0, 210), anchor='ls', stroke_width=int(size * .2), stroke_fill=(0, 0, 0, 210))
+    img.alpha_composite(cine.defocus(sh, 8 * KK))
+    d = ImageDraw.Draw(img)
+    for i, ln in enumerate(lines):
+        x = (img.width - kit.text_w(ln, f)) / 2; y = y0 + i * lh
+        d.text((x, y), ln, font=f, fill=fill, anchor='ls', stroke_width=max(2, int(size * .13)), stroke_fill=(8, 8, 16))
 
 
 def frame(T, captions=True):
@@ -2626,12 +3208,12 @@ def frame(T, captions=True):
     if captions:
         for a, b, txt in CAPS:
             if a <= T < b:
-                sc = 1.0 + .08 * max(0.0, 1 - (T - a) * FPS / 4)
-                draw_caption(img, txt, H * .70, sc * 1.3, fill=(255, 230, 150))   # THIEF 2: pale sodium yellow
+                sc = 1.0 + .06 * max(0.0, 1 - (T - a) * FPS / 4)
+                draw_caption(img, txt, H * T2_ZONE, sc, fill=(255, 230, 150), anchor_last=False)   # THIEF 2: pale yellow
         for a, b, txt in VO:
             if a <= T < b:
-                sc = 1.0 + .08 * max(0.0, 1 - (T - a) * FPS / 4)
-                draw_caption(img, txt, H * vo_base(T), sc)                    # ME's narration: white
+                sc = 1.0 + .06 * max(0.0, 1 - (T - a) * FPS / 4)
+                draw_caption(img, txt, H * VO_ZONE, sc)                    # ME's narration: white, one fixed zone
     return img.convert('RGB')
 
 
