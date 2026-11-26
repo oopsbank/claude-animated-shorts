@@ -6,6 +6,7 @@ Four independent sonnet reviewers (shots 1-5, 6-10, 11-15, whole film) on per-sh
 - Motion looks unnatural; study how real people move, above all walking down the stairs.
 - THIEF 1's hood/head is as big as half his body: fix the proportions (head + hood ~1/3 of the figure at most, same scale as ME's head).
 - Faces look the wrong way: a character standing on the LEFT faces RIGHT/away. Every character must look at whom/what they are acting on (eyeline), and screen direction must stay consistent across cuts.
+- Arms must visibly connect to a body: no floating arms entering from a frame corner (shot 3 hand/lamp, shot 13 fists on the collar, the phone macro). In close-ups show the shoulder/torso edge the arm comes from, or frame so the connection is implied by a sleeve running to a visible body.
 
 ## Whole film (top fixes)
 1. Hook 0-2 s: start with the phone ALREADY lit at frame 0 (00:00), slight push-in; the clack hits with a tiny shake (glass shiver).
