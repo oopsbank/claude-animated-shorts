@@ -27,8 +27,10 @@ Render time at 540: about 1.7 s per frame per core (2400 frames in about 17 min 
 - Stickmen: `FACE_STYLE='ref'`, `BODY_STYLE='round'`, R=132 / SEG_LEG=170 / SEG_ARM=112 / OUT=4.4.
   ME: messy (`wild`) dark hair, beige striped pyjamas (`#d9bf94`, the Director's lock), barefoot.
   THIEF 1: a plain dark hooded zip jacket (`uniform` + the new opt-in `plain=True` of `stickman.draw`: zip line +
-  front pocket, no buttons/belt), hood up (from behind: a peaked hood shell draping onto the shoulders, seam + folds) + black balaclava drawn over the card (`masked_head`: only an eye
-  slot shows the card's eyes), backpack, crowbar (hip or in hand). THIEF 2: the card stretched 1.28x wide, 2.05 m,
+  front pocket, no buttons/belt), hood up + a black cloth FACE MASK ("khau trang den", fix pass 5): ME's white round
+  head with the same 'ref' eyes + brows inside the hood opening, the mask over nose to chin with pleats and ear loops
+  (`hood_front`, expressions in `TFACE`, animated squint via `('n', narrow, slant, pdx, pdy)`); from behind the hood
+  shell with the mask's tie strap + knot and the ear loops at the sides (`hood_mask(back=True)`); backpack, crowbar. THIEF 2: the card stretched 1.28x wide, 2.05 m,
   flattened to one near-black colour (no face, the Director's lock), lit only by sodium rim light, a long steel
   wrench with a cold glint. From shot 12 on he is a dedicated 2D silhouette (`thief2_sil`: broad square shoulders,
   long coat, collar up, stride, the wrench arm hanging / raised / swinging) with a backlit rim (`sil_finish`).
@@ -183,9 +185,37 @@ Iterated on 540 strips (6 fps) per changed shot, judged by the Animator (no suba
   38.07-38.24 while cocking the bar; the whip pan settles by 38.16 so the turn reads.
 - Thumbnail re-rendered with the new hood (menacing slit eyes, the face glare reduced).
 
+## Fix pass 5 (the Director's notes on the fix-pass-4 preview; 2026-11-26)
+Iterated on 540 strips (6-12 fps) per changed shot, judged by the Animator.
+- THIEF 1's head redesigned everywhere (shots 6, 8, 9, 10, 11, 13, thumbnail): no balaclava any more. `hood_front`
+  draws (on a 2x patch, AA) the hood shell (crown ~1.15 R, folds, the drape onto the shoulders), the opening rim, then
+  ME's head (same size, same 'ref' eyes/brows/lids, pupils follow the look) clipped by the opening, and the black face
+  mask from the nose to the chin (soft peak over the nose, pleats, ear loops running up under the hood). The acting is
+  in the eyes/brows: surprised wide eyes in shot 8, angry in 9-11, a smug squint animated in the 62 s CU
+  (`('n', narrow, ...)` replaces the old eye-slit lids). `head_sprite('thief')` no longer uses the card. Back view
+  (shot 6, the start of the shot-9 spin): the mask's tie strap across the hood with a knot + tails, ear loops at the
+  sides. `thief_eyes`, `smug_eyes`, `thief_getup_J` removed.
+- Shot 13 slide (63.6-68): THIEF 1 removed from the background (only ME sliding, stopping, rolling up; the door glow).
+- Shot 10, 44.0-47.0 (new `tackle_figs`, `prof_J` = profile on absolute floor points, `foot_keys` foot plants, keys
+  `MK`/`MFEET`/`TK`/`TFEET`): THIEF 1, folded over his arm, sees the rolling bar, turns to face left (44.3-44.58,
+  head goes through frontal) and lurches a step to bend for it, his near hand down at the bar (now rolls further left,
+  still on its sound to 46.4 and drawn under the fighters). ME reacts, anticipation 44.45-44.7 (sinks, weight back,
+  arms back), two fast run steps (R 44.86, L 45.0) with the trunk dropping, dives off the left foot shoulder first,
+  contact on THIEF 1's lower back at 45.3 (ME's head above his back, arms wrapping his waist, THIEF 1's trunk whips
+  down, arms fly back then forward), then ME's legs drive him left in short steps (both bodies keyed together,
+  feet planted, no sliding) into the cut; the camera widens (fov, 17 %) and pans left with the charge (a yaw; figure
+  positions shifted by the measured pan). Shot 11's shove starts with ME already leaning 40 deg (continuity).
+- Shot 11 face CU (51.5-53.2): real arms (striped sleeves from the shoulders, elbows bent out, fists gripping THIEF 1's
+  bunched collar at the bottom over his blurred hood, short yanks), head smaller in frame.
+- Shot 9: figures 7 % smaller and re-centred (X9, k 560) so THIEF 1 stays inside the frame during the spin + wind-up.
+- Thumbnail re-rendered (new head), `--zoom 1.12 --focus 0.56,0.43`, lines 100/150/200 px.
+
 ## Known issues
 - No sonnet reviewer subagents this pass either (the toolset has no subagent tool); strips judged by the Animator only.
 - Shot 4: the door intro is a 2D drawing, not the 3D set; the side view is a dollhouse cutaway (no near wall).
 - Shot 5: the peek tilt pivots the trunk on a fixed pelvis (no foot shift).
-- Shot 9: THIEF 1 is partly cropped by the left edge during the wind-up.
+- Shot 9: the bar tip touches the left edge for ~2 frames at 38.18; ME's back hand grazes the right edge at the hit.
+- Shot 10 tackle: profile 2D, so ME's wrapping near arm and head overlap THIEF 1's back (drawn on top); the drive
+  phase (45.5-47.0) is slow under the following pan.
+- Motion QA flags 8 mild pre-existing 'pops' outside the changed shots (0.8, 3.0, 4.9, 26.2, 28.7, 42.7, 57.8, 60.5 s; ratio <= 1.8); none in 43-47 or 62-68; frozen spans only the black holds.
 - 1080 final not rendered (expect about 4x the 540 time).
